@@ -1,0 +1,305 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   BIONOVA México · CAPA MÓVIL Y APP
+   Se carga DESPUÉS de styles.css. Solo AÑADE ajustes: no reescribe el diseño,
+   así que quitar este archivo devuelve el sitio a como estaba.
+
+   Contenido:
+     0. Base           · <picture> sin efectos de layout
+     1. Táctil         · zonas de toque, resaltado, zoom
+     2. Áreas seguras  · notch y barra de gestos
+     3. Toques ≥44px   · botones y enlaces que eran muy chicos
+     4. Legibilidad    · nada por debajo de 12px
+     5. Contenido      · pósters de curso sin recortar en móvil
+     6. Dock social    · un solo botón de WhatsApp; redes en el pie
+     7. Modo app       · ajustes cuando corre instalada (standalone)
+     8. Movimiento     · respeto a prefers-reduced-motion
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+
+/* ── 0. Base ──────────────────────────────────────────────────────────────── */
+
+/* Las imágenes ahora van envueltas en <picture> para servir WebP. Con
+   display:contents el <img> sigue siendo el hijo directo de su contenedor,
+   así que TODAS las reglas de styles.css (.course-card img, .brand-logo…)
+   siguen aplicando exactamente igual que antes. */
+picture { display: contents; }
+
+/* Las <img> ahora declaran width/height reales (reservan el hueco y evitan que
+   la página “salte” al cargar). Sin height:auto el navegador tomaría ese alto
+   al pie de la letra y deformaría la imagen al limitarse el ancho: con esto
+   manda la proporción. Las reglas con clase (.brand-logo, etc.) siguen
+   ganando, porque tienen más especificidad. */
+img { height: auto; }
+
+/* El header es sticky: sin esto los enlaces #cursos, #club, #contacto…
+   dejan el título tapado debajo de la barra al saltar. */
+html { scroll-padding-top: 92px; }
+
+
+/* ── 1. Comportamiento táctil ─────────────────────────────────────────────── */
+
+html {
+  -webkit-text-size-adjust: 100%;      /* iOS no reescala al girar el teléfono */
+  text-size-adjust: 100%;
+}
+
+a, button, [role="button"], input, select, textarea {
+  -webkit-tap-highlight-color: rgba(6, 182, 212, .18);
+}
+
+/* Elimina el retardo de 300 ms al tocar y evita el doble-tap-zoom accidental
+   sobre controles. */
+a, button, .btn, .chip, [role="button"] { touch-action: manipulation; }
+
+/* Los campos de formulario por debajo de 16px hacen que iOS haga zoom
+   automático al enfocarlos y descuadre la página. */
+@media (max-width: 780px) {
+  input, select, textarea { font-size: 16px; }
+}
+
+
+/* ── 2. Áreas seguras (notch / barra de gestos) ───────────────────────────── */
+
+@supports (padding: env(safe-area-inset-left)) {
+  .site-header .container,
+  .site-footer .container {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+  .site-footer { padding-bottom: calc(28px + env(safe-area-inset-bottom)); }
+  .social-dock {
+    right: max(12px, env(safe-area-inset-right));
+    bottom: max(12px, env(safe-area-inset-bottom));
+  }
+  .modal-backdrop, .club-modal-backdrop {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+
+/* ── 3. Zonas de toque de 44px (mínimo recomendado) ───────────────────────── */
+
+@media (max-width: 780px) {
+  .menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    margin-right: -6px;              /* compensa el ancho extra, no mueve el logo */
+  }
+
+  /* Al ensanchar el botón de menú a 44px la barra se quedaba sin sitio y
+     "BIONOVA México" partía en dos líneas. Recuperamos ese espacio de los
+     huecos, sin tocar tamaños de letra. */
+  .nav { gap: 10px; }
+  .brand { gap: 10px; }
+  .nav-actions { gap: 6px; }
+
+  .nav-actions .vip-access-mobile {
+    min-height: 44px;
+    padding: 11px 14px;
+  }
+
+  /* Enlaces del menú desplegable: fila completa, cómoda de acertar */
+  .menu a {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 44px;
+  }
+
+  /* Cerrar modales: la "×" medía 36px y está pegada a la esquina */
+  .modal-close,
+  .club-modal-close {
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* "Volver arriba ↑" del pie medía 15px de alto */
+  .site-footer a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  /* "Crear cuenta nueva" / "Ya tengo cuenta" del modal del Club: 15px de alto */
+  .club-modal-help a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
+
+/* Teléfonos estrechos: apuramos el logo y la píldora VIP para que la marca
+   siga cabiendo en una sola línea. Por debajo de ~340px ya no da y parte en
+   dos, que es preferible a recortar el nombre de la empresa. */
+@media (max-width: 400px) {
+  .brand-logo { width: 40px; height: 40px; }
+  .nav-actions .vip-access-mobile { padding: 11px 11px; font-size: .78rem; }
+  .nav { gap: 8px; }
+  .brand { gap: 8px; }
+}
+
+
+/* ── 4. Legibilidad: nada por debajo de 12px ──────────────────────────────── */
+
+@media (max-width: 780px) {
+  /* El selector de styles.css es .club-modal-stepper .step-label (0,2,0):
+     hay que igualarlo o la regla no gana. Estaba en .64rem = 10.24px. */
+  .club-modal-stepper .step-label { font-size: 12px; line-height: 1.3; }
+  .course-top small,
+  .hero-points li small { font-size: 12.5px; }
+}
+
+
+/* ── 5. Contenido: pósters de curso completos en móvil ────────────────────── */
+
+/* styles.css recorta los pósters a 16/10 en móvil, pero son cuadrados
+   (1080×1080) y llevan el título, el precio y la fecha impresos: el recorte
+   se comía justo esa información. En móvil la tarjeta ocupa el ancho
+   completo, así que cabe el póster entero. */
+@media (max-width: 780px) {
+  .course-card img { aspect-ratio: 1 / 1; }
+}
+
+
+/* ── 6. Dock social: un solo botón en móvil ───────────────────────────────── */
+
+/* Los tres botones flotantes tapaban contenido en el lado derecho (chips del
+   hero, texto del pie). En móvil dejamos solo WhatsApp —que es el canal de
+   contacto real— y Facebook e Instagram pasan al pie, donde no estorban. */
+@media (max-width: 780px) {
+  .social-dock .dock-btn.facebook,
+  .social-dock .dock-btn.instagram { display: none; }
+
+  .social-dock .dock-btn.whatsapp {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    font-size: .95rem;
+  }
+
+  /* Espacio para que el botón flotante nunca se siente encima del pie */
+  .site-footer { padding-bottom: calc(78px + env(safe-area-inset-bottom, 0px)); }
+}
+
+/* Mientras se muestra el aviso de "Instalar la app" (pwa.js añade esta clase
+   al body), el botón de WhatsApp sube para no quedar tapado. */
+.bn-con-banner .social-dock {
+  /* --bn-banner-h la publica pwa.js con la altura real del aviso */
+  transform: translateY(calc(-1 * (var(--bn-banner-h, 92px) + 16px)));
+  transition: transform .35s cubic-bezier(.16, 1, .3, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .bn-con-banner .social-dock { transition: none; }
+}
+
+/* Redes en el pie (visibles solo donde ocultamos el dock) */
+.footer-social { display: none; }
+@media (max-width: 780px) {
+  .footer-social {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 4px;
+  }
+  .footer-social a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 14px;
+    font-weight: 900;
+    font-size: .82rem;
+    color: #fff;
+  }
+  .footer-social .facebook  { background: linear-gradient(135deg, #1877f2, #2451ff); }
+  .footer-social .instagram { background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); }
+}
+
+
+/* ── 7. Modo app (instalada en la pantalla de inicio) ─────────────────────── */
+
+@media (display-mode: standalone), (display-mode: minimal-ui) {
+  /* Sin barra del navegador, el rebote vertical delata que es una web */
+  body { overscroll-behavior-y: contain; }
+
+  /* El header sube hasta el borde: le devolvemos el alto de la barra de estado */
+  .site-header { padding-top: env(safe-area-inset-top); }
+
+  /* Dentro de la app, "Volver arriba" y los enlaces externos siguen igual,
+     pero el menú desplegable tiene que bajar con el header. */
+  .menu { top: calc(78px + env(safe-area-inset-top)); }
+}
+
+
+/* ── 8b. Páginas sueltas: acceso VIP y verificador ────────────────────────── */
+
+/* vip-auth.html y verificar.html tienen sus propios estilos en línea, con otros
+   nombres de clase. Aquí solo corregimos lo que de verdad estorba en un móvil:
+   controles imposibles de acertar con el dedo y texto por debajo de 11px.
+   Las etiquetas en versalitas a 11px se dejan como están: son intencionadas. */
+
+@media (max-width: 780px) {
+  /* Mostrar/ocultar contraseña: medía 25×25px. Ampliamos la zona sensible con
+     un pseudo-elemento invisible en vez de ensanchar el botón: así se puede
+     acertar con el dedo sin que el campo crezca ni desborde en pantallas
+     estrechas. */
+  .toggle-pass { position: relative; }
+  .toggle-pass::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 44px;
+    height: 44px;
+    transform: translate(-50%, -50%);
+  }
+
+  /* Logo que vuelve al inicio y "¿Olvidaste tu contraseña?" */
+  .logo-link,
+  .forgot {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  /* Enlace del pie del verificador (medía 13px de alto) */
+  .foot a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  /* "Ahorras $389" iba a 9.6px: es un argumento de venta y hay que poder
+     leerlo. El selector original es .hero-price .badge (0,2,0). */
+  .hero-price .badge { font-size: 11px; }
+
+  /* En pantallas de ~320-360px la página de acceso se desplazaba en
+     horizontal: el carrusel de cursos (miles de px de ancho) estiraba a sus
+     contenedores, porque en flex/grid el mínimo automático es el del
+     contenido. min-width:0 es el remedio estándar y no altera nada más. */
+  .hero,
+  .hero-mid,
+  .hero-marquee { min-width: 0; max-width: 100%; }
+  .hero-marquee { overflow: hidden; }
+
+  /* La rejilla que envuelve al hero se dimensionaba por su contenido y se
+     salía del ancho de la pantalla. minmax(0,1fr) la obliga a no pasar del
+     contenedor. (En index.html .split es flex, así que esto no le afecta.) */
+  .split { grid-template-columns: minmax(0, 1fr); }
+}
+
+
+/* ── 8. Movimiento reducido ───────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .clients-track { animation: none !important; }
+  .reveal { opacity: 1 !important; transform: none !important; }
+}
