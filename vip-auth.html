@@ -11,26 +11,26 @@
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg-deep:#050a16; --bg:#081225; --surface:#0b1530; --surface-2:#0f1e3a;
+  --bg-deep:#2E1B15; --bg:#442A22; --surface:#4A2D21; --surface-2:#55362A;
   --line:rgba(105,210,255,.12); --line-soft:rgba(255,255,255,.06);
-  --primary:#6b1526; --primary-soft:#c9a227; --primary-deep:#4a0f1c;
-  --accent:#c9a227; --accent-soft:#e0c060;
-  --text:#eaf2ff; --muted:#94a3b8; --faint:#5b6b86;
+  --primary:#C94B68; --primary-soft:#D5A13D; --primary-deep:#9E3550;
+  --accent:#D5A13D; --accent-soft:#E5C171;
+  --text:#FFF3E5; --muted:#A08B7F; --faint:#8A7468;
   --danger:#f87171; --danger-bg:rgba(248,113,113,.12);
-  --ok:#c9a227; --ok-bg:rgba(201,162,39,.12);
+  --ok:#D5A13D; --ok-bg:rgba(213,161,61,.12);
   --glass:rgba(13,26,52,.55); --glass-brd:rgba(105,210,255,.14);
-  --glow-blue:rgba(107,21,38,.45); --glow-green:rgba(201,162,39,.32);
+  --glow-blue:rgba(201,75,104,.45); --glow-green:rgba(213,161,61,.32);
   --radius:18px; --radius-sm:12px;
   --font-display:'Sora',sans-serif; --font-body:'Manrope',sans-serif; --font-mono:'JetBrains Mono',monospace;
 }
 body.modo-dia{
-  --bg-deep:#e6eefb; --bg:#f5f9ff; --surface:#ffffff; --surface-2:#f1f6ff;
-  --line:rgba(15,23,42,.10); --line-soft:rgba(15,23,42,.06);
-  --text:#0f172a; --muted:#52617a; --faint:#94a3b8;
+  --bg-deep:#DBBEB2; --bg:#F1E4D2; --surface:#FFF6EA; --surface-2:#F6E9D6;
+  --line:rgba(59,36,32,.10); --line-soft:rgba(59,36,32,.06);
+  --text:#3B2420; --muted:#6B5147; --faint:#A08B7F;
   --danger:#dc2626; --danger-bg:rgba(220,38,38,.08);
   --ok:#0f9d58; --ok-bg:rgba(15,157,88,.10);
-  --glass:rgba(255,255,255,.72); --glass-brd:rgba(107,21,38,.18);
-  --glow-blue:rgba(107,21,38,.22); --glow-green:rgba(201,162,39,.18);
+  --glass:rgba(255,255,255,.72); --glass-brd:rgba(201,75,104,.18);
+  --glow-blue:rgba(201,75,104,.22); --glow-green:rgba(213,161,61,.18);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -118,7 +118,7 @@ body.modo-dia .logo-day{display:block}
 .alert{display:flex;gap:11px;align-items:flex-start;border-radius:var(--radius-sm);padding:13px 14px;font-size:.86rem;line-height:1.45;animation:fade .3s ease}
 .alert svg{width:18px;height:18px;flex:none;margin-top:1px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .alert--error{background:var(--danger-bg);color:var(--danger);border:1px solid rgba(248,113,113,.25)}
-.alert--success{background:var(--ok-bg);color:var(--ok);border:1px solid rgba(201,162,39,.25)}
+.alert--success{background:var(--ok-bg);color:var(--ok);border:1px solid rgba(213,161,61,.25)}
 .alert__msg strong{font-weight:700;font-family:var(--font-display)}
 .copyr{font-family:var(--font-mono);font-size:.68rem;color:var(--faint);text-align:center;margin-top:18px;letter-spacing:.04em}
 @media(max-width:900px){
@@ -162,7 +162,7 @@ body.modo-dia .logo-day{display:block}
 .hero-benefits svg{width:17px;height:17px;flex:none;margin-top:2px;stroke:var(--accent-soft);fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 .hero-tools{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 8px}
 .hero-tools span{font-family:var(--font-mono);font-size:.64rem;letter-spacing:.04em;color:var(--primary-soft);
-  background:rgba(107,21,38,.1);border:1px solid var(--line);border-radius:7px;padding:4px 8px}
+  background:rgba(201,75,104,.1);border:1px solid var(--line);border-radius:7px;padding:4px 8px}
 .hero-price{display:flex;gap:10px;margin:10px 0 14px;flex-wrap:wrap}
 .hero-price .opt{flex:1;min-width:150px;background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:12px 14px;position:relative}
 .hero-price .opt--star{border-color:var(--accent)}
