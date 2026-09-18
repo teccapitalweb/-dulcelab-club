@@ -3878,8 +3878,9 @@ const Pages={
     renderCerts();
     function renderCerts(){
       const list=document.getElementById('cert-list');
-      if(SEED.certificados.length===0){list.innerHTML=`<div class="empty"><div class="empty__icon"><svg class="ic"><use href="#i-certificate"/></svg></div><h3>Sin certificados emitidos</h3><p>Empieza emitiendo el primer certificado.</p></div>`;return;}
-      list.innerHTML=SEED.certificados.map(c=>`
+      const certs = window.AdminStore?.certificados || [];
+      if(certs.length===0){list.innerHTML=`<div class="empty"><div class="empty__icon"><svg class="ic"><use href="#i-certificate"/></svg></div><h3>Sin certificados emitidos</h3><p>Empieza emitiendo el primer certificado.</p></div>`;return;}
+      list.innerHTML=certs.map(c=>`
         <div class="adm-row" style="--c1:#C94B68;">
           <div class="adm-row__thumb"><svg class="ic"><use href="#i-certificate"/></svg></div>
           <div class="adm-row__body">
@@ -3898,9 +3899,10 @@ const Pages={
           </div>
         </div>
       `).join('');
-      list.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',()=>{
+      list.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',async ()=>{
         if(confirm('¿Eliminar este certificado? Esta acción es irreversible.')){
-          const i=SEED.certificados.findIndex(x=>x.id===b.dataset.del);if(i>=0){SEED.certificados.splice(i,1);renderCerts();Toast.success('Certificado eliminado');}
+          try{ const fb=window._fb; await fb.deleteDoc(fb.doc(fb.db,'certificados',b.dataset.del)); Toast.success('Certificado eliminado'); }
+          catch(e){ Toast.error('No se pudo eliminar', e.message||''); }
         }
       }));
     }
@@ -4890,38 +4892,39 @@ const Pages={
   },
 
   noticias(p){
+    const noticiasReales = window.AdminStore?.noticias || [];
     p.innerHTML=`
       <div class="fade-up">
         <div class="sec-hero">
           <span class="sec-hero__eyebrow">Cron automático</span>
           <h1 class="sec-hero__title">Noticias</h1>
-          <p class="sec-hero__sub">El cron de Railway corre cada día a las 7 AM y publica noticias del sector salud y laboratorio en el panel VIP.</p>
+          <p class="sec-hero__sub">El cron de Railway publica noticias del sector gastronómico y alimentos en el panel VIP.</p>
         </div>
 
         <section class="cron-card">
           <div class="cron-card__row">
             <div class="cron-card__icon"><svg class="ic" style="width:24px;height:24px;"><use href="#i-refresh"/></svg></div>
             <div class="cron-card__info">
-              <span class="cron-card__lbl">${SEED.config.cronStatus==='activo'?'Cron en línea':'Cron pausado'}</span>
+              <span class="cron-card__lbl">Estado sin confirmar</span>
               <div class="cron-card__title">NewsData → Firestore</div>
-              <div class="cron-card__sub">Última ejecución: <strong>${SEED.config.cronUltima}</strong> · Próxima: <strong>${SEED.config.cronProxima}</strong> · <strong>${SEED.config.noticiasGeneradas}</strong> noticias publicadas en mayo</div>
+              <div class="cron-card__sub">Aún no hay registro de ejecuciones reales del cron para DulceLab Food. Verifica el cron de Railway en el repo del webhook.</div>
             </div>
             <button class="btn btn--ghost" id="cron-run"><svg class="ic"><use href="#i-refresh"/></svg>Ejecutar ahora</button>
           </div>
         </section>
 
-        <div class="section-header"><h2 class="section-header__title">Noticias publicadas hoy<span class="section-header__badge">${SEED.noticias.filter(n=>n.fecha==='Hoy').length} nuevas</span></h2></div>
+        <div class="section-header"><h2 class="section-header__title">Noticias publicadas${noticiasReales.length?` <span class="section-header__badge">${noticiasReales.length}</span>`:''}</h2></div>
         <div class="adm-list">
-          ${SEED.noticias.map(n=>`
-            <div class="news-card" style="--c1:${n.color};">
+          ${noticiasReales.length===0?`<div class="empty"><div class="empty__icon"><svg class="ic"><use href="#i-news"/></svg></div><h3>Sin noticias publicadas</h3><p>El cron aún no ha generado noticias reales para DulceLab Food.</p></div>`:noticiasReales.map(n=>`
+            <div class="news-card" style="--c1:${n.color||'#C94B68'};">
               <div class="news-card__cover"><svg class="ic"><use href="#i-news"/></svg></div>
               <div class="news-card__body">
                 <div class="news-card__head">
-                  <span class="tag" style="color:${n.color};border-color:${n.color}40;background:${n.color}14;">${n.cat}</span>
-                  <span class="news-card__date">${n.fecha}</span>
+                  <span class="tag" style="color:${n.color||'#C94B68'};border-color:${n.color||'#C94B68'}40;background:${n.color||'#C94B68'}14;">${n.cat||''}</span>
+                  <span class="news-card__date">${n.fecha||''}</span>
                 </div>
-                <div class="news-card__title">${n.titulo}</div>
-                <div class="news-card__source"><svg class="ic"><use href="#i-news"/></svg>${n.fuente}</div>
+                <div class="news-card__title">${n.titulo||''}</div>
+                <div class="news-card__source"><svg class="ic"><use href="#i-news"/></svg>${n.fuente||''}</div>
               </div>
               <div class="adm-row__actions">
                 <button class="icon-action icon-action--danger" data-del-news="${n.id}" title="Eliminar"><svg class="ic"><use href="#i-trash"/></svg></button>
@@ -4931,10 +4934,11 @@ const Pages={
         </div>
       </div>
     `;
-    document.getElementById('cron-run').addEventListener('click',()=>Toast.info('Cron ejecutado','Buscando noticias nuevas… 3 publicadas.'));
-    p.querySelectorAll('[data-del-news]').forEach(b=>b.addEventListener('click',()=>{
+    document.getElementById('cron-run').addEventListener('click',()=>Toast.info('Este botón aún no ejecuta el cron real','Falta conectar el endpoint del webhook de DulceLab que corre el cron de noticias'));
+    p.querySelectorAll('[data-del-news]').forEach(b=>b.addEventListener('click',async ()=>{
       if(confirm('¿Eliminar esta noticia del panel?')){
-        const i=SEED.noticias.findIndex(x=>x.id===b.dataset.delNews);if(i>=0){SEED.noticias.splice(i,1);Pages.noticias(document.getElementById('page'));Toast.success('Noticia eliminada');}
+        try{ const fb=window._fb; await fb.deleteDoc(fb.doc(fb.db,'noticias',b.dataset.delNews)); Toast.success('Noticia eliminada'); }
+        catch(e){ Toast.error('No se pudo eliminar', e.message||''); }
       }
     }));
   },
