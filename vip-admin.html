@@ -1165,10 +1165,10 @@ window.__signOut = async () => {
 
     <div class="nav-section">
       <div class="nav-label">Contenido</div>
-      <a class="nav-item" data-section="cursos"><svg class="ic"><use href="#i-book"/></svg>Cursos<span class="nav-item__badge">12</span></a>
-      <a class="nav-item" data-section="webinars"><svg class="ic"><use href="#i-broadcast"/></svg>Clases en vivo<span class="nav-item__badge">3</span></a>
-      <a class="nav-item" data-section="pdfs"><svg class="ic"><use href="#i-news"/></svg>PDFs y material<span class="nav-item__badge">9</span></a>
-      <a class="nav-item" data-section="certificados"><svg class="ic"><use href="#i-certificate"/></svg>Certificados<span class="nav-item__badge">2</span></a>
+      <a class="nav-item" data-section="cursos"><svg class="ic"><use href="#i-book"/></svg>Cursos<span class="nav-item__badge" id="badge-cursos">0</span></a>
+      <a class="nav-item" data-section="webinars"><svg class="ic"><use href="#i-broadcast"/></svg>Clases en vivo<span class="nav-item__badge" id="badge-vivo">0</span></a>
+      <a class="nav-item" data-section="pdfs"><svg class="ic"><use href="#i-news"/></svg>PDFs y material<span class="nav-item__badge" id="badge-pdfs">0</span></a>
+      <a class="nav-item" data-section="certificados"><svg class="ic"><use href="#i-certificate"/></svg>Certificados<span class="nav-item__badge" id="badge-cert">0</span></a>
     </div>
 
     <div class="nav-section">
@@ -1178,7 +1178,7 @@ window.__signOut = async () => {
 
     <div class="nav-section">
       <div class="nav-label">Comunidad</div>
-      <a class="nav-item" data-section="miembros"><svg class="ic"><use href="#i-users"/></svg>Miembros VIP<span class="nav-item__badge">486</span></a>
+      <a class="nav-item" data-section="miembros"><svg class="ic"><use href="#i-users"/></svg>Miembros VIP<span class="nav-item__badge" id="badge-miembros">0</span></a>
       <a class="nav-item" data-section="noticias"><svg class="ic"><use href="#i-news"/></svg>Noticias</a>
       <a class="nav-item" data-section="foro"><svg class="ic"><use href="#i-users"/></svg>Foro<span class="nav-item__badge" id="badge-foro">0</span></a>
       <a class="nav-item" data-section="directorio"><svg class="ic"><use href="#i-user"/></svg>Directorio<span class="nav-item__badge" id="badge-dir">0</span></a>
@@ -1247,8 +1247,8 @@ window.__signOut = async () => {
    ========================================================= */
 
 const Theme={
-  init(){const s=localStorage.getItem('bionova-admin:theme')||'night';document.documentElement.dataset.theme=s;this.updateIcon();},
-  toggle(){const c=document.documentElement.dataset.theme;const n=c==='night'?'day':'night';document.documentElement.dataset.theme=n;localStorage.setItem('bionova-admin:theme',n);this.updateIcon();},
+  init(){const s=localStorage.getItem('dulcelab-admin:theme')||'night';document.documentElement.dataset.theme=s;this.updateIcon();},
+  toggle(){const c=document.documentElement.dataset.theme;const n=c==='night'?'day':'night';document.documentElement.dataset.theme=n;localStorage.setItem('dulcelab-admin:theme',n);this.updateIcon();},
   updateIcon(){const b=document.getElementById('theme-toggle');if(!b)return;const isDay=document.documentElement.dataset.theme==='day';b.innerHTML='<svg class="ic"><use href="#'+(isDay?'i-sun':'i-moon')+'"/></svg>';}
 };
 
@@ -2032,8 +2032,8 @@ const Pages={
               <svg class="ic"><use href="#i-plus"/></svg>
               Nuevo curso
             </button>
-            <button class="btn btn--ghost" id="sync-bionova-bunny-btn">
-              🐰 Sincronizar 31 videos Bunny
+            <button class="btn btn--ghost" id="sync-dulcelab-bunny-btn">
+              🐰 Sincronizar videos Bunny
             </button>
           </div>
         </div>
@@ -2149,8 +2149,8 @@ const Pages={
     p.querySelector('#new-curso-btn')?.addEventListener('click', () => {
       Pages._abrirModalCurso(null);
     });
-    p.querySelector('#sync-bionova-bunny-btn')?.addEventListener('click', () => {
-      Pages._sincronizarBionovaBunny();
+    p.querySelector('#sync-dulcelab-bunny-btn')?.addEventListener('click', () => {
+      Pages._sincronizarDulcelabBunny();
     });
   },
 
@@ -2174,7 +2174,7 @@ const Pages={
     return union.size ? inter / union.size : 0;
   },
 
-  async _sincronizarBionovaBunny() {
+  async _sincronizarDulcelabBunny() {
     const catalogo = window.DULCELAB_BUNNY_CATALOG || [];
     const fb = window._fb;
     const cursos = window.AdminStore?.cursos || [];
@@ -2186,9 +2186,9 @@ const Pages={
       Toast.error('Firestore no está listo', 'Espera unos segundos y reintenta');
       return;
     }
-    if (!confirm('Se vincularán los 31 videos de Bunny con los cursos existentes. Los materiales se conservarán. ¿Continuar?')) return;
+    if (!confirm('Se vincularán los videos de Bunny con los cursos existentes según el catálogo. Los materiales se conservarán. ¿Continuar?')) return;
 
-    const btn = document.getElementById('sync-bionova-bunny-btn');
+    const btn = document.getElementById('sync-dulcelab-bunny-btn');
     if (btn) { btn.disabled = true; btn.textContent = 'Sincronizando…'; }
     try {
       const usados = new Set();
@@ -2248,7 +2248,7 @@ const Pages={
       console.error('[Bunny sync]', error);
       Toast.error('No se pudo sincronizar', error.message || 'Intenta nuevamente');
     } finally {
-      if (btn) { btn.disabled = false; btn.textContent = '🐰 Sincronizar 31 videos Bunny'; }
+      if (btn) { btn.disabled = false; btn.textContent = '🐰 Sincronizar videos Bunny'; }
     }
   },
 
@@ -5636,6 +5636,12 @@ const AdminStore = {
     // Actualizar badge de notif en el sidebar siempre
     const badge = document.getElementById('badge-notif');
     if (badge) badge.textContent = String(this.notificaciones.length);
+    // Badges del sidebar conectados a datos reales de Firestore (ya no son números fijos)
+    const bC = document.getElementById('badge-cursos'); if (bC) bC.textContent = String(this.cursos.length);
+    const bV = document.getElementById('badge-vivo'); if (bV) bV.textContent = String(this.webinars.length);
+    const bP = document.getElementById('badge-pdfs'); if (bP) bP.textContent = String(this.pdfs.length);
+    const bCert = document.getElementById('badge-cert'); if (bCert) bCert.textContent = String(this.certificados.length);
+    const bM = document.getElementById('badge-miembros'); if (bM) bM.textContent = String(this.miembros.length);
 
     // Detecta cuál es la sección activa y re-renderiza
     const active = document.querySelector('.nav-item.is-active[data-section]');
