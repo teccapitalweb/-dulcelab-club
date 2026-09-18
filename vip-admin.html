@@ -1376,6 +1376,12 @@ async function cargarPreciosClub(){
     };
     SEED.config.precioMensual = window.__preciosClub.mes;
     SEED.config.precioAnual   = window.__preciosClub.ano;
+    // Datos de contacto reales (antes solo mostraba placeholders de SEED)
+    if (c.whatsapp) SEED.config.whatsapp = c.whatsapp;
+    if (c.instagram) SEED.config.instagram = c.instagram;
+    if (c.emailContacto) SEED.config.emailContacto = c.emailContacto;
+    SEED.config.facebook = c.facebook || '';
+    SEED.config.whatsappCanal = c.whatsappCanal || '';
   } catch(e){ console.warn('[DulceLab Food admin] No se pudo leer config/club:', e.message); }
 }
 window.addEventListener('adminready', cargarPreciosClub);
@@ -4957,8 +4963,10 @@ const Pages={
           <div class="dash-card">
             <div class="dash-card__header"><div class="dash-card__title"><svg class="ic"><use href="#i-whatsapp"/></svg>Contacto</div></div>
             <div class="form-grid">
-              <div class="form-field form-field--full"><label class="label">WhatsApp</label><input type="text" class="input" id="cfg-wa" value="${c.whatsapp}" placeholder="+52 ..."></div>
+              <div class="form-field form-field--full"><label class="label">WhatsApp (venta)</label><input type="text" class="input" id="cfg-wa" value="${c.whatsapp}" placeholder="+52 ..."></div>
+              <div class="form-field form-field--full"><label class="label">Canal de WhatsApp (comunidad/anuncios)</label><input type="url" class="input" id="cfg-canal" value="${c.whatsappCanal || ''}" placeholder="https://whatsapp.com/channel/..."></div>
               <div class="form-field form-field--full"><label class="label">Instagram</label><input type="text" class="input" id="cfg-ig" value="${c.instagram}"></div>
+              <div class="form-field form-field--full"><label class="label">Facebook</label><input type="url" class="input" id="cfg-fb" value="${c.facebook || ''}" placeholder="https://www.facebook.com/..."></div>
               <div class="form-field form-field--full"><label class="label">Email de contacto</label><input type="email" class="input" id="cfg-em" value="${c.emailContacto}"></div>
             </div>
             <div class="form-actions"><button class="btn btn--accent" data-save="contacto">Guardar contacto<svg class="ic"><use href="#i-check"/></svg></button></div>
@@ -5018,7 +5026,24 @@ const Pages={
           Toast.success('Precios guardados','Ya se reflejan en el sitio y en el cobro de Stripe');
         }catch(e){Toast.error('Error al guardar precios',e.message);}
       }
-      else if(type==='contacto'){c.whatsapp=document.getElementById('cfg-wa').value;c.instagram=document.getElementById('cfg-ig').value;c.emailContacto=document.getElementById('cfg-em').value;Toast.success('Contacto actualizado');}
+      else if(type==='contacto'){
+        // MODIFICADO: ahora sí escribe en Firestore config/club (antes solo actualizaba la variable local y no persistía nada)
+        const whatsapp = document.getElementById('cfg-wa').value.trim();
+        const whatsappCanal = document.getElementById('cfg-canal').value.trim();
+        const instagram = document.getElementById('cfg-ig').value.trim();
+        const facebook = document.getElementById('cfg-fb').value.trim();
+        const emailContacto = document.getElementById('cfg-em').value.trim();
+        try{
+          const fb=window._fb;
+          await fb.setDoc(fb.doc(fb.db,'config','club'),{
+            whatsapp, whatsappCanal, instagram, facebook, emailContacto,
+            actualizadoPor:(window.__currentAdmin&&window.__currentAdmin.email)||'admin',
+            actualizadoEn:fb.serverTimestamp()
+          },{merge:true});
+          c.whatsapp=whatsapp; c.whatsappCanal=whatsappCanal; c.instagram=instagram; c.facebook=facebook; c.emailContacto=emailContacto;
+          Toast.success('Contacto actualizado','Ya se reflejan en el sitio');
+        }catch(e){Toast.error('Error al guardar contacto',e.message);}
+      }
     }));
     document.getElementById('add-admin').addEventListener('click',()=>{
       const e=document.getElementById('cfg-new-admin').value.trim();
