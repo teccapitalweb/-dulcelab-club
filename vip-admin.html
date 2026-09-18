@@ -1293,55 +1293,15 @@ const Modal={
    DATOS SEED (después → Firestore)
    ========================================================= */
 const SEED={
-  cursos:[
-    {id:'c1',titulo:'Microbiología clínica · diagnóstico bacteriano',area:'Microbiología',nivel:'Intermedio',instructor:'Dra. María López',horas:12,modulos:8,activo:true,inscritos:184},
-    {id:'c2',titulo:'Hematología: interpretación de la biometría hemática',area:'Hematología',nivel:'Avanzado',instructor:'Dr. Mauricio León',horas:10,modulos:6,activo:true,inscritos:96},
-    {id:'c3',titulo:'Química sanguínea y perfil bioquímico',area:'Bioquímica',nivel:'Intermedio',instructor:'QFB Patricia Solís',horas:14,modulos:9,activo:true,inscritos:67},
-    {id:'c4',titulo:'Bioseguridad y buenas prácticas de laboratorio',area:'Laboratorio Clínico',nivel:'Básico',instructor:'QFB Daniela Ríos',horas:8,modulos:5,activo:true,inscritos:240},
-    {id:'c5',titulo:'Uroanálisis y estudio del sedimento urinario',area:'Laboratorio Clínico',nivel:'Intermedio',instructor:'QFB Patricia Solís',horas:16,modulos:10,activo:true,inscritos:312},
-    {id:'c6',titulo:'Inmunología y serología diagnóstica (ELISA)',area:'Inmunología',nivel:'Avanzado',instructor:'Dra. María López',horas:18,modulos:11,activo:true,inscritos:45},
-    {id:'c7',titulo:'Biología molecular: PCR y qPCR aplicada',area:'Biología Molecular',nivel:'Avanzado',instructor:'Dra. María López',horas:40,modulos:24,activo:true,inscritos:28},
-    {id:'c8',titulo:'Parasitología: identificación en muestras clínicas',area:'Parasitología',nivel:'Intermedio',instructor:'Biól. Carlos Vidal',horas:12,modulos:8,activo:true,inscritos:54},
-    {id:'c9',titulo:'Control de calidad en el laboratorio clínico',area:'Laboratorio Clínico',nivel:'Avanzado',instructor:'QFB Patricia Solís',horas:24,modulos:14,activo:false,inscritos:0},
-    {id:'c10',titulo:'Antibiograma e interpretación de resistencias',area:'Microbiología',nivel:'Intermedio',instructor:'Biól. Carlos Vidal',horas:10,modulos:7,activo:true,inscritos:39},
-    {id:'c11',titulo:'Toma de muestras y fase preanalítica',area:'Laboratorio Clínico',nivel:'Básico',instructor:'QFB Daniela Ríos',horas:14,modulos:10,activo:true,inscritos:71},
-    {id:'c12',titulo:'Biomedicina: marcadores y diagnóstico integrado',area:'Biomedicina',nivel:'Intermedio',instructor:'Dr. Mauricio León',horas:10,modulos:6,activo:true,inscritos:158}
-  ],
-  webinars:[
-    {id:'w1',titulo:'Interpretación de la biometría hemática en vivo',instructor:'Dr. Mauricio León',fecha:'2026-05-28T19:00:00',duracion:90,area:'Hematología',link:'https://meet.dulcelabfood.com/bh-mayo28',publicado:true,registrados:84},
-    {id:'w2',titulo:'Tinción de Gram paso a paso',instructor:'Dra. María López',fecha:'2026-06-03T19:00:00',duracion:75,area:'Microbiología',link:'https://meet.dulcelabfood.com/gram-junio3',publicado:true,registrados:52},
-    {id:'w3',titulo:'Pruebas de función hepática · cómo interpretarlas',instructor:'QFB Patricia Solís',fecha:'2026-06-10T19:00:00',duracion:60,area:'Bioquímica',link:'',publicado:false,registrados:0}
-  ],
-  pdfs:[
-    {id:'p1',titulo:'Guía de medios de cultivo en microbiología',cat:'Microbiología',paginas:14,size:'2.4 MB',publicado:true,descargas:184},
-    {id:'p2',titulo:'Valores de referencia · química sanguínea',cat:'Bioquímica',paginas:22,size:'1.8 MB',publicado:true,descargas:412},
-    {id:'p3',titulo:'Protocolo de bioseguridad nivel BSL-2',cat:'Laboratorio Clínico',paginas:32,size:'4.1 MB',publicado:true,descargas:67},
-    {id:'p4',titulo:'Checklist de control de calidad interno',cat:'Laboratorio Clínico',paginas:8,size:'820 KB',publicado:true,descargas:128},
-    {id:'p5',titulo:'Formato de reporte de laboratorio clínico',cat:'Laboratorio Clínico',paginas:6,size:'480 KB',publicado:true,descargas:96},
-    {id:'p6',titulo:'Manual de toma de muestras sanguíneas',cat:'Laboratorio Clínico',paginas:18,size:'3.6 MB',publicado:true,descargas:54},
-    {id:'p7',titulo:'Antibiograma · método de Kirby-Bauer',cat:'Microbiología',paginas:4,size:'320 KB',publicado:true,descargas:210},
-    {id:'p8',titulo:'Procedimiento de extracción de ADN',cat:'Biología Molecular',paginas:12,size:'1.5 MB',publicado:false,descargas:0},
-    {id:'p9',titulo:'Plantilla de bitácora de equipos',cat:'Laboratorio Clínico',paginas:6,size:'540 KB',publicado:true,descargas:42}
-  ],
-  certificados:[
-    {id:'cert1',estudiante:'Carlos Méndez',email:'carlos.mendez@email.com',curso:'Microbiología clínica · diagnóstico bacteriano',folio:'DulceLab Food-2026-48201',emitido:'2026-04-18',horas:8,calificacion:96,enviado:true},
-    {id:'cert2',estudiante:'María Hernández',email:'maria.hernandez@email.com',curso:'Hematología: interpretación de la biometría hemática',folio:'DulceLab Food-2026-37154',emitido:'2026-03-22',horas:16,calificacion:92,enviado:true}
-  ],
-  miembros:[
-    {id:'m1',nombre:'Carlos Méndez Aguilar',email:'carlos.mendez@email.com',plan:'Anual',inicio:'2026-03-15',renovacion:'2027-03-15',activo:true,cursos:7},
-    {id:'m2',nombre:'María Hernández López',email:'maria.hernandez@email.com',plan:'Anual',inicio:'2026-02-20',renovacion:'2027-02-20',activo:true,cursos:5},
-    {id:'m3',nombre:'Roberto Aguilar Pérez',email:'r.aguilar@email.com',plan:'Mensual',inicio:'2026-05-10',renovacion:'2026-06-10',activo:true,cursos:2},
-    {id:'m4',nombre:'Patricia Solís García',email:'p.solis@email.com',plan:'Anual',inicio:'2026-01-08',renovacion:'2027-01-08',activo:true,cursos:9},
-    {id:'m5',nombre:'Jorge Rivera Castro',email:'j.rivera@email.com',plan:'Mensual',inicio:'2026-04-01',renovacion:'2026-05-01',activo:false,cursos:1},
-    {id:'m6',nombre:'Ana López Méndez',email:'a.lopez@email.com',plan:'Anual',inicio:'2026-03-30',renovacion:'2027-03-30',activo:true,cursos:4},
-    {id:'m7',nombre:'Fernando Castro Ortiz',email:'f.castro@email.com',plan:'Mensual',inicio:'2026-05-18',renovacion:'2026-06-18',activo:true,cursos:1}
-  ],
-  noticias:[
-    {id:'n1',titulo:'Nuevas guías de diagnóstico microbiológico para laboratorios clínicos',cat:'Microbiología',fuente:'Salud Pública MX',fecha:'Hoy',color:'#C94B68'},
-    {id:'n2',titulo:'Avances en biología molecular aplicada al diagnóstico temprano',cat:'Biología Molecular',fuente:'Gaceta Médica',fecha:'Hoy',color:'#3B82F6'},
-    {id:'n3',titulo:'Hematología: actualizan valores de referencia de la biometría hemática',cat:'Hematología',fuente:'Medscape',fecha:'Ayer',color:'#D5A13D'},
-    {id:'n4',titulo:'Control de calidad en laboratorios: tendencias 2026',cat:'Laboratorio Clínico',fuente:'Lab Médica',fecha:'Ayer',color:'#A855F7'}
-  ],
+  // MODIFICADO: se limpiaron los datos de ejemplo de laboratorio/BioNova que traía el clon
+  // (cursos, webinars, PDFs, certificados, miembros y noticias ficticias). Los datos reales
+  // ya vienen de Firestore vía AdminStore; estos arrays quedan vacíos como respaldo inofensivo.
+  cursos:[],
+  webinars:[],
+  pdfs:[],
+  certificados:[],
+  miembros:[],
+  noticias:[],
   config:{
     precioMensual:199,
     precioAnual:1999,
@@ -1569,7 +1529,7 @@ const Pages={
                   return `<div style="padding:24px;text-align:center;color:var(--text-3);font-size:13px;">${ready ? 'Sin noticias del cron' : 'Cargando…'}</div>`;
                 }
                 return arr.map(n => {
-                  const colorMap = {'Microbiología':'#C94B68','Biología Molecular':'#3B82F6','Hematología':'#D5A13D','Laboratorio Clínico':'#A855F7'};
+                  const colorMap = {'Repostería':'#C94B68','Cocina':'#3B82F6','Costos':'#D5A13D','Inocuidad':'#A855F7'};
                   const c = colorMap[n.categoria] || colorMap[n.cat] || '#C94B68';
                   const titulo = n.titulo || 'Sin título';
                   const f = n.fecha?.toDate ? n.fecha.toDate() : (n.fecha ? new Date(n.fecha) : null);
@@ -1988,23 +1948,17 @@ const Pages={
   // (CREAR/EDITAR/ELIMINAR vienen en 3B y 3C)
   // ════════════════════════════════════════════════════════════════════
 
+  // MODIFICADO: portadas de cocina (antes elegía siempre una foto de laboratorio como
+  // respaldo final). Fotos verificadas, licencia libre de Unsplash.
   _coverSVG(area, titulo){
     var a=(area||'').toLowerCase(), t=(titulo||'').toLowerCase();
     var IMG={
-      micro:'https://images.unsplash.com/photo-1596051827487-7b3d6f6df842?w=900&q=80&auto=format&fit=crop',
-      mol:'https://images.unsplash.com/photo-1681911046064-e663d5192921?w=900&q=80&auto=format&fit=crop',
-      lab:'https://images.unsplash.com/photo-1748261348213-62f4c399bb72?w=900&q=80&auto=format&fit=crop',
-      scope:'https://images.unsplash.com/photo-1526930700683-86db0d6bab09?w=900&q=80&auto=format&fit=crop'
+      horno:'https://images.unsplash.com/photo-1732565649629-eb4932a1ec09?w=900&q=80&auto=format&fit=crop',
+      cocina:'https://images.unsplash.com/photo-1762329924239-e204f101fca4?w=900&q=80&auto=format&fit=crop'
     };
     function pick(){
-      if(a.indexOf('microbi')>=0||a.indexOf('parasit')>=0)return'micro';
-      if(a.indexOf('molecular')>=0||a.indexOf('gen\u00e9t')>=0||a.indexOf('genet')>=0)return'mol';
-      if(a.indexOf('investig')>=0)return'scope';
-      if(a.indexOf('bioqu')>=0||a.indexOf('qu\u00edmic')>=0||a.indexOf('quimic')>=0||a.indexOf('laboratorio')>=0||a.indexOf('hemato')>=0||a.indexOf('inmuno')>=0||a.indexOf('biomedic')>=0)return'lab';
-      if(/microbi|bacteri|gram|cultivo|antibiog|ferment|levadur|petri|agar/.test(t))return'micro';
-      if(/molecular|adn|dna|pcr|crispr|gen\u00e9t|genet|secuenc/.test(t))return'mol';
-      if(/cristal|material|difrac|microsc/.test(t))return'scope';
-      return'lab';
+      if(a.indexOf('reposter')>=0||a.indexOf('panader')>=0||/pan|pastel|masa|horne|galleta/.test(t))return'horno';
+      return'cocina';
     }
     return IMG[pick()];
   },
@@ -2408,10 +2362,10 @@ const Pages={
     const activo = c.activo !== false && c.disponible !== false;
     const area = c.area || 'Sin área';
     const areaColors = {
-      'Microbiología':'#EF4444', 'Laboratorio Clínico':'#D5A13D', 'Biomedicina':'#3B82F6',
-      'Biología Molecular':'#A855F7', 'Hematología':'#F59E0B', 'Bioquímica':'#D5A13D',
-      'Inmunología':'#14B8A6', 'Parasitología':'#F97316', 'Genética':'#8B5CF6',
-      'Investigación':'#06B6D4', 'Otro':'#EC4899'
+      'Repostería':'#C94B68', 'Panadería':'#D5A13D', 'Cocina mexicana':'#EF4444',
+      'Cocina internacional':'#F97316', 'Alta cocina':'#8B5CF6', 'Control de costos':'#3B82F6',
+      'Catering y eventos':'#A855F7', 'Inocuidad y NOM-251':'#22C55E', 'Barismo y bebidas':'#14B8A6',
+      'Otro':'#EC4899'
     };
     const areaColor = areaColors[area] || '#C94B68';
     const tituloEsc = (c.titulo || 'Sin título').replace(/"/g,'&quot;');
@@ -2463,10 +2417,10 @@ const Pages={
     const activo = c.activo !== false && c.disponible !== false;
     const area = c.area || 'Sin área';
     const areaColors = {
-      'Microbiología':'#EF4444', 'Laboratorio Clínico':'#D5A13D', 'Biomedicina':'#3B82F6',
-      'Biología Molecular':'#A855F7', 'Hematología':'#F59E0B', 'Bioquímica':'#D5A13D',
-      'Inmunología':'#14B8A6', 'Parasitología':'#F97316', 'Genética':'#8B5CF6',
-      'Investigación':'#06B6D4', 'Otro':'#EC4899'
+      'Repostería':'#C94B68', 'Panadería':'#D5A13D', 'Cocina mexicana':'#EF4444',
+      'Cocina internacional':'#F97316', 'Alta cocina':'#8B5CF6', 'Control de costos':'#3B82F6',
+      'Catering y eventos':'#A855F7', 'Inocuidad y NOM-251':'#22C55E', 'Barismo y bebidas':'#14B8A6',
+      'Otro':'#EC4899'
     };
     const areaColor = areaColors[area] || '#C94B68';
     const tituloEsc = (c.titulo || 'Sin título').replace(/"/g,'&quot;');
@@ -3615,10 +3569,10 @@ const Pages={
     }
 
     const areaColors = {
-      'Microbiología':'#EF4444','Laboratorio Clínico':'#D5A13D','Biomedicina':'#3B82F6',
-      'Biología Molecular':'#A855F7','Hematología':'#F59E0B','Bioquímica':'#D5A13D',
-      'Inmunología':'#14B8A6','Parasitología':'#F97316','Genética':'#8B5CF6',
-      'Investigación':'#06B6D4','Otro':'#EC4899'
+      'Repostería':'#C94B68', 'Panadería':'#D5A13D', 'Cocina mexicana':'#EF4444',
+      'Cocina internacional':'#F97316', 'Alta cocina':'#8B5CF6', 'Control de costos':'#3B82F6',
+      'Catering y eventos':'#A855F7', 'Inocuidad y NOM-251':'#22C55E', 'Barismo y bebidas':'#14B8A6',
+      'Otro':'#EC4899'
     };
 
     wrap.innerHTML = `<div class="curso-list">${mats.map(m => {
@@ -3866,15 +3820,16 @@ const Pages={
         <div class="sec-hero">
           <span class="sec-hero__eyebrow">Emisión</span>
           <h1 class="sec-hero__title">Certificados</h1>
-          <p class="sec-hero__sub">Emite certificados con folio único DulceLab Food-AÑO-XXXXX. El sistema genera el PDF, lo guarda y envía al estudiante por email.</p>
+          <p class="sec-hero__sub">Aquí aparecerán los certificados emitidos. <strong style="color:var(--warning);">La emisión automática (PDF + envío por correo) todavía no está activa.</strong></p>
           <div class="sec-hero__actions">
-            <button class="btn btn--accent" id="new-cert"><svg class="ic"><use href="#i-plus"/></svg>Emitir certificado</button>
+            <!-- MODIFICADO: botón desactivado hasta que exista el endpoint real en el webhook (PDF + correo) -->
+            <button class="btn btn--accent" id="new-cert" disabled title="Próximamente" style="opacity:.5;cursor:not-allowed;"><svg class="ic"><use href="#i-clock"/></svg>Emitir certificado · Próximamente</button>
           </div>
         </div>
         <div class="adm-list" id="cert-list"></div>
       </div>
     `;
-    document.getElementById('new-cert').addEventListener('click',()=>certModal());
+    // MODIFICADO: certModal() solo simulaba la emisión (no guardaba, no generaba PDF, no enviaba correo, y mostraba cursos de ejemplo de laboratorio). Se reconecta cuando exista /admin/emitir-certificado en el webhook.
     renderCerts();
     function renderCerts(){
       const list=document.getElementById('cert-list');
@@ -4909,7 +4864,8 @@ const Pages={
               <div class="cron-card__title">NewsData → Firestore</div>
               <div class="cron-card__sub">Aún no hay registro de ejecuciones reales del cron para DulceLab Food. Verifica el cron de Railway en el repo del webhook.</div>
             </div>
-            <button class="btn btn--ghost" id="cron-run"><svg class="ic"><use href="#i-refresh"/></svg>Ejecutar ahora</button>
+            <!-- MODIFICADO: desactivado hasta que exista el cron real de noticias en Railway -->
+            <button class="btn btn--ghost" id="cron-run" disabled title="Próximamente" style="opacity:.5;cursor:not-allowed;"><svg class="ic"><use href="#i-clock"/></svg>Próximamente</button>
           </div>
         </section>
 
@@ -4934,7 +4890,7 @@ const Pages={
         </div>
       </div>
     `;
-    document.getElementById('cron-run').addEventListener('click',()=>Toast.info('Este botón aún no ejecuta el cron real','Falta conectar el endpoint del webhook de DulceLab que corre el cron de noticias'));
+    // MODIFICADO: el botón "cron-run" quedó deshabilitado (Próximamente); ya no lleva listener hasta que exista el endpoint real del cron en Railway.
     p.querySelectorAll('[data-del-news]').forEach(b=>b.addEventListener('click',async ()=>{
       if(confirm('¿Eliminar esta noticia del panel?')){
         try{ const fb=window._fb; await fb.deleteDoc(fb.doc(fb.db,'noticias',b.dataset.delNews)); Toast.success('Noticia eliminada'); }
@@ -4997,7 +4953,7 @@ const Pages={
               <div class="mini-row" style="--c1:#E5C171;"><div class="mini-row__dot"><svg class="ic"><use href="#i-shield-check"/></svg></div><div class="mini-row__body"><div class="mini-row__title">Firebase Auth</div><div class="mini-row__meta">dulcelab-club · Funcionando</div></div><span class="tag tag--success">OK</span></div>
               <div class="mini-row" style="--c1:#E5C171;"><div class="mini-row__dot"><svg class="ic"><use href="#i-shield-check"/></svg></div><div class="mini-row__body"><div class="mini-row__title">Firestore</div><div class="mini-row__meta">us-central1 · Reglas v1</div></div><span class="tag tag--success">OK</span></div>
               <div class="mini-row" style="--c1:#FBBF24;"><div class="mini-row__dot"><svg class="ic"><use href="#i-bolt"/></svg></div><div class="mini-row__body"><div class="mini-row__title">Stripe LIVE</div><div class="mini-row__meta">Webhook pendiente de conectar</div></div><span class="tag tag--warning">Pendiente</span></div>
-              <div class="mini-row" style="--c1:#E5C171;"><div class="mini-row__dot"><svg class="ic"><use href="#i-refresh"/></svg></div><div class="mini-row__body"><div class="mini-row__title">Railway Cron (noticias)</div><div class="mini-row__meta">Última: ${c.cronUltima}</div></div><span class="tag tag--success">OK</span></div>
+              <div class="mini-row" style="--c1:#FBBF24;"><div class="mini-row__dot"><svg class="ic"><use href="#i-refresh"/></svg></div><div class="mini-row__body"><div class="mini-row__title">Railway Cron (noticias)</div><div class="mini-row__meta">Sin configurar</div></div><span class="tag tag--warning">Pendiente</span></div>
               <div class="mini-row" style="--c1:#FBBF24;"><div class="mini-row__dot"><svg class="ic"><use href="#i-mail"/></svg></div><div class="mini-row__body"><div class="mini-row__title">EmailJS · Certificados</div><div class="mini-row__meta">Sin configurar</div></div><span class="tag tag--warning">Pendiente</span></div>
             </div>
           </div>
