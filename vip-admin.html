@@ -2592,7 +2592,7 @@ const Pages={
     const areasExistentes = store?.ready
       ? Array.from(new Set(store.cursos.map(c => c.area).filter(Boolean)))
       : [];
-    const areasEstandar = ['Microbiología','Laboratorio Clínico','Biomedicina','Biología Molecular','Hematología','Bioquímica','Inmunología','Parasitología','Genética','Investigación','Otro'];
+    const areasEstandar = ['Repostería','Panadería','Cocina mexicana','Cocina internacional','Alta cocina','Control de costos','Catering y eventos','Inocuidad y NOM-251','Barismo y bebidas','Otro'];
     const areas = Array.from(new Set([...areasEstandar, ...areasExistentes])).sort();
 
     const c = esEdicion ? curso : {};
