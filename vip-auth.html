@@ -149,9 +149,9 @@ body.modo-dia .logo-day{display:block}
 .hero-marquee{margin:22px 0 4px;max-width:100%;overflow:hidden;
   -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
   mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);}
-.hero-marquee .track{display:flex;gap:12px;width:max-content;animation:bionovaSlide 60s linear infinite}
+.hero-marquee .track{display:flex;gap:12px;width:max-content;animation:dulcelabSlide 60s linear infinite}
 .hero-marquee:hover .track{animation-play-state:paused}
-@keyframes bionovaSlide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes dulcelabSlide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 .hero-marquee img{width:104px;height:104px;object-fit:cover;border-radius:12px;flex:none;
   border:1px solid var(--line);box-shadow:0 10px 26px rgba(0,0,0,.45)}
 .hero-hook{margin:18px 0 10px;font-size:.95rem;font-weight:700;color:var(--text)}
@@ -342,13 +342,13 @@ body.modo-dia .logo-day{display:block}
 <script>
 const Theme = {
   init(){
-    const s = localStorage.getItem('bionova-auth:theme') || 'night';
+    const s = localStorage.getItem('dulcelab-auth:theme') || 'night';
     if (s === 'day') document.body.classList.add('modo-dia');
     this.updateIcon();
   },
   toggle(){
     document.body.classList.toggle('modo-dia');
-    localStorage.setItem('bionova-auth:theme', document.body.classList.contains('modo-dia') ? 'day' : 'night');
+    localStorage.setItem('dulcelab-auth:theme', document.body.classList.contains('modo-dia') ? 'day' : 'night');
     this.updateIcon();
   },
   updateIcon(){
@@ -406,7 +406,7 @@ window.setLoading = function(btn, isLoading, originalLabel){
 
 (function(){
   try{
-    const last = JSON.parse(localStorage.getItem('bionova_last_user') || 'null');
+    const last = JSON.parse(localStorage.getItem('dulcelab_last_user') || 'null');
     if (last && last.email){
       const em = document.getElementById('li-email');
       if (em && !em.value) em.value = last.email;
@@ -530,7 +530,7 @@ async function ensureMiembroDoc(user, displayName, origen){
 onAuthStateChanged(auth, async (user) => {
   if (user){
     await ensureMiembroDoc(user, user.displayName, 'login-web');
-    try{ localStorage.setItem('bionova_last_user', JSON.stringify({ email:user.email||'', nombre:user.displayName||'' })); }catch(e){}
+    try{ localStorage.setItem('dulcelab_last_user', JSON.stringify({ email:user.email||'', nombre:user.displayName||'' })); }catch(e){}
     const isAdmin = ADMINS.includes((user.email || '').toLowerCase());
     window.location.href = isAdmin ? 'vip-admin.html' : 'vip-panel.html';
   }
