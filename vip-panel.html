@@ -20,7 +20,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/onboarding-tour.css?v=1">
+<!-- MODIFICADO: onboarding-tour.css aún no existe (daba 404). Comentado hasta que se cree el tour. -->
+<!-- <link rel="stylesheet" href="assets/onboarding-tour.css?v=1"> -->
 
 <style>
 /* DulceLab Food VIP · Layout estilo Zoorigen/Sinergia · 3 columnas */
@@ -6679,7 +6680,7 @@ const Sections = (function(){
         return;
       }
       // ⚡ Solo VIP: abrir el enlace REAL siempre (sin importar si ya empezó)
-      const url = prox.link || prox.zoom || window.DulceLab Food_CONTACT?.zoom;
+      const url = prox.link || prox.zoom || window.DULCELAB_CONTACT?.zoom;
       if (!url) {
         Toast.info('Sin enlace', 'El instructor aún no ha configurado el link de transmisión');
         return;
@@ -8720,16 +8721,16 @@ const Sections = (function(){
 })();
 
 // ═══════════════════════════════════════════════════════════════════
-// DulceLab Food_CONTACT · constantes globales de contacto y mensajes
+// DULCELAB_CONTACT · constantes globales de contacto y mensajes
 // ═══════════════════════════════════════════════════════════════════
-const DulceLab Food_CONTACT = {
+const DULCELAB_CONTACT = {
   // Número único de contacto (vendedora · soporte · descuento · director)
   whatsapp: '522384092448',  // soporte · descuento
   director: '522361112213', // dirección · temas estratégicos
   // Canal de difusión oficial
   canal: 'https://whatsapp.com/channel/0029Vb78FmPF6sn5xpEqpr2R',
   // Zoom de la próxima clase (muestra · sustituir por el real al confirmar webinar)
-  zoom: 'https://zoom.us/j/85234567890?pwd=DulceLab Food2026OEE',
+  zoom: 'https://zoom.us/j/85234567890?pwd=DULCELAB2026OEE',
   // Sitio público
   sitio: 'https://www.dulcelabfood.com',
 
@@ -8751,7 +8752,7 @@ const DulceLab Food_CONTACT = {
     return `https://wa.me/?text=${encodeURIComponent(txt)}`;
   }
 };
-window.DulceLab Food_CONTACT = DulceLab Food_CONTACT;
+window.DULCELAB_CONTACT = DULCELAB_CONTACT;
 
 // ═══════════════════════════════════════════════════════════════════
 // Helpers Modal bonitos (logout, password reset, editar perfil)
@@ -9299,7 +9300,7 @@ function getReferralCode(){
 
 function openReferralModal(){
   const code=getReferralCode();
-  const refLink=DulceLab Food_CONTACT.sitio+'/?ref='+code;
+  const refLink=DULCELAB_CONTACT.sitio+'/?ref='+code;
   const shareTxt=`Conoce DulceLab Food · cursos de biomedicina, microbiología y medicina con certificación oficial.\n\nUsa mi código ${code} y obtén un descuento especial.\n\nMás info: ${refLink}`;
   Modal.open({
     id:'referral',
@@ -9391,10 +9392,10 @@ function injectSupportFAB(){
           return;
         }
         const map={
-          discount:{url:DulceLab Food_CONTACT.waLink(DulceLab Food_CONTACT.msgDescuento20()),msg:'Abriendo WhatsApp · Descuento 20%'},
-          support:{url:DulceLab Food_CONTACT.waLink(DulceLab Food_CONTACT.msgSoporte()),msg:'Abriendo WhatsApp · Soporte'},
-          director:{url:DulceLab Food_CONTACT.waLink(DulceLab Food_CONTACT.msgDirector(),DulceLab Food_CONTACT.director),msg:'Abriendo WhatsApp · Dirección'},
-          canal:{url:DulceLab Food_CONTACT.canal,msg:'Abriendo canal DulceLab Food'}
+          discount:{url:DULCELAB_CONTACT.waLink(DULCELAB_CONTACT.msgDescuento20()),msg:'Abriendo WhatsApp · Descuento 20%'},
+          support:{url:DULCELAB_CONTACT.waLink(DULCELAB_CONTACT.msgSoporte()),msg:'Abriendo WhatsApp · Soporte'},
+          director:{url:DULCELAB_CONTACT.waLink(DULCELAB_CONTACT.msgDirector(),DULCELAB_CONTACT.director),msg:'Abriendo WhatsApp · Dirección'},
+          canal:{url:DULCELAB_CONTACT.canal,msg:'Abriendo canal DulceLab Food'}
         };
         window.open(map[action].url,'_blank');
         Toast.success(map[action].msg,'WhatsApp');
@@ -9465,7 +9466,7 @@ function initNav(){
   // ─── Botones del DOM estático (topbar, sidebar, widgets siempre presentes) ───
   document.getElementById('btn-logout')?.addEventListener('click',openLogoutModal);
   document.getElementById('btn-wa')?.addEventListener('click',()=>{
-    window.open(DulceLab Food_CONTACT.canal,'_blank');
+    window.open(DULCELAB_CONTACT.canal,'_blank');
     Toast.success('Abriendo canal DulceLab Food','Comunidad oficial');
   });
   if(typeof toolEsVIP==='function'&&!toolEsVIP()){ document.getElementById('widget-disc')?.style.setProperty('display','none'); }
@@ -9473,7 +9474,7 @@ function initNav(){
   document.getElementById('btn-disc-wa')?.addEventListener('click',(e)=>{
     e.stopPropagation();
     if(typeof toolEsVIP==='function'&&!toolEsVIP()){ window.__showPaywallModal && window.__showPaywallModal({title:'Descuento exclusivo VIP',sub:'El 20% en certificaciones es un beneficio para miembros. Hazte VIP para solicitarlo.'}); return; }
-    window.open(DulceLab Food_CONTACT.waLink(DulceLab Food_CONTACT.msgDescuento20()),'_blank');
+    window.open(DULCELAB_CONTACT.waLink(DULCELAB_CONTACT.msgDescuento20()),'_blank');
     Toast.success('Abriendo WhatsApp','Solicitando tu 20% de descuento');
   });
   document.getElementById('btn-notif')?.addEventListener('click',(e)=>{e.stopPropagation();toggleNotifDropdown();});
@@ -9568,13 +9569,13 @@ function initNav(){
 
     // Sección Canal WhatsApp · abrir grupo
     if(t.closest('#btn-wa-canal-open')){
-      window.open(DulceLab Food_CONTACT.canal,'_blank');
+      window.open(DULCELAB_CONTACT.canal,'_blank');
       Toast.success('Abriendo canal','Comunidad DulceLab Food');
       return;
     }
     // Sección Canal WhatsApp · compartir
     if(t.closest('#btn-wa-canal-share')){
-      window.open(DulceLab Food_CONTACT.shareInvitacion(),'_blank');
+      window.open(DULCELAB_CONTACT.shareInvitacion(),'_blank');
       Toast.success('Compartiendo','Selecciona contactos');
       return;
     }
@@ -10417,8 +10418,13 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   if (overlay) overlay.addEventListener('click', function(){ ocultar(false); });
 })();
 </script>
-<script src="assets/onboarding-tour.js?v=1"></script>
+<!-- MODIFICADO: onboarding-tour.js aún no existe (daba 404). Comentado hasta que se cree el tour. -->
+<!-- <script src="assets/onboarding-tour.js?v=1"></script> -->
 <script>
+// MODIFICADO: el tour vive en assets/onboarding-tour.js (aún no existe → daba 404 y tronaba
+// toda la página con "MembershipTour is not a constructor"). Lo protegemos: si el archivo
+// del tour no está cargado, simplemente no se inicia, en vez de romper el resto del panel.
+if (typeof window.MembershipTour === 'function') {
 window.DulceLabOnboarding = new window.MembershipTour({
   namespace: 'dulcelab',
   version: 'v1',
@@ -10479,6 +10485,7 @@ window.DulceLabOnboarding = new window.MembershipTour({
     }
   ]
 });
+} // fin del if (MembershipTour existe)
 </script>
 </body>
 </html>
