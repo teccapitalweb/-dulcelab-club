@@ -3134,14 +3134,14 @@ window.UserState = {
   window.__isDemoMode = true;  // bandera para que el módulo Firebase NO redirija
 
   // Contar visitas al demo
-  const visits = parseInt(localStorage.getItem('bionova_demo_visits') || '0', 10) + 1;
-  localStorage.setItem('bionova_demo_visits', String(visits));
+  const visits = parseInt(localStorage.getItem('dulcelab_demo_visits') || '0', 10) + 1;
+  localStorage.setItem('dulcelab_demo_visits', String(visits));
   window.UserState.demo.visitas = visits;
 
   // Cupón 20% off solo primera visita
   if (visits === 1) {
-    localStorage.setItem('bionova_demo_cupon', 'DULCELABVISIT20');
-    localStorage.setItem('bionova_demo_cupon_expires', String(Date.now() + 24*60*60*1000));
+    localStorage.setItem('dulcelab_demo_cupon', 'DULCELABVISIT20');
+    localStorage.setItem('dulcelab_demo_cupon_expires', String(Date.now() + 24*60*60*1000));
   }
 
   document.body.style.visibility = 'visible';
@@ -3275,7 +3275,7 @@ if (window.__isDemoMode) {
       const md = window.memberData || {};
       const emailPart = (window.UserState.email || '').split('@')[0];
       let ls = {};
-      try { ls = JSON.parse(localStorage.getItem('bionova_profile') || '{}'); } catch(e){}
+      try { ls = JSON.parse(localStorage.getItem('dulcelab_profile') || '{}'); } catch(e){}
       const nombre = (md.nombre && md.nombre.trim())
         || (user.displayName && user.displayName.trim())
         || (ls.nombre && ls.nombre.trim())
@@ -4660,9 +4660,9 @@ function navigateToSection(section, opts){
   if(section!=='directorio' && typeof window.__dirCleanup==='function'){ window.__dirCleanup(); }
   // Destruir el Embedded Checkout de Stripe al salir de Suscripción
   // (evita el error "multiple Embedded Checkout objects" al regresar)
-  if(section!=='suscripcion' && window.__bionovaCheckout){
-    try { window.__bionovaCheckout.destroy(); } catch(e) {}
-    window.__bionovaCheckout = null;
+  if(section!=='suscripcion' && window.__dulcelabCheckout){
+    try { window.__dulcelabCheckout.destroy(); } catch(e) {}
+    window.__dulcelabCheckout = null;
   }
   if(section==='inicio'){inicio.style.display='';dyn.style.display='none';if(typeof window.__cargarNoticiasHome==='function')window.__cargarNoticiasHome();if(typeof window.__actualizarWidgetsActividad==='function')window.__actualizarWidgetsActividad();return;}
   inicio.style.display='none';dyn.style.display='';
@@ -4808,9 +4808,9 @@ const Sections = (function(){
   }
 
   // Expuestos para las filas generadas con HTML dinámico y para pruebas de acceso.
-  window.__bionovaTieneAccesoVipCompleto = tieneAccesoVipCompleto;
-  window.__bionovaEsPrimeraClaseGratis = esPrimeraClaseGratis;
-  window.__bionovaEsMaterialGratis = esMaterialGratis;
+  window.__dulcelabTieneAccesoVipCompleto = tieneAccesoVipCompleto;
+  window.__dulcelabEsPrimeraClaseGratis = esPrimeraClaseGratis;
+  window.__dulcelabEsMaterialGratis = esMaterialGratis;
 
   // ═══════════════════════════════════════════════════════════════
   // 🎛️ Dropdown custom fancy · reemplaza select nativo (sin cuadro azul horrible)
@@ -4908,7 +4908,7 @@ const Sections = (function(){
   // ═══════════════════════════════════════════════════════════════
   function getProgresoKey() {
     const uid = window.UserState?.uid || 'demo';
-    return `bionova_progress_${uid}`;
+    return `dulcelab_progress_${uid}`;
   }
 
   function getProgreso() {
@@ -4966,7 +4966,7 @@ const Sections = (function(){
     return prog.clasesVistas.includes(anteriorNum);
   }
 
-  window.abrirClaseBionova = function(cursoId, indexClase) {
+  window.abrirClaseDulcelab = function(cursoId, indexClase) {
     const curso = cursos.find(c => c.id === cursoId);
     const sesion = curso?.sesiones?.[Number(indexClase)];
     if (!curso || !sesion) return;
@@ -4990,7 +4990,7 @@ const Sections = (function(){
     );
   };
 
-  window.abrirMaterialBionova = function(cursoId, indexMaterial) {
+  window.abrirMaterialDulcelab = function(cursoId, indexMaterial) {
     const curso = cursos.find(c => c.id === cursoId);
     const material = curso?.materiales?.[Number(indexMaterial)];
     if (!curso || !material) return;
@@ -5700,7 +5700,7 @@ const Sections = (function(){
               const desblok = claseDesbloqueada(cursoId, i, c.sesiones);
               const esMuestraGratis = esPrimeraClaseGratis(cursoId, i);
               const accesoCompleto = tieneAccesoVipCompleto();
-              const accion = `window.abrirClaseBionova('${cursoId}', ${i})`;
+              const accion = `window.abrirClaseDulcelab('${cursoId}', ${i})`;
 
               if (vista && desblok) {
                 return `
@@ -5790,7 +5790,7 @@ const Sections = (function(){
             ? 'Click para ver'
             : (muestraGratis ? 'MATERIAL GRATIS · Click para ver' : '🔒 Activa tu membresía para abrir');
           return `
-            <div class="mat-card" onclick="window.abrirMaterialBionova('${id}', ${materialIndex})" data-bypass-paywall="true" style="display:flex;align-items:center;gap:12px;padding:13px 15px;background:var(--surface-2);border:1px solid var(--border);border-radius:12px;cursor:pointer;color:inherit;transition:all .18s cubic-bezier(.2,.8,.25,1);position:relative;overflow:hidden;${accesoMaterial?'':'opacity:.72;'}" onmouseover="this.style.borderColor='${t.color}';this.style.transform='translateY(-1px)';this.style.boxShadow='0 8px 20px rgba(0,0,0,.25)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform='none';this.style.boxShadow='none'">
+            <div class="mat-card" onclick="window.abrirMaterialDulcelab('${id}', ${materialIndex})" data-bypass-paywall="true" style="display:flex;align-items:center;gap:12px;padding:13px 15px;background:var(--surface-2);border:1px solid var(--border);border-radius:12px;cursor:pointer;color:inherit;transition:all .18s cubic-bezier(.2,.8,.25,1);position:relative;overflow:hidden;${accesoMaterial?'':'opacity:.72;'}" onmouseover="this.style.borderColor='${t.color}';this.style.transform='translateY(-1px)';this.style.boxShadow='0 8px 20px rgba(0,0,0,.25)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform='none';this.style.boxShadow='none'">
               <div style="width:38px;height:38px;border-radius:9px;background:color-mix(in srgb,${t.color} 16%,transparent);color:${t.color};display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="width:18px;height:18px;display:block;">${t.ic}</span></div>
               <div style="flex:1;min-width:0;">
                 <div style="font-size:13.5px;font-weight:600;letter-spacing:-.2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${m.titulo || 'Material del curso'}</div>
@@ -5971,7 +5971,7 @@ const Sections = (function(){
     //    le bloquea el resultado, así que no se considera "uso real" de la herramienta.
     let proUsadas = 0;
     if (esVipUser) {
-      const proKeys = ['bionova:diluciones','bionova:ufc','bionova:conversor','bionova:dosis','bionova:tfg','bionova:molaridad','bionova:beer','bionova:reporte'];
+      const proKeys = ['dulcelab:diluciones','dulcelab:ufc','dulcelab:conversor','dulcelab:dosis','dulcelab:tfg','dulcelab:molaridad','dulcelab:beer','dulcelab:reporte'];
       proKeys.forEach(k => { try { if (localStorage.getItem(k)) proUsadas++; } catch (e) {} });
     }
     setTxt('act-pro-count', `${proUsadas}/5`);
@@ -8102,7 +8102,7 @@ const Sections = (function(){
 
   /* ─── Estado: SIN membresía (logueado pero no pagó) o INVITADO (demo) ─── */
   function renderSuscripcionActivar(container, S){
-    const intentPlan = localStorage.getItem('bionova_intent_plan') || 'anual';
+    const intentPlan = localStorage.getItem('dulcelab_intent_plan') || 'anual';
     const isInvitado = S.modo === 'invitado';
 
     container.innerHTML = `
@@ -8174,7 +8174,7 @@ const Sections = (function(){
 
     if (isInvitado) {
       document.getElementById('btn-crear-cuenta-sub')?.addEventListener('click', () => {
-        window.location.href = 'vip-auth.html?plan=' + (localStorage.getItem('bionova_intent_plan') || 'anual');
+        window.location.href = 'vip-auth.html?plan=' + (localStorage.getItem('dulcelab_intent_plan') || 'anual');
       });
       return;
     }
@@ -8196,9 +8196,9 @@ const Sections = (function(){
     // Destruir cualquier checkout previo que haya quedado vivo de un render anterior
     // (al salir y volver a la pestaña, esta función se re-ejecuta; la instancia
     //  vive en window para poder limpiarla y evitar "multiple Embedded Checkout objects")
-    if (window.__bionovaCheckout) {
-      try { window.__bionovaCheckout.destroy(); } catch(e) {}
-      window.__bionovaCheckout = null;
+    if (window.__dulcelabCheckout) {
+      try { window.__dulcelabCheckout.destroy(); } catch(e) {}
+      window.__dulcelabCheckout = null;
     }
 
     document.querySelectorAll('#plan-picker .plan-picker__card').forEach(btn => {
@@ -8206,7 +8206,7 @@ const Sections = (function(){
         const plan = btn.dataset.plan;
         if (plan === selectedPlan) return;
         selectedPlan = plan;
-        localStorage.setItem('bionova_intent_plan', plan);
+        localStorage.setItem('dulcelab_intent_plan', plan);
         document.querySelectorAll('#plan-picker .plan-picker__card').forEach(c =>
           c.classList.toggle('is-active', c.dataset.plan === plan));
         mountStripeCheckout();
@@ -8214,9 +8214,9 @@ const Sections = (function(){
     });
 
     async function mountStripeCheckout(){
-      if (window.__bionovaCheckout) {
-        try { window.__bionovaCheckout.destroy(); } catch(e) {}
-        window.__bionovaCheckout = null;
+      if (window.__dulcelabCheckout) {
+        try { window.__dulcelabCheckout.destroy(); } catch(e) {}
+        window.__dulcelabCheckout = null;
       }
       mountEl.innerHTML = `<div class="sub-loading"><div class="sub-loading__spin"></div><div>Cargando plan ${selectedPlan}…</div></div>`;
       try {
@@ -8237,20 +8237,20 @@ const Sections = (function(){
         if (!clientSecret) throw new Error('No recibimos clientSecret');
         if (!window.__stripe) {
           if (!window.Stripe) throw new Error('Stripe.js no cargó');
-          window.__stripe = window.Stripe('TODO_PK_LIVE_STRIPE_DULCELAB'); // TODO: llave publica (pk_live_...) de la cuenta de Stripe de DulceLab, NO reusar la de BioNova
+          window.__stripe = window.Stripe('TODO_PK_LIVE_STRIPE_DULCELAB'); // TODO: llave publica (pk_live_...) de la cuenta de Stripe de DulceLab, NO reusar la de DulceLab
         }
         // El elemento del DOM pudo haber cambiado al re-renderizar; re-obtenerlo
         const liveMount = document.getElementById('sub-checkout-mount');
         if (!liveMount) return; // el usuario ya salió de la sección
         liveMount.innerHTML = '';
-        window.__bionovaCheckout = await window.__stripe.initEmbeddedCheckout({ clientSecret });
+        window.__dulcelabCheckout = await window.__stripe.initEmbeddedCheckout({ clientSecret });
         // Verificar que seguimos en la sección antes de montar
         if (!document.getElementById('sub-checkout-mount')) {
-          try { window.__bionovaCheckout.destroy(); } catch(e) {}
-          window.__bionovaCheckout = null;
+          try { window.__dulcelabCheckout.destroy(); } catch(e) {}
+          window.__dulcelabCheckout = null;
           return;
         }
-        window.__bionovaCheckout.mount('#sub-checkout-mount');
+        window.__dulcelabCheckout.mount('#sub-checkout-mount');
       } catch (err) {
         console.error('Checkout error:', err);
         const liveMount = document.getElementById('sub-checkout-mount');
@@ -8801,7 +8801,7 @@ function openPasswordResetModal(){
 // ═══════════════════════════════════════════════════════════════════
 window.__maybeAskName = function(){
   try {
-    if (localStorage.getItem('bionova_name_confirmed') === '1') return;
+    if (localStorage.getItem('dulcelab_name_confirmed') === '1') return;
     if (document.getElementById('name-modal')) return;
     const S = window.UserState || {};
     const email = S.email || '';
@@ -8877,8 +8877,8 @@ window.__maybeAskName = function(){
       window.UserState.displayName = val;
       window.UserState.iniciales = (window.calcIniciales ? window.calcIniciales(val) : val.slice(0,2).toUpperCase());
       if (window.memberData) window.memberData.nombre = val;
-      try { const ls=JSON.parse(localStorage.getItem('bionova_profile')||'{}'); ls.nombre=val; localStorage.setItem('bionova_profile',JSON.stringify(ls)); } catch(e){}
-      localStorage.setItem('bionova_name_confirmed','1');
+      try { const ls=JSON.parse(localStorage.getItem('dulcelab_profile')||'{}'); ls.nombre=val; localStorage.setItem('dulcelab_profile',JSON.stringify(ls)); } catch(e){}
+      localStorage.setItem('dulcelab_name_confirmed','1');
       if (typeof window.__applyUserState==='function') window.__applyUserState();
       if (window.Toast) Toast.success('Nombre guardado', val);
       ov.remove();
@@ -8888,7 +8888,7 @@ window.__maybeAskName = function(){
     document.getElementById('nm-skip').addEventListener('click', ()=>{
       // No volver a molestar, pero NO marcamos como "confirmado" para que el
       // perfil siga sugiriendo completarlo. Marcamos solo "preguntado".
-      localStorage.setItem('bionova_name_confirmed','1');
+      localStorage.setItem('dulcelab_name_confirmed','1');
       ov.remove();
       if (window.Toast) Toast.info('Puedes cambiarlo luego', 'Mi perfil → Nombre completo');
     });
@@ -8924,8 +8924,8 @@ function openEditField(field){
     if(!newVal){Toast.info('Campo vacío','Escribe un valor antes de guardar');return;}
 
     // Guardar SIEMPRE en localStorage (todos los campos)
-    const all=JSON.parse(localStorage.getItem('bionova_profile')||'{}');
-    all[field]=newVal;localStorage.setItem('bionova_profile',JSON.stringify(all));
+    const all=JSON.parse(localStorage.getItem('dulcelab_profile')||'{}');
+    all[field]=newVal;localStorage.setItem('dulcelab_profile',JSON.stringify(all));
 
     if (field==='nombre') {
       const saveBtn=document.getElementById('save-edit-nombre');
@@ -8964,7 +8964,7 @@ function openEditField(field){
 }
 
 function loadProfileFromLS(){
-  const all=JSON.parse(localStorage.getItem('bionova_profile')||'{}');
+  const all=JSON.parse(localStorage.getItem('dulcelab_profile')||'{}');
   Object.entries(all).forEach(([field,val])=>{
     if(field==='nombre'||field==='email')return; // estos vienen de Auth/Firestore, no se pisan
     const wrap=document.querySelector(`[data-field="${field}"] .perfil-field__val`);
@@ -9057,7 +9057,7 @@ function setupNotificacionesListener(intento = 0) {
 function getNotifsLeidas() {
   const uid = window.UserState?.uid || 'guest';
   try {
-    return JSON.parse(localStorage.getItem('bionova_notif_read_' + uid) || '[]');
+    return JSON.parse(localStorage.getItem('dulcelab_notif_read_' + uid) || '[]');
   } catch(e) { return []; }
 }
 
@@ -9067,7 +9067,7 @@ function marcarNotifsLeidas(ids) {
   const ya = getNotifsLeidas();
   const todas = Array.from(new Set([...ya, ...ids]));
   try {
-    localStorage.setItem('bionova_notif_read_' + uid, JSON.stringify(todas));
+    localStorage.setItem('dulcelab_notif_read_' + uid, JSON.stringify(todas));
   } catch(e) {}
 }
 
@@ -9076,7 +9076,7 @@ function marcarNotifsLeidas(ids) {
 function getNotifsEliminadas() {
   const uid = window.UserState?.uid || 'guest';
   try {
-    return JSON.parse(localStorage.getItem('bionova_notif_deleted_' + uid) || '[]');
+    return JSON.parse(localStorage.getItem('dulcelab_notif_deleted_' + uid) || '[]');
   } catch(e) { return []; }
 }
 
@@ -9086,7 +9086,7 @@ function marcarNotifsEliminadas(ids) {
   const ya = getNotifsEliminadas();
   const todas = Array.from(new Set([...ya, ...ids]));
   try {
-    localStorage.setItem('bionova_notif_deleted_' + uid, JSON.stringify(todas));
+    localStorage.setItem('dulcelab_notif_deleted_' + uid, JSON.stringify(todas));
   } catch(e) {}
 }
 
@@ -9288,11 +9288,11 @@ window.crearNotificacion = async function(opts) {
 // Sistema de referidos · código + copiar + compartir
 // ═══════════════════════════════════════════════════════════════════
 function getReferralCode(){
-  let code=localStorage.getItem('bionova_referral');
+  let code=localStorage.getItem('dulcelab_referral');
   if(!code){
     const rand=Math.random().toString(36).slice(2,7).toUpperCase().replace(/[01OIL]/g,'X');
     code='DulceLab Food-'+rand;
-    localStorage.setItem('bionova_referral',code);
+    localStorage.setItem('dulcelab_referral',code);
   }
   return code;
 }
@@ -9736,7 +9736,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     if (bannerCTA) {
       bannerCTA.onclick = () => {
         if (S.modo === 'invitado') {
-          window.location.href = 'vip-auth.html?plan=' + (localStorage.getItem('bionova_intent_plan') || 'anual');
+          window.location.href = 'vip-auth.html?plan=' + (localStorage.getItem('dulcelab_intent_plan') || 'anual');
         } else {
           window.navigateToSection?.('suscripcion');
         }
@@ -9771,13 +9771,13 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   let demoInterval = null;
   function startDemoTimer(){
     if (demoInterval) return;
-    const startTs = parseInt(localStorage.getItem('bionova_demo_session_start') || '0', 10);
+    const startTs = parseInt(localStorage.getItem('dulcelab_demo_session_start') || '0', 10);
     const now = Date.now();
     let elapsed = 0;
     if (startTs && (now - startTs) < 600000) {
       elapsed = Math.floor((now - startTs) / 1000);
     } else {
-      localStorage.setItem('bionova_demo_session_start', String(now));
+      localStorage.setItem('dulcelab_demo_session_start', String(now));
     }
     let remaining = Math.max(0, 300 - elapsed);
     const timerEl = document.getElementById('fomo-banner-timer');
@@ -9802,7 +9802,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     document.getElementById('paywall-sub').innerHTML = '¿Te gustó lo que viste? Crea tu cuenta y accede a TODO el contenido de DulceLab Food VIP. Solo te toma 30 segundos.';
     document.getElementById('paywall-cta').textContent = 'Crear mi cuenta';
     document.getElementById('paywall-cta').onclick = () => {
-      window.location.href = 'vip-auth.html?plan=' + (localStorage.getItem('bionova_intent_plan') || 'anual');
+      window.location.href = 'vip-auth.html?plan=' + (localStorage.getItem('dulcelab_intent_plan') || 'anual');
     };
     document.getElementById('paywall-dismiss').textContent = 'Ya tengo cuenta · Iniciar sesión';
     document.getElementById('paywall-dismiss').onclick = () => {
@@ -9898,7 +9898,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     const mostrarPlanes = () => {
       closePaywallModal();
       if (S.modo === 'invitado') {
-        window.location.href = 'vip-auth.html?plan=' + (localStorage.getItem('bionova_intent_plan') || 'anual');
+        window.location.href = 'vip-auth.html?plan=' + (localStorage.getItem('dulcelab_intent_plan') || 'anual');
       } else {
         window.navigateToSection?.('suscripcion');
       }
@@ -10305,34 +10305,34 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 </script>
 <!-- ═══ POPUP PROFESIONAL: Instalar DulceLab Food como app ═══ -->
 <style>
-  #bionova-install-pop{position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;padding:20px;font-family:'Inter','Plus Jakarta Sans',system-ui,sans-serif}
-  #bionova-install-pop.show{display:flex;animation:iipFade .25s ease}
-  #bionova-install-pop .iip-overlay{position:absolute;inset:0;background:rgba(7,5,3,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
-  #bionova-install-pop .iip-card{position:relative;width:100%;max-width:380px;background:#4A2D21;border:1px solid #603F30;border-radius:24px;padding:28px 24px 22px;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.55);animation:iipPop .35s cubic-bezier(.16,1,.3,1)}
-  #bionova-install-pop .iip-glow{position:absolute;top:-40px;left:50%;transform:translateX(-50%);width:200px;height:120px;background:radial-gradient(ellipse,rgba(201,75,104,.35),transparent 70%);pointer-events:none}
-  #bionova-install-pop .iip-icon{width:84px;height:84px;border-radius:20px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#C94B68,#9E3550);box-shadow:0 10px 28px rgba(201,75,104,.4);position:relative}
-  #bionova-install-pop .iip-icon img{width:54px;height:54px;object-fit:contain}
-  #bionova-install-pop .iip-badge{position:absolute;top:-8px;right:-8px;background:#D5A13D;color:#442A22;font-size:10px;font-weight:800;letter-spacing:.5px;padding:3px 8px;border-radius:20px;text-transform:uppercase}
-  #bionova-install-pop h3{margin:0 0 8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:21px;font-weight:800;color:#FFF3E5;letter-spacing:-.3px}
-  #bionova-install-pop p{margin:0 0 18px;font-size:13.5px;line-height:1.55;color:#C9B8AE}
-  #bionova-install-pop .iip-feats{display:flex;flex-direction:column;gap:9px;text-align:left;margin:0 0 22px;padding:0}
-  #bionova-install-pop .iip-feat{display:flex;align-items:center;gap:10px;font-size:13px;color:#FFF3E5}
-  #bionova-install-pop .iip-feat svg{width:18px;height:18px;flex-shrink:0;color:#C94B68}
-  #bionova-install-pop .iip-btn{display:block;width:100%;border:none;border-radius:14px;padding:15px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;background:linear-gradient(135deg,#C94B68,#9E3550);color:#fff;box-shadow:0 8px 20px rgba(201,75,104,.35);transition:transform .15s,box-shadow .15s}
-  #bionova-install-pop .iip-btn:hover{transform:translateY(-1px);box-shadow:0 12px 26px rgba(201,75,104,.45)}
-  #bionova-install-pop .iip-later{display:block;width:100%;margin-top:10px;background:none;border:none;color:#8A7468;font-size:13px;font-family:inherit;cursor:pointer;padding:8px}
-  #bionova-install-pop .iip-later:hover{color:#C9B8AE}
-  #bionova-install-pop .iip-ios{display:none;margin:0 0 14px;padding:12px 14px;background:#55362A;border:1px solid #603F30;border-radius:12px;font-size:12.5px;line-height:1.6;color:#C9B8AE;text-align:left}
-  #bionova-install-pop .iip-ios b{color:#D5A13D}
+  #dulcelab-install-pop{position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;padding:20px;font-family:'Inter','Plus Jakarta Sans',system-ui,sans-serif}
+  #dulcelab-install-pop.show{display:flex;animation:iipFade .25s ease}
+  #dulcelab-install-pop .iip-overlay{position:absolute;inset:0;background:rgba(7,5,3,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+  #dulcelab-install-pop .iip-card{position:relative;width:100%;max-width:380px;background:#4A2D21;border:1px solid #603F30;border-radius:24px;padding:28px 24px 22px;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.55);animation:iipPop .35s cubic-bezier(.16,1,.3,1)}
+  #dulcelab-install-pop .iip-glow{position:absolute;top:-40px;left:50%;transform:translateX(-50%);width:200px;height:120px;background:radial-gradient(ellipse,rgba(201,75,104,.35),transparent 70%);pointer-events:none}
+  #dulcelab-install-pop .iip-icon{width:84px;height:84px;border-radius:20px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#C94B68,#9E3550);box-shadow:0 10px 28px rgba(201,75,104,.4);position:relative}
+  #dulcelab-install-pop .iip-icon img{width:54px;height:54px;object-fit:contain}
+  #dulcelab-install-pop .iip-badge{position:absolute;top:-8px;right:-8px;background:#D5A13D;color:#442A22;font-size:10px;font-weight:800;letter-spacing:.5px;padding:3px 8px;border-radius:20px;text-transform:uppercase}
+  #dulcelab-install-pop h3{margin:0 0 8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:21px;font-weight:800;color:#FFF3E5;letter-spacing:-.3px}
+  #dulcelab-install-pop p{margin:0 0 18px;font-size:13.5px;line-height:1.55;color:#C9B8AE}
+  #dulcelab-install-pop .iip-feats{display:flex;flex-direction:column;gap:9px;text-align:left;margin:0 0 22px;padding:0}
+  #dulcelab-install-pop .iip-feat{display:flex;align-items:center;gap:10px;font-size:13px;color:#FFF3E5}
+  #dulcelab-install-pop .iip-feat svg{width:18px;height:18px;flex-shrink:0;color:#C94B68}
+  #dulcelab-install-pop .iip-btn{display:block;width:100%;border:none;border-radius:14px;padding:15px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;background:linear-gradient(135deg,#C94B68,#9E3550);color:#fff;box-shadow:0 8px 20px rgba(201,75,104,.35);transition:transform .15s,box-shadow .15s}
+  #dulcelab-install-pop .iip-btn:hover{transform:translateY(-1px);box-shadow:0 12px 26px rgba(201,75,104,.45)}
+  #dulcelab-install-pop .iip-later{display:block;width:100%;margin-top:10px;background:none;border:none;color:#8A7468;font-size:13px;font-family:inherit;cursor:pointer;padding:8px}
+  #dulcelab-install-pop .iip-later:hover{color:#C9B8AE}
+  #dulcelab-install-pop .iip-ios{display:none;margin:0 0 14px;padding:12px 14px;background:#55362A;border:1px solid #603F30;border-radius:12px;font-size:12.5px;line-height:1.6;color:#C9B8AE;text-align:left}
+  #dulcelab-install-pop .iip-ios b{color:#D5A13D}
   @keyframes iipFade{from{opacity:0}to{opacity:1}}
   @keyframes iipPop{from{opacity:0;transform:translateY(20px) scale(.96)}to{opacity:1;transform:none}}
-  html[data-theme="day"] #bionova-install-pop .iip-card{background:#FFFFFF;border-color:#E5DCC9}
-  html[data-theme="day"] #bionova-install-pop h3{color:#3B2420}
-  html[data-theme="day"] #bionova-install-pop p{color:#6B6152}
-  html[data-theme="day"] #bionova-install-pop .iip-feat{color:#3B2420}
-  html[data-theme="day"] #bionova-install-pop .iip-ios{background:#F1E4D2;border-color:#E5DCC9}
+  html[data-theme="day"] #dulcelab-install-pop .iip-card{background:#FFFFFF;border-color:#E5DCC9}
+  html[data-theme="day"] #dulcelab-install-pop h3{color:#3B2420}
+  html[data-theme="day"] #dulcelab-install-pop p{color:#6B6152}
+  html[data-theme="day"] #dulcelab-install-pop .iip-feat{color:#3B2420}
+  html[data-theme="day"] #dulcelab-install-pop .iip-ios{background:#F1E4D2;border-color:#E5DCC9}
 </style>
-<div id="bionova-install-pop" role="dialog" aria-modal="true" aria-labelledby="iip-title">
+<div id="dulcelab-install-pop" role="dialog" aria-modal="true" aria-labelledby="iip-title">
   <div class="iip-overlay" id="iip-overlay"></div>
   <div class="iip-card">
     <div class="iip-glow"></div>
@@ -10356,9 +10356,9 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 </div>
 <script>
 (function(){
-  var STORAGE_KEY = 'bionova_install_dismissed';
+  var STORAGE_KEY = 'dulcelab_install_dismissed';
   var deferredPrompt = null;
-  var pop = document.getElementById('bionova-install-pop');
+  var pop = document.getElementById('dulcelab-install-pop');
   var installBtn = document.getElementById('iip-install-btn');
   var laterBtn = document.getElementById('iip-later-btn');
   var overlay = document.getElementById('iip-overlay');
@@ -10420,7 +10420,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 <script src="assets/onboarding-tour.js?v=1"></script>
 <script>
 window.DulceLabOnboarding = new window.MembershipTour({
-  namespace: 'bionova',
+  namespace: 'dulcelab',
   version: 'v1',
   brand: 'Guía DulceLab Food',
   autoDelay: 1600,
