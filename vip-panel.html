@@ -24,7 +24,7 @@
 <!-- <link rel="stylesheet" href="assets/onboarding-tour.css?v=1"> -->
 
 <style>
-/* DulceLab Food VIP · Layout estilo Zoorigen/Sinergia · 3 columnas */
+/* DulceLab Food VIP · Layout de 3 columnas */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
@@ -671,7 +671,7 @@ body::after{
 
 .toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:22px}
 
-/* CURSOS — cards estilo Sinergia */
+/* CURSOS — cards */
 .cursos-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px}
 .curso-card{
   background:var(--surface);
@@ -751,7 +751,7 @@ body::after{
 @keyframes shimmerSlide{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
 .curso-card__progress-pct{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--primary);font-weight:700;min-width:38px;text-align:right}
 
-/* CERTIFICADOS — cards estilo Sinergia */
+/* CERTIFICADOS — cards */
 .certs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px}
 /* Banners compactos de certificado (lista) */
 .certs-list{display:flex;flex-direction:column;gap:12px}
@@ -958,7 +958,7 @@ body::after{
 }
 .logro.is-unlocked .logro__xp{color:var(--cat-color,var(--primary))}
 
-/* WEBINARS — próximo hero + grid estilo Sinergia */
+/* WEBINARS — próximo hero + grid */
 .webinar-hero{
   background:linear-gradient(135deg,#4A2D21 0%,#442A22 100%);
   border:1px solid var(--border-2);
@@ -2344,7 +2344,7 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 }
 
 /* =========================================================
-   NOTICIAS DIARIAS · estilo ICADEM/Sinergia
+   NOTICIAS DIARIAS
    ========================================================= */
 .news-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
 .news-card{
@@ -2434,7 +2434,7 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 .news-card__more .ic{width:11px;height:11px}
 
 /* =========================================================
-   PDFs y MATERIAL estilo Sinergia · cards más vibrantes
+   PDFs y MATERIAL · cards más vibrantes
    ========================================================= */
 .pdfs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
 .pdf-card{
@@ -2592,7 +2592,7 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 }
 
 /* =========================================================
-   CERTIFICADOS · estilo preview tipo postal Sinergia
+   CERTIFICADOS · estilo preview tipo postal
    ========================================================= */
 .cert-card{
   background:var(--surface);
@@ -3220,7 +3220,7 @@ if (window.__isDemoMode) {
       }
 
       // ─── Leer doc miembros/{uid} de Firestore para obtener fechaAlta ───
-      // (para el desbloqueo progresivo de cursos como Sinergia)
+      // (para el desbloqueo progresivo de cursos)
       try {
         const memberSnap = await getDoc(doc(db, 'miembros', user.uid));
         if (memberSnap.exists()) {
@@ -4664,7 +4664,7 @@ const Sections = (function(){
   };
 
   /* ═══════════════════════════════════════════════════════════════════
-     CURSOS · sistema dinámico desde Firestore (flujo Sinergia)
+     CURSOS · sistema dinámico desde Firestore
      ═══════════════════════════════════════════════════════════════════ */
 
   // Array global de cursos cargados desde Firestore
@@ -4672,7 +4672,7 @@ const Sections = (function(){
   let _cursosLoaded = false;
   let _cursosLoading = false;
 
-  // ─── Lógica de desbloqueo progresivo (copiada de Sinergia) ───
+  // ─── Lógica de desbloqueo progresivo ───
   // Un curso se desbloquea cada 10 días desde fechaAlta del miembro
   // EXCEPCIÓN: si disponibleSiempre === true, visible desde día 1
   // ═══ Modo preview para admins (probar como usuario VIP sin crear cuenta) ═══
@@ -5052,7 +5052,7 @@ const Sections = (function(){
   }
 
   // ═══════════════════════════════════════════════════════════════
-  // 🎬 VISOR EMBEBIDO · estilo Sinergia
+  // 🎬 VISOR EMBEBIDO
   // Convierte URLs de Drive a /preview y abre en iframe interno
   // ═══════════════════════════════════════════════════════════════
   function convertirUrlDrive(url) {
@@ -6778,7 +6778,7 @@ const Sections = (function(){
 
   /* ============================ PDFs Y MATERIAL ============================ */
   // ⚡ AHORA conectado a Firestore · agrega los materiales de TODOS los cursos
-  // Lógica idéntica a Sinergia · respeta desbloqueo progresivo (8 días) y "siempre disponible"
+  // Respeta desbloqueo progresivo (8 días) y "siempre disponible"
 
   // Recorre todos los cursos y aplana sus materiales con metadata del curso de origen
   function _allMaterialesFromCursos() {
@@ -9894,7 +9894,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 })();
 </script>
 
-<!-- ═══ Visor embebido (clases + materiales) · estilo Sinergia ═══ -->
+<!-- ═══ Visor embebido (clases + materiales) ═══ -->
 <div id="visorOverlay" class="visor-overlay" style="display:none;">
   <div class="visor-container">
     <div class="visor-header">
