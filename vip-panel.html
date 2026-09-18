@@ -600,26 +600,19 @@ body::after{
 }
 .sec-hero__sub{font-size:14px;color:var(--text-2);margin-top:10px;max-width:680px;line-height:1.6}
 
-/* KPI grid estilo Sinergia (stats cards en certificados, logros) */
+/* KPI grid — plano, sin shimmer ni glow (usado en dashboard, cursos, certificados, logros) */
 .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:28px}
 .kpi-card{
   background:var(--surface);
   border:1px solid var(--border);
-  border-radius:20px;
+  border-top:3px solid var(--primary);
+  border-radius:12px;
   padding:20px 22px;
   position:relative;
   overflow:hidden;
-  transition:transform .25s cubic-bezier(.2,.8,.25,1),border-color .25s,box-shadow .3s;
+  transition:transform .2s ease,border-color .2s ease;
 }
-.kpi-card::before{
-  content:"";position:absolute;top:0;left:0;right:0;height:3px;
-  background:linear-gradient(90deg,var(--primary),var(--highlight),var(--primary));
-  background-size:200% 100%;
-  animation:shimmerBar 3.5s ease-in-out infinite;
-  border-radius:20px 20px 0 0;
-}
-@keyframes shimmerBar{0%,100%{background-position:0 0}50%{background-position:200% 0}}
-.kpi-card:hover{transform:translateY(-4px);border-color:color-mix(in srgb,var(--primary) 35%,transparent);box-shadow:0 14px 36px rgba(0,0,0,.12)}
+.kpi-card:hover{transform:translateY(-2px);border-color:var(--border-strong)}
 .kpi-card__label{
   font-family:'JetBrains Mono',monospace;
   font-size:10px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;
@@ -629,17 +622,15 @@ body::after{
 }
 .kpi-card__label::before{
   content:"";width:6px;height:6px;border-radius:50%;background:var(--primary);
-  animation:pulseDotSmall 2s ease-out infinite;
-  box-shadow:0 0 8px var(--primary-glow);
 }
 .kpi-card__value{
   font-family:'Plus Jakarta Sans','Inter',sans-serif;
   font-size:30px;font-weight:800;letter-spacing:-.8px;line-height:1;
   font-feature-settings:"tnum" 1;
-  background:linear-gradient(135deg,var(--text),color-mix(in srgb,var(--text) 55%,transparent));
-  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  color:var(--text);
 }
 .kpi-card__value-sub{font-size:15px;color:var(--text-3);font-weight:600;margin-left:4px}
+@keyframes shimmerBar{0%,100%{background-position:0 0}50%{background-position:200% 0}}
 
 /* Tabs */
 .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
@@ -3159,6 +3150,20 @@ window.__cargarPreciosClub = async function(){
 };
 window.__cargarPreciosClub();
 
+// MODIFICADO: carga el WhatsApp y el canal REALES desde config/club (los mismos que
+// se configuran en Admin → Configuración → Contacto), en vez de datos fijos en el código.
+window.__cargarContactoClub = async function(){
+  try {
+    const snap = await getDoc(doc(db, 'config', 'club'));
+    const c = snap.exists() ? snap.data() : {};
+    const soloDigitos = (s) => (s || '').replace(/[^0-9]/g, '');
+    const wa = soloDigitos(c.whatsapp);
+    if (wa) { DULCELAB_CONTACT.whatsapp = wa; DULCELAB_CONTACT.director = wa; }
+    if (c.whatsappCanal) DULCELAB_CONTACT.canal = c.whatsappCanal;
+  } catch (e) { console.warn('[DulceLab Food] No se pudo leer contacto de config/club:', e.message); }
+};
+window.__cargarContactoClub();
+
 // ⚠️ CAMBIA esta URL por la de tu Railway cuando esté deployado
 const WEBHOOK_URL = 'https://dulcelab-webhook-production.up.railway.app';
 window.WEBHOOK_URL = WEBHOOK_URL;
@@ -3387,7 +3392,7 @@ window.__showWelcomeSplash = function(opts) {
         <div class="splash-film__dots" id="splash-dots"></div>
         <button class="splash-bnv__btn splash-film__next" id="splash-next">Siguiente →</button>
       </div>
-      <div class="splash-bnv__foot">Cualquier duda · <a href="https://wa.me/522384092448" target="_blank" rel="noopener">WhatsApp +52 238 409 2448</a></div>
+      <div class="splash-bnv__foot">Cualquier duda · <a href="#" id="splash-wa-link" target="_blank" rel="noopener">contáctanos por WhatsApp</a></div>
     </div>
   `;
   document.body.appendChild(splash);
@@ -5502,7 +5507,7 @@ const Sections = (function(){
         <div class="empty-state__icon"><svg class="ic ic--xl"><use href="#i-book"/></svg></div>
         <h3>Aún no hay cursos publicados</h3>
         <p>Estamos preparando los primeros cursos de DulceLab Food. Apenas se publiquen, los verás aquí. Síguenos en WhatsApp para enterarte primero.</p>
-        <a class="btn btn--ghost" href="https://wa.me/522384092448" target="_blank" rel="noopener" data-bypass-paywall="true" style="margin-top:14px;"><svg class="ic"><use href="#i-whatsapp"/></svg>Avísame por WhatsApp</a>
+        <a class="btn btn--ghost" href="#" id="sin-cursos-wa-link" target="_blank" rel="noopener" data-bypass-paywall="true" style="margin-top:14px;"><svg class="ic"><use href="#i-whatsapp"/></svg>Avísame por WhatsApp</a>
       </div>`;
       return;
     }
@@ -5953,7 +5958,7 @@ const Sections = (function(){
       if (comBtn) comBtn.textContent = 'Ver mi tarjeta';
     } else {
       setTxt('com-title', 'Crea tu tarjeta profesional');
-      setTxt('com-sub', 'Aparece en el Directorio VIP y haz networking con otros profesionales de la salud.');
+      setTxt('com-sub', 'Aparece en el Directorio VIP y haz networking con otros profesionales de la gastronomía.');
       setTxt('com-pct', '0%');
       setBar('com-bar', 0);
       if (comBtn) comBtn.textContent = 'Crear mi tarjeta';
@@ -7888,7 +7893,7 @@ const Sections = (function(){
         <div class="sec-hero">
           <span class="sec-hero__eyebrow">Comunidad WhatsApp</span>
           <h1 class="sec-hero__title">Canal WhatsApp DulceLab Food</h1>
-          <p class="sec-hero__sub">Únete a nuestra comunidad de profesionales de la salud. Recibe alertas de nuevos cursos, novedades del sector salud, casos clínicos y networking.</p>
+          <p class="sec-hero__sub">Únete a nuestra comunidad de profesionales de la gastronomía. Recibe alertas de nuevos cursos, novedades del sector, recetas y networking.</p>
         </div>
 
         <section class="wa-hero">
@@ -8641,11 +8646,13 @@ const Sections = (function(){
 // DULCELAB_CONTACT · constantes globales de contacto y mensajes
 // ═══════════════════════════════════════════════════════════════════
 const DULCELAB_CONTACT = {
-  // Número único de contacto (vendedora · soporte · descuento · director)
-  whatsapp: '522384092448',  // soporte · descuento
-  director: '522361112213', // dirección · temas estratégicos
+  // MODIFICADO: estos venían con datos REALES de BioNova (número y canal de WhatsApp
+  // de otra consultora). Se limpian a vacío; se llenan en vivo desde config/club
+  // (lo mismo que ya configuras en Admin → Configuración → Contacto). Ver __cargarContactoClub().
+  whatsapp: '',  // soporte · descuento · se carga desde config/club
+  director: '', // dirección · temas estratégicos · usa el mismo número si no hay uno dedicado
   // Canal de difusión oficial
-  canal: 'https://whatsapp.com/channel/0029Vb78FmPF6sn5xpEqpr2R',
+  canal: '', // se carga desde config/club (campo whatsappCanal)
   // Zoom de la próxima clase (muestra · sustituir por el real al confirmar webinar)
   zoom: 'https://zoom.us/j/85234567890?pwd=DULCELAB2026OEE',
   // Sitio público
@@ -9314,8 +9321,10 @@ function injectSupportFAB(){
           director:{url:DULCELAB_CONTACT.waLink(DULCELAB_CONTACT.msgDirector(),DULCELAB_CONTACT.director),msg:'Abriendo WhatsApp · Dirección'},
           canal:{url:DULCELAB_CONTACT.canal,msg:'Abriendo canal DulceLab Food'}
         };
-        window.open(map[action].url,'_blank');
-        Toast.success(map[action].msg,'WhatsApp');
+        const sel=map[action];
+        if(!sel.url){ Toast.info('Aún no está configurado','Pídele al equipo que ponga el WhatsApp/canal en Admin → Configuración'); menu.remove(); return; }
+        window.open(sel.url,'_blank');
+        Toast.success(sel.msg,'WhatsApp');
         menu.remove();
       });
     });
@@ -9383,14 +9392,25 @@ function initNav(){
   // ─── Botones del DOM estático (topbar, sidebar, widgets siempre presentes) ───
   document.getElementById('btn-logout')?.addEventListener('click',openLogoutModal);
   document.getElementById('btn-wa')?.addEventListener('click',()=>{
+    if(!DULCELAB_CONTACT.canal){ Toast.info('Aún no está configurado','Pídele al equipo que ponga el canal de WhatsApp en Admin → Configuración'); return; }
     window.open(DULCELAB_CONTACT.canal,'_blank');
     Toast.success('Abriendo canal DulceLab Food','Comunidad oficial');
+  });
+  // MODIFICADO: click delegado para los links fijos de WhatsApp del splash y de "sin cursos"
+  // (no dependen de cuándo se cargó config/club, ni de si el elemento ya existía en el DOM).
+  document.addEventListener('click',function(e){
+    const link = e.target.closest && e.target.closest('#splash-wa-link, #sin-cursos-wa-link');
+    if(!link) return;
+    e.preventDefault();
+    if(!DULCELAB_CONTACT.whatsapp){ Toast.info('Aún no está configurado','Pídele al equipo que ponga el WhatsApp en Admin → Configuración'); return; }
+    window.open('https://wa.me/'+DULCELAB_CONTACT.whatsapp,'_blank');
   });
   if(typeof toolEsVIP==='function'&&!toolEsVIP()){ document.getElementById('widget-disc')?.style.setProperty('display','none'); }
   document.addEventListener('click',function(e){ if(e.target.closest && e.target.closest('.bn-viplock-btn')){ window.__showPaywallModal && window.__showPaywallModal({title:'Herramientas Pro · solo VIP',sub:'Hazte miembro de DulceLab Food para usar las calculadoras y descargar tus reportes en PDF.'}); } });
   document.getElementById('btn-disc-wa')?.addEventListener('click',(e)=>{
     e.stopPropagation();
     if(typeof toolEsVIP==='function'&&!toolEsVIP()){ window.__showPaywallModal && window.__showPaywallModal({title:'Descuento exclusivo VIP',sub:'El 20% en certificaciones es un beneficio para miembros. Hazte VIP para solicitarlo.'}); return; }
+    if(!DULCELAB_CONTACT.whatsapp){ Toast.info('Aún no está configurado','Pídele al equipo que ponga el WhatsApp en Admin → Configuración'); return; }
     window.open(DULCELAB_CONTACT.waLink(DULCELAB_CONTACT.msgDescuento20()),'_blank');
     Toast.success('Abriendo WhatsApp','Solicitando tu 20% de descuento');
   });
@@ -9486,6 +9506,7 @@ function initNav(){
 
     // Sección Canal WhatsApp · abrir grupo
     if(t.closest('#btn-wa-canal-open')){
+      if(!DULCELAB_CONTACT.canal){ Toast.info('Aún no está configurado','Pídele al equipo que ponga el canal de WhatsApp en Admin → Configuración'); return; }
       window.open(DULCELAB_CONTACT.canal,'_blank');
       Toast.success('Abriendo canal','Comunidad DulceLab Food');
       return;
