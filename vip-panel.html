@@ -4665,32 +4665,32 @@ function sectionPlaceholder(section){
    ========================================================= */
 const Sections = (function(){
   const COLOR_AREA = {
-    'Microbiología y Resistencia Antimicrobiana':'#C94B68',
-    'Laboratorio Clínico y Diagnóstico':'#38bdf8',
-    'Biomedicina y Terapia Celular':'#D5A13D',
-    'Bioinformática y Biología Molecular':'#a78bfa',
-    'Industria Alimentaria e Inocuidad':'#fbbf24',
-    'Industria Farmacéutica, Química y Cosmética':'#f472b6',
-    'Gestión Ambiental y Biotecnología Aplicada':'#E5C171'
+    'Repostería':'#C94B68',
+    'Panadería':'#D5A13D',
+    'Cocina mexicana':'#fbbf24',
+    'Cocina internacional':'#a78bfa',
+    'Control de costos':'#38bdf8',
+    'Catering y eventos':'#f472b6',
+    'Inocuidad y NOM-251':'#22C55E'
   };
   const ICON_AREA = {
-    'Microbiología y Resistencia Antimicrobiana':'i-bn-microbe',
-    'Laboratorio Clínico y Diagnóstico':'i-bn-flask',
-    'Biomedicina y Terapia Celular':'i-bn-dna',
-    'Bioinformática y Biología Molecular':'i-bn-dna',
-    'Industria Alimentaria e Inocuidad':'i-bn-leaf',
-    'Industria Farmacéutica, Química y Cosmética':'i-bn-pill',
-    'Gestión Ambiental y Biotecnología Aplicada':'i-bn-droplet'
+    'Repostería':'i-bn-leaf',
+    'Panadería':'i-bn-leaf',
+    'Cocina mexicana':'i-bn-flask',
+    'Cocina internacional':'i-bn-flask',
+    'Control de costos':'i-credit-card',
+    'Catering y eventos':'i-users',
+    'Inocuidad y NOM-251':'i-shield-check'
   };
   const COLOR_CAT = {
-    'Microbiología':'#C94B68','Laboratorio':'#38bdf8','Biomedicina':'#D5A13D',
-    'Biología Molecular':'#a78bfa','Alimentaria':'#fbbf24','Farmacéutica':'#f472b6',
-    'Ambiental':'#E5C171','Comunidad':'#D5A13D','Maestría':'#C94B68'
+    'Repostería':'#C94B68','Panadería':'#D5A13D','Cocina':'#fbbf24',
+    'Costos':'#38bdf8','Inocuidad':'#22C55E','Catering':'#a78bfa',
+    'Bebidas':'#f472b6','Comunidad':'#E5C171','Maestría':'#C94B68'
   };
   const ICON_CAT = {
-    'Microbiología':'i-bn-microbe','Laboratorio':'i-bn-flask','Biomedicina':'i-bn-dna',
-    'Biología Molecular':'i-bn-dna','Alimentaria':'i-bn-leaf','Farmacéutica':'i-bn-pill',
-    'Ambiental':'i-bn-droplet','Comunidad':'i-messages','Maestría':'i-crown'
+    'Repostería':'i-bn-leaf','Panadería':'i-bn-leaf','Cocina':'i-bn-flask',
+    'Costos':'i-credit-card','Inocuidad':'i-shield-check','Catering':'i-users',
+    'Bebidas':'i-bn-droplet','Comunidad':'i-messages','Maestría':'i-crown'
   };
 
   /* ═══════════════════════════════════════════════════════════════════
@@ -5322,25 +5322,25 @@ const Sections = (function(){
   ];
 
   const logros = [
-    {id:'l1',cat:'Microbiología',nombre:'Primer cultivo',desc:'Completaste tu primer curso de microbiología',xp:50,unlock:null,criterio:'Termina 1 curso de Microbiología'},
-    {id:'l2',cat:'Microbiología',nombre:'Cazador de microbios',desc:'Completaste 3 cursos de microbiología',xp:150,unlock:null,criterio:'Termina 3 cursos de Microbiología'},
-    {id:'l3',cat:'Microbiología',nombre:'Guardián antimicrobiano',desc:'Dominaste resistencia antimicrobiana',xp:300,unlock:null,criterio:'Termina el módulo de Resistencia Antimicrobiana'},
-    {id:'l4',cat:'Microbiología',nombre:'Maestro del antibiograma',desc:'Calificación perfecta en microbiología',xp:200,unlock:null,criterio:'Saca 100 en un curso de Microbiología'},
-    {id:'l5',cat:'Laboratorio',nombre:'Bata puesta',desc:'Completaste tu primer curso de laboratorio',xp:50,unlock:null,criterio:'Termina 1 curso de Laboratorio Clínico'},
-    {id:'l6',cat:'Laboratorio',nombre:'Lector de resultados',desc:'Dominaste la interpretación de resultados',xp:150,unlock:null,criterio:'Termina Interpretación de resultados de laboratorio'},
-    {id:'l7',cat:'Laboratorio',nombre:'Química sanguínea pro',desc:'Completaste química sanguínea',xp:200,unlock:null,criterio:'Termina el curso de Química Sanguínea'},
-    {id:'l8',cat:'Laboratorio',nombre:'Calculadora viviente',desc:'Usaste 50 veces las herramientas de lab',xp:180,unlock:null,criterio:'Usa las herramientas 50 veces'},
-    {id:'l9',cat:'Biomedicina',nombre:'Célula madre',desc:'Completaste tu primer curso de biomedicina',xp:50,unlock:null,criterio:'Termina 1 curso de Biomedicina'},
-    {id:'l10',cat:'Biomedicina',nombre:'Terapia celular',desc:'Dominaste terapia celular y enfermedades',xp:250,unlock:null,criterio:'Termina Terapia celular y enfermedades'},
-    {id:'l11',cat:'Biomedicina',nombre:'Pionero biomédico',desc:'Completaste todos los cursos de biomedicina',xp:400,unlock:null,criterio:'Termina todos los cursos de Biomedicina'},
-    {id:'l12',cat:'Biología Molecular',nombre:'Doble hélice',desc:'Completaste tu primer curso molecular',xp:80,unlock:null,criterio:'Termina 1 curso de Biología Molecular'},
-    {id:'l13',cat:'Biología Molecular',nombre:'Domador de genes',desc:'Dominaste expresión génica y primers',xp:220,unlock:null,criterio:'Termina el módulo de Biología Molecular'},
-    {id:'l14',cat:'Alimentaria',nombre:'Inocuidad ante todo',desc:'Completaste tu primer curso de inocuidad',xp:80,unlock:null,criterio:'Termina 1 curso de Industria Alimentaria'},
-    {id:'l15',cat:'Alimentaria',nombre:'Maestro HACCP',desc:'Dominaste HACCP y Codex Alimentarius',xp:250,unlock:null,criterio:'Termina el módulo HACCP'},
-    {id:'l16',cat:'Farmacéutica',nombre:'Validación impecable',desc:'Completaste validación de equipos',xp:200,unlock:null,criterio:'Termina Validación de equipos farmacéutica'},
-    {id:'l17',cat:'Farmacéutica',nombre:'Control de calidad',desc:'Dominaste control de calidad químico',xp:180,unlock:null,criterio:'Termina Control de calidad química'},
-    {id:'l18',cat:'Ambiental',nombre:'Agua limpia',desc:'Completaste tratamiento de aguas',xp:150,unlock:null,criterio:'Termina el módulo de Gestión Ambiental'},
-    {id:'l19',cat:'Ambiental',nombre:'Biotecnólogo verde',desc:'Dominaste biotecnología ambiental aplicada',xp:300,unlock:null,criterio:'Termina todos los cursos Ambientales'},
+    {id:'l1',cat:'Repostería',nombre:'Primer horneado',desc:'Completaste tu primer curso de repostería',xp:50,unlock:null,criterio:'Termina 1 curso de Repostería'},
+    {id:'l2',cat:'Repostería',nombre:'Mano de pastelero',desc:'Completaste 3 cursos de repostería',xp:150,unlock:null,criterio:'Termina 3 cursos de Repostería'},
+    {id:'l3',cat:'Repostería',nombre:'Rey del merengue',desc:'Dominaste técnicas de repostería fina',xp:300,unlock:null,criterio:'Termina el módulo de Repostería avanzada'},
+    {id:'l4',cat:'Repostería',nombre:'Perfección dulce',desc:'Calificación perfecta en repostería',xp:200,unlock:null,criterio:'Saca 100 en un curso de Repostería'},
+    {id:'l5',cat:'Panadería',nombre:'Masa madre',desc:'Completaste tu primer curso de panadería',xp:50,unlock:null,criterio:'Termina 1 curso de Panadería'},
+    {id:'l6',cat:'Panadería',nombre:'Maestro del fermento',desc:'Dominaste fermentación y levados',xp:150,unlock:null,criterio:'Termina el módulo de Fermentación'},
+    {id:'l7',cat:'Panadería',nombre:'Bolillo perfecto',desc:'Completaste panadería mexicana',xp:200,unlock:null,criterio:'Termina el curso de Pan mexicano'},
+    {id:'l8',cat:'Costos',nombre:'Calculadora viviente',desc:'Usaste 50 veces las herramientas pro',xp:180,unlock:null,criterio:'Usa las herramientas 50 veces'},
+    {id:'l9',cat:'Cocina',nombre:'Primeros sabores',desc:'Completaste tu primer curso de cocina',xp:50,unlock:null,criterio:'Termina 1 curso de Cocina'},
+    {id:'l10',cat:'Cocina',nombre:'Sazón de la casa',desc:'Dominaste cocina mexicana tradicional',xp:250,unlock:null,criterio:'Termina Cocina mexicana'},
+    {id:'l11',cat:'Cocina',nombre:'Chef completo',desc:'Completaste todos los cursos de cocina',xp:400,unlock:null,criterio:'Termina todos los cursos de Cocina'},
+    {id:'l12',cat:'Costos',nombre:'Cuentas claras',desc:'Completaste tu primer curso de costos',xp:80,unlock:null,criterio:'Termina 1 curso de Control de costos'},
+    {id:'l13',cat:'Costos',nombre:'Domador del food cost',desc:'Dominaste costeo y control de mermas',xp:220,unlock:null,criterio:'Termina el módulo de Costos A&B'},
+    {id:'l14',cat:'Inocuidad',nombre:'Cocina segura',desc:'Completaste tu primer curso de inocuidad',xp:80,unlock:null,criterio:'Termina 1 curso de Inocuidad'},
+    {id:'l15',cat:'Inocuidad',nombre:'Maestro NOM-251',desc:'Dominaste la NOM-251 y buenas prácticas',xp:250,unlock:null,criterio:'Termina el módulo de NOM-251'},
+    {id:'l16',cat:'Catering',nombre:'Evento impecable',desc:'Completaste el curso de catering',xp:200,unlock:null,criterio:'Termina Catering y eventos'},
+    {id:'l17',cat:'Catering',nombre:'Alto volumen',desc:'Dominaste producción para grandes eventos',xp:180,unlock:null,criterio:'Termina Cocina de alto volumen'},
+    {id:'l18',cat:'Bebidas',nombre:'Primer trago',desc:'Completaste tu primer curso de bebidas',xp:150,unlock:null,criterio:'Termina el módulo de Bebidas'},
+    {id:'l19',cat:'Bebidas',nombre:'Barista pro',desc:'Dominaste barismo y bebidas de especialidad',xp:300,unlock:null,criterio:'Termina todos los cursos de Bebidas'},
     {id:'l20',cat:'Comunidad',nombre:'Bienvenido a DulceLab Food',desc:'Activaste tu membresía VIP',xp:30,unlock:null,criterio:'Hazte miembro VIP'},
     {id:'l21',cat:'Comunidad',nombre:'Constante',desc:'Racha de 7 días aprendiendo',xp:120,unlock:null,criterio:'Estudia 7 días seguidos'},
     {id:'l22',cat:'Comunidad',nombre:'Imparable',desc:'Racha de 30 días aprendiendo',xp:350,unlock:null,criterio:'Estudia 30 días seguidos'},
@@ -5843,8 +5843,8 @@ const Sections = (function(){
   };
 
   function moduloTitulo(c,i){
-    const g={'Microbiología':['Introducción y bioseguridad','Medios de cultivo','Tinción de Gram','Identificación bacteriana','Antibiograma','Casos prácticos','Control de calidad','Evaluación final'],'Laboratorio':['Fundamentos del laboratorio','Toma de muestras','Química sanguínea','Hematología básica','Uroanálisis','Casos reales','Reporte de resultados','Evaluación'],'Biomedicina':['Bases celulares','Fisiología aplicada','Marcadores biológicos','Interpretación clínica','Diagnóstico integrado','Casos prácticos','Aplicación clínica','Evaluación'],'Biología Molecular':['Introducción','Extracción de ácidos nucleicos','PCR y qPCR','Electroforesis','Análisis de resultados','Aplicaciones diagnósticas','Casos prácticos','Evaluación']};
-    const t=g[c.area]||g['Microbiología'];return 'Módulo '+i+': '+t[(i-1)%t.length];
+    const g={'default':['Introducción y bienvenida','Ingredientes y equipo','Técnicas base','Manos a la obra','Práctica guiada','Casos reales','Tips profesionales','Cierre y evaluación']};
+    const t=g[c.area]||g['default'];return 'Módulo '+i+': '+t[(i-1)%t.length];
   }
 
   /* ============================ CERTIFICADOS ============================ */
@@ -6350,7 +6350,7 @@ const Sections = (function(){
                   <div class="cert-preview-mini__logo"><img src="assets/logo-dulcelab.png" alt="DulceLab Food"></div>
                   <div>
                     <div class="cert-preview-mini__brand">DulceLab Food</div>
-                    <div class="cert-preview-mini__brand-sub">Biomedicina · Microbiología · Medicina</div>
+                    <div class="cert-preview-mini__brand-sub">Gastronomía · Repostería · Inocuidad</div>
                   </div>
                   <div class="cert-preview-mini__qr">${qrSvg(c.folio,32)}</div>
                 </div>
@@ -6389,7 +6389,7 @@ const Sections = (function(){
           <div class="cert-preview__border"></div>
           <div class="cert-preview__brand">
             <div style="width:38px;height:38px;border-radius:10px;background:#3B2420;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><img src="assets/logo-dulcelab.png" alt="DulceLab Food" style="width:30px;height:30px;object-fit:contain;display:block;"></div>
-            <div><div class="cert-preview__brand-name">DulceLab Food</div><div class="cert-preview__brand-sub">Biomedicina · Microbiología · Medicina general</div></div>
+            <div><div class="cert-preview__brand-name">DulceLab Food</div><div class="cert-preview__brand-sub">Gastronomía · Repostería · Inocuidad alimentaria</div></div>
           </div>
           <div class="cert-preview__eyebrow">Certificado de aprovechamiento</div>
           <div class="cert-preview__otorga">Se otorga el presente certificado a</div>
@@ -6423,7 +6423,7 @@ const Sections = (function(){
       const pdf=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
       pdf.setFillColor(255,122,45);pdf.rect(0,0,297,8,'F');
       pdf.setFillColor(26,20,16);pdf.rect(0,8,297,4,'F');
-      pdf.setFontSize(11);pdf.setTextColor(120,108,90);pdf.text('DulceLab Food · Biomedicina · Microbiología · Medicina general',148,28,{align:'center'});
+      pdf.setFontSize(11);pdf.setTextColor(120,108,90);pdf.text('DulceLab Food · Gastronomía · Repostería · Inocuidad alimentaria',148,28,{align:'center'});
       pdf.setFontSize(9);pdf.text('CERTIFICADO DE APROVECHAMIENTO',148,37,{align:'center'});
       pdf.setFontSize(13);pdf.setTextColor(60,52,42);pdf.text('Se otorga el presente certificado a',148,60,{align:'center'});
       pdf.setFontSize(32);pdf.setTextColor(26,20,16);pdf.setFont(undefined,'bold');pdf.text(usuario.nombre,148,76,{align:'center'});pdf.setFont(undefined,'normal');
@@ -6448,7 +6448,7 @@ const Sections = (function(){
     const proxNivel=niveles[nivelActual.id]?.nombre||'Maestro';
     const ganados=logros.filter(l=>l.unlock).length;
     const totalXp=logros.filter(l=>l.unlock).reduce((s,l)=>s+l.xp,0);
-    const cats=['Microbiología','Laboratorio','Biomedicina','Biología Molecular','Alimentaria','Farmacéutica','Ambiental','Comunidad','Maestría'];
+    const cats=['Repostería','Panadería','Cocina','Costos','Inocuidad','Catering','Bebidas','Comunidad','Maestría'];
     container.innerHTML=`
       <div class="fade-up">
         <div class="sec-hero">
@@ -7002,9 +7002,9 @@ const Sections = (function(){
 
   function _renderPdfCard(m) {
     const colorMap = {
-      'Microbiología':'#C94B68','Laboratorio':'#06B6D4','Biomedicina':'#D5A13D',
-      'Biología Molecular':'#8B5CF6','Alimentaria':'#F59E0B','Farmacéutica':'#EC4899',
-      'Ambiental':'#14B8A6','Diagnóstico':'#A855F7','Comunidad':'#F97316',
+      'Repostería':'#C94B68','Panadería':'#D5A13D','Cocina':'#fbbf24',
+      'Costos':'#38bdf8','Inocuidad':'#22C55E','Catering':'#A855F7',
+      'Bebidas':'#EC4899','Tendencias':'#F97316','Comunidad':'#F59E0B',
       'General':'#C94B68'
     };
     const c = colorMap[m.cursoArea] || '#C94B68';
@@ -7057,31 +7057,31 @@ const Sections = (function(){
   const bibliotecaMeses = {
     'mes-mayo':{mes:'Mayo',año:'2026',videos:4,pdfs:3,lives:1,
       items:[
-        {tipo:'video',titulo:'Tinción de Gram paso a paso · interpretación',instructor:'QFB Daniela Ríos',duracion:'42 min',fecha:'22 may'},
-        {tipo:'live',titulo:'Hemograma: lectura e interpretación de la BH',instructor:'Dr. Mauricio León',duracion:'90 min',fecha:'28 may',badge:'live'},
-        {tipo:'pdf',titulo:'Guía de medios de cultivo en microbiología',cat:'Microbiología',duracion:'14 pág.',fecha:'22 may',badge:'new'},
-        {tipo:'video',titulo:'Control de calidad en el laboratorio clínico',instructor:'QFB Patricia Solís',duracion:'38 min',fecha:'18 may'},
-        {tipo:'pdf',titulo:'Valores de referencia · química sanguínea',cat:'Laboratorio',duracion:'22 pág.',fecha:'15 may'},
-        {tipo:'video',titulo:'Antibiograma · método de Kirby-Bauer',instructor:'Biól. Carlos Vidal',duracion:'52 min',fecha:'12 may'},
-        {tipo:'pdf',titulo:'Protocolo de bioseguridad nivel BSL-2',cat:'Laboratorio',duracion:'32 pág.',fecha:'10 may'},
-        {tipo:'video',titulo:'Introducción a la PCR en diagnóstico',instructor:'Dra. María López',duracion:'45 min',fecha:'5 may'}
+        {tipo:'video',titulo:'Merengue italiano paso a paso',instructor:'Chef Repostería',duracion:'42 min',fecha:'22 may'},
+        {tipo:'live',titulo:'Costeo de menú en vivo · food cost real',instructor:'Chef Costos',duracion:'90 min',fecha:'28 may',badge:'live'},
+        {tipo:'pdf',titulo:'Guía de temperaturas de horneado',cat:'Repostería',duracion:'14 pág.',fecha:'22 may',badge:'new'},
+        {tipo:'video',titulo:'Control de mermas en cocina',instructor:'Chef Costos',duracion:'38 min',fecha:'18 may'},
+        {tipo:'pdf',titulo:'Tabla de rendimientos por ingrediente',cat:'Costos',duracion:'22 pág.',fecha:'15 may'},
+        {tipo:'video',titulo:'Masa madre · fermentación desde cero',instructor:'Chef Panadería',duracion:'52 min',fecha:'12 may'},
+        {tipo:'pdf',titulo:'Buenas prácticas NOM-251 · resumen',cat:'Inocuidad',duracion:'32 pág.',fecha:'10 may'},
+        {tipo:'video',titulo:'Introducción al costeo de recetas',instructor:'Chef Costos',duracion:'45 min',fecha:'5 may'}
       ]},
     'mes-abril':{mes:'Abril',año:'2026',videos:3,pdfs:2,lives:1,
       items:[
-        {tipo:'video',titulo:'Uroanálisis · sedimento urinario',instructor:'QFB Daniela Ríos',duracion:'80 min',fecha:'28 abr'},
-        {tipo:'pdf',titulo:'Formato de reporte de laboratorio clínico',cat:'Laboratorio',duracion:'4 pág.',fecha:'22 abr'},
-        {tipo:'video',titulo:'Identificación de bacterias Gram negativas',instructor:'Biól. Carlos Vidal',duracion:'70 min',fecha:'18 abr'},
-        {tipo:'live',titulo:'Pruebas de función hepática · interpretación',instructor:'Dr. Mauricio León',duracion:'85 min',fecha:'17 abr'},
-        {tipo:'pdf',titulo:'Manual de toma de muestras sanguíneas',cat:'Laboratorio',duracion:'12 pág.',fecha:'15 abr'},
-        {tipo:'video',titulo:'Hematología · morfología eritrocitaria',instructor:'QFB Patricia Solís',duracion:'75 min',fecha:'10 abr'}
+        {tipo:'video',titulo:'Cocina mexicana · salsas base',instructor:'Chef Cocina',duracion:'80 min',fecha:'28 abr'},
+        {tipo:'pdf',titulo:'Formato de escandallo de recetas',cat:'Costos',duracion:'4 pág.',fecha:'22 abr'},
+        {tipo:'video',titulo:'Panadería · bolillo y telera',instructor:'Chef Panadería',duracion:'70 min',fecha:'18 abr'},
+        {tipo:'live',titulo:'Catering · producción para 200 pax',instructor:'Chef Catering',duracion:'85 min',fecha:'17 abr'},
+        {tipo:'pdf',titulo:'Checklist de higiene en cocina',cat:'Inocuidad',duracion:'12 pág.',fecha:'15 abr'},
+        {tipo:'video',titulo:'Repostería · decoración con fondant',instructor:'Chef Repostería',duracion:'75 min',fecha:'10 abr'}
       ]},
     'mes-marzo':{mes:'Marzo',año:'2026',videos:3,pdfs:2,lives:0,
       items:[
-        {tipo:'video',titulo:'Microbiología · cocos Gram positivos',instructor:'Dra. María López',duracion:'60 min',fecha:'28 mar'},
-        {tipo:'pdf',titulo:'Checklist de control de calidad interno',cat:'Laboratorio',duracion:'8 pág.',fecha:'25 mar'},
-        {tipo:'video',titulo:'Diagnóstico serológico · técnica de ELISA',instructor:'QFB Patricia Solís',duracion:'90 min',fecha:'18 mar'},
-        {tipo:'pdf',titulo:'Plantilla de bitácora de equipos',cat:'Laboratorio',duracion:'6 pág.',fecha:'12 mar'},
-        {tipo:'video',titulo:'Biología molecular · extracción de ADN',instructor:'Dra. María López',duracion:'95 min',fecha:'5 mar'}
+        {tipo:'video',titulo:'Cocina · fondos y caldos base',instructor:'Chef Cocina',duracion:'60 min',fecha:'28 mar'},
+        {tipo:'pdf',titulo:'Checklist de control de inventario',cat:'Costos',duracion:'8 pág.',fecha:'25 mar'},
+        {tipo:'video',titulo:'Barismo · extracción de espresso',instructor:'Barista',duracion:'90 min',fecha:'18 mar'},
+        {tipo:'pdf',titulo:'Plantilla de bitácora de temperaturas',cat:'Inocuidad',duracion:'6 pág.',fecha:'12 mar'},
+        {tipo:'video',titulo:'Repostería · pan dulce mexicano',instructor:'Chef Panadería',duracion:'95 min',fecha:'5 mar'}
       ]}
   };
 
@@ -7150,7 +7150,7 @@ const Sections = (function(){
   // 📇 DIRECTORIO VIP · cada miembro arma su tarjeta profesional
   // Firestore: colección `directorio/{uid}` · foto base64 optimizada
   // ═══════════════════════════════════════════════════════════════
-  const SECTORES = ['Microbiología','Laboratorio Clínico','Biomedicina','Biología Molecular','Industria Farmacéutica','Industria Alimentaria','Investigación','Docencia','Consultoría','Otro'];
+  const SECTORES = ['Repostería','Panadería','Cocina','Catering','Restaurante','Negocio propio','Docencia','Consultoría','Otro'];
   let _dirUnsub = null;
   window.__dirCleanup = function(){ try{ if(typeof _dirUnsub==='function'){ _dirUnsub(); _dirUnsub=null; } }catch(e){} };
   window.__dirEditar = function(){ return dirEditarMiTarjeta(); };
@@ -7929,7 +7929,7 @@ const Sections = (function(){
         <section class="wa-hero">
           <div class="wa-hero__icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.05 4.91A9.816 9.816 0 0 0 12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01zm-7.01 15.24c-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.264 8.264 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24 2.2 0 4.27.86 5.82 2.42a8.183 8.183 0 0 1 2.41 5.83c.02 4.54-3.68 8.23-8.22 8.23zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.78.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43s.17-.25.25-.41c.08-.17.04-.31-.02-.43s-.56-1.34-.76-1.84c-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.14-1.18s-.22-.16-.47-.28z"/></svg></div>
           <h2 class="wa-hero__title">Únete al canal oficial</h2>
-          <p class="wa-hero__sub">Profesionales de biomedicina, microbiología y laboratorio compartiendo casos, dudas y avances del área.</p>
+          <p class="wa-hero__sub">Profesionales de la gastronomía y la repostería compartiendo recetas, dudas y tips del oficio.</p>
 
           <div class="wa-stats">
             <div class="wa-stat"><div class="wa-stat__num">486</div><div class="wa-stat__lbl">Miembros</div></div>
@@ -8856,7 +8856,7 @@ function openEditField(field){
     return;
   }
   const labels={nombre:'Nombre completo',whatsapp:'WhatsApp',empresa:'Empresa donde trabajas',especialidad:'Especialidad / área'};
-  const placeholders={nombre:'Ej: Dra. Ana Martínez',whatsapp:'+52 238 123 4567',empresa:'Ej: Laboratorio Clínico del Centro',especialidad:'Ej: Microbiología clínica'};
+  const placeholders={nombre:'Ej: Chef Ana Martínez',whatsapp:'+52 238 123 4567',empresa:'Ej: Pastelería La Dulce',especialidad:'Ej: Repostería fina'};
   const currentVal=wrap.querySelector('.perfil-field__val').textContent.trim();
   const cleanVal=(currentVal==='—'||currentVal.includes('···'))?'':currentVal;
   const subt = field==='nombre'
@@ -10401,7 +10401,7 @@ window.DulceLabOnboarding = new window.MembershipTour({
       desktopSelectors: '.sidebar .nav-item[data-section="cursos"]',
       mobileSelectors: '.mobile-nav .mobile-nav__item[data-section="cursos"]',
       title: 'Tus cursos de biociencias',
-      copy: 'En Mis cursos encontrarás las clases disponibles, tu progreso y los contenidos de microbiología, bioquímica, laboratorio y áreas afines.'
+      copy: 'En Mis cursos encontrarás las clases disponibles, tu progreso y los contenidos de repostería, cocina, costos e inocuidad.'
     },
     {
       desktopSelectors: '.sidebar .nav-item[data-section="pdfs"]',
