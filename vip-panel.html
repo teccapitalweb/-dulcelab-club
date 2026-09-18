@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#442A22">
-<meta name="description" content="DulceLab Food Panel VIP · Biomedicina, microbiología y medicina general. Cursos, herramientas y certificación.">
+<meta name="description" content="DulceLab Food Panel VIP · Gastronomía, repostería e inocuidad alimentaria. Cursos, herramientas y certificación.">
 <title>DulceLab Food · Panel VIP</title>
 <link rel="icon" type="image/png" href="assets/logo-dulcelab.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -3369,12 +3369,12 @@ window.__showWelcomeSplash = function(opts) {
     icono = '⭐';
     kicker = '¡BIENVENIDO AL CLUB VIP!';
     titulo = `Bienvenido al <em>club VIP Anual</em>`;
-    desc = `${nombre}, te uniste por todo un año a la comunidad de profesionales de biomedicina, microbiología y medicina más activa de México. Esto es tuyo:`;
+    desc = `${nombre}, te uniste por todo un año a la comunidad de profesionales de gastronomía, repostería e inocuidad alimentaria más activa de México. Esto es tuyo:`;
   } else {
     icono = '⚙️';
     kicker = '¡MEMBRESÍA VIP ACTIVA!';
     titulo = `Bienvenido al <em>club VIP Mensual</em>`;
-    desc = `${nombre}, ya eres parte de la comunidad de profesionales de biomedicina, microbiología y medicina más activa de México. Esto es tuyo:`;
+    desc = `${nombre}, ya eres parte de la comunidad de profesionales de gastronomía, repostería e inocuidad alimentaria más activa de México. Esto es tuyo:`;
   }
 
   // ── Recorrido "película" · los beneficios del panel ──
@@ -3382,7 +3382,7 @@ window.__showWelcomeSplash = function(opts) {
     { ic:'📚', t:'Cursos premium',   d:'Catálogo completo con clases reales que se desbloquean a tu ritmo.' },
     { ic:'🎥', t:'Clases en vivo',   d:'Webinars con expertos y acceso a las grabaciones cuando quieras.' },
     { ic:'📂', t:'PDFs y material',  d:'Plantillas, formatos y recursos descargables listos para usar.' },
-    { ic:'🛠️', t:'Herramientas pro', d:'Calculadoras de laboratorio: diluciones, UFC/mL, dosis, TFG, Ley de Beer, conversor clínico y reporte PDF.' },
+    { ic:'🛠️', t:'Herramientas pro', d:'Calculadoras de cocina: costeo de recetas, conversor, merma, catering, temperaturas de horno y costo por porción.' },
     { ic:'🎓', t:'Certificados',     d:'Con folio oficial DulceLab Food para respaldar lo que aprendes.' }
   ];
 
@@ -3609,14 +3609,12 @@ window.__setDisplayName = async (nombre) => {
 
     <div class="nav-section" data-tour="tools">
       <div class="nav-label">Herramientas pro</div>
-      <a class="nav-item" data-tool="diluciones"><svg class="ic"><use href="#i-bn-flask"/></svg>Diluciones C₁V₁</a>
-      <a class="nav-item" data-tool="ufc"><svg class="ic"><use href="#i-bn-microbe"/></svg>UFC/mL</a>
-      <a class="nav-item" data-tool="conversor"><svg class="ic"><use href="#i-bn-droplet"/></svg>Conversor clínico</a>
-      <a class="nav-item" data-tool="dosis"><svg class="ic"><use href="#i-bn-pill"/></svg>Dosis por peso</a>
-      <a class="nav-item" data-tool="tfg"><svg class="ic"><use href="#i-gauge"/></svg>TFG / eGFR</a>
-      <a class="nav-item" data-tool="molaridad"><svg class="ic"><use href="#i-bn-flask"/></svg>Molaridad ↔ g/L</a>
-      <a class="nav-item" data-tool="beer"><svg class="ic"><use href="#i-chart-bar"/></svg>Ley de Beer</a>
-      <a class="nav-item" data-tool="reporte"><svg class="ic"><use href="#i-clipboard-check"/></svg>Reporte de lab</a>
+      <a class="nav-item" data-tool="costeo"><svg class="ic"><use href="#i-bn-leaf"/></svg>Costeo de receta</a>
+      <a class="nav-item" data-tool="conversor"><svg class="ic"><use href="#i-bn-droplet"/></svg>Conversor de cocina</a>
+      <a class="nav-item" data-tool="merma"><svg class="ic"><use href="#i-bn-leaf"/></svg>Rendimiento y merma</a>
+      <a class="nav-item" data-tool="catering"><svg class="ic"><use href="#i-users"/></svg>Porciones para catering</a>
+      <a class="nav-item" data-tool="horno"><svg class="ic"><use href="#i-gauge"/></svg>Temperaturas de horno</a>
+      <a class="nav-item" data-tool="porcion"><svg class="ic"><use href="#i-credit-card"/></svg>Costo por porción</a>
     </div>
 
     <div class="nav-section">
@@ -3668,7 +3666,7 @@ window.__setDisplayName = async (nombre) => {
         <div class="banner__info">
           <span class="banner__eyebrow"><span class="banner__eyebrow__dot"></span><span id="greeting-label">En vivo</span><span class="banner__version">v.2026.05</span></span>
           <h1 class="banner__title" id="hero-title">Buenas tardes</h1>
-          <p class="banner__sub">Tu acceso a cursos premium, herramientas pro de laboratorio y la comunidad de biomedicina, microbiología y medicina más activa de México.</p>
+          <p class="banner__sub">Tu acceso a cursos premium, herramientas pro de cocina y la comunidad de gastronomía, repostería e inocuidad alimentaria más activa de México.</p>
         </div>
         <div class="banner__stats">
           <div class="banner__stat" data-section="cursos" style="cursor:pointer"><div class="banner__stat-lbl">Cursos</div><div class="banner__stat-val" id="bn-stat-cursos">0</div></div>
@@ -3746,7 +3744,7 @@ window.__setDisplayName = async (nombre) => {
     <div class="widget widget--cert">
       <div class="widget__label"><svg class="ic"><use href="#i-users"/></svg>Tu presencia en la comunidad</div>
       <div class="widget__title" id="com-title">Crea tu tarjeta profesional</div>
-      <div class="widget__count-sub" id="com-sub">Aparece en el Directorio VIP y haz networking con otros profesionales de la salud.</div>
+      <div class="widget__count-sub" id="com-sub">Aparece en el Directorio VIP y haz networking con otros profesionales de la gastronomía.</div>
       <div class="activity-row" style="margin-top:4px;">
         <div class="activity-row__bar" style="height:6px;"><div class="activity-row__bar-fill activity-row__bar-fill--orange" id="com-bar" style="width:0%"></div></div>
         <span class="activity-row__count" id="com-pct">0%</span>
@@ -3797,14 +3795,12 @@ window.__setDisplayName = async (nombre) => {
 
       <div class="mobile-drawer__section" data-tour="tools">
         <div class="mobile-drawer__label">Herramientas pro</div>
-        <a class="mobile-drawer__item" data-tool="diluciones"><svg class="ic"><use href="#i-bn-flask"/></svg>Diluciones C₁V₁</a>
-        <a class="mobile-drawer__item" data-tool="ufc"><svg class="ic"><use href="#i-bn-microbe"/></svg>UFC/mL</a>
-        <a class="mobile-drawer__item" data-tool="conversor"><svg class="ic"><use href="#i-bn-droplet"/></svg>Conversor clínico</a>
-        <a class="mobile-drawer__item" data-tool="dosis"><svg class="ic"><use href="#i-bn-pill"/></svg>Dosis por peso</a>
-        <a class="mobile-drawer__item" data-tool="tfg"><svg class="ic"><use href="#i-gauge"/></svg>TFG / eGFR</a>
-        <a class="mobile-drawer__item" data-tool="molaridad"><svg class="ic"><use href="#i-bn-flask"/></svg>Molaridad ↔ g/L</a>
-        <a class="mobile-drawer__item" data-tool="beer"><svg class="ic"><use href="#i-chart-bar"/></svg>Ley de Beer</a>
-        <a class="mobile-drawer__item" data-tool="reporte"><svg class="ic"><use href="#i-clipboard-check"/></svg>Reporte de lab</a>
+        <a class="mobile-drawer__item" data-tool="costeo"><svg class="ic"><use href="#i-bn-leaf"/></svg>Costeo de receta</a>
+        <a class="mobile-drawer__item" data-tool="conversor"><svg class="ic"><use href="#i-bn-droplet"/></svg>Conversor de cocina</a>
+        <a class="mobile-drawer__item" data-tool="merma"><svg class="ic"><use href="#i-bn-leaf"/></svg>Rendimiento y merma</a>
+        <a class="mobile-drawer__item" data-tool="catering"><svg class="ic"><use href="#i-users"/></svg>Porciones para catering</a>
+        <a class="mobile-drawer__item" data-tool="horno"><svg class="ic"><use href="#i-gauge"/></svg>Temperaturas de horno</a>
+        <a class="mobile-drawer__item" data-tool="porcion"><svg class="ic"><use href="#i-credit-card"/></svg>Costo por porción</a>
       </div>
 
       <div class="mobile-drawer__section">
@@ -4125,7 +4121,7 @@ function bnPdfHeader(pdf, titulo, sub){
   pdf.setFontSize(15); pdf.setTextColor(15,23,42); pdf.setFont(undefined,'bold');
   pdf.text(titulo, M, y); pdf.setFont(undefined,'normal'); y+=6;
   pdf.setFontSize(9); pdf.setTextColor(110,120,140);
-  pdf.text('DulceLab Food · Biomedicina · Microbiología · Medicina general', M, y); y+=4;
+  pdf.text('DulceLab Food · Gastronomía · Repostería · Inocuidad alimentaria', M, y); y+=4;
   if(sub){ pdf.text(sub, M, y); y+=4; }
   pdf.setDrawColor(225,232,245); pdf.line(M,y+2,W-M,y+2); y+=10;
   return y;
@@ -4138,14 +4134,12 @@ function bnPdfFooter(pdf){
 
 /* Registro */
 const Tools = {
-  diluciones:{open(){navigateToSection('tool-diluciones');}},
-  ufc:{open(){navigateToSection('tool-ufc');}},
+  costeo:{open(){navigateToSection('tool-costeo');}},
   conversor:{open(){navigateToSection('tool-conversor');}},
-  dosis:{open(){navigateToSection('tool-dosis');}},
-  tfg:{open(){navigateToSection('tool-tfg');}},
-  molaridad:{open(){navigateToSection('tool-molaridad');}},
-  beer:{open(){navigateToSection('tool-beer');}},
-  reporte:{open(){navigateToSection('tool-reporte');}}
+  merma:{open(){navigateToSection('tool-merma');}},
+  catering:{open(){navigateToSection('tool-catering');}},
+  horno:{open(){navigateToSection('tool-horno');}},
+  porcion:{open(){navigateToSection('tool-porcion');}}
 };
 
 /* Shell común de cada herramienta-sección */
@@ -4171,446 +4165,406 @@ function bnToolShell(container, cfg){
   return container.querySelector('.bn-tool');
 }
 
-/* 1 ─ DILUCIONES C1·V1 = C2·V2 ─────────────────────────── */
-const ToolDiluciones = (function(){
+/* ═══════════════════════════════════════════════════════════════════
+   HERRAMIENTAS PRO · GASTRONOMÍA (reemplazan a las de laboratorio)
+   Reutilizan bnToolShell / bnNum / bnFmt / toolEsVIP / bnPdf* existentes.
+   6 calculadoras: Costeo de receta, Conversor de cocina, Rendimiento y
+   merma, Porciones para catering, Temperaturas de horno, Costo por porción.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* 1 ─ COSTEO DE RECETA ──────────────────────────────────── */
+const ToolCosteo = (function(){
   function mount(c){
-    bnToolShell(c,{icon:'i-bn-flask',title:'Diluciones (C₁V₁ = C₂V₂)',
-      sub:'Calcula el volumen de stock y diluyente para preparar una solución. Deja vacío el dato que quieres calcular.',
-      actions:`<button class="btn btn--accent btn--sm" id="dil-pdf">Reporte PDF<svg class="ic"><use href="#i-download"/></svg></button>`,
+    bnToolShell(c,{icon:'i-bn-leaf',title:'Costeo de receta',
+      sub:'Suma el costo de tus ingredientes, define tu margen y obtén el precio de venta sugerido.',
+      actions:`<button class="btn btn--accent btn--sm" id="cos-pdf">Reporte PDF<svg class="ic"><use href="#i-download"/></svg></button>`,
       body:`<div class="bn-card">
-        <div class="bn-card__t"><svg class="ic"><use href="#i-bn-flask"/></svg>Datos (llena 3, deja 1 vacío)</div>
-        <div class="bn-grid">
-          <div class="bn-field"><label>C₁ · concentración stock</label><input class="input" id="dil-c1" placeholder="ej. 1000" inputmode="decimal"><div class="bn-field__hint">Unidad libre (mg/mL, M, %…)</div></div>
-          <div class="bn-field"><label>V₁ · volumen de stock</label><input class="input" id="dil-v1" placeholder="se calcula…" inputmode="decimal"><div class="bn-field__hint">mL</div></div>
-          <div class="bn-field"><label>C₂ · concentración final</label><input class="input" id="dil-c2" placeholder="ej. 50" inputmode="decimal"></div>
-          <div class="bn-field"><label>V₂ · volumen final</label><input class="input" id="dil-v2" placeholder="ej. 100" inputmode="decimal"><div class="bn-field__hint">mL</div></div>
+        <div class="bn-card__t"><svg class="ic"><use href="#i-bn-leaf"/></svg>Ingredientes</div>
+        <div id="cos-list" style="display:flex;flex-direction:column;gap:8px"></div>
+        <button class="btn btn--ghost btn--sm" id="cos-add" style="margin-top:10px"><svg class="ic"><use href="#i-tools"/></svg>Agregar ingrediente</button>
+        <div class="bn-grid" style="margin-top:16px">
+          <div class="bn-field"><label>Porciones que rinde</label><input class="input" id="cos-porc" placeholder="ej. 10" inputmode="numeric" value="1"></div>
+          <div class="bn-field"><label>Margen / ganancia (%)</label><input class="input" id="cos-margen" placeholder="ej. 65" inputmode="decimal" value="65"><div class="bn-field__hint">Sobre el costo total</div></div>
+          <div class="bn-field"><label>Merma extra (%)</label><input class="input" id="cos-merma" placeholder="ej. 5" inputmode="decimal" value="0"><div class="bn-field__hint">Desperdicio no contemplado</div></div>
         </div>
-        <div class="bn-result" id="dil-out" style="margin-top:18px">
-          <div class="bn-result__lbl">Resultado</div>
-          <div class="bn-result__val" id="dil-val">—</div>
-          <div class="bn-result__note" id="dil-note">Completa 3 campos para calcular el cuarto.</div>
+        <div class="bn-result" id="cos-out" style="margin-top:18px">
+          <div class="bn-result__lbl">Precio de venta sugerido (por porción)</div>
+          <div class="bn-result__val" id="cos-val">—</div>
+          <div class="bn-result__note" id="cos-note">Agrega ingredientes con su costo para calcular.</div>
         </div>
-        <div class="bn-mini" id="dil-mini" style="display:none">
-          <div class="bn-mini__c"><div class="bn-mini__l">Volumen de stock (V₁)</div><div class="bn-mini__v" id="dil-m-v1">—</div></div>
-          <div class="bn-mini__c"><div class="bn-mini__l">Diluyente a agregar</div><div class="bn-mini__v" id="dil-m-dil">—</div></div>
-          <div class="bn-mini__c"><div class="bn-mini__l">Factor de dilución</div><div class="bn-mini__v" id="dil-m-fd">—</div></div>
+        <div class="bn-mini" id="cos-mini" style="display:none">
+          <div class="bn-mini__c"><div class="bn-mini__l">Costo total receta</div><div class="bn-mini__v" id="cos-m-tot">—</div></div>
+          <div class="bn-mini__c"><div class="bn-mini__l">Costo por porción</div><div class="bn-mini__v" id="cos-m-porc">—</div></div>
+          <div class="bn-mini__c"><div class="bn-mini__l">Ganancia por porción</div><div class="bn-mini__v" id="cos-m-gan">—</div></div>
         </div>
-        <div class="bn-formula">C₁ · V₁ = C₂ · V₂</div>
+        <div class="bn-formula">Precio = (Costo ÷ porciones) × (1 + margen%) × (1 + merma%)</div>
       </div>`});
     const q=id=>c.querySelector('#'+id);
-    const ids=['dil-c1','dil-v1','dil-c2','dil-v2'];
-    let last={};
-    function calc(){if(typeof toolEsVIP==='function'&&!toolEsVIP())return;
-      const c1=bnNum(q('dil-c1').value),v1=bnNum(q('dil-v1').value),c2=bnNum(q('dil-c2').value),v2=bnNum(q('dil-v2').value);
-      const vals={c1,v1,c2,v2}; const blanks=Object.keys(vals).filter(k=>vals[k]===null);
-      const val=q('dil-val'),note=q('dil-note'),mini=q('dil-mini');
-      mini.style.display='none';
-      if(blanks.length!==1){ val.textContent='—'; note.textContent=blanks.length>1?'Faltan datos: llena 3 campos.':'Hay 4 datos: deja vacío el que quieres calcular.'; return; }
-      let r,lbl;
-      const b=blanks[0];
-      try{
-        if(b==='v1'){ r=(c2*v2)/c1; lbl='V₁ = '+bnFmt(r)+' mL'; q('dil-v1').setAttribute('data-calc',r); }
-        else if(b==='c1'){ r=(c2*v2)/v1; lbl='C₁ = '+bnFmt(r); }
-        else if(b==='c2'){ r=(c1*v1)/v2; lbl='C₂ = '+bnFmt(r); }
-        else { r=(c1*v1)/c2; lbl='V₂ = '+bnFmt(r)+' mL'; }
-      }catch(e){ r=null; }
-      if(r===null||!isFinite(r)){ val.textContent='—'; note.textContent='Revisa que los valores no sean cero.'; return; }
-      val.textContent=lbl;
-      // panel de preparación si tenemos C1,C2,V2
-      const C1=c1, C2=c2, V2=(b==='v2'?r:v2);
-      if(C1&&C2&&V2&&C1>=C2){
-        const V1=(C2*V2)/C1; const dilv=V2-V1; const fd=C1/C2;
-        q('dil-m-v1').textContent=bnFmt(V1)+' mL'; q('dil-m-dil').textContent=bnFmt(dilv)+' mL'; q('dil-m-fd').textContent='1:'+bnFmt(fd,2);
-        note.textContent='Toma '+bnFmt(V1)+' mL de stock y afora con '+bnFmt(dilv)+' mL de diluyente hasta '+bnFmt(V2)+' mL.';
-        mini.style.display='';
-      } else { note.textContent='Resultado calculado.'; }
-      last={c1,v1:(b==='v1'?r:v1),c2,v2:V2,lbl};
+    let rows=[];
+    function addRow(nombre,cant,costo){
+      const i=rows.length;
+      rows.push({nombre:nombre||'',cant:cant||'',costo:costo||''});
+      const div=document.createElement('div');
+      div.style.cssText='display:flex;gap:8px;align-items:center';
+      div.innerHTML=`
+        <input class="input" data-r="${i}" data-f="nombre" placeholder="Ingrediente" value="${(nombre||'').replace(/"/g,'&quot;')}" style="flex:2;min-width:0">
+        <input class="input" data-r="${i}" data-f="cant" placeholder="Cant." inputmode="decimal" value="${cant||''}" style="flex:1;min-width:0">
+        <input class="input" data-r="${i}" data-f="costo" placeholder="Costo $" inputmode="decimal" value="${costo||''}" style="flex:1;min-width:0">
+        <button class="btn btn--ghost btn--sm" data-del="${i}" title="Quitar" style="flex-shrink:0;padding:8px 10px"><svg class="ic"><use href="#i-trash"/></svg></button>`;
+      q('cos-list').appendChild(div);
+      div.querySelectorAll('[data-f]').forEach(inp=>inp.addEventListener('input',e=>{
+        const r=+inp.dataset.r, f=inp.dataset.f; if(rows[r]) rows[r][f]=e.target.value; calc();
+      }));
+      div.querySelector('[data-del]').addEventListener('click',()=>{ rows[i]=null; div.remove(); calc(); });
     }
-    ids.forEach(id=>q(id).addEventListener('input',calc));
-    q('dil-pdf').addEventListener('click',()=>{
-      if(!toolRequiereVIP('Diluciones')) return;
+    function calc(){ if(typeof toolEsVIP==='function'&&!toolEsVIP())return;
+      let tot=0; rows.forEach(r=>{ if(r){ const cst=bnNum(r.costo); if(cst!==null) tot+=cst; } });
+      const porc=Math.max(1,bnNum(q('cos-porc').value)||1);
+      const margen=(bnNum(q('cos-margen').value)||0)/100;
+      const merma=(bnNum(q('cos-merma').value)||0)/100;
+      const val=q('cos-val'),note=q('cos-note'),mini=q('cos-mini');
+      if(tot<=0){ val.textContent='—'; note.textContent='Agrega ingredientes con su costo para calcular.'; mini.style.display='none'; return; }
+      const costoPorc=tot/porc;
+      const precioPorc=costoPorc*(1+margen)*(1+merma);
+      const ganPorc=precioPorc-costoPorc;
+      val.textContent='$'+bnFmt(precioPorc,2);
+      note.textContent='Con '+porc+' porción(es), margen '+(margen*100).toFixed(0)+'% y merma '+(merma*100).toFixed(0)+'%.';
+      q('cos-m-tot').textContent='$'+bnFmt(tot,2);
+      q('cos-m-porc').textContent='$'+bnFmt(costoPorc,2);
+      q('cos-m-gan').textContent='$'+bnFmt(ganPorc,2);
+      mini.style.display='';
+      window.__cosLast={tot,porc,costoPorc,precioPorc,ganPorc,margen,merma,rows:rows.filter(Boolean)};
+    }
+    q('cos-add').addEventListener('click',()=>addRow());
+    ['cos-porc','cos-margen','cos-merma'].forEach(id=>q(id).addEventListener('input',calc));
+    // Arranca con 3 renglones de ejemplo vacíos
+    addRow(); addRow(); addRow();
+    q('cos-pdf').addEventListener('click',()=>{
+      if(!toolRequiereVIP('Costeo de receta')) return;
       if(!window.jspdf){ Toast.error('PDF no disponible','Revisa tu conexión.'); return; }
+      const L=window.__cosLast; if(!L){ Toast.info('Sin datos','Agrega ingredientes primero.'); return; }
       const {jsPDF}=window.jspdf; const pdf=new jsPDF({unit:'mm',format:'a4'});
-      let y=bnPdfHeader(pdf,'Reporte de dilución', 'Folio: '+bnFolio('DIL'));
-      pdf.setFontSize(10); pdf.setTextColor(15,23,42);
-      [['C₁ (stock)',last.c1],['V₁ (stock)',last.v1!=null?last.v1+' mL':'—'],['C₂ (final)',last.c2],['V₂ (final)',last.v2!=null?last.v2+' mL':'—']].forEach(([l,v])=>{
-        pdf.setTextColor(110,120,140); pdf.text(l+':',16,y); pdf.setTextColor(15,23,42); pdf.text(String(v??'—'),70,y); y+=7;
-      });
-      y+=4; pdf.setFont(undefined,'bold'); pdf.text('Resultado: '+(last.lbl||'—'),16,y); pdf.setFont(undefined,'normal');
-      bnPdfFooter(pdf); pdf.save('dilucion-'+Date.now()+'.pdf'); Toast.success('PDF generado','Reporte de dilución');
-    });
-    calc();
-  }
-  return {open(){navigateToSection('tool-diluciones');}, mount};
-})();
-
-/* 2 ─ UFC/mL (conteo en placa) ─────────────────────────── */
-const ToolUFC = (function(){
-  function mount(c){
-    bnToolShell(c,{icon:'i-bn-microbe',title:'UFC/mL · conteo en placa',
-      sub:'Unidades Formadoras de Colonias por mililitro a partir del conteo y la dilución sembrada.',
-      actions:`<button class="btn btn--accent btn--sm" id="ufc-pdf">Reporte PDF<svg class="ic"><use href="#i-download"/></svg></button>`,
-      body:`<div class="bn-card">
-        <div class="bn-card__t"><svg class="ic"><use href="#i-bn-microbe"/></svg>Datos de la placa</div>
-        <div class="bn-grid">
-          <div class="bn-field"><label>Colonias contadas</label><input class="input" id="ufc-col" placeholder="ej. 156" inputmode="numeric"><div class="bn-field__hint">Rango contable ideal: 30–300</div></div>
-          <div class="bn-field"><label>Dilución sembrada (10⁻ⁿ)</label><input class="input" id="ufc-dil" placeholder="ej. 4" inputmode="numeric"><div class="bn-field__hint">Escribe sólo n (10⁻⁴ → 4)</div></div>
-          <div class="bn-field"><label>Volumen sembrado</label><input class="input" id="ufc-vol" placeholder="ej. 0.1" inputmode="decimal" value="0.1"><div class="bn-field__hint">mL</div></div>
-        </div>
-        <div class="bn-result" style="margin-top:18px">
-          <div class="bn-result__lbl">Concentración</div>
-          <div class="bn-result__val"><span id="ufc-val">—</span><span class="bn-result__unit">UFC/mL</span></div>
-          <div class="bn-result__note" id="ufc-note">Captura los tres datos.</div>
-        </div>
-        <div class="bn-formula">UFC/mL = colonias ÷ (volumen × dilución)</div>
-      </div>`});
-    const q=id=>c.querySelector('#'+id); let last={};
-    function calc(){if(typeof toolEsVIP==='function'&&!toolEsVIP())return;
-      const col=bnNum(q('ufc-col').value), n=bnNum(q('ufc-dil').value), vol=bnNum(q('ufc-vol').value);
-      const val=q('ufc-val'), note=q('ufc-note');
-      if(col===null||n===null||vol===null||vol===0){ val.textContent='—'; note.textContent='Captura colonias, dilución y volumen.'; return; }
-      const ufc = col / (vol * Math.pow(10,-n));
-      val.textContent=bnFmt(ufc,2);
-      let aviso='';
-      if(col<30) aviso=' · Conteo bajo (<30): resultado poco confiable, reporta como estimado.';
-      else if(col>300) aviso=' · Conteo alto (>300): incontable, usa una dilución mayor.';
-      note.textContent='= '+bnFmt(col)+' ÷ ('+vol+' × 10⁻'+n+')'+aviso;
-      last={col,n,vol,ufc};
-    }
-    ['ufc-col','ufc-dil','ufc-vol'].forEach(id=>q(id).addEventListener('input',calc));
-    q('ufc-pdf').addEventListener('click',()=>{
-      if(!toolRequiereVIP('UFC/mL')) return; if(!window.jspdf){ Toast.error('PDF no disponible'); return; }
-      const {jsPDF}=window.jspdf; const pdf=new jsPDF({unit:'mm',format:'a4'});
-      let y=bnPdfHeader(pdf,'Reporte de recuento microbiano','Folio: '+bnFolio('UFC'));
+      let y=bnPdfHeader(pdf,'Costeo de receta','Folio: '+bnFolio('COS'));
       pdf.setFontSize(10);
-      [['Colonias contadas',last.col],['Dilución','10⁻'+last.n],['Volumen sembrado',last.vol+' mL']].forEach(([l,v])=>{
-        pdf.setTextColor(110,120,140); pdf.text(l+':',16,y); pdf.setTextColor(15,23,42); pdf.text(String(v??'—'),70,y); y+=7;});
-      y+=4; pdf.setFont(undefined,'bold'); pdf.setFontSize(12); pdf.text('Resultado: '+bnFmt(last.ufc,2)+' UFC/mL',16,y); pdf.setFont(undefined,'normal');
-      bnPdfFooter(pdf); pdf.save('ufc-'+Date.now()+'.pdf'); Toast.success('PDF generado');
+      L.rows.forEach(r=>{ pdf.setTextColor(110,120,140); pdf.text(String(r.nombre||'—'),16,y); pdf.setTextColor(15,23,42); pdf.text('$'+bnFmt(bnNum(r.costo)||0,2),150,y); y+=6; });
+      y+=3; pdf.setDrawColor(225,232,245); pdf.line(16,y,194,y); y+=8;
+      [['Costo total','$'+bnFmt(L.tot,2)],['Porciones',String(L.porc)],['Costo por porción','$'+bnFmt(L.costoPorc,2)],['Margen',(L.margen*100).toFixed(0)+'%'],['Precio de venta / porción','$'+bnFmt(L.precioPorc,2)]].forEach(([l,v])=>{
+        pdf.setTextColor(110,120,140); pdf.text(l+':',16,y); pdf.setTextColor(15,23,42); pdf.text(String(v),90,y); y+=7;
+      });
+      bnPdfFooter(pdf); pdf.save('costeo-receta-'+Date.now()+'.pdf'); Toast.success('PDF generado','Costeo de receta');
     });
     calc();
   }
-  return {open(){navigateToSection('tool-ufc');}, mount};
+  return {open(){navigateToSection('tool-costeo');}, mount};
 })();
 
-/* 3 ─ CONVERSOR CLÍNICO mg/dL ↔ mmol/L ─────────────────── */
+/* 2 ─ CONVERSOR DE COCINA ───────────────────────────────── */
 const ToolConversor = (function(){
-  const AN=[
-    {k:'glucosa',n:'Glucosa',f:0.0555,u:'mmol/L'},
-    {k:'colesterol',n:'Colesterol / HDL / LDL',f:0.02586,u:'mmol/L'},
-    {k:'trigliceridos',n:'Triglicéridos',f:0.01129,u:'mmol/L'},
-    {k:'urea',n:'Urea',f:0.1665,u:'mmol/L'},
-    {k:'bun',n:'Nitrógeno ureico (BUN)',f:0.357,u:'mmol/L'},
-    {k:'creatinina',n:'Creatinina',f:88.4,u:'µmol/L'},
-    {k:'acidourico',n:'Ácido úrico',f:59.48,u:'µmol/L'},
-    {k:'calcio',n:'Calcio',f:0.2495,u:'mmol/L'},
-    {k:'bilirrubina',n:'Bilirrubina',f:17.1,u:'µmol/L'}
-  ];
+  // Densidades aproximadas (g por taza de 240 mL) para ingredientes comunes
+  const DENS={
+    'agua':240,'leche':245,'aceite':224,'harina':120,'harina de trigo':120,
+    'azúcar':200,'azucar':200,'azúcar glass':120,'azucar glass':120,'sal':288,
+    'mantequilla':227,'arroz':185,'cacao':100,'miel':340,'crema':240
+  };
   function mount(c){
-    bnToolShell(c,{icon:'i-bn-droplet',title:'Conversor clínico de unidades',
-      sub:'Convierte resultados de química sanguínea entre mg/dL y unidades del SI (mmol/L · µmol/L).',
+    const opts=Object.keys(DENS).filter((v,i,a)=>a.indexOf(v)===i).sort().map(k=>`<option value="${k}">${k}</option>`).join('');
+    bnToolShell(c,{icon:'i-bn-droplet',title:'Conversor de cocina',
+      sub:'Convierte entre tazas, gramos y mililitros. Elige el ingrediente para que el peso sea exacto según su densidad.',
       body:`<div class="bn-card">
-        <div class="bn-card__t"><svg class="ic"><use href="#i-bn-droplet"/></svg>Analito y valor</div>
+        <div class="bn-card__t"><svg class="ic"><use href="#i-bn-droplet"/></svg>Convertir</div>
         <div class="bn-grid">
-          <div class="bn-field"><label>Analito</label>
-            <select class="bn-select" id="cv-an">${AN.map(a=>`<option value="${a.k}">${a.n}</option>`).join('')}</select></div>
-          <div class="bn-field"><label>Dirección</label>
-            <div class="bn-seg" id="cv-dir">
-              <button data-d="to" class="is-on">mg/dL → SI</button>
-              <button data-d="from">SI → mg/dL</button>
-            </div></div>
-          <div class="bn-field"><label>Valor a convertir</label><input class="input" id="cv-val" placeholder="ej. 90" inputmode="decimal"></div>
+          <div class="bn-field"><label>Cantidad</label><input class="input" id="cnv-cant" placeholder="ej. 2" inputmode="decimal"></div>
+          <div class="bn-field"><label>De</label><select class="input" id="cnv-de"><option value="taza">Tazas</option><option value="cda">Cucharadas</option><option value="cdta">Cucharaditas</option><option value="g">Gramos</option><option value="ml">Mililitros</option></select></div>
+          <div class="bn-field"><label>A</label><select class="input" id="cnv-a"><option value="g">Gramos</option><option value="ml">Mililitros</option><option value="taza">Tazas</option><option value="cda">Cucharadas</option><option value="cdta">Cucharaditas</option></select></div>
+          <div class="bn-field"><label>Ingrediente</label><select class="input" id="cnv-ing"><option value="agua">agua (genérico)</option>${opts}</select><div class="bn-field__hint">Necesario para peso ↔ volumen</div></div>
         </div>
-        <div class="bn-result" style="margin-top:18px">
-          <div class="bn-result__lbl">Equivalente</div>
-          <div class="bn-result__val"><span id="cv-out">—</span><span class="bn-result__unit" id="cv-unit"></span></div>
-          <div class="bn-result__note" id="cv-note">Selecciona analito y captura el valor.</div>
+        <div class="bn-result" id="cnv-out" style="margin-top:18px">
+          <div class="bn-result__lbl">Resultado</div>
+          <div class="bn-result__val" id="cnv-val">—</div>
+          <div class="bn-result__note" id="cnv-note">Captura una cantidad para convertir.</div>
         </div>
+        <div class="bn-formula">1 taza = 240 mL · 1 cda = 15 mL · 1 cdta = 5 mL</div>
       </div>`});
-    const q=id=>c.querySelector('#'+id); let dir='to';
-    function calc(){if(typeof toolEsVIP==='function'&&!toolEsVIP())return;
-      const a=AN.find(x=>x.k===q('cv-an').value); const v=bnNum(q('cv-val').value);
-      const out=q('cv-out'),unit=q('cv-unit'),note=q('cv-note');
-      if(!a||v===null){ out.textContent='—'; unit.textContent=''; note.textContent='Captura el valor.'; return; }
-      let r,u;
-      if(dir==='to'){ r=v*a.f; u=a.u; note.textContent=v+' mg/dL × '+a.f+' = '+bnFmt(r,3)+' '+u; }
-      else { r=v/a.f; u='mg/dL'; note.textContent=v+' '+a.u+' ÷ '+a.f+' = '+bnFmt(r,3)+' mg/dL'; }
-      out.textContent=bnFmt(r,3); unit.textContent=' '+u;
+    const q=id=>c.querySelector('#'+id);
+    const ML={taza:240,cda:15,cdta:5,ml:1};
+    function calc(){ if(typeof toolEsVIP==='function'&&!toolEsVIP())return;
+      const cant=bnNum(q('cnv-cant').value); const de=q('cnv-de').value, a=q('cnv-a').value;
+      const ing=q('cnv-ing').value; const dens=DENS[ing]||240; // g por taza(240mL)
+      const gPerMl=dens/240;
+      const val=q('cnv-val'),note=q('cnv-note');
+      if(cant===null){ val.textContent='—'; note.textContent='Captura una cantidad para convertir.'; return; }
+      // Paso 1: llevar TODO a mililitros (volumen) usando densidad si viene en gramos
+      let ml;
+      if(de==='g'){ ml=cant/gPerMl; } else { ml=cant*ML[de]; }
+      // Paso 2: de mililitros a la unidad destino
+      let out,unidad;
+      if(a==='g'){ out=ml*gPerMl; unidad='g'; }
+      else { out=ml/ML[a]; unidad=(a==='ml'?'mL':a); }
+      val.textContent=bnFmt(out,2)+' '+unidad;
+      const usaDens=(de==='g'||a==='g');
+      note.textContent=usaDens?('Calculado con densidad de "'+ing+'" ('+bnFmt(dens,0)+' g/taza).'):'Conversión de volumen (no depende del ingrediente).';
     }
-    q('cv-an').addEventListener('change',calc);
-    q('cv-val').addEventListener('input',calc);
-    q('cv-dir').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
-      q('cv-dir').querySelectorAll('button').forEach(x=>x.classList.remove('is-on'));
-      b.classList.add('is-on'); dir=b.dataset.d; calc();
-    }));
+    ['cnv-cant','cnv-de','cnv-a','cnv-ing'].forEach(id=>q(id).addEventListener('input',calc));
+    ['cnv-de','cnv-a','cnv-ing'].forEach(id=>q(id).addEventListener('change',calc));
     calc();
   }
   return {open(){navigateToSection('tool-conversor');}, mount};
 })();
 
-/* 4 ─ DOSIS POR PESO (mg/kg) ───────────────────────────── */
-const ToolDosis = (function(){
+/* 3 ─ RENDIMIENTO Y MERMA ───────────────────────────────── */
+const ToolMerma = (function(){
   function mount(c){
-    bnToolShell(c,{icon:'i-bn-pill',title:'Dosis por peso (mg/kg)',
-      sub:'Calcula la dosis total, por toma y el volumen a administrar según el peso del paciente.',
+    bnToolShell(c,{icon:'i-bn-leaf',title:'Rendimiento y merma',
+      sub:'Cuánto producto útil queda después de limpiar, pelar o cocer. Calcula el % de merma y el costo real del producto aprovechable.',
+      actions:`<button class="btn btn--accent btn--sm" id="mer-pdf">Reporte PDF<svg class="ic"><use href="#i-download"/></svg></button>`,
       body:`<div class="bn-card">
-        <div class="bn-card__t"><svg class="ic"><use href="#i-bn-pill"/></svg>Parámetros</div>
+        <div class="bn-card__t"><svg class="ic"><use href="#i-bn-leaf"/></svg>Datos</div>
         <div class="bn-grid">
-          <div class="bn-field"><label>Peso del paciente</label><input class="input" id="ds-peso" placeholder="ej. 70" inputmode="decimal"><div class="bn-field__hint">kg</div></div>
-          <div class="bn-field"><label>Dosis</label><input class="input" id="ds-mgkg" placeholder="ej. 15" inputmode="decimal"><div class="bn-field__hint">mg/kg (por día o por toma)</div></div>
-          <div class="bn-field"><label>Tomas por día</label><input class="input" id="ds-tomas" placeholder="ej. 3" inputmode="numeric" value="1"></div>
-          <div class="bn-field"><label>Concentración (opcional)</label><input class="input" id="ds-conc" placeholder="ej. 250" inputmode="decimal"><div class="bn-field__hint">mg/mL del fármaco</div></div>
+          <div class="bn-field"><label>Peso bruto (compra)</label><input class="input" id="mer-bruto" placeholder="ej. 1000" inputmode="decimal"><div class="bn-field__hint">g o kg (usa la misma unidad)</div></div>
+          <div class="bn-field"><label>Peso neto (aprovechable)</label><input class="input" id="mer-neto" placeholder="ej. 750" inputmode="decimal"><div class="bn-field__hint">Después de limpiar/cocer</div></div>
+          <div class="bn-field"><label>Costo del bruto ($)</label><input class="input" id="mer-costo" placeholder="ej. 80" inputmode="decimal"><div class="bn-field__hint">Opcional · para costo real</div></div>
         </div>
-        <div class="bn-result" style="margin-top:18px">
-          <div class="bn-result__lbl">Dosis total</div>
-          <div class="bn-result__val"><span id="ds-total">—</span><span class="bn-result__unit">mg</span></div>
+        <div class="bn-result" id="mer-out" style="margin-top:18px">
+          <div class="bn-result__lbl">Merma</div>
+          <div class="bn-result__val" id="mer-val">—</div>
+          <div class="bn-result__note" id="mer-note">Captura peso bruto y neto para calcular.</div>
         </div>
-        <div class="bn-mini">
-          <div class="bn-mini__c"><div class="bn-mini__l">Por toma</div><div class="bn-mini__v" id="ds-toma">—</div></div>
-          <div class="bn-mini__c"><div class="bn-mini__l">Volumen por toma</div><div class="bn-mini__v" id="ds-vol">—</div></div>
+        <div class="bn-mini" id="mer-mini" style="display:none">
+          <div class="bn-mini__c"><div class="bn-mini__l">Rendimiento</div><div class="bn-mini__v" id="mer-m-rend">—</div></div>
+          <div class="bn-mini__c"><div class="bn-mini__l">Factor de corrección</div><div class="bn-mini__v" id="mer-m-fc">—</div></div>
+          <div class="bn-mini__c"><div class="bn-mini__l">Costo real por unidad útil</div><div class="bn-mini__v" id="mer-m-costo">—</div></div>
         </div>
-        <div class="bn-formula">dosis = peso (kg) × mg/kg</div>
-        <div class="bn-field__hint" style="margin-top:10px">⚠ Herramienta de apoyo de cálculo. La indicación final es responsabilidad del profesional tratante.</div>
+        <div class="bn-formula">Merma % = (bruto − neto) ÷ bruto × 100</div>
       </div>`});
     const q=id=>c.querySelector('#'+id);
-    function calc(){if(typeof toolEsVIP==='function'&&!toolEsVIP())return;
-      const p=bnNum(q('ds-peso').value), mk=bnNum(q('ds-mgkg').value), t=bnNum(q('ds-tomas').value)||1, conc=bnNum(q('ds-conc').value);
-      const tot=q('ds-total'),toma=q('ds-toma'),vol=q('ds-vol');
-      if(p===null||mk===null){ tot.textContent='—'; toma.textContent='—'; vol.textContent='—'; return; }
-      const total=p*mk; tot.textContent=bnFmt(total,2);
-      const porToma=total/(t||1); toma.textContent=bnFmt(porToma,2)+' mg';
-      vol.textContent=(conc&&conc>0)?bnFmt(porToma/conc,2)+' mL':'—';
+    function calc(){ if(typeof toolEsVIP==='function'&&!toolEsVIP())return;
+      const bruto=bnNum(q('mer-bruto').value), neto=bnNum(q('mer-neto').value), costo=bnNum(q('mer-costo').value);
+      const val=q('mer-val'),note=q('mer-note'),mini=q('mer-mini');
+      if(bruto===null||neto===null||bruto<=0){ val.textContent='—'; note.textContent='Captura peso bruto y neto para calcular.'; mini.style.display='none'; return; }
+      if(neto>bruto){ val.textContent='—'; note.textContent='El peso neto no puede ser mayor que el bruto.'; mini.style.display='none'; return; }
+      const merma=(bruto-neto)/bruto*100;
+      const rend=neto/bruto*100;
+      const fc=bruto/neto; // factor de corrección
+      val.textContent=bnFmt(merma,1)+' %';
+      note.textContent='Se pierde '+bnFmt(bruto-neto,0)+' de cada '+bnFmt(bruto,0)+' comprado.';
+      q('mer-m-rend').textContent=bnFmt(rend,1)+' %';
+      q('mer-m-fc').textContent='× '+bnFmt(fc,3);
+      let costoReal='—';
+      if(costo!==null&&neto>0){ costoReal='$'+bnFmt(costo/neto,4); }
+      q('mer-m-costo').textContent=costoReal;
+      mini.style.display='';
+      window.__merLast={bruto,neto,costo,merma,rend,fc,costoReal};
     }
-    ['ds-peso','ds-mgkg','ds-tomas','ds-conc'].forEach(id=>q(id).addEventListener('input',calc));
-    calc();
-  }
-  return {open(){navigateToSection('tool-dosis');}, mount};
-})();
-
-/* 5 ─ TFG / eGFR (CKD-EPI 2021, sin raza) ──────────────── */
-const ToolTFG = (function(){
-  function etapa(g){
-    if(g>=90) return {t:'G1 · Normal o alta',c:'ok'};
-    if(g>=60) return {t:'G2 · Ligeramente disminuida',c:'ok'};
-    if(g>=45) return {t:'G3a · Leve-moderada',c:'lo'};
-    if(g>=30) return {t:'G3b · Moderada-grave',c:'lo'};
-    if(g>=15) return {t:'G4 · Grave',c:'hi'};
-    return {t:'G5 · Falla renal',c:'hi'};
-  }
-  function mount(c){
-    bnToolShell(c,{icon:'i-bn-droplet',title:'TFG / eGFR (CKD-EPI 2021)',
-      sub:'Tasa de filtración glomerular estimada con la ecuación CKD-EPI Creatinina 2021 (sin variable de raza).',
-      body:`<div class="bn-card">
-        <div class="bn-card__t"><svg class="ic"><use href="#i-bn-droplet"/></svg>Datos del paciente</div>
-        <div class="bn-grid">
-          <div class="bn-field"><label>Creatinina sérica</label><input class="input" id="tfg-cr" placeholder="ej. 0.9" inputmode="decimal"><div class="bn-field__hint">mg/dL</div></div>
-          <div class="bn-field"><label>Edad</label><input class="input" id="tfg-edad" placeholder="ej. 45" inputmode="numeric"><div class="bn-field__hint">años</div></div>
-          <div class="bn-field"><label>Sexo</label>
-            <div class="bn-seg" id="tfg-sexo"><button data-s="f" class="is-on">Femenino</button><button data-s="m">Masculino</button></div></div>
-        </div>
-        <div class="bn-result" style="margin-top:18px">
-          <div class="bn-result__lbl">TFG estimada</div>
-          <div class="bn-result__val"><span id="tfg-val">—</span><span class="bn-result__unit">mL/min/1.73m²</span></div>
-          <div class="bn-result__note" id="tfg-etapa">Captura creatinina y edad.</div>
-        </div>
-        <div class="bn-formula">CKD-EPI 2021 · 142 × min(Scr/κ,1)^α × max(Scr/κ,1)^⁻¹·² × 0.9938^edad × (1.012 si mujer)</div>
-      </div>`});
-    const q=id=>c.querySelector('#'+id); let sexo='f';
-    function calc(){if(typeof toolEsVIP==='function'&&!toolEsVIP())return;
-      const scr=bnNum(q('tfg-cr').value), edad=bnNum(q('tfg-edad').value);
-      const val=q('tfg-val'), et=q('tfg-etapa');
-      if(scr===null||edad===null||scr<=0||edad<=0){ val.textContent='—'; et.textContent='Captura creatinina y edad.'; return; }
-      const k = sexo==='f'?0.7:0.9; const a = sexo==='f'?-0.241:-0.302;
-      const r = scr/k;
-      let g = 142 * Math.pow(Math.min(r,1),a) * Math.pow(Math.max(r,1),-1.200) * Math.pow(0.9938,edad);
-      if(sexo==='f') g*=1.012;
-      val.textContent=bnFmt(g,1);
-      const e=etapa(g);
-      et.innerHTML='Estadio: <span class="bn-badge bn-badge--'+e.c+'">'+e.t+'</span>';
-    }
-    ['tfg-cr','tfg-edad'].forEach(id=>q(id).addEventListener('input',calc));
-    q('tfg-sexo').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
-      q('tfg-sexo').querySelectorAll('button').forEach(x=>x.classList.remove('is-on'));
-      b.classList.add('is-on'); sexo=b.dataset.s; calc();
-    }));
-    calc();
-  }
-  return {open(){navigateToSection('tool-tfg');}, mount};
-})();
-
-/* 6 ─ MOLARIDAD ↔ g/L ──────────────────────────────────── */
-const ToolMolaridad = (function(){
-  function mount(c){
-    bnToolShell(c,{icon:'i-bn-flask',title:'Molaridad ↔ g/L',
-      sub:'Convierte entre molaridad y concentración másica, y calcula los gramos para preparar una solución.',
-      body:`<div class="bn-card">
-        <div class="bn-card__t"><svg class="ic"><use href="#i-bn-flask"/></svg>Conversión</div>
-        <div class="bn-grid">
-          <div class="bn-field"><label>Peso molecular (PM)</label><input class="input" id="mol-pm" placeholder="ej. 58.44 (NaCl)" inputmode="decimal"><div class="bn-field__hint">g/mol</div></div>
-          <div class="bn-field"><label>Molaridad</label><input class="input" id="mol-m" placeholder="ej. 0.5" inputmode="decimal"><div class="bn-field__hint">mol/L (M)</div></div>
-          <div class="bn-field"><label>Concentración másica</label><input class="input" id="mol-gl" placeholder="se calcula…" inputmode="decimal"><div class="bn-field__hint">g/L</div></div>
-        </div>
-        <div class="bn-field__hint" style="margin:4px 0 14px">Llena PM y uno de los dos (M o g/L); el otro se calcula.</div>
-        <div class="bn-card__t" style="margin-top:6px"><svg class="ic"><use href="#i-bn-flask"/></svg>¿Cuántos gramos pesar?</div>
-        <div class="bn-grid">
-          <div class="bn-field"><label>Volumen a preparar</label><input class="input" id="mol-v" placeholder="ej. 1" inputmode="decimal"><div class="bn-field__hint">litros</div></div>
-        </div>
-        <div class="bn-result" style="margin-top:18px">
-          <div class="bn-result__lbl">Gramos a pesar</div>
-          <div class="bn-result__val"><span id="mol-g">—</span><span class="bn-result__unit">g</span></div>
-          <div class="bn-result__note" id="mol-note">g = M × V(L) × PM</div>
-        </div>
-        <div class="bn-formula">M = (g/L) ÷ PM   ·   g/L = M × PM</div>
-      </div>`});
-    const q=id=>c.querySelector('#'+id);
-    function calc(src){
-      const pm=bnNum(q('mol-pm').value); let m=bnNum(q('mol-m').value); let gl=bnNum(q('mol-gl').value);
-      if(pm&&pm>0){
-        if(src==='m'&&m!==null){ gl=m*pm; q('mol-gl').value=bnFmt(gl,4); }
-        else if(src==='gl'&&gl!==null){ m=gl/pm; q('mol-m').value=bnFmt(m,4); }
-        else if(m!==null&&gl===null){ gl=m*pm; q('mol-gl').value=bnFmt(gl,4); }
-        else if(gl!==null&&m===null){ m=gl/pm; q('mol-m').value=bnFmt(m,4); }
-      }
-      const v=bnNum(q('mol-v').value);
-      const g=q('mol-g');
-      if(pm&&m!==null&&v!==null){ g.textContent=bnFmt(m*v*pm,4); }
-      else { g.textContent='—'; }
-    }
-    q('mol-m').addEventListener('input',()=>calc('m'));
-    q('mol-gl').addEventListener('input',()=>calc('gl'));
-    q('mol-pm').addEventListener('input',()=>calc());
-    q('mol-v').addEventListener('input',()=>calc());
-    calc();
-  }
-  return {open(){navigateToSection('tool-molaridad');}, mount};
-})();
-
-/* 7 ─ LEY DE BEER (A = ε·b·c) ──────────────────────────── */
-const ToolBeer = (function(){
-  function mount(c){
-    bnToolShell(c,{icon:'i-bn-droplet',title:'Ley de Beer-Lambert (A = ε·b·c)',
-      sub:'Relaciona absorbancia, absortividad molar, paso óptico y concentración. Deja vacío el dato a calcular.',
-      body:`<div class="bn-card">
-        <div class="bn-card__t"><svg class="ic"><use href="#i-bn-droplet"/></svg>Variables (llena 3, deja 1 vacío)</div>
-        <div class="bn-grid">
-          <div class="bn-field"><label>A · absorbancia</label><input class="input" id="be-a" placeholder="ej. 0.45" inputmode="decimal"><div class="bn-field__hint">adimensional</div></div>
-          <div class="bn-field"><label>ε · absortividad molar</label><input class="input" id="be-e" placeholder="ej. 6300" inputmode="decimal"><div class="bn-field__hint">L·mol⁻¹·cm⁻¹</div></div>
-          <div class="bn-field"><label>b · paso óptico</label><input class="input" id="be-b" placeholder="1" inputmode="decimal" value="1"><div class="bn-field__hint">cm</div></div>
-          <div class="bn-field"><label>c · concentración</label><input class="input" id="be-c" placeholder="se calcula…" inputmode="decimal"><div class="bn-field__hint">mol/L</div></div>
-        </div>
-        <div class="bn-result" style="margin-top:18px">
-          <div class="bn-result__lbl">Resultado</div>
-          <div class="bn-result__val" id="be-val">—</div>
-          <div class="bn-result__note" id="be-note">Completa 3 campos para calcular el cuarto.</div>
-        </div>
-        <div class="bn-formula">A = ε · b · c</div>
-      </div>`});
-    const q=id=>c.querySelector('#'+id);
-    function calc(){if(typeof toolEsVIP==='function'&&!toolEsVIP())return;
-      const A=bnNum(q('be-a').value),E=bnNum(q('be-e').value),B=bnNum(q('be-b').value),C=bnNum(q('be-c').value);
-      const vals={A,E,B,C}; const blanks=Object.keys(vals).filter(k=>vals[k]===null);
-      const val=q('be-val'),note=q('be-note');
-      if(blanks.length!==1){ val.textContent='—'; note.textContent=blanks.length>1?'Faltan datos: llena 3 campos.':'Deja vacío el dato que quieres calcular.'; return; }
-      const b=blanks[0]; let r,lbl;
-      if(b==='A'){ r=E*B*C; lbl='A = '+bnFmt(r,4); }
-      else if(b==='E'){ r=A/(B*C); lbl='ε = '+bnFmt(r,2)+' L·mol⁻¹·cm⁻¹'; }
-      else if(b==='B'){ r=A/(E*C); lbl='b = '+bnFmt(r,4)+' cm'; }
-      else { r=A/(E*B); lbl='c = '+bnFmt(r,6)+' mol/L'; }
-      if(r===null||!isFinite(r)){ val.textContent='—'; note.textContent='Revisa que no haya ceros.'; return; }
-      val.textContent=lbl; note.textContent='Calculado a partir de los otros 3 valores.';
-    }
-    ['be-a','be-e','be-b','be-c'].forEach(id=>q(id).addEventListener('input',calc));
-    calc();
-  }
-  return {open(){navigateToSection('tool-beer');}, mount};
-})();
-
-/* 8 ─ REPORTE DE RESULTADOS DE LAB (PDF) ───────────────── */
-const ToolReporte = (function(){
-  let rows=[];
-  function rowHTML(i,r){
-    return `<tr data-i="${i}">
-      <td><input class="input" data-f="param" placeholder="Parámetro" value="${r.param||''}"></td>
-      <td><input class="input" data-f="res" placeholder="Resultado" value="${r.res||''}" inputmode="decimal" style="max-width:90px"></td>
-      <td><input class="input" data-f="uni" placeholder="Unidad" value="${r.uni||''}" style="max-width:80px"></td>
-      <td><input class="input" data-f="ref" placeholder="ej. 70-110" value="${r.ref||''}" style="max-width:100px"></td>
-      <td id="flag-${i}"></td>
-      <td><button class="bn-rowdel" data-del="${i}" title="Quitar">×</button></td>
-    </tr>`;
-  }
-  function flagFor(res,ref){
-    const v=bnNum(res); if(v===null||!ref) return '';
-    const m=String(ref).match(/(-?\d+\.?\d*)\s*[-–a]\s*(-?\d+\.?\d*)/);
-    if(!m) return '';
-    const lo=parseFloat(m[1]), hi=parseFloat(m[2]);
-    if(v<lo) return '<span class="bn-badge bn-badge--lo">BAJO</span>';
-    if(v>hi) return '<span class="bn-badge bn-badge--hi">ALTO</span>';
-    return '<span class="bn-badge bn-badge--ok">NORMAL</span>';
-  }
-  function mount(c){
-    if(rows.length===0) rows=[{param:'',res:'',uni:'',ref:''}];
-    bnToolShell(c,{icon:'i-edit',title:'Reporte de resultados de laboratorio',
-      sub:'Captura datos del paciente y resultados; genera un PDF profesional con membrete DulceLab Food.',
-      actions:`<button class="btn btn--ghost btn--sm" id="rp-add">+ Analito</button><button class="btn btn--accent btn--sm" id="rp-pdf">Generar PDF<svg class="ic"><use href="#i-download"/></svg></button>`,
-      body:`<div class="bn-card">
-        <div class="bn-card__t"><svg class="ic"><use href="#i-user"/></svg>Datos del paciente</div>
-        <div class="bn-grid">
-          <div class="bn-field"><label>Nombre del paciente</label><input class="input" id="rp-nom" placeholder="Nombre completo"></div>
-          <div class="bn-field"><label>Edad</label><input class="input" id="rp-edad" placeholder="años" inputmode="numeric"></div>
-          <div class="bn-field"><label>Sexo</label><input class="input" id="rp-sexo" placeholder="F / M"></div>
-          <div class="bn-field"><label>ID / Folio interno</label><input class="input" id="rp-id" placeholder="opcional"></div>
-          <div class="bn-field"><label>Médico solicitante</label><input class="input" id="rp-med" placeholder="opcional"></div>
-          <div class="bn-field"><label>Fecha de toma</label><input class="input" id="rp-fecha" placeholder="dd/mm/aaaa"></div>
-        </div>
-      </div>
-      <div class="bn-card" style="overflow-x:auto">
-        <div class="bn-card__t"><svg class="ic"><use href="#i-clipboard-check"/></svg>Resultados</div>
-        <table class="bn-tbl"><thead><tr><th>Parámetro</th><th>Resultado</th><th>Unidad</th><th>Ref.</th><th>Flag</th><th></th></tr></thead>
-        <tbody id="rp-body">${rows.map((r,i)=>rowHTML(i,r)).join('')}</tbody></table>
-      </div>`});
-    const q=id=>c.querySelector('#'+id);
-    function refreshFlags(){ rows.forEach((r,i)=>{ const f=c.querySelector('#flag-'+i); if(f) f.innerHTML=flagFor(r.res,r.ref); }); }
-    function rebind(){
-      c.querySelectorAll('#rp-body input').forEach(inp=>{
-        inp.addEventListener('input',e=>{ const tr=e.target.closest('tr'); const i=+tr.dataset.i; rows[i][e.target.dataset.f]=e.target.value; if(e.target.dataset.f==='res'||e.target.dataset.f==='ref') refreshFlags(); });
-      });
-      c.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',()=>{ const i=+b.dataset.del; rows.splice(i,1); if(rows.length===0) rows=[{param:'',res:'',uni:'',ref:''}]; redraw(); }));
-    }
-    function redraw(){ const body=q('rp-body'); body.innerHTML=rows.map((r,i)=>rowHTML(i,r)).join(''); rebind(); refreshFlags(); }
-    rebind(); refreshFlags();
-    q('rp-add').addEventListener('click',()=>{ rows.push({param:'',res:'',uni:'',ref:''}); redraw(); });
-    q('rp-pdf').addEventListener('click',()=>{
-      if(!toolRequiereVIP('Reporte de laboratorio')) return;
+    ['mer-bruto','mer-neto','mer-costo'].forEach(id=>q(id).addEventListener('input',calc));
+    q('mer-pdf').addEventListener('click',()=>{
+      if(!toolRequiereVIP('Rendimiento y merma')) return;
       if(!window.jspdf){ Toast.error('PDF no disponible','Revisa tu conexión.'); return; }
-      const {jsPDF}=window.jspdf; const pdf=new jsPDF({unit:'mm',format:'a4'}); const W=210,M=16;
-      let y=bnPdfHeader(pdf,'Reporte de resultados de laboratorio','Folio: '+(q('rp-id').value||bnFolio('LAB')));
+      const L=window.__merLast; if(!L){ Toast.info('Sin datos','Captura los pesos primero.'); return; }
+      const {jsPDF}=window.jspdf; const pdf=new jsPDF({unit:'mm',format:'a4'});
+      let y=bnPdfHeader(pdf,'Rendimiento y merma','Folio: '+bnFolio('MER'));
       pdf.setFontSize(10);
-      const datos=[['Paciente',q('rp-nom').value||'—'],['Edad / Sexo',((q('rp-edad').value||'—')+' / '+(q('rp-sexo').value||'—'))],['Médico',q('rp-med').value||'—'],['Fecha de toma',q('rp-fecha').value||new Date().toLocaleDateString('es-MX')]];
-      datos.forEach(([l,v])=>{ pdf.setTextColor(110,120,140); pdf.text(l+':',M,y); pdf.setTextColor(15,23,42); pdf.text(String(v),M+34,y); y+=6; });
-      y+=4;
-      // tabla
-      const cols=[M,M+62,M+92,M+118,W-M]; const heads=['Parámetro','Resultado','Unidad','Referencia'];
-      pdf.setFillColor(42,109,246); pdf.rect(M,y-5,W-2*M,8,'F'); pdf.setTextColor(255,255,255); pdf.setFont(undefined,'bold'); pdf.setFontSize(9);
-      pdf.text(heads[0],cols[0]+2,y); pdf.text(heads[1],cols[1]+2,y); pdf.text(heads[2],cols[2]+2,y); pdf.text(heads[3],cols[3]+2,y);
-      y+=6; pdf.setFont(undefined,'normal'); pdf.setTextColor(15,23,42);
-      rows.filter(r=>r.param||r.res).forEach((r,idx)=>{
-        if(y>270){ pdf.addPage(); y=24; }
-        if(idx%2===0){ pdf.setFillColor(244,248,255); pdf.rect(M,y-4,W-2*M,7,'F'); }
-        pdf.setTextColor(15,23,42); pdf.text(String(r.param||''),cols[0]+2,y);
-        const fl=flagFor(r.res,r.ref).includes('ALTO')?' ↑':flagFor(r.res,r.ref).includes('BAJO')?' ↓':'';
-        pdf.text(String(r.res||'')+fl,cols[1]+2,y);
-        pdf.text(String(r.uni||''),cols[2]+2,y);
-        pdf.setTextColor(110,120,140); pdf.text(String(r.ref||''),cols[3]+2,y);
-        y+=7;
+      [['Peso bruto',bnFmt(L.bruto,0)],['Peso neto',bnFmt(L.neto,0)],['Merma',bnFmt(L.merma,1)+' %'],['Rendimiento',bnFmt(L.rend,1)+' %'],['Factor de corrección','× '+bnFmt(L.fc,3)],['Costo real por unidad útil',L.costoReal]].forEach(([l,v])=>{
+        pdf.setTextColor(110,120,140); pdf.text(l+':',16,y); pdf.setTextColor(15,23,42); pdf.text(String(v),90,y); y+=7;
       });
-      y+=8; pdf.setDrawColor(225,232,245); pdf.line(M,y,W-M,y); y+=8;
-      pdf.setFontSize(8); pdf.setTextColor(110,120,140);
-      pdf.text('Resultados de carácter informativo. La interpretación clínica corresponde al profesional tratante.',M,y);
-      bnPdfFooter(pdf); pdf.save('reporte-lab-'+Date.now()+'.pdf'); Toast.success('PDF generado','Reporte de laboratorio');
+      bnPdfFooter(pdf); pdf.save('merma-'+Date.now()+'.pdf'); Toast.success('PDF generado','Rendimiento y merma');
     });
+    calc();
   }
-  return {open(){navigateToSection('tool-reporte');}, mount};
+  return {open(){navigateToSection('tool-merma');}, mount};
 })();
+
+/* 4 ─ PORCIONES PARA CATERING ───────────────────────────── */
+const ToolCatering = (function(){
+  function mount(c){
+    bnToolShell(c,{icon:'i-users',title:'Porciones para catering',
+      sub:'De número de comensales a cantidades totales. Define el gramaje por persona de cada tiempo y obtén cuánto preparar.',
+      actions:`<button class="btn btn--accent btn--sm" id="cat-pdf">Reporte PDF<svg class="ic"><use href="#i-download"/></svg></button>`,
+      body:`<div class="bn-card">
+        <div class="bn-card__t"><svg class="ic"><use href="#i-users"/></svg>Datos del evento</div>
+        <div class="bn-grid">
+          <div class="bn-field"><label>Número de comensales</label><input class="input" id="cat-pax" placeholder="ej. 120" inputmode="numeric"></div>
+          <div class="bn-field"><label>Colchón / extra (%)</label><input class="input" id="cat-extra" placeholder="ej. 10" inputmode="decimal" value="10"><div class="bn-field__hint">Por si llega gente de más</div></div>
+        </div>
+        <div class="bn-card__t" style="margin-top:16px"><svg class="ic"><use href="#i-tools"/></svg>Gramaje por persona</div>
+        <div id="cat-list" style="display:flex;flex-direction:column;gap:8px"></div>
+        <button class="btn btn--ghost btn--sm" id="cat-add" style="margin-top:10px"><svg class="ic"><use href="#i-tools"/></svg>Agregar platillo</button>
+        <div class="bn-result" id="cat-out" style="margin-top:18px">
+          <div class="bn-result__lbl">Total a preparar</div>
+          <div class="bn-result__val" id="cat-val">—</div>
+          <div class="bn-result__note" id="cat-note">Captura los comensales y el gramaje de cada platillo.</div>
+        </div>
+        <div id="cat-detalle" style="margin-top:14px;display:none"></div>
+        <div class="bn-formula">Total = pax × (1 + extra%) × gramaje por persona</div>
+      </div>`});
+    const q=id=>c.querySelector('#'+id);
+    let rows=[];
+    function addRow(nombre,gramos){
+      const i=rows.length; rows.push({nombre:nombre||'',gramos:gramos||''});
+      const div=document.createElement('div'); div.style.cssText='display:flex;gap:8px;align-items:center';
+      div.innerHTML=`
+        <input class="input" data-r="${i}" data-f="nombre" placeholder="Platillo (ej. Arroz)" value="${(nombre||'').replace(/"/g,'&quot;')}" style="flex:2;min-width:0">
+        <input class="input" data-r="${i}" data-f="gramos" placeholder="g / persona" inputmode="decimal" value="${gramos||''}" style="flex:1;min-width:0">
+        <button class="btn btn--ghost btn--sm" data-del="${i}" title="Quitar" style="flex-shrink:0;padding:8px 10px"><svg class="ic"><use href="#i-trash"/></svg></button>`;
+      q('cat-list').appendChild(div);
+      div.querySelectorAll('[data-f]').forEach(inp=>inp.addEventListener('input',e=>{ const r=+inp.dataset.r,f=inp.dataset.f; if(rows[r]) rows[r][f]=e.target.value; calc(); }));
+      div.querySelector('[data-del]').addEventListener('click',()=>{ rows[i]=null; div.remove(); calc(); });
+    }
+    function calc(){ if(typeof toolEsVIP==='function'&&!toolEsVIP())return;
+      const pax=bnNum(q('cat-pax').value); const extra=(bnNum(q('cat-extra').value)||0)/100;
+      const val=q('cat-val'),note=q('cat-note'),det=q('cat-detalle');
+      const activos=rows.filter(r=>r&&bnNum(r.gramos)!==null&&(r.nombre||'').trim());
+      if(pax===null||pax<=0||activos.length===0){ val.textContent='—'; note.textContent='Captura los comensales y el gramaje de cada platillo.'; det.style.display='none'; return; }
+      const paxAj=pax*(1+extra);
+      let filas=''; let totalG=0;
+      activos.forEach(r=>{ const g=bnNum(r.gramos); const totG=g*paxAj; totalG+=totG;
+        const kg=totG/1000;
+        filas+=`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)"><span style="color:var(--text-2)">${(r.nombre||'').replace(/</g,'&lt;')}</span><strong style="color:var(--text)">${bnFmt(kg,2)} kg</strong></div>`;
+      });
+      val.textContent=bnFmt(totalG/1000,2)+' kg totales';
+      note.textContent='Para '+pax+' pax (+'+(extra*100).toFixed(0)+'% = '+bnFmt(paxAj,0)+' porciones).';
+      det.innerHTML=filas; det.style.display='';
+      window.__catLast={pax,extra,paxAj,activos:activos.map(r=>({nombre:r.nombre,gramos:bnNum(r.gramos),kg:(bnNum(r.gramos)*paxAj)/1000})),totalKg:totalG/1000};
+    }
+    q('cat-add').addEventListener('click',()=>addRow());
+    ['cat-pax','cat-extra'].forEach(id=>q(id).addEventListener('input',calc));
+    addRow('',150); addRow('',120); addRow('',200);
+    q('cat-pdf').addEventListener('click',()=>{
+      if(!toolRequiereVIP('Porciones para catering')) return;
+      if(!window.jspdf){ Toast.error('PDF no disponible','Revisa tu conexión.'); return; }
+      const L=window.__catLast; if(!L){ Toast.info('Sin datos','Captura el evento primero.'); return; }
+      const {jsPDF}=window.jspdf; const pdf=new jsPDF({unit:'mm',format:'a4'});
+      let y=bnPdfHeader(pdf,'Porciones para catering','Folio: '+bnFolio('CAT'));
+      pdf.setFontSize(10);
+      pdf.setTextColor(110,120,140); pdf.text('Comensales: '+L.pax+'  (+'+(L.extra*100).toFixed(0)+'% = '+bnFmt(L.paxAj,0)+' porciones)',16,y); y+=9;
+      L.activos.forEach(r=>{ pdf.setTextColor(110,120,140); pdf.text(String(r.nombre||'—'),16,y); pdf.setTextColor(15,23,42); pdf.text(bnFmt(r.kg,2)+' kg',150,y); y+=6; });
+      y+=3; pdf.setDrawColor(225,232,245); pdf.line(16,y,194,y); y+=8;
+      pdf.setFont(undefined,'bold'); pdf.text('Total: '+bnFmt(L.totalKg,2)+' kg',16,y); pdf.setFont(undefined,'normal');
+      bnPdfFooter(pdf); pdf.save('catering-'+Date.now()+'.pdf'); Toast.success('PDF generado','Porciones para catering');
+    });
+    calc();
+  }
+  return {open(){navigateToSection('tool-catering');}, mount};
+})();
+
+/* 5 ─ TEMPERATURAS DE HORNO ─────────────────────────────── */
+const ToolHorno = (function(){
+  // Marcas de gas (gas mark) → °C aproximado
+  const GAS={1:140,2:150,3:170,4:180,5:190,6:200,7:220,8:230,9:240};
+  function mount(c){
+    bnToolShell(c,{icon:'i-gauge',title:'Temperaturas de horno',
+      sub:'Convierte entre grados Celsius, Fahrenheit y número de gas (gas mark). Escribe en cualquiera de los tres.',
+      body:`<div class="bn-card">
+        <div class="bn-card__t"><svg class="ic"><use href="#i-gauge"/></svg>Convertir</div>
+        <div class="bn-grid">
+          <div class="bn-field"><label>Celsius (°C)</label><input class="input" id="hor-c" placeholder="ej. 180" inputmode="decimal"></div>
+          <div class="bn-field"><label>Fahrenheit (°F)</label><input class="input" id="hor-f" placeholder="ej. 356" inputmode="decimal"></div>
+          <div class="bn-field"><label>Número de gas</label><input class="input" id="hor-g" placeholder="ej. 4" inputmode="decimal"><div class="bn-field__hint">Gas mark 1–9</div></div>
+        </div>
+        <div class="bn-result" id="hor-out" style="margin-top:18px">
+          <div class="bn-result__lbl">Equivalencias</div>
+          <div class="bn-result__val" id="hor-val">—</div>
+          <div class="bn-result__note" id="hor-note">Escribe una temperatura en cualquiera de los campos.</div>
+        </div>
+        <div class="bn-mini" id="hor-ref" style="display:none">
+          <div class="bn-mini__c"><div class="bn-mini__l">Horno suave</div><div class="bn-mini__v">150 °C</div></div>
+          <div class="bn-mini__c"><div class="bn-mini__l">Horno medio</div><div class="bn-mini__v">180 °C</div></div>
+          <div class="bn-mini__c"><div class="bn-mini__l">Horno fuerte</div><div class="bn-mini__v">220 °C</div></div>
+        </div>
+        <div class="bn-formula">°F = °C × 9/5 + 32</div>
+      </div>`});
+    const q=id=>c.querySelector('#'+id);
+    let lock=false;
+    function gasToC(g){ if(g<=1)return GAS[1]; if(g>=9)return GAS[9]; const lo=Math.floor(g),hi=Math.ceil(g); if(lo===hi)return GAS[lo]; return GAS[lo]+(GAS[hi]-GAS[lo])*(g-lo); }
+    function cToGas(cel){ let best=1,bd=1e9; for(let g=1;g<=9;g++){ const d=Math.abs(GAS[g]-cel); if(d<bd){bd=d;best=g;} } return best; }
+    function pinta(cel){
+      const f=cel*9/5+32; const g=cToGas(cel);
+      q('hor-val').textContent=bnFmt(cel,0)+' °C  ·  '+bnFmt(f,0)+' °F  ·  gas '+g;
+      q('hor-note').textContent='Gas '+g+' es la marca más cercana a '+bnFmt(cel,0)+' °C.';
+      q('hor-ref').style.display='';
+    }
+    function fromC(){ if(typeof toolEsVIP==='function'&&!toolEsVIP())return; if(lock)return; lock=true;
+      const cel=bnNum(q('hor-c').value);
+      if(cel!==null){ q('hor-f').value=bnFmt(cel*9/5+32,0); q('hor-g').value=cToGas(cel); pinta(cel); }
+      else { q('hor-val').textContent='—'; q('hor-note').textContent='Escribe una temperatura en cualquiera de los campos.'; q('hor-ref').style.display='none'; }
+      lock=false;
+    }
+    function fromF(){ if(typeof toolEsVIP==='function'&&!toolEsVIP())return; if(lock)return; lock=true;
+      const f=bnNum(q('hor-f').value);
+      if(f!==null){ const cel=(f-32)*5/9; q('hor-c').value=bnFmt(cel,0); q('hor-g').value=cToGas(cel); pinta(cel); }
+      lock=false;
+    }
+    function fromG(){ if(typeof toolEsVIP==='function'&&!toolEsVIP())return; if(lock)return; lock=true;
+      const g=bnNum(q('hor-g').value);
+      if(g!==null){ const cel=gasToC(g); q('hor-c').value=bnFmt(cel,0); q('hor-f').value=bnFmt(cel*9/5+32,0); pinta(cel); }
+      lock=false;
+    }
+    q('hor-c').addEventListener('input',fromC);
+    q('hor-f').addEventListener('input',fromF);
+    q('hor-g').addEventListener('input',fromG);
+  }
+  return {open(){navigateToSection('tool-horno');}, mount};
+})();
+
+/* 6 ─ COSTO POR PORCIÓN ─────────────────────────────────── */
+const ToolPorcion = (function(){
+  function mount(c){
+    bnToolShell(c,{icon:'i-credit-card',title:'Costo por porción',
+      sub:'Rápido: costo total de un platillo o tanda ÷ número de porciones. Con precio de venta te dice tu margen real.',
+      actions:`<button class="btn btn--accent btn--sm" id="por-pdf">Reporte PDF<svg class="ic"><use href="#i-download"/></svg></button>`,
+      body:`<div class="bn-card">
+        <div class="bn-card__t"><svg class="ic"><use href="#i-credit-card"/></svg>Datos</div>
+        <div class="bn-grid">
+          <div class="bn-field"><label>Costo total ($)</label><input class="input" id="por-costo" placeholder="ej. 350" inputmode="decimal"></div>
+          <div class="bn-field"><label>Porciones</label><input class="input" id="por-porc" placeholder="ej. 8" inputmode="numeric"></div>
+          <div class="bn-field"><label>Precio de venta / porción ($)</label><input class="input" id="por-venta" placeholder="opcional" inputmode="decimal"><div class="bn-field__hint">Para calcular margen</div></div>
+        </div>
+        <div class="bn-result" id="por-out" style="margin-top:18px">
+          <div class="bn-result__lbl">Costo por porción</div>
+          <div class="bn-result__val" id="por-val">—</div>
+          <div class="bn-result__note" id="por-note">Captura costo total y porciones.</div>
+        </div>
+        <div class="bn-mini" id="por-mini" style="display:none">
+          <div class="bn-mini__c"><div class="bn-mini__l">Ganancia por porción</div><div class="bn-mini__v" id="por-m-gan">—</div></div>
+          <div class="bn-mini__c"><div class="bn-mini__l">Margen sobre venta</div><div class="bn-mini__v" id="por-m-mar">—</div></div>
+          <div class="bn-mini__c"><div class="bn-mini__l">Food cost %</div><div class="bn-mini__v" id="por-m-fc">—</div></div>
+        </div>
+        <div class="bn-formula">Costo por porción = costo total ÷ porciones</div>
+      </div>`});
+    const q=id=>c.querySelector('#'+id);
+    function calc(){ if(typeof toolEsVIP==='function'&&!toolEsVIP())return;
+      const costo=bnNum(q('por-costo').value), porc=bnNum(q('por-porc').value), venta=bnNum(q('por-venta').value);
+      const val=q('por-val'),note=q('por-note'),mini=q('por-mini');
+      if(costo===null||porc===null||porc<=0){ val.textContent='—'; note.textContent='Captura costo total y porciones.'; mini.style.display='none'; return; }
+      const cp=costo/porc;
+      val.textContent='$'+bnFmt(cp,2);
+      note.textContent='$'+bnFmt(costo,2)+' entre '+bnFmt(porc,0)+' porciones.';
+      if(venta!==null&&venta>0){
+        const gan=venta-cp; const margen=gan/venta*100; const fc=cp/venta*100;
+        q('por-m-gan').textContent='$'+bnFmt(gan,2);
+        q('por-m-mar').textContent=bnFmt(margen,1)+' %';
+        q('por-m-fc').textContent=bnFmt(fc,1)+' %';
+        mini.style.display='';
+        window.__porLast={costo,porc,cp,venta,gan,margen,fc};
+      } else { mini.style.display='none'; window.__porLast={costo,porc,cp}; }
+    }
+    ['por-costo','por-porc','por-venta'].forEach(id=>q(id).addEventListener('input',calc));
+    q('por-pdf').addEventListener('click',()=>{
+      if(!toolRequiereVIP('Costo por porción')) return;
+      if(!window.jspdf){ Toast.error('PDF no disponible','Revisa tu conexión.'); return; }
+      const L=window.__porLast; if(!L){ Toast.info('Sin datos','Captura los datos primero.'); return; }
+      const {jsPDF}=window.jspdf; const pdf=new jsPDF({unit:'mm',format:'a4'});
+      let y=bnPdfHeader(pdf,'Costo por porción','Folio: '+bnFolio('POR'));
+      pdf.setFontSize(10);
+      const filas=[['Costo total','$'+bnFmt(L.costo,2)],['Porciones',String(L.porc)],['Costo por porción','$'+bnFmt(L.cp,2)]];
+      if(L.venta){ filas.push(['Precio venta / porción','$'+bnFmt(L.venta,2)],['Ganancia / porción','$'+bnFmt(L.gan,2)],['Margen sobre venta',bnFmt(L.margen,1)+' %'],['Food cost',bnFmt(L.fc,1)+' %']); }
+      filas.forEach(([l,v])=>{ pdf.setTextColor(110,120,140); pdf.text(l+':',16,y); pdf.setTextColor(15,23,42); pdf.text(String(v),90,y); y+=7; });
+      bnPdfFooter(pdf); pdf.save('costo-porcion-'+Date.now()+'.pdf'); Toast.success('PDF generado','Costo por porción');
+    });
+    calc();
+  }
+  return {open(){navigateToSection('tool-porcion');}, mount};
+})();
+
 /* ═══════════════════════════════════════════════════════════════════
    MODIFICADO · Persistencia de sección (deep-linking con hash)
    Antes: al recargar (F5) siempre volvías al Inicio.
@@ -4621,8 +4575,8 @@ const ToolReporte = (function(){
 const SECCIONES_VALIDAS_PANEL = [
   'inicio','cursos','certificados','logros','webinars','pdfs','foro',
   'directorio','canal','perfil','suscripcion',
-  'tool-diluciones','tool-ufc','tool-conversor','tool-dosis','tool-tfg',
-  'tool-molaridad','tool-beer','tool-reporte'
+  'tool-costeo','tool-conversor','tool-merma','tool-catering','tool-horno',
+  'tool-porcion'
 ];
 
 function seccionPanelDesdeHash(){
@@ -6615,7 +6569,7 @@ const Sections = (function(){
           <div class="sec-hero">
             <span class="sec-hero__eyebrow">Aprende en directo</span>
             <h1 class="sec-hero__title">Clases en vivo</h1>
-            <p class="sec-hero__sub">Sesiones en directo con profesionales de la salud, biomedicina y laboratorio. Pregunta en vivo, las grabaciones quedan disponibles.</p>
+            <p class="sec-hero__sub">Sesiones en directo con chefs y expertos en gastronomía e inocuidad. Pregunta en vivo, las grabaciones quedan disponibles.</p>
           </div>
           <div style="text-align:center;padding:60px 24px;background:var(--surface-2);border:1px dashed var(--border-2);border-radius:14px;margin-top:18px;">
             <div style="width:64px;height:64px;border-radius:50%;background:color-mix(in srgb, var(--primary) 12%, transparent);color:var(--primary);display:inline-flex;align-items:center;justify-content:center;margin-bottom:14px;">
@@ -6639,7 +6593,7 @@ const Sections = (function(){
         <div class="sec-hero">
           <span class="sec-hero__eyebrow">Aprende en directo</span>
           <h1 class="sec-hero__title">Clases en vivo</h1>
-          <p class="sec-hero__sub">Sesiones en directo con profesionales de la salud, biomedicina y laboratorio. Pregunta en vivo, las grabaciones quedan disponibles.</p>
+          <p class="sec-hero__sub">Sesiones en directo con chefs y expertos en gastronomía e inocuidad. Pregunta en vivo, las grabaciones quedan disponibles.</p>
         </div>
         ${prox?renderProxHero(prox):''}
         <div class="tabs">
@@ -6947,7 +6901,7 @@ const Sections = (function(){
         <div class="sec-hero">
           <span class="sec-hero__eyebrow">Descargables</span>
           <h1 class="sec-hero__title">PDFs y material</h1>
-          <p class="sec-hero__sub">Plantillas en Excel, checklists, procedimientos y formatos oficiales listos para tu laboratorio o consulta. ${textoAccesoMateriales}</p>
+          <p class="sec-hero__sub">Plantillas en Excel, checklists, procedimientos y formatos oficiales listos para tu cocina o negocio. ${textoAccesoMateriales}</p>
         </div>
         ${total === 0 ? `
           <div style="text-align:center;padding:60px 24px;background:var(--surface-2);border:1px dashed var(--border-2);border-radius:14px;margin-top:18px;">
@@ -7313,7 +7267,7 @@ const Sections = (function(){
         <div class="sec-hero">
           <span class="sec-hero__eyebrow">Networking profesional</span>
           <h1 class="sec-hero__title">Directorio VIP</h1>
-          <p class="sec-hero__sub">Conecta con la comunidad DulceLab Food. Crea tu tarjeta profesional y descubre a otros profesionales de biomedicina, microbiología y medicina.</p>
+          <p class="sec-hero__sub">Conecta con la comunidad DulceLab Food. Crea tu tarjeta profesional y descubre a otros profesionales de gastronomía, repostería e inocuidad alimentaria.</p>
         </div>
 
         <div class="dir-bar">
@@ -7638,7 +7592,7 @@ const Sections = (function(){
         <div class="sec-hero">
           <span class="sec-hero__eyebrow">Comunidad activa</span>
           <h1 class="sec-hero__title">Foro VIP</h1>
-          <p class="sec-hero__sub">Comparte casos clínicos y de laboratorio, haz preguntas y conecta con la comunidad DulceLab Food. Publica texto e imágenes, comenta y reacciona.</p>
+          <p class="sec-hero__sub">Comparte recetas, técnicas y dudas de tu negocio, haz preguntas y conecta con la comunidad DulceLab Food. Publica texto e imágenes, comenta y reacciona.</p>
         </div>
 
         <div class="foro-aviso">
@@ -8707,14 +8661,12 @@ const Sections = (function(){
       canal:renderCanal,
       perfil:renderPerfil,
       suscripcion:renderSuscripcion,
-      'tool-diluciones':(c)=>ToolDiluciones.mount(c),
-      'tool-ufc':(c)=>ToolUFC.mount(c),
+      'tool-costeo':(c)=>ToolCosteo.mount(c),
       'tool-conversor':(c)=>ToolConversor.mount(c),
-      'tool-dosis':(c)=>ToolDosis.mount(c),
-      'tool-tfg':(c)=>ToolTFG.mount(c),
-      'tool-molaridad':(c)=>ToolMolaridad.mount(c),
-      'tool-beer':(c)=>ToolBeer.mount(c),
-      'tool-reporte':(c)=>ToolReporte.mount(c)
+      'tool-merma':(c)=>ToolMerma.mount(c),
+      'tool-catering':(c)=>ToolCatering.mount(c),
+      'tool-horno':(c)=>ToolHorno.mount(c),
+      'tool-porcion':(c)=>ToolPorcion.mount(c)
     },
     countdownTimer:null
   };
@@ -8748,7 +8700,7 @@ const DULCELAB_CONTACT = {
     return '✉️ Hola, soy miembro VIP de DulceLab Food y me gustaría contactar con la dirección. Mi consulta es:\n\n';
   },
   shareInvitacion() {
-    const txt = '⭐ Conoce DulceLab Food · Biomedicina · Microbiología · Medicina general.\n\nCursos online de biomedicina, microbiología, laboratorio clínico y más, con certificación verificable.\n\nÚnete al canal: '+this.canal+'\nSitio: '+this.sitio;
+    const txt = '⭐ Conoce DulceLab Food · Gastronomía · Repostería · Inocuidad alimentaria.\n\nCursos online de cocina, repostería, control de costos, catering y NOM-251, con certificación verificable.\n\nÚnete al canal: '+this.canal+'\nSitio: '+this.sitio;
     return `https://wa.me/?text=${encodeURIComponent(txt)}`;
   }
 };
@@ -9301,7 +9253,7 @@ function getReferralCode(){
 function openReferralModal(){
   const code=getReferralCode();
   const refLink=DULCELAB_CONTACT.sitio+'/?ref='+code;
-  const shareTxt=`Conoce DulceLab Food · cursos de biomedicina, microbiología y medicina con certificación oficial.\n\nUsa mi código ${code} y obtén un descuento especial.\n\nMás info: ${refLink}`;
+  const shareTxt=`Conoce DulceLab Food · cursos de gastronomía, repostería e inocuidad alimentaria con certificación oficial.\n\nUsa mi código ${code} y obtén un descuento especial.\n\nMás info: ${refLink}`;
   Modal.open({
     id:'referral',
     title:'Tu código de referidos',
@@ -9416,7 +9368,7 @@ function initNav(){
         cerrarDrawerMovil();
       }
       // Herramientas con sección propia (se abren dentro del panel, no como popup)
-      const toolSections = { diluciones:'tool-diluciones', ufc:'tool-ufc', conversor:'tool-conversor', dosis:'tool-dosis', tfg:'tool-tfg', molaridad:'tool-molaridad', beer:'tool-beer', reporte:'tool-reporte' };
+      const toolSections = { costeo:'tool-costeo', conversor:'tool-conversor', merma:'tool-merma', catering:'tool-catering', horno:'tool-horno', porcion:'tool-porcion' };
       if(it.dataset.tool){
         if(toolSections[it.dataset.tool]){ navigateToSection(toolSections[it.dataset.tool]); return; }
         if(Tools[it.dataset.tool]){ Tools[it.dataset.tool].open(); return; }
