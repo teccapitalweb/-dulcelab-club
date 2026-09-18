@@ -847,39 +847,24 @@ body::after{
   box-shadow:0 0 6px var(--success);
 }
 
-/* LOGROS — hero estilo Sinergia + grid de medallas */
+/* LOGROS — hero plano estilo "tarjeta de receta", sin brillos ni degradados */
 .logro-hero{
-  background:linear-gradient(135deg,var(--surface) 0%,var(--surface-2) 100%);
+  background:var(--surface);
   border:1px solid var(--border-2);
-  border-radius:22px;
+  border-radius:16px;
   padding:26px 28px;
   margin-bottom:24px;
   display:flex;flex-direction:column;gap:18px;
-  position:relative;overflow:hidden;
-}
-.logro-hero::before{
-  content:"";position:absolute;inset:0;
-  background:radial-gradient(circle at 85% 25%,color-mix(in srgb,var(--primary) 18%,transparent),transparent 50%),radial-gradient(circle at 20% 80%,color-mix(in srgb,var(--highlight) 14%,transparent),transparent 55%);
-  filter:blur(50px);
-  pointer-events:none;
-  animation:aurora 22s ease-in-out infinite alternate;
-}
-.logro-hero::after{
-  content:"";position:absolute;inset:0;
-  background-image:linear-gradient(to right,color-mix(in srgb,var(--primary) 7%,transparent) 1px,transparent 1px),linear-gradient(to bottom,color-mix(in srgb,var(--primary) 7%,transparent) 1px,transparent 1px);
-  background-size:36px 36px;
-  -webkit-mask-image:radial-gradient(ellipse at top right,#000 0%,transparent 70%);
-  mask-image:radial-gradient(ellipse at top right,#000 0%,transparent 70%);
-  pointer-events:none;
+  position:relative;
+  border-top:3px solid var(--primary);
 }
 .logro-hero__row{display:flex;align-items:center;gap:18px;flex-wrap:wrap;position:relative;z-index:1}
 .logro-hero__icon{
-  width:64px;height:64px;
-  border-radius:18px;
-  background:linear-gradient(135deg,var(--primary),var(--primary-deep));
+  width:58px;height:58px;
+  border-radius:14px;
+  background:var(--primary);
   color:#fff;
   display:flex;align-items:center;justify-content:center;flex-shrink:0;
-  box-shadow:0 12px 32px var(--primary-glow),inset 0 1px 0 rgba(255,255,255,.18);
 }
 .logro-hero__lbl{
   font-family:'JetBrains Mono',monospace;
@@ -888,41 +873,32 @@ body::after{
 }
 .logro-hero__name{
   font-family:'Plus Jakarta Sans','Inter',sans-serif;
-  font-size:30px;font-weight:800;letter-spacing:-.8px;line-height:1.05;margin-top:4px;
-  background:linear-gradient(135deg,var(--text),color-mix(in srgb,var(--text) 55%,transparent));
-  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  font-size:28px;font-weight:800;letter-spacing:-.6px;line-height:1.05;margin-top:4px;
+  color:var(--text);
 }
 .logro-hero__racha{
   margin-left:auto;
   display:inline-flex;align-items:center;gap:9px;
-  background:color-mix(in srgb,var(--primary) 14%,transparent);
-  border:1px solid color-mix(in srgb,var(--primary) 35%,transparent);
-  padding:10px 18px;border-radius:100px;
-  box-shadow:0 6px 18px var(--primary-glow);
+  background:var(--surface-2);
+  border:1px solid var(--border-2);
+  padding:9px 16px;border-radius:11px;
 }
 .logro-hero__racha-num{font-family:'Plus Jakarta Sans','Inter',sans-serif;font-size:16px;font-weight:800;color:var(--primary);letter-spacing:-.3px}
-.logro-hero__racha-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--primary);letter-spacing:.9px;text-transform:uppercase;font-weight:700}
+.logro-hero__racha-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-2);letter-spacing:.9px;text-transform:uppercase;font-weight:700}
 .logro-hero__xp-bar{
-  height:14px;
+  height:10px;
   background:var(--surface-3);
-  border-radius:100px;
+  border-radius:6px;
   overflow:hidden;
   position:relative;z-index:1;
   border:1px solid var(--border);
 }
 .logro-hero__xp-fill{
   height:100%;
-  background:linear-gradient(90deg,var(--highlight),var(--primary));
-  border-radius:100px;
-  transition:width 1.2s cubic-bezier(.2,.8,.25,1);
-  box-shadow:0 0 18px var(--primary-glow);
+  background:var(--primary);
+  border-radius:6px 0 0 6px;
+  transition:width 1s cubic-bezier(.2,.8,.25,1);
   position:relative;
-  overflow:hidden;
-}
-.logro-hero__xp-fill::after{
-  content:"";position:absolute;inset:0;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);
-  animation:shimmerSlide 2.6s ease-in-out infinite;
 }
 .logro-hero__xp-text{
   display:flex;justify-content:space-between;
@@ -937,11 +913,10 @@ body::after{
   margin-bottom:14px;
 }
 .logros-cat__icon{
-  width:32px;height:32px;border-radius:10px;
+  width:32px;height:32px;border-radius:9px;
   display:flex;align-items:center;justify-content:center;
-  background:color-mix(in srgb,var(--cat-color,var(--primary)) 14%,transparent);
-  color:var(--cat-color,var(--primary));
-  border:1px solid color-mix(in srgb,var(--cat-color,var(--primary)) 25%,transparent);
+  background:var(--cat-color,var(--primary));
+  color:#fff;
 }
 .logros-cat__title{
   font-family:'Plus Jakarta Sans','Inter',sans-serif;
@@ -951,7 +926,7 @@ body::after{
   margin-left:auto;
   font-family:'JetBrains Mono',monospace;
   font-size:11px;font-weight:600;color:var(--text-3);letter-spacing:.5px;
-  padding:4px 10px;border-radius:100px;
+  padding:4px 10px;border-radius:8px;
   background:var(--surface-2);
   border:1px solid var(--border);
 }
@@ -960,28 +935,27 @@ body::after{
 .logro{
   background:var(--surface);
   border:1px solid var(--border);
-  border-radius:16px;
+  border-radius:12px;
   padding:16px 12px 14px;
   display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;
   cursor:pointer;
-  transition:transform .25s cubic-bezier(.2,.8,.25,1),border-color .25s,box-shadow .3s,opacity .2s;
+  transition:transform .2s ease,border-color .2s ease;
 }
-.logro:hover{transform:translateY(-3px);border-color:var(--border-strong);box-shadow:0 10px 26px rgba(0,0,0,.12)}
-.logro.is-locked{opacity:.45;filter:grayscale(.4)}
-.logro.is-locked:hover{opacity:.85}
+.logro:hover{transform:translateY(-2px);border-color:var(--cat-color,var(--primary))}
+.logro.is-locked{opacity:.45;filter:grayscale(.6)}
+.logro.is-locked:hover{opacity:.75}
 .logro__icon{
-  width:48px;height:48px;
-  border-radius:14px;
+  width:44px;height:44px;
+  border-radius:10px;
   display:flex;align-items:center;justify-content:center;
-  background:color-mix(in srgb,var(--cat-color,var(--primary)) 14%,transparent);
+  background:var(--surface-2);
   color:var(--cat-color,var(--primary));
-  border:1px solid color-mix(in srgb,var(--cat-color,var(--primary)) 22%,transparent);
+  border:1.5px solid var(--cat-color,var(--primary));
 }
 .logro.is-unlocked .logro__icon{
-  background:linear-gradient(135deg,var(--cat-color,var(--primary)),color-mix(in srgb,var(--cat-color,var(--primary)) 60%,#000));
+  background:var(--cat-color,var(--primary));
   color:#fff;
-  border-color:transparent;
-  box-shadow:0 6px 18px color-mix(in srgb,var(--cat-color,var(--primary)) 30%,transparent),inset 0 1px 0 rgba(255,255,255,.2);
+  border-color:var(--cat-color,var(--primary));
 }
 .logro__name{
   font-family:'Plus Jakarta Sans','Inter',sans-serif;
@@ -991,7 +965,7 @@ body::after{
   font-family:'JetBrains Mono',monospace;
   font-size:10px;color:var(--text-3);font-weight:700;letter-spacing:.4px;
 }
-.logro.is-unlocked .logro__xp{color:var(--highlight)}
+.logro.is-unlocked .logro__xp{color:var(--cat-color,var(--primary))}
 
 /* WEBINARS — próximo hero + grid estilo Sinergia */
 .webinar-hero{
@@ -2537,21 +2511,17 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 .pdf-card__meta .ic{width:12px;height:12px}
 .pdf-card__tags{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:auto;padding-top:10px;border-top:1px solid var(--border)}
 
+
 /* =========================================================
-   LOGROS · camino de niveles Sinergia
+   LOGROS · camino de niveles — plano, estilo tarjeta de receta
    ========================================================= */
 .nivel-path{
   background:var(--surface);
   border:1px solid var(--border);
-  border-radius:22px;
+  border-radius:16px;
   padding:24px 26px;
   margin-bottom:24px;
-  position:relative;overflow:hidden;
-}
-.nivel-path::before{
-  content:"";position:absolute;inset:0;
-  background:radial-gradient(circle at 50% 50%,color-mix(in srgb,var(--primary) 8%,transparent),transparent 60%);
-  pointer-events:none;
+  position:relative;
 }
 .nivel-path__title{
   font-family:'JetBrains Mono',monospace;
@@ -2563,8 +2533,6 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 }
 .nivel-path__title::before{
   content:"";width:6px;height:6px;border-radius:50%;background:var(--primary);
-  animation:pulseDotSmall 1.8s ease-out infinite;
-  box-shadow:0 0 8px var(--primary-glow);
 }
 .nivel-path__track{
   display:flex;
@@ -2575,22 +2543,19 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 }
 .nivel-path__track::before{
   content:"";position:absolute;
-  top:32px;left:7%;right:7%;
-  height:3px;
+  top:26px;left:7%;right:7%;
+  height:2px;
   background:var(--surface-3);
-  border-radius:100px;
   z-index:-1;
 }
 .nivel-path__track::after{
   content:"";position:absolute;
-  top:32px;left:7%;
-  height:3px;
+  top:26px;left:7%;
+  height:2px;
   width:var(--nivel-progress,30%);
-  background:linear-gradient(90deg,var(--primary),var(--highlight));
-  border-radius:100px;
+  background:var(--primary);
   z-index:-1;
-  box-shadow:0 0 12px var(--primary-glow);
-  transition:width 1.2s cubic-bezier(.2,.8,.25,1);
+  transition:width 1s cubic-bezier(.2,.8,.25,1);
 }
 .nivel-step{
   display:flex;flex-direction:column;align-items:center;gap:8px;
@@ -2598,30 +2563,26 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
   position:relative;
 }
 .nivel-step__icon{
-  width:64px;height:64px;
-  border-radius:50%;
+  width:52px;height:52px;
+  border-radius:12px;
   display:flex;align-items:center;justify-content:center;
-  background:var(--surface);
-  border:2px solid var(--border-strong);
+  background:var(--surface-2);
+  border:1.5px solid var(--border-strong);
   color:var(--text-3);
-  font-size:26px;
-  transition:all .25s;
+  transition:all .2s ease;
   flex-shrink:0;
 }
 .nivel-step.is-done .nivel-step__icon{
-  background:linear-gradient(135deg,var(--primary),var(--primary-deep));
+  background:var(--primary);
   border-color:var(--primary);
   color:#fff;
-  box-shadow:0 6px 18px var(--primary-glow);
 }
 .nivel-step.is-current .nivel-step__icon{
-  background:linear-gradient(135deg,var(--highlight),var(--primary));
+  background:var(--highlight);
   border-color:var(--highlight);
-  color:#fff;
-  box-shadow:0 8px 26px var(--primary-glow),0 0 0 4px color-mix(in srgb,var(--primary) 22%,transparent);
-  transform:scale(1.12);
+  color:#442A22;
 }
-.nivel-step.is-locked .nivel-step__icon{opacity:.55;filter:grayscale(.5)}
+.nivel-step.is-locked .nivel-step__icon{opacity:.5;filter:grayscale(.6)}
 .nivel-step__name{
   font-family:'Plus Jakarta Sans','Inter',sans-serif;
   font-size:12.5px;font-weight:700;letter-spacing:-.1px;
@@ -2633,10 +2594,10 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
   font-size:9.5px;font-weight:600;color:var(--text-3);letter-spacing:.5px;
 }
 .nivel-step.is-current .nivel-step__xp{
-  color:var(--primary);
-  background:color-mix(in srgb,var(--primary) 14%,transparent);
-  padding:2px 8px;border-radius:100px;
-  border:1px solid color-mix(in srgb,var(--primary) 30%,transparent);
+  color:#442A22;
+  background:var(--highlight);
+  padding:2px 8px;border-radius:8px;
+  font-weight:700;
 }
 
 /* =========================================================
@@ -3073,6 +3034,10 @@ body.has-fomo .main{padding-top:18px}
 <symbol id="i-bn-leaf" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 4 13c0-6 5-9 16-9 0 9-4 16-9 16z"/><path d="M4 20c4-6 8-8 12-9"/></symbol>
 <symbol id="i-bn-pill" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="18" height="6" rx="3" transform="rotate(45 12 12)"/><path d="M8.5 8.5l7 7"/></symbol>
 <symbol id="i-bn-droplet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></symbol>
+<symbol id="i-bn-toque" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 0-4 4c0 .7.2 1.3.5 1.9A4.5 4.5 0 0 0 6 12c0 2 1.3 3.5 3 4h6c1.7-.5 3-2 3-4a4.5 4.5 0 0 0-2.5-4.1c.3-.6.5-1.2.5-1.9a4 4 0 0 0-4-4z"/><path d="M9 16v5h6v-5"/></symbol>
+<symbol id="i-bn-whisk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2"/><path d="M7 4c0 5 2 8.5 5 13c3-4.5 5-8 5-13"/><path d="M12 15v7"/></symbol>
+<symbol id="i-bn-rollingpin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="4" rx="2"/><path d="M2 12h2"/><path d="M20 12h2"/></symbol>
+<symbol id="i-bn-flame" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c2 3-2 4-2 7a2 2 0 0 0 4 0c0-1-.5-1-.5-2c1.5 1 2.5 2.5 2.5 5a4.5 4.5 0 0 1-9 0c0-4.5 3-5.5 5-10z"/></symbol>
 </defs></svg>
 
 
@@ -4676,8 +4641,8 @@ const Sections = (function(){
   const ICON_AREA = {
     'Repostería':'i-bn-leaf',
     'Panadería':'i-bn-leaf',
-    'Cocina mexicana':'i-bn-flask',
-    'Cocina internacional':'i-bn-flask',
+    'Cocina mexicana':'i-bn-flame',
+    'Cocina internacional':'i-bn-flame',
     'Control de costos':'i-credit-card',
     'Catering y eventos':'i-users',
     'Inocuidad y NOM-251':'i-shield-check'
@@ -4688,7 +4653,7 @@ const Sections = (function(){
     'Bebidas':'#f472b6','Comunidad':'#E5C171','Maestría':'#C94B68'
   };
   const ICON_CAT = {
-    'Repostería':'i-bn-leaf','Panadería':'i-bn-leaf','Cocina':'i-bn-flask',
+    'Repostería':'i-bn-leaf','Panadería':'i-bn-leaf','Cocina':'i-bn-flame',
     'Costos':'i-credit-card','Inocuidad':'i-shield-check','Catering':'i-users',
     'Bebidas':'i-bn-droplet','Comunidad':'i-messages','Maestría':'i-crown'
   };
@@ -6458,7 +6423,7 @@ const Sections = (function(){
         </div>
         <div class="logro-hero">
           <div class="logro-hero__row">
-            <div class="logro-hero__icon"><svg class="ic ic--xl"><use href="#i-trophy"/></svg></div>
+            <div class="logro-hero__icon"><svg class="ic ic--xl"><use href="#i-bn-toque"/></svg></div>
             <div>
               <div class="logro-hero__lbl">Nivel ${nivelActual.id} de 5</div>
               <div class="logro-hero__name">${nivelActual.nombre}</div>
@@ -6477,7 +6442,7 @@ const Sections = (function(){
           <div class="nivel-path__title">Tu camino de aprendiz a maestro</div>
           <div class="nivel-path__track">
             ${niveles.map((n,idx)=>{
-              const emojis=['<svg class="ic" style="width:24px;height:24px"><use href="#i-bn-microbe"/></svg>','<svg class="ic" style="width:24px;height:24px"><use href="#i-bn-flask"/></svg>','<svg class="ic" style="width:24px;height:24px"><use href="#i-bn-dna"/></svg>','<svg class="ic" style="width:24px;height:24px"><use href="#i-bn-droplet"/></svg>','<svg class="ic" style="width:24px;height:24px"><use href="#i-trophy"/></svg>'];
+              const emojis=['<svg class="ic" style="width:22px;height:22px"><use href="#i-bn-toque"/></svg>','<svg class="ic" style="width:22px;height:22px"><use href="#i-bn-whisk"/></svg>','<svg class="ic" style="width:22px;height:22px"><use href="#i-bn-rollingpin"/></svg>','<svg class="ic" style="width:22px;height:22px"><use href="#i-bn-flame"/></svg>','<svg class="ic" style="width:22px;height:22px"><use href="#i-trophy"/></svg>'];
               const isCurrent=n.id===nivelActual.id;
               const isDone=n.id<nivelActual.id;
               const cls=isCurrent?'is-current':isDone?'is-done':'is-locked';
