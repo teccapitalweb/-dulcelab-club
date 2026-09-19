@@ -7433,7 +7433,7 @@ const Sections = (function(){
         <textarea class="dir-form__in" id="dirf-bio" maxlength="160" rows="2" placeholder="Una línea sobre tu experiencia…">${escapeHtml(data.bio||'')}</textarea>
         <div class="dir-form__sep">Contacto <span class="dir-form__opt">(todos opcionales)</span></div>
         <label class="dir-form__lbl">WhatsApp</label>
-        <input class="dir-form__in" id="dirf-wa" maxlength="20" value="${(data.whatsapp||'').replace(/"/g,'&quot;')}" placeholder="Ej. 52 238 123 4567">
+        <input class="dir-form__in" id="dirf-wa" maxlength="20" value="${(data.whatsapp||'').replace(/"/g,'&quot;')}" placeholder="Ej. 52 55 1234 5678">
         <label class="dir-form__lbl">Correo</label>
         <input class="dir-form__in" id="dirf-email" maxlength="80" value="${(data.email||'').replace(/"/g,'&quot;')}" placeholder="correo@ejemplo.com">
         <label class="dir-form__lbl">LinkedIn</label>
@@ -7938,6 +7938,22 @@ const Sections = (function(){
     const _nom = escapeHtml(S.nombre || S.displayName || 'Miembro');
     const _em  = escapeHtml(S.email || '—');
     const _ini = (S.iniciales || 'IN');
+    // MODIFICADO: plan, nivel y fecha de membresía eran texto fijo ("VIP Anual", "Nivel 2 ·
+    // Técnico", "Miembro desde mar 2026") que salía igual para cualquier usuario, sin importar
+    // su plan real. Ahora se calculan con los mismos datos reales que usa el resto del panel.
+    const _planLabels = {mensual:'VIP Mensual', anual:'VIP Anual', regalo:'Acceso de regalo', admin:'Administrador'};
+    const _planTxt = _planLabels[S.plan] || 'Miembro';
+    const _nivelReal = getNivel(usuario.xp);
+    const _nivelTxt = 'Nivel '+_nivelReal.id+' · '+_nivelReal.nombre;
+    let _desdeTxt = '';
+    const _rawDesde = S.membership && (S.membership.activadoEn || S.membership.startedAt || S.membership.createdAt);
+    if (_rawDesde) {
+      let _d = null;
+      if (_rawDesde.toDate) _d = _rawDesde.toDate();
+      else if (_rawDesde.seconds) _d = new Date(_rawDesde.seconds*1000);
+      else { const _p = new Date(_rawDesde); if (!isNaN(_p.getTime())) _d = _p; }
+      if (_d) _desdeTxt = 'Miembro desde '+_d.toLocaleDateString('es-MX',{month:'short',year:'numeric'});
+    }
     container.innerHTML = `
       <div class="fade-up">
         <div class="sec-hero">
@@ -7952,9 +7968,9 @@ const Sections = (function(){
             <h2 class="perfil-hero__name">${_nom}</h2>
             <div class="perfil-hero__email">${_em}</div>
             <div class="perfil-hero__badges">
-              <span class="pill"><svg class="ic"><use href="#i-crown"/></svg>VIP Anual</span>
-              <span class="tag tag--new">Nivel 2 · Técnico</span>
-              <span class="tag tag--down">Miembro desde mar 2026</span>
+              <span class="pill"><svg class="ic"><use href="#i-crown"/></svg>${_planTxt}</span>
+              <span class="tag tag--new">${_nivelTxt}</span>
+              ${_desdeTxt?`<span class="tag tag--down">${_desdeTxt}</span>`:''}
             </div>
           </div>
           <button class="btn btn--ghost" id="btn-edit-profile" style="align-self:flex-start;"><svg class="ic"><use href="#i-tools"/></svg>Editar perfil</button>
@@ -7967,7 +7983,7 @@ const Sections = (function(){
             <div class="perfil-card__title">Datos personales</div>
             <div class="perfil-field" data-field="nombre"><span class="perfil-field__lbl">Nombre</span><span class="perfil-field__val">${_nom}</span><button class="perfil-field__edit"><svg class="ic"><use href="#i-tools"/></svg></button></div>
             <div class="perfil-field" data-field="email" data-readonly="1"><span class="perfil-field__lbl">Email</span><span class="perfil-field__val">${_em}</span><button class="perfil-field__edit"><svg class="ic"><use href="#i-tools"/></svg></button></div>
-            <div class="perfil-field" data-field="whatsapp"><span class="perfil-field__lbl">WhatsApp</span><span class="perfil-field__val">+52 238 ··· ··43</span><button class="perfil-field__edit"><svg class="ic"><use href="#i-tools"/></svg></button></div>
+            <div class="perfil-field" data-field="whatsapp"><span class="perfil-field__lbl">WhatsApp</span><span class="perfil-field__val">—</span><button class="perfil-field__edit"><svg class="ic"><use href="#i-tools"/></svg></button></div>
             <div class="perfil-field" data-field="empresa"><span class="perfil-field__lbl">Empresa</span><span class="perfil-field__val">—</span><button class="perfil-field__edit"><svg class="ic"><use href="#i-tools"/></svg></button></div>
             <div class="perfil-field" data-field="especialidad"><span class="perfil-field__lbl">Especialidad</span><span class="perfil-field__val" id="pf-especialidad">—</span><button class="perfil-field__edit"><svg class="ic"><use href="#i-tools"/></svg></button></div>
           </div>
@@ -8824,7 +8840,7 @@ function openEditField(field){
     return;
   }
   const labels={nombre:'Nombre completo',whatsapp:'WhatsApp',empresa:'Empresa donde trabajas',especialidad:'Especialidad / área'};
-  const placeholders={nombre:'Ej: Chef Ana Martínez',whatsapp:'+52 238 123 4567',empresa:'Ej: Pastelería La Dulce',especialidad:'Ej: Repostería fina'};
+  const placeholders={nombre:'Ej: Chef Ana Martínez',whatsapp:'+52 55 1234 5678',empresa:'Ej: Pastelería La Dulce',especialidad:'Ej: Repostería fina'};
   const currentVal=wrap.querySelector('.perfil-field__val').textContent.trim();
   const cleanVal=(currentVal==='—'||currentVal.includes('···'))?'':currentVal;
   const subt = field==='nombre'
