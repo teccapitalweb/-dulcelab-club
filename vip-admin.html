@@ -2516,7 +2516,7 @@ const Pages={
   },
 
   // ════════════════════════════════════════════════════════════════════
-  // MODAL CREAR/EDITAR CURSO · Sub-fase 3B (lógica copiada de Sinergia)
+  // MODAL CREAR/EDITAR CURSO · Sub-fase 3B
   // Si recibe null → crea curso nuevo · si recibe objeto → edita
   // ════════════════════════════════════════════════════════════════════
 
@@ -2933,7 +2933,7 @@ const Pages={
 
   // ════════════════════════════════════════════════════════════════════
   // CLASES EN VIVO (WEBINARS) · CRUD real conectado a Firestore col `webinars`
-  // Lógica idéntica a Sinergia · adaptada al diseño DulceLab Food
+  // Adaptada al diseño DulceLab Food
   // ════════════════════════════════════════════════════════════════════
 
   _webState: {
@@ -3351,7 +3351,7 @@ const Pages={
   // PDFs y MATERIAL · Vista agregada de todos los materiales de Firestore
   // Cada material vive dentro de su curso (en cursos/{id}.materiales[])
   // Esta vista los recorre todos y los muestra en una sola lista.
-  // (Lógica de Sinergia · adaptada al diseño DulceLab Food)
+  // (Adaptada al diseño DulceLab Food)
   // ════════════════════════════════════════════════════════════════════
 
   _pdfsState: {
@@ -5419,7 +5419,7 @@ window.addEventListener('popstate', () => {
 
 /* =========================================================
    ADMIN STORE · estado reactivo conectado a Firestore
-   Inspirado en la lógica de Sinergia · cargas en tiempo real
+   Cargas en tiempo real desde Firestore
    ========================================================= */
 const AdminStore = {
   // Datos vivos (se llenan al conectar con Firestore)
