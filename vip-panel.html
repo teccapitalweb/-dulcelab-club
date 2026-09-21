@@ -5719,7 +5719,15 @@ const Sections = (function(){
   function mostrarActividadClase(sesion, onDone){
     const act = sesion && sesion.actividad;
     if (!act || !act.tipo) { onDone(); return; }
-    const modalId = 'actividad-clase';
+    // MODIFICADO: antes usaba un id fijo ('actividad-clase') para el modal.
+    // Si el usuario abría una segunda actividad mientras la anterior todavía
+    // estaba a medio cerrar (la animación tarda 250ms), Modal.open confundía
+    // cuál ventana era cuál: a veces rellenaba de contenido la que ya se
+    // estaba cerrando (por eso a veces se veía vacía la visible), y a veces
+    // dejaba el candado de scroll de la página trabado (por eso no se podía
+    // abrir la siguiente clase). Con un id único por apertura, esto no puede
+    // volver a pasar — nunca hay dos actividades compitiendo por el mismo id.
+    const modalId = 'actividad-clase-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 7);
     let bodyHtml = '';
     if (act.tipo === 'ahorcado') bodyHtml = _renderAhorcado(act);
     else if (act.tipo === 'vf') bodyHtml = _renderVF(act);
@@ -5779,7 +5787,8 @@ const Sections = (function(){
       const curso = cursos.find(c => c.id === cursoId);
       const sesion = curso?.sesiones?.find(s => (s.numero || 0) === numClase);
       if (sesion && sesion.actividad && sesion.actividad.tipo) {
-        mostrarActividadClase(sesion, completarMarcado);
+        btn.disabled = true; // evita abrir dos actividades encimadas si le dan doble clic
+        mostrarActividadClase(sesion, () => { btn.disabled = false; completarMarcado(); });
       } else {
         completarMarcado();
       }
