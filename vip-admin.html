@@ -1534,7 +1534,7 @@ const Pages={
                   const colorMap = {'cocina':'#EF4444','reposteria':'#C94B68','inocuidad':'#22C55E','negocio':'#3B82F6','bebidas':'#14B8A6'};
                   const c = colorMap[n.categoria] || colorMap[n.cat] || '#C94B68';
                   const titulo = n.titulo || 'Sin título';
-                  const f = n.fecha?.toDate ? n.fecha.toDate() : (n.fecha ? new Date(n.fecha) : null);
+                  const f = n.fechaPublicacion?.toDate ? n.fechaPublicacion.toDate() : (n.fechaPublicacion ? new Date(n.fechaPublicacion) : null);
                   let fechaStr = '—';
                   if (f) {
                     const diff = (Date.now() - f.getTime()) / 86400000;
@@ -1545,7 +1545,7 @@ const Pages={
                       <div class="mini-row__dot"><svg class="ic"><use href="#i-news"/></svg></div>
                       <div class="mini-row__body">
                         <div class="mini-row__title">${titulo.length>50 ? titulo.slice(0,50)+'…' : titulo}</div>
-                        <div class="mini-row__meta">${n.fuente || '—'} · ${n.categoria || n.cat || 'General'}</div>
+                        <div class="mini-row__meta">${n.fuente || '—'} · ${n.categoriaNombre || n.categoria || 'General'}</div>
                       </div>
                       <span class="mini-row__right">${fechaStr}</span>
                     </div>
@@ -5058,13 +5058,16 @@ const Pages={
 
         <div class="section-header"><h2 class="section-header__title">Noticias publicadas${noticiasReales.length?` <span class="section-header__badge">${noticiasReales.length}</span>`:''}</h2></div>
         <div class="adm-list">
-          ${noticiasReales.length===0?`<div class="empty"><div class="empty__icon"><svg class="ic"><use href="#i-news"/></svg></div><h3>Sin noticias publicadas</h3><p>El cron aún no ha generado noticias reales para DulceLab Food.</p></div>`:noticiasReales.map(n=>`
+          ${noticiasReales.length===0?`<div class="empty"><div class="empty__icon"><svg class="ic"><use href="#i-news"/></svg></div><h3>Sin noticias publicadas</h3><p>El cron aún no ha generado noticias reales para DulceLab Food.</p></div>`:noticiasReales.map(n=>{
+            const fp = n.fechaPublicacion?.toDate ? n.fechaPublicacion.toDate() : (n.fechaPublicacion ? new Date(n.fechaPublicacion) : null);
+            const fechaTxt = fp ? fp.toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'}) : '—';
+            return `
             <div class="news-card" style="--c1:${n.color||'#C94B68'};">
               <div class="news-card__cover"><svg class="ic"><use href="#i-news"/></svg></div>
               <div class="news-card__body">
                 <div class="news-card__head">
-                  <span class="tag" style="color:${n.color||'#C94B68'};border-color:${n.color||'#C94B68'}40;background:${n.color||'#C94B68'}14;">${n.cat||''}</span>
-                  <span class="news-card__date">${n.fecha||''}</span>
+                  <span class="tag" style="color:${n.color||'#C94B68'};border-color:${n.color||'#C94B68'}40;background:${n.color||'#C94B68'}14;">${n.categoriaNombre||n.categoria||''}</span>
+                  <span class="news-card__date">${fechaTxt}</span>
                 </div>
                 <div class="news-card__title">${n.titulo||''}</div>
                 <div class="news-card__source"><svg class="ic"><use href="#i-news"/></svg>${n.fuente||''}</div>
@@ -5073,7 +5076,7 @@ const Pages={
                 <button class="icon-action icon-action--danger" data-del-news="${n.id}" title="Eliminar"><svg class="ic"><use href="#i-trash"/></svg></button>
               </div>
             </div>
-          `).join('')}
+          `;}).join('')}
         </div>
       </div>
     `;
@@ -5174,7 +5177,7 @@ const Pages={
               ${(() => {
                 const noticias = window.AdminStore?.noticias || [];
                 const ultima = noticias[0];
-                const f = ultima?.fecha?.toDate ? ultima.fecha.toDate() : (ultima?.fecha ? new Date(ultima.fecha) : null);
+                const f = ultima?.fechaPublicacion?.toDate ? ultima.fechaPublicacion.toDate() : (ultima?.fechaPublicacion ? new Date(ultima.fechaPublicacion) : null);
                 const hayNoticias = noticias.length > 0;
                 const meta = hayNoticias && f ? `Última: ${f.toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'})}` : 'Sin noticias aún';
                 return `<div class="mini-row" style="--c1:${hayNoticias?'#22C55E':'#FBBF24'};"><div class="mini-row__dot"><svg class="ic"><use href="#i-refresh"/></svg></div><div class="mini-row__body"><div class="mini-row__title">Railway Cron (noticias)</div><div class="mini-row__meta">${meta}</div></div><span class="tag ${hayNoticias?'tag--success':'tag--warning'}">${hayNoticias?'OK':'Pendiente'}</span></div>`;
@@ -5788,7 +5791,7 @@ const AdminStore = {
 
     // ─── 6. NOTICIAS (col que ya existe del cron) ───
     try {
-      const q = query(collection(db, 'noticias_auto'), orderBy('fecha', 'desc'), limit(20));
+      const q = query(collection(db, 'noticias_auto'), orderBy('fechaPublicacion', 'desc'), limit(20));
       const u = onSnapshot(q, (snap) => {
         this.noticias = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         this._emit('noticias');
@@ -5821,7 +5824,7 @@ const AdminStore = {
     }).length;
     const pdfsPubl = this.pdfs.filter(p => p.publicado !== false).length;
     const noticiasHoy = this.noticias.filter(n => {
-      const f = n.fecha?.toDate ? n.fecha.toDate() : (n.fecha ? new Date(n.fecha) : null);
+      const f = n.fechaPublicacion?.toDate ? n.fechaPublicacion.toDate() : (n.fechaPublicacion ? new Date(n.fechaPublicacion) : null);
       if (!f) return false;
       const diff = (Date.now() - f.getTime()) / 86400000;
       return diff < 1;
