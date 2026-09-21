@@ -6723,7 +6723,7 @@ const Sections = (function(){
     document.head.appendChild(st);
   }
   function assetUrl(f){ try { return new URL(f, location.href).href; } catch(e){ return f; } }
-  function verifyUrlCert(folio){ return 'https://www.dulcelabfood.com/verificar.html?folio=' + encodeURIComponent(folio); }
+  function verifyUrlCert(folio){ return 'https://club.dulcelabfood.com/verificar.html?folio=' + encodeURIComponent(folio); }
   function qrUrlCert(folio){ return 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=0&data=' + encodeURIComponent(verifyUrlCert(folio)); }
 
   function buildCertPremium(c, nombre){
