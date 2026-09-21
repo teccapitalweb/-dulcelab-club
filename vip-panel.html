@@ -7772,13 +7772,15 @@ const Sections = (function(){
     const grid = document.getElementById('home-news-grid');
     if (!grid) return;
     if (_noticiasCargadas && !force) return; // ya están pintadas
-    const fs = window.__fs;
-    if (!fs || !fs.getDocs){ return; }
     try {
-      const q = fs.query(fs.collection(fs.db,'noticias_auto'), fs.orderBy('createdAt','desc'), fs.limit(6));
-      const snap = await fs.getDocs(q);
-      const arts = [];
-      snap.forEach(d=>arts.push(d.data()));
+      // MODIFICADO: Firestore rechaza la lectura de noticias_auto desde el
+      // cliente ("Missing or insufficient permissions"). En vez de tocar las
+      // reglas, se pide la lista al webhook (Admin SDK, mismo patrón que
+      // certificados) — es la misma causa por la que el admin la veía vacía.
+      const res = await fetch(`${WEBHOOK_URL}/noticias/lista?limite=6`);
+      const data = await res.json().catch(()=>({}));
+      if (!res.ok || !data.ok) throw new Error(data.error || res.statusText);
+      const arts = data.noticias || [];
       if (!arts.length){
         grid.innerHTML = '<div class="foro-empty" style="grid-column:1/-1;">Aún no hay noticias publicadas. Se actualizan cada mañana.</div>';
         _noticiasCargadas = true;
