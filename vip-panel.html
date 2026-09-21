@@ -4978,6 +4978,21 @@ const Sections = (function(){
         createdAt: fs.serverTimestamp()
       }, { merge: true });
       console.log('[cert] emitido a Firestore:', folio);
+
+      // MODIFICADO: avisa al webhook para que genere el PDF y lo mande por
+      // correo (Resend). No bloquea ni rompe el flujo si falla — el alumno
+      // ya tiene su certificado visible en pantalla de cualquier forma.
+      const emailAlumno = window.UserState?.email;
+      if (emailAlumno) {
+        const base = window.WEBHOOK_URL || 'https://dulcelab-webhook-production.up.railway.app';
+        fetch(`${base}/certificados/emitir`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ folio, email: emailAlumno })
+        }).then(r => r.json()).then(r => {
+          console.log('[cert] correo:', r);
+        }).catch(e => console.warn('[cert] no se pudo avisar al webhook:', e));
+      }
     } catch (e) { console.warn('[cert] no se pudo emitir a Firestore:', e); }
   }
   window.emitirCertificadoFirestore = emitirCertificadoFirestore;
