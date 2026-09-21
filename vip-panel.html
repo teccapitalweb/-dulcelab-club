@@ -5158,6 +5158,318 @@ const Sections = (function(){
     document.body.style.overflow = '';
   };
 
+  /* ============================================================
+     ACTIVIDAD DINÁMICA AL TERMINAR CADA CLASE
+     Tipos: ahorcado, vf (verdadero/falso), opcion (opción múltiple).
+     Se configura por clase en el admin (sesion.actividad). Obligatoria
+     de completar (no cierra con click fuera), no afecta certificado.
+     ============================================================ */
+  function _normalizaLetra(s){
+    return (s||'').toUpperCase()
+      .replace(/[ÁÀÄÂ]/g,'A').replace(/[ÉÈËÊ]/g,'E').replace(/[ÍÌÏÎ]/g,'I')
+      .replace(/[ÓÒÖÔ]/g,'O').replace(/[ÚÙÜÛ]/g,'U');
+  }
+
+  function _renderAhorcado(act){
+    const palabra = _normalizaLetra(act.palabra||'');
+    return `
+      <div style="text-align:center;padding:6px 4px 2px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:var(--primary);margin-bottom:6px;">🎮 Actividad · Ahorcado</div>
+        <div style="font-size:13.5px;color:var(--text-2);margin-bottom:18px;line-height:1.5;">${escapeHtml(act.pista||'')}</div>
+        <div id="ah-vidas" style="font-size:19px;letter-spacing:6px;margin-bottom:16px;">❤️❤️❤️❤️❤️❤️</div>
+        <div id="ah-palabra" style="display:flex;justify-content:center;flex-wrap:wrap;gap:6px;margin-bottom:20px;"></div>
+        <div id="ah-teclado" style="display:flex;flex-wrap:wrap;justify-content:center;gap:6px;max-width:440px;margin:0 auto;"></div>
+        <div id="ah-resultado" style="margin-top:16px;font-weight:700;font-size:14px;min-height:22px;"></div>
+        <button id="ah-continuar" class="btn btn--primary" style="display:none;margin-top:14px;">Continuar →</button>
+      </div>`;
+  }
+  function _initAhorcado(root, act, onDone){
+    const palabra = _normalizaLetra(act.palabra||'');
+    const letras = palabra.split('');
+    const abecedario = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ'.split('');
+    let adivinadas = new Set();
+    let vidas = 6;
+    const elPalabra = root.querySelector('#ah-palabra');
+    const elTeclado = root.querySelector('#ah-teclado');
+    const elVidas = root.querySelector('#ah-vidas');
+    const elResultado = root.querySelector('#ah-resultado');
+    const elContinuar = root.querySelector('#ah-continuar');
+    function dibujarPalabra(){
+      elPalabra.innerHTML = letras.map(l => {
+        if (l === ' ') return `<span style="width:14px;"></span>`;
+        const visible = adivinadas.has(l);
+        return `<span style="width:28px;height:34px;display:flex;align-items:center;justify-content:center;border-bottom:3px solid var(--primary);font-family:'JetBrains Mono',monospace;font-size:19px;font-weight:800;">${visible?l:''}</span>`;
+      }).join('');
+    }
+    function dibujarVidas(){ elVidas.textContent = '❤️'.repeat(Math.max(0,vidas)) + '🖤'.repeat(6-Math.max(0,vidas)); }
+    function terminar(gano){
+      elTeclado.querySelectorAll('button').forEach(b => b.disabled = true);
+      elResultado.style.color = gano ? 'var(--success)' : 'var(--danger)';
+      elResultado.textContent = gano ? '¡Muy bien! 🎉' : `La palabra era: ${letras.join('')}`;
+      if(!gano){ adivinadas = new Set(letras); dibujarPalabra(); }
+      elContinuar.style.display = 'inline-flex';
+    }
+    function tocarLetra(l, btn){
+      btn.disabled = true;
+      if (letras.includes(l)) {
+        adivinadas.add(l); dibujarPalabra();
+        btn.style.background = 'var(--success)'; btn.style.color = '#fff'; btn.style.borderColor = 'var(--success)';
+        if (letras.every(x => x===' '||adivinadas.has(x))) terminar(true);
+      } else {
+        vidas--; dibujarVidas();
+        btn.style.background = 'var(--danger)'; btn.style.color = '#fff'; btn.style.borderColor = 'var(--danger)';
+        if (vidas <= 0) terminar(false);
+      }
+    }
+    elTeclado.innerHTML = '';
+    abecedario.forEach(l => {
+      const b = document.createElement('button');
+      b.textContent = l; b.type = 'button';
+      b.style.cssText = 'width:32px;height:32px;border-radius:7px;border:1.5px solid var(--border-2);background:var(--surface-2);color:var(--text);font-weight:700;font-size:13px;cursor:pointer;';
+      b.addEventListener('click', () => tocarLetra(l, b));
+      elTeclado.appendChild(b);
+    });
+    dibujarPalabra(); dibujarVidas();
+    elContinuar.addEventListener('click', onDone);
+  }
+
+  function _renderVF(act){
+    return `
+      <div style="text-align:center;padding:6px 4px 2px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:var(--primary);margin-bottom:14px;">🎮 Actividad · Verdadero o Falso</div>
+        <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:22px;line-height:1.5;max-width:420px;margin-left:auto;margin-right:auto;">${escapeHtml(act.enunciado||'')}</div>
+        <div style="display:flex;gap:12px;justify-content:center;">
+          <button id="vf-v" class="btn btn--ghost" style="min-width:120px;">Verdadero</button>
+          <button id="vf-f" class="btn btn--ghost" style="min-width:120px;">Falso</button>
+        </div>
+        <div id="vf-resultado" style="margin-top:18px;font-weight:700;font-size:14px;min-height:22px;"></div>
+        <button id="vf-continuar" class="btn btn--primary" style="display:none;margin-top:10px;">Continuar →</button>
+      </div>`;
+  }
+  function _initVF(root, act, onDone){
+    const correcta = act.respuesta === true;
+    const elV = root.querySelector('#vf-v'), elF = root.querySelector('#vf-f');
+    const elResultado = root.querySelector('#vf-resultado');
+    const elContinuar = root.querySelector('#vf-continuar');
+    function responder(esVerdadero, btn, otro){
+      elV.disabled = true; elF.disabled = true;
+      const ok = esVerdadero === correcta;
+      btn.style.background = ok ? 'var(--success)' : 'var(--danger)';
+      btn.style.color = '#fff'; btn.style.borderColor = btn.style.background;
+      if (!ok) { otro.style.background='var(--success)'; otro.style.color='#fff'; otro.style.borderColor='var(--success)'; }
+      elResultado.style.color = ok ? 'var(--success)' : 'var(--danger)';
+      elResultado.textContent = ok ? '¡Correcto! 🎉' : 'No era así, pero ya quedó claro.';
+      elContinuar.style.display = 'inline-flex';
+    }
+    elV.addEventListener('click', () => responder(true, elV, elF));
+    elF.addEventListener('click', () => responder(false, elF, elV));
+    elContinuar.addEventListener('click', onDone);
+  }
+
+  function _renderOpcion(act){
+    const opts = Array.isArray(act.opciones) ? act.opciones : [];
+    return `
+      <div style="text-align:center;padding:6px 4px 2px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:var(--primary);margin-bottom:14px;">🎮 Actividad · Opción múltiple</div>
+        <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:18px;line-height:1.5;max-width:440px;margin-left:auto;margin-right:auto;">${escapeHtml(act.pregunta||'')}</div>
+        <div id="op-lista" style="display:flex;flex-direction:column;gap:9px;max-width:380px;margin:0 auto;">
+          ${opts.map((o,i)=>`<button type="button" class="btn btn--ghost" data-op-idx="${i}" style="text-align:left;justify-content:flex-start;">${String.fromCharCode(65+i)}) ${escapeHtml(o)}</button>`).join('')}
+        </div>
+        <div id="op-resultado" style="margin-top:16px;font-weight:700;font-size:14px;min-height:22px;"></div>
+        <button id="op-continuar" class="btn btn--primary" style="display:none;margin-top:10px;">Continuar →</button>
+      </div>`;
+  }
+  function _initOpcion(root, act, onDone){
+    const correcta = Number(act.correcta);
+    const botones = Array.from(root.querySelectorAll('[data-op-idx]'));
+    const elResultado = root.querySelector('#op-resultado');
+    const elContinuar = root.querySelector('#op-continuar');
+    botones.forEach(btn => {
+      btn.addEventListener('click', () => {
+        botones.forEach(b => b.disabled = true);
+        const idx = Number(btn.dataset.opIdx);
+        const ok = idx === correcta;
+        btn.style.background = ok ? 'var(--success)' : 'var(--danger)';
+        btn.style.color = '#fff'; btn.style.borderColor = btn.style.background;
+        if (!ok && botones[correcta]) { botones[correcta].style.background='var(--success)'; botones[correcta].style.color='#fff'; botones[correcta].style.borderColor='var(--success)'; }
+        elResultado.style.color = ok ? 'var(--success)' : 'var(--danger)';
+        elResultado.textContent = ok ? '¡Correcto! 🎉' : 'Esa no era, pero ya quedó marcada la correcta.';
+        elContinuar.style.display = 'inline-flex';
+      });
+    });
+    elContinuar.addEventListener('click', onDone);
+  }
+
+
+  /* ─── SOPA DE LETRAS ─── */
+  function _parsePalabrasLista(texto){
+    return (texto||'').split(/[,\n]/).map(w => _normalizaLetra(w).replace(/[^A-ZÑ]/g,'')).filter(w => w.length >= 3 && w.length <= 12);
+  }
+  function _generarSopa(palabras){
+    const lista = [...palabras].sort((a,b) => b.length - a.length);
+    const maxLen = Math.max(...lista.map(w => w.length), 6);
+    const n = Math.min(13, Math.max(9, maxLen + 2));
+    const grid = Array.from({length:n}, () => Array(n).fill(null));
+    const dirs = [[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,-1],[1,-1],[-1,1]];
+    const colocadas = [];
+    lista.forEach(palabra => {
+      let ok = false;
+      for (let intento = 0; intento < 300 && !ok; intento++){
+        const [dx,dy] = dirs[Math.floor(Math.random()*dirs.length)];
+        const r0 = Math.floor(Math.random()*n), c0 = Math.floor(Math.random()*n);
+        const rEnd = r0 + dy*(palabra.length-1), cEnd = c0 + dx*(palabra.length-1);
+        if (rEnd < 0 || rEnd >= n || cEnd < 0 || cEnd >= n) continue;
+        let cabe = true;
+        for (let i = 0; i < palabra.length; i++){
+          const r = r0 + dy*i, c = c0 + dx*i;
+          const existente = grid[r][c];
+          if (existente !== null && existente !== palabra[i]) { cabe = false; break; }
+        }
+        if (!cabe) continue;
+        for (let i = 0; i < palabra.length; i++){
+          const r = r0 + dy*i, c = c0 + dx*i;
+          grid[r][c] = palabra[i];
+        }
+        colocadas.push({ palabra, r0, c0, dx, dy });
+        ok = true;
+      }
+    });
+    const letras = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ';
+    for (let r = 0; r < n; r++) for (let c = 0; c < n; c++){
+      if (grid[r][c] === null) grid[r][c] = letras[Math.floor(Math.random()*letras.length)];
+    }
+    return { n, grid, colocadas };
+  }
+  function _renderSopa(act){
+    return `
+      <div style="text-align:center;padding:6px 4px 2px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:var(--primary);margin-bottom:10px;">🎮 Actividad · Sopa de letras</div>
+        <div id="sopa-lista" style="display:flex;flex-wrap:wrap;justify-content:center;gap:7px;margin-bottom:14px;"></div>
+        <div id="sopa-grid" style="display:inline-grid;gap:2px;user-select:none;touch-action:none;margin:0 auto;"></div>
+        <div id="sopa-resultado" style="margin-top:16px;font-weight:700;font-size:14px;min-height:22px;"></div>
+        <button id="sopa-continuar" class="btn btn--primary" style="display:none;margin-top:10px;">Continuar →</button>
+      </div>`;
+  }
+  function _initSopa(root, act, onDone){
+    const palabras = _parsePalabrasLista(act.palabras);
+    if (palabras.length === 0) { onDone(); return; }
+    const { n, grid, colocadas } = _generarSopa(palabras);
+    const encontradas = new Set();
+    const elLista = root.querySelector('#sopa-lista');
+    const elGrid = root.querySelector('#sopa-grid');
+    const elResultado = root.querySelector('#sopa-resultado');
+    const elContinuar = root.querySelector('#sopa-continuar');
+    const cellPx = n >= 12 ? 24 : n >= 10 ? 27 : 30;
+    elGrid.style.gridTemplateColumns = `repeat(${n}, ${cellPx}px)`;
+
+    function refrescarLista(){
+      elLista.innerHTML = colocadas.map(p => `<span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:700;padding:4px 9px;border-radius:7px;background:${encontradas.has(p.palabra)?'var(--success)':'var(--surface-2)'};color:${encontradas.has(p.palabra)?'#fff':'var(--text-2)'};${encontradas.has(p.palabra)?'text-decoration:line-through;':''}">${p.palabra}</span>`).join('');
+    }
+    // Construir celdas
+    const celdas = [];
+    elGrid.innerHTML = '';
+    for (let r = 0; r < n; r++){
+      celdas.push([]);
+      for (let c = 0; c < n; c++){
+        const cel = document.createElement('div');
+        cel.textContent = grid[r][c];
+        cel.dataset.r = r; cel.dataset.c = c;
+        cel.style.cssText = `width:${cellPx}px;height:${cellPx}px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:${cellPx>=28?13:11}px;font-weight:700;background:var(--surface-2);border-radius:4px;color:var(--text);cursor:pointer;`;
+        elGrid.appendChild(cel);
+        celdas[r].push(cel);
+      }
+    }
+
+    let seleccionando = false, inicio = null, seleccionActual = [];
+    function celdaEnPunto(x, y){
+      const el = document.elementFromPoint(x, y);
+      if (el && el.dataset && el.dataset.r !== undefined) return { r: Number(el.dataset.r), c: Number(el.dataset.c), el };
+      return null;
+    }
+    function limpiarSeleccionVisual(){
+      seleccionActual.forEach(({el}) => { if(!el.dataset.found) el.style.background = 'var(--surface-2)'; });
+    }
+    function lineaDesde(ini, fin){
+      const dr = fin.r - ini.r, dc = fin.c - ini.c;
+      const pasos = Math.max(Math.abs(dr), Math.abs(dc));
+      if (pasos === 0) return [{...ini, el: celdas[ini.r][ini.c]}];
+      if (dr !== 0 && dc !== 0 && Math.abs(dr) !== Math.abs(dc)) return null; // no es línea recta válida
+      const stepR = dr === 0 ? 0 : dr / Math.abs(dr);
+      const stepC = dc === 0 ? 0 : dc / Math.abs(dc);
+      const out = [];
+      for (let i = 0; i <= pasos; i++){
+        const r = ini.r + stepR*i, c = ini.c + stepC*i;
+        out.push({ r, c, el: celdas[r][c] });
+      }
+      return out;
+    }
+    function comprobarSeleccion(){
+      const texto = seleccionActual.map(p => grid[p.r][p.c]).join('');
+      const textoInv = texto.split('').reverse().join('');
+      const match = colocadas.find(p => !encontradas.has(p.palabra) && (p.palabra === texto || p.palabra === textoInv));
+      if (match){
+        encontradas.add(match.palabra);
+        seleccionActual.forEach(({el}) => { el.style.background = 'var(--success)'; el.style.color = '#fff'; el.dataset.found = '1'; });
+        refrescarLista();
+        if (encontradas.size === colocadas.length){
+          elResultado.style.color = 'var(--success)';
+          elResultado.textContent = '¡Las encontraste todas! 🎉';
+          elContinuar.style.display = 'inline-flex';
+        }
+      } else {
+        limpiarSeleccionVisual();
+      }
+    }
+    function onDown(e){
+      const p = celdaEnPunto(e.clientX, e.clientY);
+      if (!p) return;
+      seleccionando = true; inicio = p; seleccionActual = [{...p, el: celdas[p.r][p.c]}];
+      celdas[p.r][p.c].style.background = 'var(--highlight)';
+      e.preventDefault();
+    }
+    function onMove(e){
+      if (!seleccionando) return;
+      const p = celdaEnPunto(e.clientX, e.clientY);
+      if (!p) return;
+      const linea = lineaDesde(inicio, p);
+      if (!linea) return;
+      limpiarSeleccionVisual();
+      seleccionActual = linea;
+      seleccionActual.forEach(({el}) => { if(!el.dataset.found) el.style.background = 'var(--highlight)'; });
+      e.preventDefault();
+    }
+    function onUp(){
+      if (!seleccionando) return;
+      seleccionando = false;
+      if (seleccionActual.length > 1) comprobarSeleccion(); else limpiarSeleccionVisual();
+    }
+    elGrid.addEventListener('pointerdown', onDown);
+    elGrid.addEventListener('pointermove', onMove);
+    document.addEventListener('pointerup', onUp);
+    refrescarLista();
+    elContinuar.addEventListener('click', onDone);
+  }
+
+  function mostrarActividadClase(sesion, onDone){
+    const act = sesion && sesion.actividad;
+    if (!act || !act.tipo) { onDone(); return; }
+    const modalId = 'actividad-clase';
+    let bodyHtml = '';
+    if (act.tipo === 'ahorcado') bodyHtml = _renderAhorcado(act);
+    else if (act.tipo === 'vf') bodyHtml = _renderVF(act);
+    else if (act.tipo === 'opcion') bodyHtml = _renderOpcion(act);
+    else if (act.tipo === 'sopa') bodyHtml = _renderSopa(act);
+    else { onDone(); return; }
+    Modal.open({ id: modalId, closeOnBackdrop: false, size: 'md', body: bodyHtml });
+    const root = document.querySelector(`[data-modal-id="${modalId}"] .modal__body`);
+    if (!root) { onDone(); return; }
+    const cerrar = () => { Modal.close(modalId); onDone(); };
+    if (act.tipo === 'ahorcado') _initAhorcado(root, act, cerrar);
+    else if (act.tipo === 'vf') _initVF(root, act, cerrar);
+    else if (act.tipo === 'opcion') _initOpcion(root, act, cerrar);
+    else if (act.tipo === 'sopa') _initSopa(root, act, cerrar);
+  }
+
   // Bind del botón de cerrar y tecla Esc (una sola vez al cargar)
   document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('visorClose')?.addEventListener('click', window.cerrarVisor);
@@ -5174,20 +5486,33 @@ const Sections = (function(){
       const cursoId = this.dataset.cursoId;
       const numClase = parseInt(this.dataset.numClase);
       if (!cursoId || !numClase) return;
-      window.marcarClaseVista(cursoId, numClase);
-      // Feedback visual
-      this.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg> ¡Marcada!';
-      this.style.background = 'color-mix(in srgb, var(--success) 20%, transparent)';
-      this.style.borderColor = 'color-mix(in srgb, var(--success) 50%, transparent)';
-      this.style.color = 'var(--success)';
-      this.disabled = true;
-      // Cerrar después de 1.2s y refrescar el DETALLE del curso (no solo la lista)
-      // para que la siguiente clase se desbloquee al instante.
-      setTimeout(() => {
-        window.cerrarVisor();
-        if (typeof window.__refrescarCursoDetalle === 'function') window.__refrescarCursoDetalle(cursoId);
-        if (typeof renderCursosList === 'function') renderCursosList();
-      }, 1200);
+      const btn = this;
+      function completarMarcado() {
+        window.marcarClaseVista(cursoId, numClase);
+        // Feedback visual
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg> ¡Marcada!';
+        btn.style.background = 'color-mix(in srgb, var(--success) 20%, transparent)';
+        btn.style.borderColor = 'color-mix(in srgb, var(--success) 50%, transparent)';
+        btn.style.color = 'var(--success)';
+        btn.disabled = true;
+        // Cerrar después de 1.2s y refrescar el DETALLE del curso (no solo la lista)
+        // para que la siguiente clase se desbloquee al instante.
+        setTimeout(() => {
+          window.cerrarVisor();
+          if (typeof window.__refrescarCursoDetalle === 'function') window.__refrescarCursoDetalle(cursoId);
+          if (typeof renderCursosList === 'function') renderCursosList();
+        }, 1200);
+      }
+      // MODIFICADO: si la clase tiene una actividad dinámica configurada (ahorcado,
+      // verdadero/falso, opción múltiple), se muestra primero y es obligatorio
+      // completarla antes de marcar la clase como vista. No afecta el certificado.
+      const curso = cursos.find(c => c.id === cursoId);
+      const sesion = curso?.sesiones?.find(s => (s.numero || 0) === numClase);
+      if (sesion && sesion.actividad && sesion.actividad.tipo) {
+        mostrarActividadClase(sesion, completarMarcado);
+      } else {
+        completarMarcado();
+      }
     });
   });
 
