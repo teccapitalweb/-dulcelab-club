@@ -3997,25 +3997,36 @@ const Pages={
       const list=document.getElementById('cert-list');
       const certs = window.AdminStore?.certificados || [];
       if(certs.length===0){list.innerHTML=`<div class="empty"><div class="empty__icon"><svg class="ic"><use href="#i-certificate"/></svg></div><h3>Sin certificados emitidos</h3><p>Empieza emitiendo el primer certificado.</p></div>`;return;}
-      list.innerHTML=certs.map(c=>`
+      list.innerHTML=certs.map(c=>{
+        // MODIFICADO: la plantilla pedía campos que el certificado real nunca tuvo
+        // (estudiante, email, calificación) — por eso salía "undefined" y "Pendiente"
+        // fijo. Estos son los campos reales que escribe el panel al emitir el
+        // certificado (ver emitirCertificadoFirestore en vip-panel.html).
+        const fecha = c.emitido?.toDate ? c.emitido.toDate() : (c.emitido ? new Date(c.emitido) : null);
+        const fechaTxt = fecha ? fecha.toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'}) : '—';
+        return `
         <div class="adm-row" style="--c1:#C94B68;">
           <div class="adm-row__thumb"><svg class="ic"><use href="#i-certificate"/></svg></div>
           <div class="adm-row__body">
-            <div class="adm-row__title">${c.estudiante} · ${c.curso}</div>
+            <div class="adm-row__title">${c.nombre||'—'} · ${c.curso||'—'}</div>
             <div class="adm-row__meta">
-              <span><svg class="ic"><use href="#i-mail"/></svg>${c.email}</span>
-              <span><svg class="ic"><use href="#i-calendar"/></svg>${c.emitido}</span>
-              <span><svg class="ic"><use href="#i-clock"/></svg>${c.horas}h · ${c.calificacion}/100</span>
-              <span style="color:var(--primary);font-weight:700;">${c.folio}</span>
+              <span><svg class="ic"><use href="#i-tools"/></svg>${c.area||'—'}</span>
+              <span><svg class="ic"><use href="#i-calendar"/></svg>${fechaTxt}</span>
+              <span><svg class="ic"><use href="#i-clock"/></svg>${c.horas||0}h · ${c.sesiones||0} sesiones</span>
+              <span style="color:var(--primary);font-weight:700;">${c.folio||'—'}</span>
             </div>
           </div>
-          <span class="tag ${c.enviado?'tag--success':'tag--warning'}">${c.enviado?'Enviado':'Pendiente'}</span>
+          <span class="tag ${c.correoEnviado?'tag--success':'tag--warning'}">${c.correoEnviado?'Enviado':'Pendiente'}</span>
           <div class="adm-row__actions">
-            <button class="icon-action" title="Ver PDF"><svg class="ic"><use href="#i-eye"/></svg></button>
+            <button class="icon-action" title="Ver / verificar" data-ver="${c.folio||''}"><svg class="ic"><use href="#i-eye"/></svg></button>
             <button class="icon-action icon-action--danger" data-del="${c.id}" title="Eliminar"><svg class="ic"><use href="#i-trash"/></svg></button>
           </div>
         </div>
-      `).join('');
+      `;}).join('');
+      list.querySelectorAll('[data-ver]').forEach(b=>b.addEventListener('click',()=>{
+        if(!b.dataset.ver){ Toast.error('Este certificado no tiene folio'); return; }
+        window.open(`https://club.dulcelabfood.com/verificar.html?folio=${encodeURIComponent(b.dataset.ver)}`,'_blank','noopener');
+      }));
       list.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',async ()=>{
         if(confirm('¿Eliminar este certificado? Esta acción es irreversible.')){
           try{ const fb=window._fb; await fb.deleteDoc(fb.doc(fb.db,'certificados',b.dataset.del)); Toast.success('Certificado eliminado'); }
