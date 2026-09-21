@@ -5450,6 +5450,257 @@ const Sections = (function(){
     elContinuar.addEventListener('click', onDone);
   }
 
+
+  /* ─── MEMORAMA ─── */
+  function _parsePares(texto){
+    return (texto||'').split('\n').map(linea => {
+      const partes = linea.split('=');
+      if (partes.length < 2) return null;
+      const a = partes[0].trim();
+      const b = partes.slice(1).join('=').trim();
+      if (!a || !b) return null;
+      return { a, b };
+    }).filter(Boolean);
+  }
+  function _renderMemorama(act){
+    return `
+      <div style="text-align:center;padding:6px 4px 2px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:var(--primary);margin-bottom:12px;">🎮 Actividad · Memorama</div>
+        <div id="mem-grid" style="display:grid;gap:8px;margin:0 auto;max-width:460px;"></div>
+        <div id="mem-resultado" style="margin-top:16px;font-weight:700;font-size:14px;min-height:22px;"></div>
+        <button id="mem-continuar" class="btn btn--primary" style="display:none;margin-top:10px;">Continuar →</button>
+      </div>`;
+  }
+  function _initMemorama(root, act, onDone){
+    const pares = _parsePares(act.parejas);
+    if (pares.length < 2) { onDone(); return; }
+    let cartas = [];
+    pares.forEach((p, idx) => { cartas.push({ pairIdx: idx, texto: p.a }); cartas.push({ pairIdx: idx, texto: p.b }); });
+    // Barajar (Fisher-Yates)
+    for (let i = cartas.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i+1));
+      [cartas[i], cartas[j]] = [cartas[j], cartas[i]];
+    }
+    const elGrid = root.querySelector('#mem-grid');
+    const elResultado = root.querySelector('#mem-resultado');
+    const elContinuar = root.querySelector('#mem-continuar');
+    const cols = cartas.length <= 8 ? 4 : cartas.length <= 12 ? 4 : 5;
+    elGrid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+
+    let volteadas = [];
+    let emparejadas = new Set();
+    let bloqueado = false;
+    let matches = 0;
+
+    elGrid.innerHTML = cartas.map((c, i) => `
+      <button type="button" data-mem-i="${i}" style="min-height:64px;padding:8px 6px;border-radius:9px;border:1.5px solid var(--border-2);background:var(--surface-2);color:var(--text);font-size:11.5px;font-weight:600;line-height:1.25;cursor:pointer;display:flex;align-items:center;justify-content:center;text-align:center;">
+        <span data-mem-cara="${i}">🎴</span>
+      </button>`).join('');
+
+    function pintarCarta(i, mostrar){
+      const btn = elGrid.querySelector(`[data-mem-i="${i}"]`);
+      const cara = btn.querySelector(`[data-mem-cara="${i}"]`);
+      if (mostrar) { cara.textContent = cartas[i].texto; btn.style.background = 'var(--highlight)'; btn.style.color='#442A22'; }
+      else { cara.textContent = '🎴'; btn.style.background = 'var(--surface-2)'; btn.style.color='var(--text)'; }
+    }
+    function marcarEmparejada(i){
+      const btn = elGrid.querySelector(`[data-mem-i="${i}"]`);
+      btn.style.background = 'var(--success)'; btn.style.color = '#fff'; btn.disabled = true;
+    }
+    elGrid.querySelectorAll('[data-mem-i]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const i = Number(btn.dataset.memI);
+        if (bloqueado || emparejadas.has(i) || volteadas.includes(i)) return;
+        pintarCarta(i, true);
+        volteadas.push(i);
+        if (volteadas.length === 2){
+          bloqueado = true;
+          const [x, y] = volteadas;
+          if (cartas[x].pairIdx === cartas[y].pairIdx){
+            emparejadas.add(x); emparejadas.add(y);
+            marcarEmparejada(x); marcarEmparejada(y);
+            volteadas = []; bloqueado = false; matches++;
+            if (matches === pares.length){
+              elResultado.style.color = 'var(--success)';
+              elResultado.textContent = '¡Encontraste todas las parejas! 🎉';
+              elContinuar.style.display = 'inline-flex';
+            }
+          } else {
+            setTimeout(() => { pintarCarta(x, false); pintarCarta(y, false); volteadas = []; bloqueado = false; }, 900);
+          }
+        }
+      });
+    });
+    elContinuar.addEventListener('click', onDone);
+  }
+
+
+  /* ─── CRUCIGRAMA ─── */
+  function _parsePistas(texto){
+    return (texto||'').split('\n').map(linea => {
+      const partes = linea.split('=');
+      if (partes.length < 2) return null;
+      const palabra = _normalizaLetra(partes[0]).replace(/[^A-ZÑ]/g,'');
+      const pista = partes.slice(1).join('=').trim();
+      if (palabra.length < 2 || !pista) return null;
+      return { palabra, pista };
+    }).filter(Boolean);
+  }
+  function _generarCrucigrama(items){
+    const palabras = [...items].sort((a,b) => b.palabra.length - a.palabra.length);
+    const celdas = new Map();
+    const colocadas = [];
+    function cabe(palabra, r0, c0, dir){
+      for (let i = 0; i < palabra.length; i++){
+        const r = dir==='V' ? r0+i : r0, c = dir==='H' ? c0+i : c0;
+        const existente = celdas.get(r+','+c);
+        if (existente !== undefined && existente !== palabra[i]) return false;
+      }
+      const rAntes = dir==='V' ? r0-1 : r0, cAntes = dir==='H' ? c0-1 : c0;
+      if (celdas.has(rAntes+','+cAntes)) return false;
+      const rDespues = dir==='V' ? r0+palabra.length : r0, cDespues = dir==='H' ? c0+palabra.length : c0;
+      if (celdas.has(rDespues+','+cDespues)) return false;
+      for (let i = 0; i < palabra.length; i++){
+        const r = dir==='V' ? r0+i : r0, c = dir==='H' ? c0+i : c0;
+        if (celdas.has(r+','+c)) continue; // es intersección, ya validada arriba
+        if (dir==='H'){ if (celdas.has((r-1)+','+c) || celdas.has((r+1)+','+c)) return false; }
+        else { if (celdas.has(r+','+(c-1)) || celdas.has(r+','+(c+1))) return false; }
+      }
+      return true;
+    }
+    function colocar(palabra, r0, c0, dir){
+      for (let i = 0; i < palabra.length; i++){
+        const r = dir==='V' ? r0+i : r0, c = dir==='H' ? c0+i : c0;
+        celdas.set(r+','+c, palabra[i]);
+      }
+    }
+    if (palabras.length === 0) return { colocadas: [], celdas, filas: 0, cols: 0 };
+    colocar(palabras[0].palabra, 0, 0, 'H');
+    colocadas.push({ ...palabras[0], r0: 0, c0: 0, dir: 'H' });
+    for (let idx = 1; idx < palabras.length; idx++){
+      const item = palabras[idx], palabra = item.palabra;
+      let ok = false;
+      for (let pi = 0; pi < colocadas.length && !ok; pi++){
+        const previa = colocadas[pi];
+        for (let i = 0; i < palabra.length && !ok; i++){
+          for (let j = 0; j < previa.palabra.length && !ok; j++){
+            if (palabra[i] !== previa.palabra[j]) continue;
+            const dirNueva = previa.dir === 'H' ? 'V' : 'H';
+            let r0, c0;
+            if (previa.dir === 'H'){ r0 = previa.r0 - i; c0 = previa.c0 + j; }
+            else { r0 = previa.r0 + j; c0 = previa.c0 - i; }
+            if (cabe(palabra, r0, c0, dirNueva)){
+              colocar(palabra, r0, c0, dirNueva);
+              colocadas.push({ ...item, r0, c0, dir: dirNueva });
+              ok = true;
+            }
+          }
+        }
+      }
+      if (!ok){
+        let filaLibre = 0;
+        colocadas.forEach(p => {
+          const filaFin = p.dir==='V' ? p.r0+p.palabra.length-1 : p.r0;
+          if (filaFin + 2 > filaLibre) filaLibre = filaFin + 2;
+        });
+        colocar(palabra, filaLibre, 0, 'H');
+        colocadas.push({ ...item, r0: filaLibre, c0: 0, dir: 'H' });
+      }
+    }
+    let minR=Infinity,maxR=-Infinity,minC=Infinity,maxC=-Infinity;
+    colocadas.forEach(p => {
+      const rFin = p.dir==='V' ? p.r0+p.palabra.length-1 : p.r0;
+      const cFin = p.dir==='H' ? p.c0+p.palabra.length-1 : p.c0;
+      minR=Math.min(minR,p.r0); maxR=Math.max(maxR,rFin);
+      minC=Math.min(minC,p.c0); maxC=Math.max(maxC,cFin);
+    });
+    colocadas.forEach(p => { p.r0 -= minR; p.c0 -= minC; });
+    const celdas2 = new Map();
+    celdas.forEach((v,k) => { const [r,c] = k.split(',').map(Number); celdas2.set((r-minR)+','+(c-minC), v); });
+    const ordenComienzos = [...colocadas].sort((a,b) => a.r0-b.r0 || a.c0-b.c0);
+    const inicios = new Map(); let contador = 1;
+    ordenComienzos.forEach(p => {
+      const key = p.r0+','+p.c0;
+      if (!inicios.has(key)) inicios.set(key, contador++);
+      p.numero = inicios.get(key);
+    });
+    return { colocadas, celdas: celdas2, filas: maxR-minR+1, cols: maxC-minC+1 };
+  }
+  function _renderCrucigrama(act){
+    return `
+      <div style="padding:4px 2px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:var(--primary);margin-bottom:12px;text-align:center;">🎮 Actividad · Crucigrama</div>
+        <div id="cru-grid-wrap" style="overflow-x:auto;margin-bottom:16px;"><div id="cru-grid" style="display:inline-grid;gap:1px;margin:0 auto;"></div></div>
+        <div id="cru-pistas" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;text-align:left;font-size:12px;color:var(--text-2);margin-bottom:14px;"></div>
+        <div style="text-align:center;">
+          <button id="cru-comprobar" class="btn btn--ghost">Comprobar</button>
+          <div id="cru-resultado" style="margin-top:12px;font-weight:700;font-size:14px;min-height:22px;"></div>
+          <button id="cru-continuar" class="btn btn--primary" style="display:none;margin-top:8px;">Continuar →</button>
+        </div>
+      </div>`;
+  }
+  function _initCrucigrama(root, act, onDone){
+    const items = _parsePistas(act.pistas);
+    if (items.length === 0) { onDone(); return; }
+    const { colocadas, celdas, filas, cols } = _generarCrucigrama(items);
+    const elGrid = root.querySelector('#cru-grid');
+    const elPistas = root.querySelector('#cru-pistas');
+    const elComprobar = root.querySelector('#cru-comprobar');
+    const elResultado = root.querySelector('#cru-resultado');
+    const elContinuar = root.querySelector('#cru-continuar');
+    const cellPx = (filas*cols > 140) ? 26 : 32;
+    elGrid.style.gridTemplateColumns = `repeat(${cols}, ${cellPx}px)`;
+    elGrid.style.gridTemplateRows = `repeat(${filas}, ${cellPx}px)`;
+
+    const inputs = new Map();
+    for (let r = 0; r < filas; r++){
+      for (let c = 0; c < cols; c++){
+        const key = r+','+c;
+        if (!celdas.has(key)){
+          const vacio = document.createElement('div');
+          vacio.style.cssText = `width:${cellPx}px;height:${cellPx}px;`;
+          elGrid.appendChild(vacio);
+          continue;
+        }
+        const cont = document.createElement('div');
+        cont.style.cssText = `position:relative;width:${cellPx}px;height:${cellPx}px;`;
+        const numero = colocadas.find(p => p.r0===r && p.c0===c)?.numero;
+        if (numero) {
+          const num = document.createElement('span');
+          num.textContent = numero;
+          num.style.cssText = 'position:absolute;top:1px;left:2px;font-size:8px;font-weight:700;color:var(--primary);line-height:1;';
+          cont.appendChild(num);
+        }
+        const inp = document.createElement('input');
+        inp.maxLength = 1;
+        inp.style.cssText = `width:100%;height:100%;text-align:center;font-weight:800;font-size:${cellPx>=30?15:13}px;border:1.5px solid var(--border-2);border-radius:3px;background:var(--surface);color:var(--text);text-transform:uppercase;padding:0;`;
+        inp.addEventListener('input', () => { inp.value = inp.value.toUpperCase().replace(/[^A-ZÑ]/g,''); });
+        cont.appendChild(inp);
+        elGrid.appendChild(cont);
+        inputs.set(key, inp);
+      }
+    }
+    const horiz = colocadas.filter(p => p.dir==='H').sort((a,b)=>a.numero-b.numero);
+    const vert = colocadas.filter(p => p.dir==='V').sort((a,b)=>a.numero-b.numero);
+    elPistas.innerHTML = `
+      <div><div style="font-weight:800;color:var(--text);margin-bottom:6px;">HORIZONTALES</div>${horiz.map(p=>`<div style="margin-bottom:5px;"><strong>${p.numero}.</strong> ${escapeHtml(p.pista)}</div>`).join('')}</div>
+      <div><div style="font-weight:800;color:var(--text);margin-bottom:6px;">VERTICALES</div>${vert.map(p=>`<div style="margin-bottom:5px;"><strong>${p.numero}.</strong> ${escapeHtml(p.pista)}</div>`).join('')}</div>`;
+
+    elComprobar.addEventListener('click', () => {
+      let correctas = 0, total = 0;
+      inputs.forEach((inp, key) => {
+        total++;
+        const esperado = celdas.get(key);
+        if (inp.value === esperado) { correctas++; inp.style.borderColor = 'var(--success)'; inp.style.background = 'color-mix(in srgb, var(--success) 12%, transparent)'; }
+        else { inp.style.borderColor = 'var(--danger)'; }
+      });
+      elResultado.style.color = correctas === total ? 'var(--success)' : 'var(--text-2)';
+      elResultado.textContent = correctas === total ? '¡Completo y correcto! 🎉' : `${correctas} de ${total} celdas correctas`;
+      elContinuar.style.display = 'inline-flex';
+    });
+    elContinuar.addEventListener('click', onDone);
+  }
+
   function mostrarActividadClase(sesion, onDone){
     const act = sesion && sesion.actividad;
     if (!act || !act.tipo) { onDone(); return; }
@@ -5459,8 +5710,10 @@ const Sections = (function(){
     else if (act.tipo === 'vf') bodyHtml = _renderVF(act);
     else if (act.tipo === 'opcion') bodyHtml = _renderOpcion(act);
     else if (act.tipo === 'sopa') bodyHtml = _renderSopa(act);
+    else if (act.tipo === 'memorama') bodyHtml = _renderMemorama(act);
+    else if (act.tipo === 'crucigrama') bodyHtml = _renderCrucigrama(act);
     else { onDone(); return; }
-    Modal.open({ id: modalId, closeOnBackdrop: false, size: 'md', body: bodyHtml });
+    Modal.open({ id: modalId, closeOnBackdrop: false, size: act.tipo === 'crucigrama' ? 'lg' : 'md', body: bodyHtml });
     const root = document.querySelector(`[data-modal-id="${modalId}"] .modal__body`);
     if (!root) { onDone(); return; }
     const cerrar = () => { Modal.close(modalId); onDone(); };
@@ -5468,6 +5721,8 @@ const Sections = (function(){
     else if (act.tipo === 'vf') _initVF(root, act, cerrar);
     else if (act.tipo === 'opcion') _initOpcion(root, act, cerrar);
     else if (act.tipo === 'sopa') _initSopa(root, act, cerrar);
+    else if (act.tipo === 'memorama') _initMemorama(root, act, cerrar);
+    else if (act.tipo === 'crucigrama') _initCrucigrama(root, act, cerrar);
   }
 
   // Bind del botón de cerrar y tecla Esc (una sola vez al cargar)
