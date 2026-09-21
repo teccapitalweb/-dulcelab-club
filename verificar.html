@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Verificar certificado · DulceLab Food</title>
+<link rel="icon" type="image/png" href="assets/logo-dulcelab.png">
+<style>
+  :root{
+    --wine:#6b1526; --cream:#fbeff2; --text:#3B2420; --muted:#6B5147;
+    --success:#1f8a4c; --danger:#b3261e; --border:#f0d9de;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; min-height:100vh; background:var(--cream);
+    font-family:'Segoe UI',Helvetica,Arial,sans-serif; color:var(--text);
+    display:flex; align-items:center; justify-content:center; padding:24px;
+    padding-top:calc(24px + env(safe-area-inset-top,0px));
+    padding-bottom:calc(24px + env(safe-area-inset-bottom,0px));
+  }
+  .card{
+    width:100%; max-width:480px; background:#fff; border:1px solid var(--border);
+    border-radius:20px; overflow:hidden; box-shadow:0 12px 40px rgba(107,21,38,.08);
+  }
+  .card__head{background:var(--wine); padding:32px 28px; text-align:center;}
+  .card__brand{font-size:22px; font-weight:800; color:#fff; letter-spacing:-.4px;}
+  .card__sub{font-size:11px; font-weight:600; color:#f6d9de; opacity:.9; margin-top:6px; letter-spacing:1.4px; text-transform:uppercase;}
+  .card__body{padding:32px 28px;}
+  .estado{display:flex; flex-direction:column; align-items:center; text-align:center; gap:10px; margin-bottom:22px;}
+  .estado__icono{width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:26px;}
+  .estado__icono--ok{background:color-mix(in srgb, var(--success) 15%, transparent); color:var(--success);}
+  .estado__icono--no{background:color-mix(in srgb, var(--danger) 15%, transparent); color:var(--danger);}
+  .estado__titulo{font-size:18px; font-weight:800; margin:0;}
+  .estado__titulo--ok{color:var(--success);}
+  .estado__titulo--no{color:var(--danger);}
+  .estado__desc{font-size:13.5px; color:var(--muted); margin:0; line-height:1.5;}
+  .datos{border-top:1px solid var(--border); padding-top:20px; display:flex; flex-direction:column; gap:14px;}
+  .dato{display:flex; flex-direction:column; gap:2px;}
+  .dato__lbl{font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--muted);}
+  .dato__val{font-size:15px; font-weight:700; color:var(--text);}
+  .dato__val--folio{font-family:'Courier New',monospace; font-size:13px; font-weight:700;}
+  .loading{display:flex; flex-direction:column; align-items:center; gap:14px; padding:20px 0;}
+  .spinner{width:36px; height:36px; border:3px solid var(--border); border-top-color:var(--wine); border-radius:50%; animation:spin .8s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .footer{padding:18px 28px; border-top:1px solid var(--border); text-align:center;}
+  .footer a{color:var(--wine); font-size:12.5px; font-weight:700; text-decoration:none;}
+  .footer a:hover{text-decoration:underline;}
+  .folio-form{display:flex; gap:8px; margin-top:4px;}
+  .folio-form input{flex:1; padding:11px 14px; border-radius:10px; border:1.5px solid var(--border); font-size:14px; font-family:'Courier New',monospace;}
+  .folio-form button{padding:11px 18px; border-radius:10px; border:none; background:var(--wine); color:#fff; font-weight:700; font-size:14px; cursor:pointer;}
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="card__head">
+      <div class="card__brand">DulceLab Food</div>
+      <div class="card__sub">Verificación de certificados</div>
+    </div>
+    <div class="card__body" id="body"></div>
+    <div class="footer"><a href="https://club.dulcelabfood.com/vip-panel.html">club.dulcelabfood.com</a></div>
+  </div>
+
+<script>
+const WEBHOOK_URL = 'https://dulcelab-webhook-production.up.railway.app';
+
+function fmtFecha(iso){
+  try{
+    return new Date(iso).toLocaleDateString('es-MX',{year:'numeric',month:'long',day:'numeric'});
+  }catch(e){ return ''; }
+}
+
+function renderSinFolio(){
+  document.getElementById('body').innerHTML = `
+    <div style="text-align:center;">
+      <p style="font-size:14px;color:var(--muted);margin:0 0 16px;line-height:1.5;">
+        Escribe el folio del certificado que aparece al pie del documento para verificar su validez.
+      </p>
+      <div class="folio-form">
+        <input type="text" id="folioInput" placeholder="Ej: DulceLab Food-2026-6V790J">
+        <button id="folioBtn">Verificar</button>
+      </div>
+    </div>`;
+  document.getElementById('folioBtn').addEventListener('click', () => {
+    const v = document.getElementById('folioInput').value.trim();
+    if (v) { window.location.search = '?folio=' + encodeURIComponent(v); }
+  });
+  document.getElementById('folioInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') document.getElementById('folioBtn').click();
+  });
+}
+
+function renderCargando(){
+  document.getElementById('body').innerHTML = `
+    <div class="loading">
+      <div class="spinner"></div>
+      <p style="font-size:13px;color:var(--muted);margin:0;">Verificando certificado…</p>
+    </div>`;
+}
+
+function renderValido(cert){
+  document.getElementById('body').innerHTML = `
+    <div class="estado">
+      <div class="estado__icono estado__icono--ok">✓</div>
+      <h1 class="estado__titulo estado__titulo--ok">Certificado válido</h1>
+      <p class="estado__desc">Este certificado fue emitido digitalmente por DulceLab Food y es auténtico.</p>
+    </div>
+    <div class="datos">
+      <div class="dato"><span class="dato__lbl">Nombre</span><span class="dato__val">${escapeHtml(cert.nombre || '—')}</span></div>
+      <div class="dato"><span class="dato__lbl">Programa académico</span><span class="dato__val">${escapeHtml(cert.curso || '—')}</span></div>
+      <div class="dato"><span class="dato__lbl">Área</span><span class="dato__val">${escapeHtml(cert.area || '—')}</span></div>
+      <div class="dato"><span class="dato__lbl">Carga académica</span><span class="dato__val">${cert.sesiones || 0} sesiones · ${cert.horas || 0} horas</span></div>
+      <div class="dato"><span class="dato__lbl">Fecha de emisión</span><span class="dato__val">${fmtFecha(cert.emitido)}</span></div>
+      <div class="dato"><span class="dato__lbl">Folio</span><span class="dato__val dato__val--folio">${escapeHtml(cert.folio || '—')}</span></div>
+    </div>`;
+}
+
+function renderNoValido(){
+  document.getElementById('body').innerHTML = `
+    <div class="estado">
+      <div class="estado__icono estado__icono--no">✕</div>
+      <h1 class="estado__titulo estado__titulo--no">Certificado no encontrado</h1>
+      <p class="estado__desc">No encontramos ningún certificado con ese folio. Revisa que esté escrito exactamente como aparece en el documento.</p>
+    </div>`;
+}
+
+function renderError(){
+  document.getElementById('body').innerHTML = `
+    <div class="estado">
+      <div class="estado__icono estado__icono--no">!</div>
+      <h1 class="estado__titulo estado__titulo--no">No se pudo verificar</h1>
+      <p class="estado__desc">Ocurrió un problema al consultar el certificado. Intenta de nuevo en unos minutos.</p>
+    </div>`;
+}
+
+function escapeHtml(s){
+  if (s == null) return '';
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+async function init(){
+  const params = new URLSearchParams(window.location.search);
+  const folio = params.get('folio');
+  if (!folio) { renderSinFolio(); return; }
+
+  renderCargando();
+  try {
+    const r = await fetch(`${WEBHOOK_URL}/certificados/verificar/${encodeURIComponent(folio)}`);
+    const data = await r.json().catch(() => ({}));
+    if (r.ok && data.valido) renderValido(data);
+    else if (r.status === 404) renderNoValido();
+    else renderError();
+  } catch (e) {
+    renderError();
+  }
+}
+
+init();
+</script>
+</body>
+</html>
