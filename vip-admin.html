@@ -5900,6 +5900,12 @@ const AdminStore = {
       // Miembros: refrescar KPIs + lista
       if (typeof Pages._renderKpisMiembros === 'function') Pages._renderKpisMiembros();
       if (typeof Pages._renderListaMiembros === 'function') Pages._renderListaMiembros();
+    } else if (section === 'noticias' && Pages[section]) {
+      // MODIFICADO: faltaba este caso — por eso la lista de Noticias se
+      // quedaba en "Sin noticias publicadas" aunque el fetch al webhook ya
+      // hubiera traído los datos: nunca se le avisaba a la página que se
+      // volviera a dibujar con la información nueva.
+      Pages[section](p);
     }
   },
 
