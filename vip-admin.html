@@ -2701,6 +2701,20 @@ const Pages={
             <input type="checkbox" data-sesion-gratis="${idx}" ${s.gratis === true ? 'checked' : ''} style="width:15px;height:15px;accent-color:var(--primary);cursor:pointer;">
             🎁 <strong style="color:var(--text);">Clase gratis</strong> <span style="color:var(--text-3);">· visible sin membresía</span>
           </label>
+          <label style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text-2);cursor:pointer;">
+            <input type="checkbox" data-sesion-act-on="${idx}" ${s.actividad ? 'checked' : ''} style="width:15px;height:15px;accent-color:var(--primary);cursor:pointer;">
+            🎮 <strong style="color:var(--text);">Agregar actividad al terminar esta clase</strong>
+          </label>
+          ${s.actividad ? `
+          <div style="background:var(--surface-2);border:1px solid var(--border-2);border-radius:9px;padding:10px;display:flex;flex-direction:column;gap:7px;">
+            <select data-sesion-act-tipo="${idx}" class="input" style="font-size:12.5px;padding:7px 10px;">
+              <option value="ahorcado" ${s.actividad.tipo==='ahorcado'?'selected':''}>🔤 Ahorcado</option>
+              <option value="vf" ${s.actividad.tipo==='vf'?'selected':''}>✅ Verdadero o falso</option>
+              <option value="opcion" ${s.actividad.tipo==='opcion'?'selected':''}>📝 Opción múltiple</option>
+              <option value="sopa" ${s.actividad.tipo==='sopa'?'selected':''}>🔎 Sopa de letras</option>
+            </select>
+            ${Pages._camposActividadHTML(s.actividad, idx)}
+          </div>` : ''}
         </div>
         <div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0;">
           <button type="button" class="curso-card__action" data-sesion-mover="${idx}" data-delta="-1" ${idx === 0 ? 'disabled' : ''} title="Subir" style="width:28px;height:24px;${idx === 0 ? 'opacity:.4;cursor:not-allowed;' : ''}">▲</button>
@@ -2724,6 +2738,57 @@ const Pages={
         if (Pages._modalCurso.sesiones[idx]) Pages._modalCurso.sesiones[idx].gratis = e.target.checked;
       });
     });
+    // MODIFICADO: bindings de la actividad dinámica por clase (ahorcado / verdadero-falso / opción múltiple)
+    cont.querySelectorAll('[data-sesion-act-on]').forEach(chk => {
+      chk.addEventListener('change', (e) => {
+        const idx = parseInt(chk.dataset.sesionActOn, 10);
+        const s = Pages._modalCurso.sesiones[idx];
+        if (!s) return;
+        s.actividad = e.target.checked ? { tipo: 'ahorcado', palabra: '', pista: '' } : null;
+        Pages._renderSesionesModal();
+      });
+    });
+    cont.querySelectorAll('[data-sesion-act-tipo]').forEach(sel => {
+      sel.addEventListener('change', (e) => {
+        const idx = parseInt(sel.dataset.sesionActTipo, 10);
+        const s = Pages._modalCurso.sesiones[idx];
+        if (!s) return;
+        const tipo = e.target.value;
+        if (tipo === 'vf') s.actividad = { tipo, enunciado: '', respuesta: true };
+        else if (tipo === 'opcion') s.actividad = { tipo, pregunta: '', opciones: ['','',''], correcta: 0 };
+        else if (tipo === 'sopa') s.actividad = { tipo, palabras: '' };
+        else s.actividad = { tipo: 'ahorcado', palabra: '', pista: '' };
+        Pages._renderSesionesModal();
+      });
+    });
+    cont.querySelectorAll('[data-sesion-act-campo]').forEach(input => {
+      input.addEventListener('input', (e) => {
+        const [idxStr, campo] = input.dataset.sesionActCampo.split(':');
+        const s = Pages._modalCurso.sesiones[parseInt(idxStr, 10)];
+        if (s && s.actividad) s.actividad[campo] = e.target.value;
+      });
+    });
+    cont.querySelectorAll('[data-sesion-act-vf]').forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        const idx = parseInt(radio.dataset.sesionActVf, 10);
+        const s = Pages._modalCurso.sesiones[idx];
+        if (s && s.actividad && e.target.checked) s.actividad.respuesta = (e.target.value === 'true');
+      });
+    });
+    cont.querySelectorAll('[data-sesion-act-correcta]').forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        const idx = parseInt(radio.dataset.sesionActCorrecta, 10);
+        const s = Pages._modalCurso.sesiones[idx];
+        if (s && s.actividad && e.target.checked) s.actividad.correcta = Number(e.target.value);
+      });
+    });
+    cont.querySelectorAll('[data-sesion-act-opcion]').forEach(input => {
+      input.addEventListener('input', (e) => {
+        const [idxStr, i] = input.dataset.sesionActOpcion.split(':');
+        const s = Pages._modalCurso.sesiones[parseInt(idxStr, 10)];
+        if (s && s.actividad && Array.isArray(s.actividad.opciones)) s.actividad.opciones[parseInt(i, 10)] = e.target.value;
+      });
+    });
     cont.querySelectorAll('[data-sesion-mover]').forEach(btn => {
       btn.addEventListener('click', () => {
         const idx = parseInt(btn.dataset.sesionMover, 10);
@@ -2737,6 +2802,37 @@ const Pages={
         Pages._eliminarSesionModal(idx);
       });
     });
+  },
+
+  _camposActividadHTML(act, idx) {
+    if (act.tipo === 'vf') {
+      return `
+        <textarea class="input" placeholder="Enunciado (la afirmación que el alumno debe juzgar)" data-sesion-act-campo="${idx}:enunciado" rows="2" style="font-size:12.5px;padding:7px 10px;">${(act.enunciado||'').replace(/</g,'&lt;')}</textarea>
+        <div style="display:flex;gap:14px;font-size:12px;color:var(--text-2);">
+          <label style="display:flex;align-items:center;gap:5px;cursor:pointer;"><input type="radio" name="act-vf-${idx}" data-sesion-act-vf="${idx}" value="true" ${act.respuesta===true?'checked':''}> Verdadero</label>
+          <label style="display:flex;align-items:center;gap:5px;cursor:pointer;"><input type="radio" name="act-vf-${idx}" data-sesion-act-vf="${idx}" value="false" ${act.respuesta===false?'checked':''}> Falso</label>
+        </div>`;
+    }
+    if (act.tipo === 'opcion') {
+      const opts = Array.isArray(act.opciones) && act.opciones.length===3 ? act.opciones : ['','',''];
+      return `
+        <textarea class="input" placeholder="Pregunta" data-sesion-act-campo="${idx}:pregunta" rows="2" style="font-size:12.5px;padding:7px 10px;">${(act.pregunta||'').replace(/</g,'&lt;')}</textarea>
+        ${opts.map((o,i)=>`
+          <div style="display:flex;align-items:center;gap:7px;">
+            <input type="radio" name="act-op-correcta-${idx}" data-sesion-act-correcta="${idx}" value="${i}" ${Number(act.correcta)===i?'checked':''}>
+            <input type="text" class="input" placeholder="Opción ${String.fromCharCode(65+i)}" value="${(o||'').replace(/"/g,'&quot;')}" data-sesion-act-opcion="${idx}:${i}" style="font-size:12.5px;padding:6px 9px;flex:1;">
+          </div>`).join('')}
+        <div style="font-size:10.5px;color:var(--text-3);">Marca el radio de la respuesta correcta.</div>`;
+    }
+    if (act.tipo === 'sopa') {
+      return `
+        <textarea class="input" placeholder="Palabras separadas por coma o una por línea, ej: CHEF, HORNO, RECETA, COSTO, MERMA (de 3 a 12 letras cada una, sin acentos)" data-sesion-act-campo="${idx}:palabras" rows="3" style="font-size:12.5px;padding:7px 10px;">${(act.palabras||'').replace(/</g,'&lt;')}</textarea>
+        <div style="font-size:10.5px;color:var(--text-3);">Mínimo 3 palabras. Se acomodan solas en la cuadrícula.</div>`;
+    }
+    // ahorcado (tipo por defecto)
+    return `
+      <input type="text" class="input" placeholder="Palabra a adivinar (sin acentos, ej. FERMENTACION)" value="${(act.palabra||'').replace(/"/g,'&quot;')}" data-sesion-act-campo="${idx}:palabra" style="font-size:12.5px;padding:7px 10px;text-transform:uppercase;">
+      <input type="text" class="input" placeholder="Pista" value="${(act.pista||'').replace(/"/g,'&quot;')}" data-sesion-act-campo="${idx}:pista" style="font-size:12.5px;padding:7px 10px;">`;
   },
 
   _agregarSesionModal() {
@@ -2848,6 +2944,32 @@ const Pages={
           try { new URL(s.url); } catch(e) {
             Toast.error(`Clase ${i + 1}: URL inválida`, 'Verifica que el enlace sea correcto');
             throw new Error('skip');
+          }
+        }
+        // MODIFICADO: validar la actividad dinámica de la clase (si se activó)
+        if (s.actividad && s.actividad.tipo) {
+          const a = s.actividad;
+          if (a.tipo === 'ahorcado' && (!a.palabra?.trim() || !a.pista?.trim())) {
+            Toast.error(`Clase ${i + 1}: actividad incompleta`, 'El ahorcado necesita palabra y pista');
+            throw new Error('skip');
+          }
+          if (a.tipo === 'vf' && !a.enunciado?.trim()) {
+            Toast.error(`Clase ${i + 1}: actividad incompleta`, 'Falta el enunciado de verdadero/falso');
+            throw new Error('skip');
+          }
+          if (a.tipo === 'opcion') {
+            const opts = Array.isArray(a.opciones) ? a.opciones : [];
+            if (!a.pregunta?.trim() || opts.length !== 3 || opts.some(o => !o?.trim())) {
+              Toast.error(`Clase ${i + 1}: actividad incompleta`, 'Completa la pregunta y las 3 opciones');
+              throw new Error('skip');
+            }
+          }
+          if (a.tipo === 'sopa') {
+            const palabras = (a.palabras || '').split(/[,\n]/).map(w => w.trim()).filter(w => w.length >= 3);
+            if (palabras.length < 3) {
+              Toast.error(`Clase ${i + 1}: actividad incompleta`, 'La sopa de letras necesita al menos 3 palabras (mínimo 3 letras cada una)');
+              throw new Error('skip');
+            }
           }
         }
         const sesionLimpia = { ...s, numero: i + 1, titulo: s.titulo.trim() };
