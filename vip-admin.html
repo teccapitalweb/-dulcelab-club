@@ -1531,7 +1531,7 @@ const Pages={
                   return `<div style="padding:24px;text-align:center;color:var(--text-3);font-size:13px;">${ready ? 'Sin noticias del cron' : 'Cargando…'}</div>`;
                 }
                 return arr.map(n => {
-                  const colorMap = {'Repostería':'#C94B68','Cocina':'#3B82F6','Costos':'#D5A13D','Inocuidad':'#A855F7'};
+                  const colorMap = {'cocina':'#EF4444','reposteria':'#C94B68','inocuidad':'#22C55E','negocio':'#3B82F6','bebidas':'#14B8A6'};
                   const c = colorMap[n.categoria] || colorMap[n.cat] || '#C94B68';
                   const titulo = n.titulo || 'Sin título';
                   const f = n.fecha?.toDate ? n.fecha.toDate() : (n.fecha ? new Date(n.fecha) : null);
@@ -5051,8 +5051,8 @@ const Pages={
               <div class="cron-card__title">NewsData → Firestore</div>
               <div class="cron-card__sub">Aún no hay registro de ejecuciones reales del cron para DulceLab Food. Verifica el cron de Railway en el repo del webhook.</div>
             </div>
-            <!-- MODIFICADO: desactivado hasta que exista el cron real de noticias en Railway -->
-            <button class="btn btn--ghost" id="cron-run" disabled title="Próximamente" style="opacity:.5;cursor:not-allowed;"><svg class="ic"><use href="#i-clock"/></svg>Próximamente</button>
+            <!-- MODIFICADO: reconectado a /admin/ejecutar-noticias ahora que existe el endpoint real -->
+            <button class="btn btn--ghost" id="cron-run"><svg class="ic"><use href="#i-refresh"/></svg>Ejecutar ahora</button>
           </div>
         </section>
 
@@ -5077,11 +5077,42 @@ const Pages={
         </div>
       </div>
     `;
-    // MODIFICADO: el botón "cron-run" quedó deshabilitado (Próximamente); ya no lleva listener hasta que exista el endpoint real del cron en Railway.
+    document.getElementById('cron-run')?.addEventListener('click', async (e) => {
+      const btn = e.currentTarget;
+      btn.disabled = true;
+      btn.innerHTML = '<svg class="ic"><use href="#i-refresh"/></svg>Ejecutando…';
+      try {
+        const token = await Pages._getAuthToken();
+        const res = await fetch(`${Pages._webhookUrl}/admin/ejecutar-noticias`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }
+        });
+        const data = await res.json().catch(()=>({}));
+        if (res.ok && data.ok) Toast.success(`${data.total} noticias guardadas`, 'Cron ejecutado');
+        else Toast.error('No se pudo ejecutar', data.error || 'Revisa que NEWSDATA_API_KEY esté configurada');
+      } catch (e) { Toast.error('No se pudo ejecutar', e.message||''); }
+      btn.disabled = false;
+      btn.innerHTML = '<svg class="ic"><use href="#i-refresh"/></svg>Ejecutar ahora';
+    });
+    // MODIFICADO: apuntaba a la colección 'noticias' (no existe; la real es
+    // 'noticias_auto') y borraba directo desde el cliente (Firestore lo
+    // habría rechazado, igual que con certificados). Ahora pasa por el
+    // webhook con la colección correcta.
     p.querySelectorAll('[data-del-news]').forEach(b=>b.addEventListener('click',async ()=>{
       if(confirm('¿Eliminar esta noticia del panel?')){
-        try{ const fb=window._fb; await fb.deleteDoc(fb.doc(fb.db,'noticias',b.dataset.delNews)); Toast.success('Noticia eliminada'); }
-        catch(e){ Toast.error('No se pudo eliminar', e.message||''); }
+        b.disabled = true;
+        try{
+          const token = await Pages._getAuthToken();
+          const res = await fetch(`${Pages._webhookUrl}/admin/eliminar-noticia`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+            body: JSON.stringify({ id: b.dataset.delNews })
+          });
+          const data = await res.json().catch(()=>({}));
+          if (res.ok && data.ok) Toast.success('Noticia eliminada');
+          else { Toast.error('No se pudo eliminar', data.error||''); b.disabled = false; }
+        }
+        catch(e){ Toast.error('No se pudo eliminar', e.message||''); b.disabled = false; }
       }
     }));
   },
@@ -5140,8 +5171,25 @@ const Pages={
               <div class="mini-row" style="--c1:#E5C171;"><div class="mini-row__dot"><svg class="ic"><use href="#i-shield-check"/></svg></div><div class="mini-row__body"><div class="mini-row__title">Firebase Auth</div><div class="mini-row__meta">dulcelab-club · Funcionando</div></div><span class="tag tag--success">OK</span></div>
               <div class="mini-row" style="--c1:#E5C171;"><div class="mini-row__dot"><svg class="ic"><use href="#i-shield-check"/></svg></div><div class="mini-row__body"><div class="mini-row__title">Firestore</div><div class="mini-row__meta">us-central1 · Reglas v1</div></div><span class="tag tag--success">OK</span></div>
               <div class="mini-row" style="--c1:#FBBF24;"><div class="mini-row__dot"><svg class="ic"><use href="#i-bolt"/></svg></div><div class="mini-row__body"><div class="mini-row__title">Stripe LIVE</div><div class="mini-row__meta">Webhook pendiente de conectar</div></div><span class="tag tag--warning">Pendiente</span></div>
-              <div class="mini-row" style="--c1:#FBBF24;"><div class="mini-row__dot"><svg class="ic"><use href="#i-refresh"/></svg></div><div class="mini-row__body"><div class="mini-row__title">Railway Cron (noticias)</div><div class="mini-row__meta">Sin configurar</div></div><span class="tag tag--warning">Pendiente</span></div>
-              <div class="mini-row" style="--c1:#FBBF24;"><div class="mini-row__dot"><svg class="ic"><use href="#i-mail"/></svg></div><div class="mini-row__body"><div class="mini-row__title">EmailJS · Certificados</div><div class="mini-row__meta">Sin configurar</div></div><span class="tag tag--warning">Pendiente</span></div>
+              ${(() => {
+                const noticias = window.AdminStore?.noticias || [];
+                const ultima = noticias[0];
+                const f = ultima?.fecha?.toDate ? ultima.fecha.toDate() : (ultima?.fecha ? new Date(ultima.fecha) : null);
+                const hayNoticias = noticias.length > 0;
+                const meta = hayNoticias && f ? `Última: ${f.toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'})}` : 'Sin noticias aún';
+                return `<div class="mini-row" style="--c1:${hayNoticias?'#22C55E':'#FBBF24'};"><div class="mini-row__dot"><svg class="ic"><use href="#i-refresh"/></svg></div><div class="mini-row__body"><div class="mini-row__title">Railway Cron (noticias)</div><div class="mini-row__meta">${meta}</div></div><span class="tag ${hayNoticias?'tag--success':'tag--warning'}">${hayNoticias?'OK':'Pendiente'}</span></div>`;
+              })()}
+              <!-- MODIFICADO: decía "EmailJS · Certificados" — un sistema que nunca se
+                   construyó, rastro del clon de BioNova. El real es Resend (ya funciona,
+                   probado con certificados reales enviados). Mismo patrón dinámico que
+                   el cron de noticias: OK si ya se mandó al menos uno, Pendiente si no. -->
+              ${(() => {
+                const certs = window.AdminStore?.certificados || [];
+                const enviados = certs.filter(c => c.correoEnviado).length;
+                const hayEnviados = enviados > 0;
+                const meta = hayEnviados ? `${enviados} enviado${enviados===1?'':'s'}` : 'Sin correos enviados aún';
+                return `<div class="mini-row" style="--c1:${hayEnviados?'#22C55E':'#FBBF24'};"><div class="mini-row__dot"><svg class="ic"><use href="#i-mail"/></svg></div><div class="mini-row__body"><div class="mini-row__title">Resend · Certificados</div><div class="mini-row__meta">${meta}</div></div><span class="tag ${hayEnviados?'tag--success':'tag--warning'}">${hayEnviados?'OK':'Pendiente'}</span></div>`;
+              })()}
             </div>
           </div>
         </div>
