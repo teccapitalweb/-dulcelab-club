@@ -2697,6 +2697,10 @@ const Pages={
         <div style="flex:1;display:flex;flex-direction:column;gap:6px;min-width:0;">
           <input type="text" class="input" placeholder="Título de la clase" value="${(s.titulo || '').replace(/"/g,'&quot;')}" data-sesion-idx="${idx}" data-sesion-campo="titulo" style="font-size:13px;padding:8px 11px;">
           <input type="url" class="input" placeholder="URL del video (Google Drive, YouTube, etc.)" value="${(s.url || '').replace(/"/g,'&quot;')}" data-sesion-idx="${idx}" data-sesion-campo="url" style="font-size:13px;padding:8px 11px;">
+          <label style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text-2);cursor:pointer;margin-top:2px;">
+            <input type="checkbox" data-sesion-gratis="${idx}" ${s.gratis === true ? 'checked' : ''} style="width:15px;height:15px;accent-color:var(--primary);cursor:pointer;">
+            🎁 <strong style="color:var(--text);">Clase gratis</strong> <span style="color:var(--text-3);">· visible sin membresía</span>
+          </label>
         </div>
         <div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0;">
           <button type="button" class="curso-card__action" data-sesion-mover="${idx}" data-delta="-1" ${idx === 0 ? 'disabled' : ''} title="Subir" style="width:28px;height:24px;${idx === 0 ? 'opacity:.4;cursor:not-allowed;' : ''}">▲</button>
@@ -2712,6 +2716,12 @@ const Pages={
         const idx = parseInt(input.dataset.sesionIdx, 10);
         const campo = input.dataset.sesionCampo;
         if (Pages._modalCurso.sesiones[idx]) Pages._modalCurso.sesiones[idx][campo] = e.target.value;
+      });
+    });
+    cont.querySelectorAll('[data-sesion-gratis]').forEach(chk => {
+      chk.addEventListener('change', (e) => {
+        const idx = parseInt(chk.dataset.sesionGratis, 10);
+        if (Pages._modalCurso.sesiones[idx]) Pages._modalCurso.sesiones[idx].gratis = e.target.checked;
       });
     });
     cont.querySelectorAll('[data-sesion-mover]').forEach(btn => {
@@ -2730,7 +2740,7 @@ const Pages={
   },
 
   _agregarSesionModal() {
-    this._modalCurso.sesiones.push({ numero: this._modalCurso.sesiones.length + 1, titulo: '', url: '' });
+    this._modalCurso.sesiones.push({ numero: this._modalCurso.sesiones.length + 1, titulo: '', url: '', gratis: false });
     this._renderSesionesModal();
   },
   _moverSesionModal(idx, delta) {
