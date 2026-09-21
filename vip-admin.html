@@ -2712,6 +2712,8 @@ const Pages={
               <option value="vf" ${s.actividad.tipo==='vf'?'selected':''}>✅ Verdadero o falso</option>
               <option value="opcion" ${s.actividad.tipo==='opcion'?'selected':''}>📝 Opción múltiple</option>
               <option value="sopa" ${s.actividad.tipo==='sopa'?'selected':''}>🔎 Sopa de letras</option>
+              <option value="memorama" ${s.actividad.tipo==='memorama'?'selected':''}>🎴 Memorama</option>
+              <option value="crucigrama" ${s.actividad.tipo==='crucigrama'?'selected':''}>🧩 Crucigrama</option>
             </select>
             ${Pages._camposActividadHTML(s.actividad, idx)}
           </div>` : ''}
@@ -2757,6 +2759,8 @@ const Pages={
         if (tipo === 'vf') s.actividad = { tipo, enunciado: '', respuesta: true };
         else if (tipo === 'opcion') s.actividad = { tipo, pregunta: '', opciones: ['','',''], correcta: 0 };
         else if (tipo === 'sopa') s.actividad = { tipo, palabras: '' };
+        else if (tipo === 'memorama') s.actividad = { tipo, parejas: '' };
+        else if (tipo === 'crucigrama') s.actividad = { tipo, pistas: '' };
         else s.actividad = { tipo: 'ahorcado', palabra: '', pista: '' };
         Pages._renderSesionesModal();
       });
@@ -2828,6 +2832,16 @@ const Pages={
       return `
         <textarea class="input" placeholder="Palabras separadas por coma o una por línea, ej: CHEF, HORNO, RECETA, COSTO, MERMA (de 3 a 12 letras cada una, sin acentos)" data-sesion-act-campo="${idx}:palabras" rows="3" style="font-size:12.5px;padding:7px 10px;">${(act.palabras||'').replace(/</g,'&lt;')}</textarea>
         <div style="font-size:10.5px;color:var(--text-3);">Mínimo 3 palabras. Se acomodan solas en la cuadrícula.</div>`;
+    }
+    if (act.tipo === 'memorama') {
+      return `
+        <textarea class="input" placeholder="Un par por línea, formato: Término = Definición${'\\n'}Ej: Chef = Encargado de la cocina${'\\n'}Mise en place = Preparar todo antes de cocinar" data-sesion-act-campo="${idx}:parejas" rows="4" style="font-size:12.5px;padding:7px 10px;">${(act.parejas||'').replace(/</g,'&lt;')}</textarea>
+        <div style="font-size:10.5px;color:var(--text-3);">Mínimo 3 pares (término = definición, uno por línea).</div>`;
+    }
+    if (act.tipo === 'crucigrama') {
+      return `
+        <textarea class="input" placeholder="Una palabra y su pista por línea, formato: PALABRA = Pista${'\\n'}Ej: CHEF = Encargado de la cocina${'\\n'}HORNO = Donde se hornea" data-sesion-act-campo="${idx}:pistas" rows="4" style="font-size:12.5px;padding:7px 10px;">${(act.pistas||'').replace(/</g,'&lt;')}</textarea>
+        <div style="font-size:10.5px;color:var(--text-3);">Mínimo 4 palabras. Las que compartan letras se cruzan solas; las demás se acomodan aparte.</div>`;
     }
     // ahorcado (tipo por defecto)
     return `
@@ -2968,6 +2982,20 @@ const Pages={
             const palabras = (a.palabras || '').split(/[,\n]/).map(w => w.trim()).filter(w => w.length >= 3);
             if (palabras.length < 3) {
               Toast.error(`Clase ${i + 1}: actividad incompleta`, 'La sopa de letras necesita al menos 3 palabras (mínimo 3 letras cada una)');
+              throw new Error('skip');
+            }
+          }
+          if (a.tipo === 'memorama') {
+            const pares = (a.parejas || '').split('\n').map(l => l.split('=')).filter(p => p.length >= 2 && p[0].trim() && p.slice(1).join('=').trim());
+            if (pares.length < 3) {
+              Toast.error(`Clase ${i + 1}: actividad incompleta`, 'El memorama necesita al menos 3 pares (formato: término = definición)');
+              throw new Error('skip');
+            }
+          }
+          if (a.tipo === 'crucigrama') {
+            const pistas = (a.pistas || '').split('\n').map(l => l.split('=')).filter(p => p.length >= 2 && p[0].trim().length >= 2 && p.slice(1).join('=').trim());
+            if (pistas.length < 4) {
+              Toast.error(`Clase ${i + 1}: actividad incompleta`, 'El crucigrama necesita al menos 4 palabras con su pista (formato: PALABRA = pista)');
               throw new Error('skip');
             }
           }
