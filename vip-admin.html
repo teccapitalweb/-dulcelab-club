@@ -5790,14 +5790,40 @@ const AdminStore = {
     } catch(e) {}
 
     // ─── 6. NOTICIAS (col que ya existe del cron) ───
+    // MODIFICADO: el manejador de error estaba vacío (`(err) => { /* OK */ }`) —
+    // si Firestore rechazaba la lectura, fallaba en silencio total y no había
+    // forma de saber por qué la lista salía vacía. Mismo patrón de diagnóstico
+    // + respaldo con getDocs que ya usa "miembros".
+    window.__newsDiag = { status: 'iniciando', count: 0, error: null };
     try {
       const q = query(collection(db, 'noticias_auto'), orderBy('fechaPublicacion', 'desc'), limit(20));
       const u = onSnapshot(q, (snap) => {
         this.noticias = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        window.__newsDiag = { status: 'ok', count: this.noticias.length, error: null };
+        console.log(`[AdminStore] noticias · onSnapshot OK · ${this.noticias.length} docs`);
         this._emit('noticias');
-      }, (err) => { /* OK */ });
+      }, async (err) => {
+        console.error('[AdminStore] noticias onSnapshot ERROR:', err.code, err.message);
+        window.__newsDiag = { status: 'error-snapshot', count: 0, error: { code: err.code, message: err.message } };
+        // Respaldo: getDocs (lectura única, sin tiempo real) por si el problema es solo del listener
+        if (typeof fb.getDocs === 'function') {
+          try {
+            const snap = await fb.getDocs(query(collection(db, 'noticias_auto'), orderBy('fechaPublicacion', 'desc'), limit(20)));
+            this.noticias = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            window.__newsDiag = { status: 'ok-getDocs', count: this.noticias.length, error: null };
+            console.log(`[AdminStore] noticias · getDocs fallback OK · ${this.noticias.length} docs`);
+            this._emit('noticias');
+          } catch (e2) {
+            window.__newsDiag = { status: 'error-getDocs', count: 0, error: { code: e2.code, message: e2.message } };
+            console.error('[AdminStore] noticias getDocs ERROR:', e2.code, e2.message);
+          }
+        }
+      });
       this.unsubs.push(u);
-    } catch(e) {}
+    } catch(e) {
+      window.__newsDiag = { status: 'exception', count: 0, error: { message: e.message } };
+      console.error('[AdminStore] noticias init exception:', e.message);
+    }
 
     // ─── 7. NOTIFICACIONES ───
     try {
