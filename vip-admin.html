@@ -4029,8 +4029,22 @@ const Pages={
       }));
       list.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',async ()=>{
         if(confirm('¿Eliminar este certificado? Esta acción es irreversible.')){
-          try{ const fb=window._fb; await fb.deleteDoc(fb.doc(fb.db,'certificados',b.dataset.del)); Toast.success('Certificado eliminado'); }
-          catch(e){ Toast.error('No se pudo eliminar', e.message||''); }
+          // MODIFICADO: Firestore rechazaba el borrado directo desde el navegador
+          // ("Missing or insufficient permissions"). Ahora pasa por el webhook
+          // (Admin SDK, mismo patrón que eliminar-miembro), que sí tiene permiso.
+          b.disabled = true;
+          try{
+            const token = await Pages._getAuthToken();
+            const res = await fetch(`${Pages._webhookUrl}/admin/eliminar-certificado`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+              body: JSON.stringify({ folio: b.dataset.del })
+            });
+            const data = await res.json().catch(()=>({}));
+            if (res.ok && data.ok) Toast.success('Certificado eliminado');
+            else { Toast.error('No se pudo eliminar', data.error||''); b.disabled = false; }
+          }
+          catch(e){ Toast.error('No se pudo eliminar', e.message||''); b.disabled = false; }
         }
       }));
     }
