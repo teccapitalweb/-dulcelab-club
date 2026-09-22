@@ -4629,10 +4629,21 @@ const Sections = (function(){
   }
 
   function mostrarPaywallCurso(curso) {
-    window.__showPaywallModal?.({
-      title: 'Continúa aprendiendo con DulceLab Food VIP',
-      sub: textoPaywallCurso(curso)
+    // Antes abría el modal chico de paywall; ahora cierra el detalle del curso
+    // (si está abierto) y manda directo a la sección de Suscripción.
+    const detalles = Array.from(document.querySelectorAll('.modal-backdrop.is-open[data-modal-id^="curso-"]'));
+    detalles.forEach(backdrop => {
+      try { window.Modal?.close(backdrop.dataset.modalId); } catch(e){}
     });
+    const ir = () => {
+      const S = window.UserState;
+      if (S && S.modo === 'invitado') {
+        window.location.href = 'vip-auth.html?plan=' + (localStorage.getItem('dulcelab_intent_plan') || 'anual');
+      } else {
+        window.navigateToSection?.('suscripcion');
+      }
+    };
+    if (detalles.length) setTimeout(ir, 270); else ir();
   }
 
   // Expuestos para las filas generadas con HTML dinámico y para pruebas de acceso.
