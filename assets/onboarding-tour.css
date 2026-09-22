@@ -1,0 +1,121 @@
+/* =========================================================
+   DulceLab Food · Estilos del recorrido guiado (onboarding tour)
+   Usa las mismas variables de color que ya definen vip-panel.html
+   (--primary, --surface, --text, --border-2, etc.) — nada de colores
+   nuevos, para que combine con el tema día/noche automáticamente.
+   ========================================================= */
+
+.mvtour-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  opacity: 0;
+  transition: opacity .22s ease;
+  pointer-events: none;
+}
+.mvtour-overlay.is-in {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* El "agujero" de luz: una sombra enorme alrededor de un rectángulo
+   transparente crea el efecto de foco sin necesitar un SVG con máscara. */
+.mvtour-spot {
+  position: fixed;
+  border-radius: 14px;
+  box-shadow: 0 0 0 9999px rgba(10, 9, 8, .72);
+  transition: top .32s cubic-bezier(.22,.61,.36,1),
+              left .32s cubic-bezier(.22,.61,.36,1),
+              width .32s cubic-bezier(.22,.61,.36,1),
+              height .32s cubic-bezier(.22,.61,.36,1);
+  pointer-events: none;
+}
+
+.mvtour-card {
+  position: fixed;
+  z-index: 1;
+  width: min(320px, calc(100vw - 28px));
+  background: var(--surface);
+  border: 1px solid var(--border-2);
+  border-radius: 16px;
+  padding: 18px 20px;
+  box-shadow: 0 18px 44px rgba(0,0,0,.35);
+  transition: top .32s cubic-bezier(.22,.61,.36,1),
+              left .32s cubic-bezier(.22,.61,.36,1);
+}
+
+.mvtour-card__eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 8px;
+}
+
+.mvtour-card__title {
+  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text);
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+
+.mvtour-card__copy {
+  font-size: 12.5px;
+  color: var(--text-2);
+  line-height: 1.55;
+  margin-bottom: 16px;
+}
+
+.mvtour-card__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.mvtour-btn {
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 9px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: transform .15s, filter .15s, background-color .15s;
+}
+.mvtour-btn:hover { transform: translateY(-1px); }
+
+.mvtour-btn--ghost {
+  background: transparent;
+  color: var(--text-3);
+  border-color: var(--border-2);
+  margin-right: auto;
+}
+.mvtour-btn--ghost:hover { color: var(--text); }
+
+.mvtour-btn--primary {
+  background: var(--primary);
+  color: #fff;
+}
+.mvtour-btn--primary:hover { filter: brightness(1.08); }
+
+/* El botón "?" de ayuda que reinicia el recorrido */
+.tour-help-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+@media (max-width: 480px) {
+  .mvtour-card { padding: 16px; }
+  .mvtour-card__title { font-size: 14px; }
+  .mvtour-card__copy { font-size: 12px; }
+}
