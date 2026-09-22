@@ -159,9 +159,14 @@ body.modo-dia .logo-day{display:block}
 .hero-benefits li{display:flex;gap:9px;align-items:flex-start;font-size:.86rem;color:var(--muted);line-height:1.45}
 .hero-benefits li b{color:var(--text);font-weight:600}
 .hero-benefits svg{width:17px;height:17px;flex:none;margin-top:2px;stroke:var(--accent-soft);fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
-.hero-tools{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 8px}
-.hero-tools span{font-family:var(--font-mono);font-size:.64rem;letter-spacing:.04em;color:var(--primary-soft);
-  background:rgba(201,75,104,.1);border:1px solid var(--line);border-radius:7px;padding:4px 8px}
+.hero-tools{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 6px}
+.hero-tools span{display:inline-flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:.64rem;letter-spacing:.04em;color:var(--faint);
+  background:var(--surface-2);border:1px solid var(--line);border-radius:7px;padding:4px 8px;opacity:.82}
+.hero-tools span::before{content:"";width:10px;height:10px;flex:none;
+  background-color:var(--faint);
+  -webkit-mask:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>') no-repeat center/contain;
+  mask:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>') no-repeat center/contain;}
+.hero-tools-note{font-family:var(--font-mono);font-size:.66rem;color:var(--faint);letter-spacing:.02em;margin:0 0 10px}
 .hero-price{display:flex;gap:10px;margin:10px 0 14px;flex-wrap:wrap}
 .hero-price .opt{flex:1;min-width:150px;background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:12px 14px;position:relative}
 .hero-price .opt--star{border-color:var(--accent)}
@@ -220,6 +225,7 @@ body.modo-dia .logo-day{display:block}
         <div class="hero-tools">
           <span>Calculadora de costos</span><span>Control de mermas</span><span>Checklist NOM-251</span><span>Producci&oacute;n y rendimientos</span><span>Recetario estandarizado</span><span>Inventario y rotaci&oacute;n</span><span>Precio de venta</span><span>Montaje y operaci&oacute;n</span>
         </div>
+        <p class="hero-tools-note">Se desbloquean al activar tu membres&iacute;a</p>
         <ul class="hero-benefits">
           <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span><b>Certificados con folio oficial</b> verificables</span></li>
           <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span><b>Asesor&iacute;a personalizada</b> y canal VIP &middot; sin permanencia</span></li>
