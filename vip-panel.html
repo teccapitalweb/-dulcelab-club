@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#181614">
+<meta name="theme-color" content="#0A0908">
 <meta name="description" content="DulceLab Food Panel VIP · Gastronomía, repostería e inocuidad alimentaria. Cursos, herramientas y certificación.">
 <title>DulceLab Food · Panel VIP</title>
 <link rel="icon" type="image/png" href="assets/logo-dulcelab.png">
@@ -14,7 +14,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="DulceLab Food VIP">
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#181614">
+<meta name="theme-color" content="#0A0908">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,24 +35,24 @@ input,select,textarea{font:inherit;color:inherit}
 ::selection{background:var(--primary);color:#fff}
 
 :root[data-theme="night"]{
-  --bg:#181614;--bg-deep:#121110;
-  --surface:#201D1A;--surface-2:#272320;--surface-3:#2E2A26;
-  --border:rgba(245,241,232,0.08);--border-2:rgba(245,241,232,0.14);--border-strong:rgba(245,241,232,0.22);
-  --text:#F5F1E8;--text-2:#B5AFA3;--text-3:#7A7468;
-  --primary:#B3542A;--primary-soft:#C97240;--primary-deep:#8A3F1C;
-  --primary-glow:rgba(179,84,42,0.16);--highlight:#C97240;
+  --bg:#0A0908;--bg-deep:#0A0908;
+  --surface:#151210;--surface-2:#1E1915;--surface-3:#241E19;
+  --border:rgba(245,239,232,0.08);--border-2:rgba(245,239,232,0.14);--border-strong:rgba(245,239,232,0.22);
+  --text:#F5EFE8;--text-2:#C9B8AE;--text-3:#8C7A70;
+  --primary:#6B1526;--primary-soft:#C4577A;--primary-deep:#4A0E1A;
+  --primary-glow:rgba(107,21,38,0.18);--highlight:#C4577A;
   --success:#7A9A6E;--danger:#C1594A;--warning:#C99A3D;--whatsapp:#22C55E;
-  --shadow-card:0 2px 8px rgba(0,0,0,0.35);
+  --shadow-card:0 2px 8px rgba(0,0,0,0.45);
 }
 :root[data-theme="day"]{
-  --bg:#F5F1E8;--bg-deep:#EDE7DA;
-  --surface:#FFFFFF;--surface-2:#F0EAE0;--surface-3:#E8E0D2;
-  --border:rgba(24,22,20,0.08);--border-2:rgba(24,22,20,0.14);--border-strong:rgba(24,22,20,0.22);
-  --text:#181614;--text-2:#524C45;--text-3:#8C8478;
-  --primary:#B3542A;--primary-soft:#C97240;--primary-deep:#8A3F1C;
-  --primary-glow:rgba(179,84,42,0.12);--highlight:#C97240;
+  --bg:#F7EEEC;--bg-deep:#F7EEEC;
+  --surface:#FFFFFF;--surface-2:#F1E1DD;--surface-3:#E9D2CC;
+  --border:rgba(43,10,16,0.08);--border-2:rgba(43,10,16,0.14);--border-strong:rgba(43,10,16,0.22);
+  --text:#2A0D16;--text-2:#6B4A45;--text-3:#9C8078;
+  --primary:#6B1526;--primary-soft:#7A1B30;--primary-deep:#4A0E1A;
+  --primary-glow:rgba(107,21,38,0.12);--highlight:#7A1B30;
   --success:#4E7A44;--danger:#A83A2E;--warning:#A87A1E;--whatsapp:#16A34A;
-  --shadow-card:0 1px 4px rgba(24,22,20,0.10);
+  --shadow-card:0 1px 4px rgba(43,10,16,0.10);
 }
 
 body{
@@ -78,7 +78,7 @@ body{
 .sidebar::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:3px}
 
 .brand{display:flex;align-items:center;gap:11px;padding:6px 16px 16px;border-bottom:0.5px solid var(--border);margin-bottom:6px}
-.brand__logo{width:38px;height:38px;border-radius:10px;background:#3B2420;border:0.5px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
+.brand__logo{width:38px;height:38px;border-radius:10px;background:#2A0D16;border:0.5px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
 .brand__logo svg{width:28px;height:28px}
 .brand__logo img{width:32px;height:32px;object-fit:contain;display:block}
 .brand__name{font-size:14px;font-weight:600;letter-spacing:-.2px;line-height:1.1}
@@ -933,7 +933,7 @@ body{
   mask-image:radial-gradient(ellipse at center,#000 0%,transparent 70%);
 }
 .webinar-card__date{
-  background:rgba(255,255,255,.95);color:#3B2420;
+  background:rgba(255,255,255,.95);color:#2A0D16;
   border-radius:12px;padding:8px 16px;text-align:center;
   min-width:64px;position:relative;z-index:1;
   box-shadow:0 6px 18px rgba(0,0,0,.2);
@@ -1000,7 +1000,7 @@ body{
 /* Cert preview en modal */
 .cert-preview{display:flex;justify-content:center;padding:8px}
 .cert-preview__paper{
-  background:#F6E9D6;color:#3B2420;
+  background:#F6E9D6;color:#2A0D16;
   border-radius:14px;padding:32px 38px;
   width:100%;max-width:560px;
   position:relative;overflow:hidden;
@@ -2518,7 +2518,7 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 }
 .cert-preview-mini{
   position:absolute;inset:18px 22px;
-  display:flex;flex-direction:column;color:#3B2420;
+  display:flex;flex-direction:column;color:#2A0D16;
 }
 .cert-preview-mini__head{
   display:flex;align-items:center;gap:9px;
@@ -2527,14 +2527,14 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 }
 .cert-preview-mini__logo{
   width:28px;height:28px;border-radius:7px;
-  background:#3B2420;color:#fff;
+  background:#2A0D16;color:#fff;
   display:flex;align-items:center;justify-content:center;flex-shrink:0;
 }
 .cert-preview-mini__logo svg{width:18px;height:18px}
 .cert-preview-mini__logo img{width:20px;height:20px;object-fit:contain;display:block}
 .cert-preview-mini__brand{
   font-family:'Plus Jakarta Sans','Inter',sans-serif;
-  font-size:11px;font-weight:800;letter-spacing:.3px;color:#3B2420;
+  font-size:11px;font-weight:800;letter-spacing:.3px;color:#2A0D16;
   line-height:1.1;
 }
 .cert-preview-mini__brand-sub{
@@ -2558,7 +2558,7 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 .cert-preview-mini__name{
   font-family:'Plus Jakarta Sans','Inter',sans-serif;
   font-size:18px;font-weight:800;letter-spacing:-.5px;
-  color:#181614;line-height:1.05;
+  color:#2A0D16;line-height:1.05;
   margin-top:2px;
   font-style:italic;
 }
@@ -2572,7 +2572,7 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
   font-family:'JetBrains Mono',monospace;
   font-size:7.5px;color:#A08B7F;
 }
-.cert-preview-mini__folio{color:#3B2420;font-weight:700}
+.cert-preview-mini__folio{color:#2A0D16;font-weight:700}
 
 /* Sobrescribir cert top vacio del top original */
 .cert-card__top > .cert-card__seal, .cert-card__top > .cert-card__qr{display:none !important}
@@ -2724,7 +2724,7 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 }
 .fomo-banner__cta{
   display:inline-flex;align-items:center;gap:6px;
-  background:#181614;color:var(--primary);
+  background:#151210;color:var(--primary);
   font-size:11.5px;font-weight:700;letter-spacing:-.1px;
   padding:6px 12px;border-radius:8px;
   text-decoration:none;border:none;cursor:pointer;
@@ -3625,7 +3625,7 @@ window.__setDisplayName = async (nombre) => {
   <div class="mobile-drawer__panel">
     <div class="mobile-drawer__header">
       <div class="mobile-drawer__brand">
-        <div class="brand__logo" style="width:42px;height:42px;border-radius:10px;background:#181614;display:flex;align-items:center;justify-content:center;border:1px solid var(--border-2);flex-shrink:0;">
+        <div class="brand__logo" style="width:42px;height:42px;border-radius:10px;background:#151210;display:flex;align-items:center;justify-content:center;border:1px solid var(--border-2);flex-shrink:0;">
           <img src="assets/logo-dulcelab.png" alt="DulceLab Food" style="width:30px;height:30px;object-fit:contain;display:block;">
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-start;gap:4px;">
@@ -3682,7 +3682,7 @@ const Storage={pref:{get(k,d){const v=localStorage.getItem(PREFIX+'pref:'+k);ret
 
 const Theme={
   init(){this.apply(Storage.pref.get('theme','night'));document.getElementById('theme-toggle')?.addEventListener('click',()=>this.toggle());},
-  apply(t){if(t!=='day'&&t!=='night')t='night';document.documentElement.setAttribute('data-theme',t);Storage.pref.set('theme',t);const icon=document.getElementById('theme-icon')?.querySelector('use');const lbl=document.getElementById('theme-label');if(icon)icon.setAttribute('href',t==='night'?'#i-moon':'#i-sun');if(lbl)lbl.textContent=t==='night'?'Noche':'Día';const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.setAttribute('content',t==='night'?'#181614':'#F5F1E8');},
+  apply(t){if(t!=='day'&&t!=='night')t='night';document.documentElement.setAttribute('data-theme',t);Storage.pref.set('theme',t);const icon=document.getElementById('theme-icon')?.querySelector('use');const lbl=document.getElementById('theme-label');if(icon)icon.setAttribute('href',t==='night'?'#i-moon':'#i-sun');if(lbl)lbl.textContent=t==='night'?'Noche':'Día';const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.setAttribute('content',t==='night'?'#0A0908':'#F7EEEC');},
   toggle(){this.apply(document.documentElement.getAttribute('data-theme')==='night'?'day':'night');}
 };
 
@@ -4709,7 +4709,7 @@ const Sections = (function(){
       banner.style.cssText = 'position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:9998;background:linear-gradient(135deg,#C94B68,#D5A13D);color:#fff;padding:11px 18px;border-radius:13px;font-family:Inter,sans-serif;font-size:12.5px;font-weight:700;letter-spacing:-.1px;box-shadow:0 12px 28px rgba(201,75,104,.35);display:flex;align-items:center;gap:14px;';
       banner.innerHTML = `
         <span>👁️ Vista previa como usuario VIP · día ${calcularDiasMembresia()} de membresía</span>
-        <a href="?" style="background:#181614;color:var(--primary-soft);padding:6px 12px;border-radius:8px;text-decoration:none;font-size:11px;font-weight:700;letter-spacing:.3px;">Salir del preview</a>
+        <a href="?" style="background:#151210;color:var(--primary-soft);padding:6px 12px;border-radius:8px;text-decoration:none;font-size:11px;font-weight:700;letter-spacing:.3px;">Salir del preview</a>
       `;
       document.body.appendChild(banner);
     });
@@ -5911,7 +5911,7 @@ const Sections = (function(){
         if(on)cells+=`<rect x="${x*cell}" y="${y*cell}" width="${cell}" height="${cell}" />`;
       }
     }
-    return `<svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}"><g fill="#3B2420">${cells}</g></svg>`;
+    return `<svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}"><g fill="#2A0D16">${cells}</g></svg>`;
   }
 
   /* ============================ CURSOS ============================ */
@@ -6859,7 +6859,7 @@ const Sections = (function(){
         <div class="cert-preview__paper">
           <div class="cert-preview__border"></div>
           <div class="cert-preview__brand">
-            <div style="width:38px;height:38px;border-radius:10px;background:#3B2420;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><img src="assets/logo-dulcelab.png" alt="DulceLab Food" style="width:30px;height:30px;object-fit:contain;display:block;"></div>
+            <div style="width:38px;height:38px;border-radius:10px;background:#2A0D16;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><img src="assets/logo-dulcelab.png" alt="DulceLab Food" style="width:30px;height:30px;object-fit:contain;display:block;"></div>
             <div><div class="cert-preview__brand-name">DulceLab Food</div><div class="cert-preview__brand-sub">Gastronomía · Repostería · Inocuidad alimentaria</div></div>
           </div>
           <div class="cert-preview__eyebrow">Certificado de aprovechamiento</div>
@@ -7223,7 +7223,7 @@ const Sections = (function(){
           </div>
         </div>
       `:`
-        <div style="background:#181614;color:#fff;border-radius:14px;aspect-ratio:16/9;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;margin-bottom:16px;">
+        <div style="background:#0A0908;color:#fff;border-radius:14px;aspect-ratio:16/9;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;margin-bottom:16px;">
           <svg class="ic" style="width:48px;height:48px;color:#fff;"><use href="#i-play"/></svg>
           <div style="font-size:13px;opacity:.8;">Reproductor de video (placeholder)</div>
           <div style="font-size:11px;opacity:.5;">Conexión real en Sprint 4</div>
@@ -9282,7 +9282,7 @@ window.__maybeAskName = function(){
         #name-modal .nm-input{width:100%;padding:14px 16px;border-radius:12px;border:1.5px solid var(--border-2,rgba(255,230,200,.18));background:var(--surface-2,#1E1812);color:var(--text,#F5EFE6);font-size:16px;font-family:inherit;outline:none;transition:border .15s;text-align:center}
         #name-modal .nm-input:focus{border-color:var(--primary,#C94B68)}
         #name-modal .nm-hint{font-size:12px;color:#E0894A;min-height:16px;margin:8px 0 4px}
-        #name-modal .nm-save{width:100%;margin-top:12px;padding:14px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--primary,#C94B68),var(--highlight,#D5A13D));color:#3B2420;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit}
+        #name-modal .nm-save{width:100%;margin-top:12px;padding:14px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--primary,#C94B68),var(--highlight,#D5A13D));color:#2A0D16;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit}
         #name-modal .nm-save:active{transform:translateY(1px)}
         #name-modal .nm-skip{width:100%;margin-top:9px;padding:11px;border:1px solid var(--border-2,rgba(255,230,200,.16));border-radius:12px;background:none;color:var(--text-2,#B8AC9C);font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit}
         #name-modal .nm-foot{font-size:11.5px;color:var(--text-3,#8A7E6E);margin-top:14px;line-height:1.5}`;
@@ -10439,8 +10439,8 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 <style>
 .visor-overlay{position:fixed;inset:0;z-index:9999;background:rgba(7,5,3,.94);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:24px;animation:visorFadeIn .25s ease}
 @keyframes visorFadeIn{from{opacity:0}to{opacity:1}}
-.visor-container{width:100%;max-width:1200px;height:88vh;background:#181614;border:1px solid rgba(255,255,255,.14);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 4px 20px rgba(0,0,0,.4)}
-.visor-header{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 20px;background:#181614;border-bottom:1px solid rgba(255,255,255,.08)}
+.visor-container{width:100%;max-width:1200px;height:88vh;background:#0A0908;border:1px solid rgba(255,255,255,.14);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 4px 20px rgba(0,0,0,.4)}
+.visor-header{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 20px;background:#0A0908;border-bottom:1px solid rgba(255,255,255,.08)}
 .visor-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:700;color:#F1E4D2;letter-spacing:-.2px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .visor-actions{display:flex;gap:8px;align-items:center;flex-shrink:0}
 .visor-btn{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;border:1px solid rgba(255,255,255,.14);background:transparent;color:#F1E4D2;cursor:pointer;transition:all .15s ease;text-decoration:none}
@@ -10454,7 +10454,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 /* ═══ Splash de curso completado ═══ */
 #splash-completado{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px;animation:splashFadeIn .35s ease}
 .splash-cmp__overlay{position:absolute;inset:0;background:rgba(7,5,3,.92);backdrop-filter:blur(10px)}
-.splash-cmp__box{position:relative;width:100%;max-width:720px;max-height:92vh;overflow-y:auto;overflow-x:hidden;background:#201D1A;border:1px solid var(--border-2);border-radius:16px;padding:30px 30px 28px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.4);animation:splashPopIn .55s cubic-bezier(.22,1.4,.36,1);scrollbar-width:none}
+.splash-cmp__box{position:relative;width:100%;max-width:720px;max-height:92vh;overflow-y:auto;overflow-x:hidden;background:#151210;border:1px solid var(--border-2);border-radius:16px;padding:30px 30px 28px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.4);animation:splashPopIn .55s cubic-bezier(.22,1.4,.36,1);scrollbar-width:none}
 .splash-cmp__box::-webkit-scrollbar{display:none}
 .splash-cmp__certreal{margin:4px 0 18px;border-radius:12px;overflow:hidden;box-shadow:0 12px 32px rgba(0,0,0,.45)}
 .splash-cmp__certreal .cp-stage{width:100%}
@@ -10498,13 +10498,13 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 }
 .select-fancy__input:hover{border-color:color-mix(in srgb,var(--primary) 45%,var(--border-2)) !important;box-shadow:0 0 0 1px color-mix(in srgb,var(--primary) 20%,transparent)}
 .select-fancy__input:focus{outline:none;border-color:var(--primary) !important;box-shadow:0 0 0 2px color-mix(in srgb,var(--primary) 30%,transparent)}
-.select-fancy__input option{background:#181614;color:var(--text);padding:8px}
+.select-fancy__input option{background:#151210;color:var(--text);padding:8px}
 </style>
 <style>
 /* ═══ Splash de BIENVENIDA post-pago ═══ */
 #splash-bienvenida{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px;animation:bnvFadeIn .4s ease}
 .splash-bnv__overlay{position:absolute;inset:0;background:rgba(7,5,3,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
-.splash-bnv__box{position:relative;width:100%;max-width:600px;background:#201D1A;border:1px solid var(--border-2);border-radius:16px;padding:40px 36px 32px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.4);animation:bnvPop .65s cubic-bezier(.22,1.4,.36,1)}
+.splash-bnv__box{position:relative;width:100%;max-width:600px;background:#151210;border:1px solid var(--border-2);border-radius:16px;padding:40px 36px 32px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.4);animation:bnvPop .65s cubic-bezier(.22,1.4,.36,1)}
 .splash-bnv__close{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:transparent;color:var(--text-2);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:all .15s ease}
 .splash-bnv__close:hover{background:rgba(255,255,255,.06);color:var(--text)}
 .splash-bnv__confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden;border-radius:24px}
@@ -10781,9 +10781,9 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   @keyframes iipFade{from{opacity:0}to{opacity:1}}
   @keyframes iipPop{from{opacity:0;transform:translateY(20px) scale(.96)}to{opacity:1;transform:none}}
   html[data-theme="day"] #dulcelab-install-pop .iip-card{background:#FFFFFF;border-color:#E5DCC9}
-  html[data-theme="day"] #dulcelab-install-pop h3{color:#3B2420}
+  html[data-theme="day"] #dulcelab-install-pop h3{color:#2A0D16}
   html[data-theme="day"] #dulcelab-install-pop p{color:#6B6152}
-  html[data-theme="day"] #dulcelab-install-pop .iip-feat{color:#3B2420}
+  html[data-theme="day"] #dulcelab-install-pop .iip-feat{color:#2A0D16}
   html[data-theme="day"] #dulcelab-install-pop .iip-ios{background:#F1E4D2;border-color:#E5DCC9}
 </style>
 <div id="dulcelab-install-pop" role="dialog" aria-modal="true" aria-labelledby="iip-title">
