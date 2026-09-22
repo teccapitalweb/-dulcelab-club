@@ -93,6 +93,21 @@ body{
 .nav-item__badge{margin-left:auto;font-size:9px;font-weight:600;padding:1px 7px;border-radius:100px;background:var(--surface-3);color:var(--text-2);letter-spacing:.3px;min-width:20px;text-align:center}
 .nav-item__badge.is-new{background:var(--primary);color:#fff}
 .nav-item__dot{width:7px;height:7px;border-radius:50%;background:var(--danger);margin-left:auto;animation:pulse 1.4s infinite}
+
+/* Candado visual en Herramientas Pro / Comunidad cuando no hay membresía activa */
+.herramientas-bloqueadas .nav-item[data-tool]::after,
+.herramientas-bloqueadas .nav-item[data-section="foro"]::after,
+.herramientas-bloqueadas .nav-item[data-section="directorio"]::after,
+.herramientas-bloqueadas .nav-item[data-section="canal"]::after,
+.herramientas-bloqueadas .mobile-drawer__item[data-tool]::after,
+.herramientas-bloqueadas .mobile-drawer__item[data-section="foro"]::after,
+.herramientas-bloqueadas .mobile-drawer__item[data-section="directorio"]::after,
+.herramientas-bloqueadas .mobile-drawer__item[data-section="canal"]::after{
+  content:"";width:12px;height:12px;margin-left:auto;flex:none;opacity:.6;
+  background-color:currentColor;
+  -webkit-mask:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>') no-repeat center/contain;
+  mask:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>') no-repeat center/contain;
+}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.85)}}
 
 /* MAIN */
@@ -3551,7 +3566,7 @@ window.__setDisplayName = async (nombre) => {
   <!-- PANEL DERECHO -->
   <aside class="aside">
 
-    <div class="widget widget--next">
+    <div class="widget widget--next" id="widget-next">
       <div class="widget__label">⏱ Próxima clase en vivo</div>
       <div style="padding:18px 0;text-align:center;color:var(--text-3);font-size:12px;">
         <div style="width:18px;height:18px;border:2px solid var(--text-3);border-top-color:transparent;border-radius:50%;display:inline-block;animation:spin 0.8s linear infinite;margin-bottom:8px;"></div>
@@ -3559,7 +3574,7 @@ window.__setDisplayName = async (nombre) => {
       </div>
     </div>
 
-    <div class="widget widget--wa">
+    <div class="widget widget--wa" id="widget-wa">
       <div class="widget__label"><svg class="ic"><use href="#i-whatsapp"/></svg>Comunidad DulceLab Food</div>
       <div class="widget__count" style="font-size:15px;">Comunidad activa</div>
       <div class="widget__count-sub">Profesionales de la gastronomía compartiendo recetas y experiencias</div>
@@ -3573,7 +3588,7 @@ window.__setDisplayName = async (nombre) => {
       <button class="btn btn--primary btn--block btn--sm" id="btn-disc-wa"><svg class="ic"><use href="#i-whatsapp"/></svg>Solicitar mi 20% por WhatsApp</button>
     </div>
 
-    <div class="widget">
+    <div class="widget" id="widget-activity">
       <div class="widget__label">📊 Tu actividad</div>
       <div class="activity-row">
         <span class="activity-row__lbl">Cursos</span>
@@ -9856,6 +9871,19 @@ function initNav(){
       if (it.classList.contains('mobile-drawer__item')) {
         cerrarDrawerMovil();
       }
+      // Herramientas Pro y Comunidad: bloqueadas sin membresía activa
+      const seccionesComunidadVIP = ['foro','directorio','canal'];
+      const esHerramientaPro = !!it.dataset.tool;
+      const esComunidadVIP = it.dataset.section && seccionesComunidadVIP.includes(it.dataset.section);
+      if((esHerramientaPro || esComunidadVIP) && typeof toolEsVIP==='function' && !toolEsVIP()){
+        window.__showPaywallModal && window.__showPaywallModal({
+          title: esHerramientaPro ? 'Herramientas Pro · solo VIP' : 'Comunidad DulceLab Food · solo VIP',
+          sub: esHerramientaPro
+            ? 'Hazte miembro de DulceLab Food para usar las calculadoras y descargar tus reportes en PDF.'
+            : 'El Foro VIP, el Directorio VIP y el Canal de WhatsApp son beneficios exclusivos para miembros. Hazte VIP para acceder.'
+        });
+        return;
+      }
       // Herramientas con sección propia (se abren dentro del panel, no como popup)
       const toolSections = { costeo:'tool-costeo', conversor:'tool-conversor', merma:'tool-merma', catering:'tool-catering', horno:'tool-horno', porcion:'tool-porcion' };
       if(it.dataset.tool){
@@ -9920,7 +9948,13 @@ function initNav(){
     if(!DULCELAB_CONTACT.whatsapp){ Toast.info('Aún no está configurado','Pídele al equipo que ponga el WhatsApp en Admin → Configuración'); return; }
     window.open('https://wa.me/'+DULCELAB_CONTACT.whatsapp,'_blank');
   });
-  if(typeof toolEsVIP==='function'&&!toolEsVIP()){ document.getElementById('widget-disc')?.style.setProperty('display','none'); }
+  if(typeof toolEsVIP==='function'&&!toolEsVIP()){
+    document.getElementById('widget-disc')?.style.setProperty('display','none');
+    document.getElementById('widget-next')?.style.setProperty('display','none');
+    document.getElementById('widget-wa')?.style.setProperty('display','none');
+    document.getElementById('widget-activity')?.style.setProperty('display','none');
+    document.body.classList.add('herramientas-bloqueadas');
+  }
   document.addEventListener('click',function(e){ if(e.target.closest && e.target.closest('.bn-viplock-btn')){ window.__showPaywallModal && window.__showPaywallModal({title:'Herramientas Pro · solo VIP',sub:'Hazte miembro de DulceLab Food para usar las calculadoras y descargar tus reportes en PDF.'}); } });
   document.getElementById('btn-disc-wa')?.addEventListener('click',(e)=>{
     e.stopPropagation();
