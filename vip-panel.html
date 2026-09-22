@@ -20,8 +20,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<!-- MODIFICADO: onboarding-tour.css aún no existe (daba 404). Comentado hasta que se cree el tour. -->
-<!-- <link rel="stylesheet" href="assets/onboarding-tour.css?v=1"> -->
+<link rel="stylesheet" href="assets/onboarding-tour.css?v=1">
 
 <style>
 /* DulceLab Food VIP · Layout de 3 columnas */
@@ -10962,16 +10961,11 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   if (overlay) overlay.addEventListener('click', function(){ ocultar(false); });
 })();
 </script>
-<!-- MODIFICADO: onboarding-tour.js aún no existe (daba 404). Comentado hasta que se cree el tour. -->
-<!-- <script src="assets/onboarding-tour.js?v=1"></script> -->
+<script src="assets/onboarding-tour.js?v=1"></script>
 <script>
-// MODIFICADO: el tour vive en assets/onboarding-tour.js (aún no existe → daba 404 y tronaba
-// toda la página con "MembershipTour is not a constructor"). Lo protegemos: si el archivo
-// del tour no está cargado, simplemente no se inicia, en vez de romper el resto del panel.
-if (typeof window.MembershipTour === 'function') {
 window.DulceLabOnboarding = new window.MembershipTour({
   namespace: 'dulcelab',
-  version: 'v1',
+  version: 'v2',
   brand: 'Guía DulceLab Food',
   autoDelay: 1600,
   identity: function(){
@@ -10987,33 +10981,32 @@ window.DulceLabOnboarding = new window.MembershipTour({
       desktopSelectors: '.sidebar .brand',
       mobileSelectors: '.topbar__left',
       title: 'Bienvenido a DulceLab Food',
-      copy: 'Este es tu espacio de aprendizaje en biociencias, laboratorio y práctica clínica. Te mostramos dónde encontrar cada recurso para que puedas empezar con confianza.'
+      copy: 'Este es tu espacio de formación en gastronomía, repostería y negocio de alimentos. Te mostramos dónde encontrar cada recurso para que empieces con confianza.'
     },
     {
       desktopSelectors: '.sidebar .nav-item[data-section="cursos"]',
       mobileSelectors: '.mobile-nav .mobile-nav__item[data-section="cursos"]',
-      title: 'Tus cursos de biociencias',
-      copy: 'En Mis cursos encontrarás las clases disponibles, tu progreso y los contenidos de repostería, cocina, costos e inocuidad.'
+      title: 'Tus cursos',
+      copy: 'En Mis cursos encontrarás las clases disponibles, tu progreso y los contenidos de repostería, cocina, control de costos e inocuidad alimentaria.'
     },
     {
       desktopSelectors: '.sidebar .nav-item[data-section="pdfs"]',
       mobileSelectors: '.mobile-drawer .mobile-drawer__item[data-section="pdfs"]',
       mobileDrawer: true,
       title: 'PDFs y material de apoyo',
-      copy: 'Aquí se reúnen presentaciones, protocolos, guías y recursos descargables para acompañar tus cursos y tu trabajo en laboratorio.'
+      copy: 'Aquí se reúnen plantillas, checklists, recetarios y formatos descargables para acompañar tus cursos y tu trabajo en cocina.'
     },
     {
       desktopSelectors: '.sidebar .nav-item[data-section="webinars"]',
       mobileSelectors: '.mobile-nav .mobile-nav__item[data-section="webinars"]',
       title: 'Clases en vivo',
-      copy: 'Consulta próximas transmisiones y sesiones con especialistas. Desde aquí podrás revisar fechas y entrar cuando una clase esté disponible.'
+      copy: 'Consulta próximas transmisiones y sesiones con chefs y especialistas. Desde aquí revisas fechas y entras cuando una clase esté disponible.'
     },
     {
       desktopSelectors: '.sidebar [data-tour="tools"]',
-      mobileSelectors: '.mobile-drawer [data-tour="tools"]',
-      mobileDrawer: true,
-      title: 'Tu panel de herramientas',
-      copy: 'Usa calculadoras para diluciones, UFC/mL, dosis, TFG, molaridad y Ley de Beer, además del generador de reportes de laboratorio.'
+      mobileSelectors: '.mobile-nav .mobile-nav__item[data-section="herramientas"]',
+      title: 'Tus herramientas pro',
+      copy: 'Calculadoras para costeo de recetas, rendimiento y merma, conversiones de cocina, porciones para catering, temperaturas de horno y costo por porción.'
     },
     {
       desktopSelectors: '.sidebar .nav-item[data-section="perfil"]',
@@ -11029,7 +11022,6 @@ window.DulceLabOnboarding = new window.MembershipTour({
     }
   ]
 });
-} // fin del if (MembershipTour existe)
 </script>
 </body>
 </html>
