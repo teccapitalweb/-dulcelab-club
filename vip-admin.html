@@ -185,6 +185,10 @@ body{
   background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 22px;
   border-top:2px solid var(--c1,var(--primary));
   transition:border-color .2s;
+  /* Antes cada tarjeta traía su propio color (arcoíris) vía --c1/--c2 inline;
+     se fuerza una sola paleta (vino) en todas, consistente con el resto del panel. */
+  --c1:var(--primary) !important;
+  --c2:var(--primary) !important;
 }
 /* ===== Foro admin (moderación) ===== */
 .empty-state{text-align:center;padding:40px 20px;color:var(--text-2);font-size:14px}
