@@ -9876,12 +9876,8 @@ function initNav(){
       const esHerramientaPro = !!it.dataset.tool;
       const esComunidadVIP = it.dataset.section && seccionesComunidadVIP.includes(it.dataset.section);
       if((esHerramientaPro || esComunidadVIP) && typeof toolEsVIP==='function' && !toolEsVIP()){
-        window.__showPaywallModal && window.__showPaywallModal({
-          title: esHerramientaPro ? 'Herramientas Pro · solo VIP' : 'Comunidad DulceLab Food · solo VIP',
-          sub: esHerramientaPro
-            ? 'Hazte miembro de DulceLab Food para usar las calculadoras y descargar tus reportes en PDF.'
-            : 'El Foro VIP, el Directorio VIP y el Canal de WhatsApp son beneficios exclusivos para miembros. Hazte VIP para acceder.'
-        });
+        if (it.classList.contains('mobile-drawer__item')) cerrarDrawerMovil();
+        navigateToSection('suscripcion');
         return;
       }
       // Herramientas con sección propia (se abren dentro del panel, no como popup)
