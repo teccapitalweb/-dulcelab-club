@@ -3629,6 +3629,7 @@ window.__setDisplayName = async (nombre) => {
 <nav class="mobile-nav">
   <a class="mobile-nav__item is-active" data-section="inicio"><svg class="ic"><use href="#i-home"/></svg>Inicio</a>
   <a class="mobile-nav__item" data-section="cursos"><svg class="ic"><use href="#i-book"/></svg>Cursos</a>
+  <a class="mobile-nav__item" id="mobile-nav-tools" role="button"><svg class="ic"><use href="#i-tools"/></svg>Pro</a>
   <a class="mobile-nav__item" data-section="webinars"><svg class="ic"><use href="#i-broadcast"/></svg>Vivo</a>
   <a class="mobile-nav__item" data-section="suscripcion"><svg class="ic"><use href="#i-credit-card"/></svg>Plan</a>
   <a class="mobile-nav__item" id="mobile-nav-more" role="button"><svg class="ic"><use href="#i-menu"/></svg>Más</a>
@@ -9923,6 +9924,14 @@ function initNav(){
   };
 
   if (moreBtn) moreBtn.addEventListener('click', (e) => { e.preventDefault(); abrirDrawerMovil(); });
+  const toolsBtn = document.getElementById('mobile-nav-tools');
+  if (toolsBtn) toolsBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    abrirDrawerMovil();
+    requestAnimationFrame(() => {
+      document.querySelector('.mobile-drawer__section[data-tour="tools"]')?.scrollIntoView({ behavior:'smooth', block:'start' });
+    });
+  });
   if (drawerOverlay) drawerOverlay.addEventListener('click', cerrarDrawerMovil);
   if (drawerClose) drawerClose.addEventListener('click', cerrarDrawerMovil);
   document.addEventListener('keydown', (e) => {
