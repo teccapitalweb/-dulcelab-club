@@ -3629,7 +3629,7 @@ window.__setDisplayName = async (nombre) => {
 <nav class="mobile-nav">
   <a class="mobile-nav__item is-active" data-section="inicio"><svg class="ic"><use href="#i-home"/></svg>Inicio</a>
   <a class="mobile-nav__item" data-section="cursos"><svg class="ic"><use href="#i-book"/></svg>Cursos</a>
-  <a class="mobile-nav__item" id="mobile-nav-tools" role="button"><svg class="ic"><use href="#i-tools"/></svg>Pro</a>
+  <a class="mobile-nav__item" data-section="herramientas"><svg class="ic"><use href="#i-tools"/></svg>Pro</a>
   <a class="mobile-nav__item" data-section="webinars"><svg class="ic"><use href="#i-broadcast"/></svg>Vivo</a>
   <a class="mobile-nav__item" data-section="suscripcion"><svg class="ic"><use href="#i-credit-card"/></svg>Plan</a>
   <a class="mobile-nav__item" id="mobile-nav-more" role="button"><svg class="ic"><use href="#i-menu"/></svg>Más</a>
@@ -4446,7 +4446,7 @@ const ToolPorcion = (function(){
    ═══════════════════════════════════════════════════════════════════ */
 const SECCIONES_VALIDAS_PANEL = [
   'inicio','cursos','certificados','logros','webinars','pdfs','foro',
-  'directorio','canal','perfil','suscripcion',
+  'directorio','canal','perfil','suscripcion','herramientas',
   'tool-costeo','tool-conversor','tool-merma','tool-catering','tool-horno',
   'tool-porcion'
 ];
@@ -6939,6 +6939,51 @@ const Sections = (function(){
   }
 
   /* ============================ LOGROS ============================ */
+  function renderHerramientas(container){
+    const accesoCompleto = tieneAccesoVipCompleto();
+    const tools = [
+      {key:'costeo', icon:'i-bn-leaf', title:'Costeo de receta', sub:'Suma el costo de tus ingredientes, define tu margen y obtén el precio de venta sugerido.'},
+      {key:'conversor', icon:'i-bn-droplet', title:'Conversor de cocina', sub:'Convierte entre tazas, gramos y mililitros según la densidad del ingrediente.'},
+      {key:'merma', icon:'i-bn-leaf', title:'Rendimiento y merma', sub:'Calcula el % de merma y el costo real del producto aprovechable.'},
+      {key:'catering', icon:'i-users', title:'Porciones para catering', sub:'De número de comensales a cantidades totales por tiempo de comida.'},
+      {key:'horno', icon:'i-gauge', title:'Temperaturas de horno', sub:'Convierte entre Celsius, Fahrenheit y número de gas (gas mark).'},
+      {key:'porcion', icon:'i-credit-card', title:'Costo por porción', sub:'Costo total ÷ porciones, con margen real si agregas el precio de venta.'}
+    ];
+    container.innerHTML = `
+      <div class="fade-up">
+        <div class="sec-hero">
+          <span class="sec-hero__eyebrow">Herramientas Pro</span>
+          <h1 class="sec-hero__title">Herramientas</h1>
+          <p class="sec-hero__sub">Calculadoras para tu día a día en cocina y negocio: costeo, mermas, conversiones y catering.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:18px;">
+          ${tools.map(t => `
+            <div class="tool-pick-card" data-tool-pick="${t.key}" style="cursor:pointer;background:var(--surface);border:1px solid var(--border-2);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:10px;transition:border-color .15s;">
+              <div style="width:40px;height:40px;border-radius:11px;background:color-mix(in srgb,var(--primary) 12%,transparent);color:var(--primary);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg class="ic ic--lg"><use href="#${t.icon}"/></svg>
+              </div>
+              <div>
+                <div style="font-weight:700;font-size:14px;color:var(--text);">${t.title}</div>
+                <div style="font-size:12px;color:var(--text-2);line-height:1.5;margin-top:4px;">${t.sub}</div>
+              </div>
+              ${accesoCompleto
+                ? `<span style="margin-top:auto;font-size:12px;font-weight:600;color:var(--primary);display:flex;align-items:center;gap:4px;">Abrir<svg class="ic" style="width:13px;height:13px;"><use href="#i-arrow-right"/></svg></span>`
+                : `<span style="margin-top:auto;font-size:11.5px;font-weight:600;color:var(--text-3);display:flex;align-items:center;gap:4px;">🔒 Solo VIP</span>`
+              }
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+    const toolSections = { costeo:'tool-costeo', conversor:'tool-conversor', merma:'tool-merma', catering:'tool-catering', horno:'tool-horno', porcion:'tool-porcion' };
+    container.querySelectorAll('[data-tool-pick]').forEach(card=>{
+      card.addEventListener('click', ()=>{
+        if(!accesoCompleto){ navigateToSection('suscripcion'); return; }
+        navigateToSection(toolSections[card.dataset.toolPick]);
+      });
+    });
+  }
+
   function renderLogros(container){
     const nivelActual=getNivel(usuario.xp);
     const pct=Math.round(((usuario.xp-nivelActual.desde)/(nivelActual.hasta-nivelActual.desde))*100);
@@ -9173,6 +9218,7 @@ const Sections = (function(){
       canal:renderCanal,
       perfil:renderPerfil,
       suscripcion:renderSuscripcion,
+      herramientas:renderHerramientas,
       'tool-costeo':(c)=>ToolCosteo.mount(c),
       'tool-conversor':(c)=>ToolConversor.mount(c),
       'tool-merma':(c)=>ToolMerma.mount(c),
@@ -9924,14 +9970,6 @@ function initNav(){
   };
 
   if (moreBtn) moreBtn.addEventListener('click', (e) => { e.preventDefault(); abrirDrawerMovil(); });
-  const toolsBtn = document.getElementById('mobile-nav-tools');
-  if (toolsBtn) toolsBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    abrirDrawerMovil();
-    requestAnimationFrame(() => {
-      document.querySelector('.mobile-drawer__section[data-tour="tools"]')?.scrollIntoView({ behavior:'smooth', block:'start' });
-    });
-  });
   if (drawerOverlay) drawerOverlay.addEventListener('click', cerrarDrawerMovil);
   if (drawerClose) drawerClose.addEventListener('click', cerrarDrawerMovil);
   document.addEventListener('keydown', (e) => {
