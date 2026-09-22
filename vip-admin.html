@@ -4565,6 +4565,15 @@ const Pages={
       </div>
 
       <div style="display:flex;flex-direction:column;gap:8px;">
+        <button class="mb-action-btn" data-act="editar-nombre" style="--c:#6B7280;">
+          <svg class="ic" style="width:18px;height:18px;"><use href="#i-edit"/></svg>
+          <div class="mb-action-btn__body">
+            <div class="mb-action-btn__title">Editar nombre</div>
+            <div class="mb-action-btn__sub">Corrige cómo se muestra en el panel y el directorio</div>
+          </div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="14" height="14" style="color:var(--text-3);"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+
         ${!activo ? `
           <!-- ─── ACCIONES PARA NO-MIEMBRO ─── -->
           <button class="mb-action-btn" data-act="activar-mensual" style="--c:#3B82F6;">
@@ -4692,6 +4701,7 @@ const Pages={
 
   // Ejecutar la acción específica · cada una abre su modal de confirmación
   _ejecutarAccion(m, accion) {
+    if (accion === 'editar-nombre')   return Pages._modalEditarNombre(m);
     if (accion === 'activar-mensual') return Pages._modalActivar(m, 'mensual', 30);
     if (accion === 'activar-anual')   return Pages._modalActivar(m, 'anual', 365);
     if (accion === 'regalar')         return Pages._modalRegalar(m);
@@ -4819,6 +4829,49 @@ const Pages={
   },
 
   // Renovar es activar de nuevo (mismo plan, suma 30 o 365 días)
+  // Modal para corregir el nombre mostrado de un miembro (solo Firestore,
+  // no toca Stripe ni Firebase Auth — es un campo de despliegue nada más)
+  _modalEditarNombre(m) {
+    const nombreActual = (m.nombre || m.displayName || '').replace(/"/g,'&quot;');
+    const email = (m.email || '').replace(/</g,'&lt;');
+
+    const body = document.createElement('div');
+    body.innerHTML = `
+      <div class="form-field form-field--full">
+        <label class="label">Nombre a mostrar</label>
+        <input type="text" class="input" id="mb-edit-nombre" value="${nombreActual}" placeholder="Ej. Wendy Hernández" maxlength="80">
+        <div style="font-size:11.5px;color:var(--text-3);margin-top:6px;">${email}</div>
+      </div>
+    `;
+    const footer = document.createElement('div');
+    footer.innerHTML = `
+      <button class="btn btn--ghost" id="mb-edit-nombre-cancel">Cancelar</button>
+      <button class="btn btn--accent" id="mb-edit-nombre-save">Guardar<svg class="ic"><use href="#i-check"/></svg></button>
+    `;
+    Modal.open({ title: 'Editar nombre', subtitle: 'Se actualiza en el panel y el Directorio VIP', icon: 'i-edit', body, footer });
+    footer.querySelector('#mb-edit-nombre-cancel').addEventListener('click', () => Modal.close());
+
+    const input = body.querySelector('#mb-edit-nombre');
+    setTimeout(() => input?.focus(), 50);
+
+    footer.querySelector('#mb-edit-nombre-save').addEventListener('click', async () => {
+      const nuevo = input.value.trim();
+      if (!nuevo) { Toast.error('Falta el nombre', 'Escribe cómo debe mostrarse'); return; }
+      const saveBtn = footer.querySelector('#mb-edit-nombre-save');
+      saveBtn.disabled = true; saveBtn.style.opacity = '.6';
+      try {
+        await updateDoc(doc(db, 'miembros', m.uid || m.id), { nombre: nuevo });
+        m.nombre = nuevo; // refleja el cambio de inmediato sin esperar el próximo snapshot
+        Toast.success('Nombre actualizado', nuevo);
+        Modal.close();
+        Pages._renderListaMiembros();
+      } catch (e) {
+        Toast.error('No se pudo guardar', e.message || 'Error desconocido');
+        saveBtn.disabled = false; saveBtn.style.opacity = '1';
+      }
+    });
+  },
+
   _modalRenovar(m) {
     const planActual = m.plan || 'mensual';
     const days = planActual === 'anual' ? 365 : 30;
