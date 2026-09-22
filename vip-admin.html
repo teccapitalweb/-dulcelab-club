@@ -24,26 +24,26 @@ input,select,textarea{font:inherit;color:inherit}
 ::selection{background:var(--primary);color:#fff}
 
 :root[data-theme="night"]{
-  --bg:#442A22;--bg-deep:#2E1B15;
-  --surface:#4A2D21;--surface-2:#55362A;--surface-3:#603F30;
-  --border:rgba(255,230,200,0.07);--border-2:rgba(255,230,200,0.14);--border-strong:rgba(255,230,200,0.22);
-  --text:#FFF3E5;--text-2:#C9B8AE;--text-3:#8A7468;
-  --primary:#C94B68;--primary-soft:#D5A13D;--primary-deep:#9E3550;
-  --primary-glow:rgba(201,75,104,0.38);--highlight:#D5A13D;
-  --success:#E5C171;--danger:#F87171;--warning:#FBBF24;--whatsapp:#22C55E;
-  --info:#3B82F6;--accent:#A855F7;
-  --shadow-card:0 10px 40px rgba(0,0,0,0.5);
+  --bg:#181614;--bg-deep:#121110;
+  --surface:#201D1A;--surface-2:#272320;--surface-3:#2E2A26;
+  --border:rgba(245,241,232,0.08);--border-2:rgba(245,241,232,0.14);--border-strong:rgba(245,241,232,0.22);
+  --text:#F5F1E8;--text-2:#B5AFA3;--text-3:#7A7468;
+  --primary:#B3542A;--primary-soft:#C97240;--primary-deep:#8A3F1C;
+  --primary-glow:rgba(179,84,42,0.16);--highlight:#C97240;
+  --success:#7A9A6E;--danger:#C1594A;--warning:#C99A3D;--whatsapp:#22C55E;
+  --info:#7A93A8;--accent:#8A7F8C;
+  --shadow-card:0 2px 8px rgba(0,0,0,0.35);
 }
 :root[data-theme="day"]{
-  --bg:#F1E4D2;--bg-deep:#F5E7D8;
-  --surface:#FFF6EA;--surface-2:#F6E9D6;--surface-3:#EFDFC9;
-  --border:rgba(59,36,32,0.07);--border-2:rgba(59,36,32,0.14);--border-strong:rgba(59,36,32,0.24);
-  --text:#3B2420;--text-2:#6B5147;--text-3:#A08B7F;
-  --primary:#C94B68;--primary-soft:#D5A13D;--primary-deep:#9E3550;
-  --primary-glow:rgba(201,75,104,0.32);--highlight:#D5A13D;
-  --success:#0F9D58;--danger:#DC2D3F;--warning:#E89B1F;--whatsapp:#16A34A;
-  --info:#3B82F6;--accent:#A855F7;
-  --shadow-card:0 8px 32px rgba(59,36,32,0.10);
+  --bg:#F5F1E8;--bg-deep:#EDE7DA;
+  --surface:#FFFFFF;--surface-2:#F0EAE0;--surface-3:#E8E0D2;
+  --border:rgba(24,22,20,0.08);--border-2:rgba(24,22,20,0.14);--border-strong:rgba(24,22,20,0.22);
+  --text:#181614;--text-2:#524C45;--text-3:#8C8478;
+  --primary:#B3542A;--primary-soft:#C97240;--primary-deep:#8A3F1C;
+  --primary-glow:rgba(179,84,42,0.12);--highlight:#C97240;
+  --success:#4E7A44;--danger:#A83A2E;--warning:#A87A1E;--whatsapp:#16A34A;
+  --info:#4A6B85;--accent:#6B5570;
+  --shadow-card:0 1px 4px rgba(24,22,20,0.10);
 }
 
 body{
@@ -80,7 +80,7 @@ body{
   border:1px solid color-mix(in srgb,var(--primary) 30%,transparent);
   display:inline-flex;align-items:center;gap:5px;margin-top:3px;
 }
-.brand__role::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--primary);animation:pulseDotSmall 1.8s ease-out infinite;box-shadow:0 0 6px var(--primary-glow)}
+.brand__role::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--primary)}
 
 .nav-section{display:flex;flex-direction:column;gap:2px;margin-top:8px}
 .nav-label{
@@ -129,7 +129,7 @@ body{
   border:1px solid color-mix(in srgb,var(--primary) 30%,transparent);
   color:var(--primary);
 }
-.topbar__pill::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--primary);animation:pulseDotSmall 1.8s ease-out infinite;box-shadow:0 0 6px var(--primary-glow)}
+.topbar__pill::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--primary)}
 .topbar__right{display:flex;align-items:center;gap:10px}
 .theme-toggle,.icon-btn{
   width:38px;height:38px;border-radius:50%;
@@ -147,7 +147,7 @@ body{
 }
 .avatar__pic{
   width:30px;height:30px;border-radius:50%;
-  background:linear-gradient(135deg,var(--primary),var(--primary-deep));
+  background:var(--primary);
   color:#fff;
   display:flex;align-items:center;justify-content:center;
   font-size:11px;font-weight:700;letter-spacing:-.2px;
@@ -169,13 +169,12 @@ body{
   background:color-mix(in srgb,var(--primary) 12%,transparent);
   border:1px solid color-mix(in srgb,var(--primary) 28%,transparent);
 }
-.sec-hero__eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--primary);animation:pulseDotSmall 1.8s ease-out infinite;box-shadow:0 0 8px var(--primary-glow)}
+.sec-hero__eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--primary)}
 .sec-hero__title{
   font-family:'Plus Jakarta Sans','Inter',sans-serif;
   font-size:clamp(28px,3.4vw,38px);font-weight:800;letter-spacing:-1.1px;line-height:1.05;
   margin-top:14px;
-  background:linear-gradient(135deg,var(--text),color-mix(in srgb,var(--text) 55%,transparent));
-  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  color:var(--text);
 }
 .sec-hero__sub{font-size:14px;color:var(--text-2);margin-top:10px;max-width:680px;line-height:1.6}
 .sec-hero__actions{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
@@ -183,18 +182,10 @@ body{
 /* KPI grid */
 .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:28px}
 .kpi-card{
-  background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:20px 22px;
-  position:relative;overflow:hidden;
-  transition:transform .25s cubic-bezier(.2,.8,.25,1),border-color .25s,box-shadow .3s;
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 22px;
+  border-top:2px solid var(--c1,var(--primary));
+  transition:border-color .2s;
 }
-.kpi-card::before{
-  content:"";position:absolute;top:0;left:0;right:0;height:3px;
-  background:linear-gradient(90deg,var(--c1,var(--primary)),var(--c2,var(--highlight)),var(--c1,var(--primary)));
-  background-size:200% 100%;
-  animation:shimmerBar 3.5s ease-in-out infinite;
-  border-radius:20px 20px 0 0;
-}
-@keyframes shimmerBar{0%,100%{background-position:0 0}50%{background-position:200% 0}}
 /* ===== Foro admin (moderación) ===== */
 .empty-state{text-align:center;padding:40px 20px;color:var(--text-2);font-size:14px}
 .tag-mini{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;padding:2px 7px;border-radius:6px;background:color-mix(in srgb,var(--primary) 16%,transparent);color:var(--primary)}
@@ -392,7 +383,7 @@ body{
   margin-left:2px;
 }
 .curso-pill[data-active="1"] .curso-pill__count{
-  background:var(--primary);color:#442A22;
+  background:var(--primary);color:#fff;
 }
 .curso-pill__dot{
   width:7px;height:7px;border-radius:50%;display:inline-block;
@@ -414,9 +405,7 @@ body{
   position:relative;
 }
 .curso-card:hover{
-  transform:translateY(-3px);
-  box-shadow:0 18px 40px rgba(0,0,0,.18), 0 4px 12px color-mix(in srgb, var(--area-color, var(--primary)) 22%, transparent);
-  border-color:color-mix(in srgb, var(--area-color, var(--primary)) 35%, transparent);
+  border-color:color-mix(in srgb, var(--area-color, var(--primary)) 45%, transparent);
 }
 .curso-card__cover{
   position:relative;aspect-ratio:16/9;
@@ -437,7 +426,7 @@ body{
 .curso-card__area{
   display:inline-flex;align-items:center;
   padding:4px 9px;border-radius:6px;
-  background:rgba(201,75,104,.95);color:#442A22;
+  background:var(--primary);color:#fff;
   font-family:'JetBrains Mono',monospace;
   font-size:9.5px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;
   box-shadow:0 2px 8px rgba(0,0,0,.18);
@@ -445,7 +434,7 @@ body{
 .curso-card__nivel{
   display:inline-flex;align-items:center;
   padding:3px 8px;border-radius:5px;
-  background:rgba(255,255,255,.92);color:#442A22;
+  background:rgba(255,255,255,.92);color:#181614;
   font-family:'JetBrains Mono',monospace;
   font-size:9px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;
 }
@@ -666,19 +655,18 @@ body{
   .curso-row__actions{order:4;}
   .curso-card__title{min-height:auto;}
 }
-.kpi-card:hover{transform:translateY(-4px);border-color:color-mix(in srgb,var(--c1,var(--primary)) 35%,transparent);box-shadow:0 14px 36px rgba(0,0,0,.12)}
+.kpi-card:hover{border-color:color-mix(in srgb,var(--c1,var(--primary)) 45%,transparent)}
 .kpi-card__label{
   font-family:'JetBrains Mono',monospace;
   font-size:10px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;
   color:var(--text-3);display:inline-flex;align-items:center;gap:6px;margin-bottom:10px;
 }
-.kpi-card__label::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--c1,var(--primary));animation:pulseDotSmall 2s ease-out infinite;box-shadow:0 0 8px var(--c1,var(--primary))}
+.kpi-card__label::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--c1,var(--primary))}
 .kpi-card__value{
   font-family:'Plus Jakarta Sans','Inter',sans-serif;
   font-size:30px;font-weight:800;letter-spacing:-.8px;line-height:1;
   font-feature-settings:"tnum" 1;
-  background:linear-gradient(135deg,var(--text),color-mix(in srgb,var(--text) 55%,transparent));
-  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  color:var(--text);
 }
 .kpi-card__sub{font-size:11.5px;color:var(--text-2);margin-top:8px;font-weight:500}
 .kpi-card__sub strong{color:var(--c1,var(--primary));font-weight:700}
@@ -693,15 +681,14 @@ body{
 }
 .btn .ic{width:14px;height:14px}
 .btn--accent{
-  background:linear-gradient(135deg,var(--primary),var(--primary-deep));
+  background:var(--primary);
   color:#fff;
-  box-shadow:0 8px 22px var(--primary-glow),inset 0 1px 0 rgba(255,255,255,.18);
 }
-.btn--accent:hover{transform:translateY(-2px);box-shadow:0 12px 32px var(--primary-glow),inset 0 1px 0 rgba(255,255,255,.22)}
+.btn--accent:hover{background:var(--primary-deep)}
 .btn--ghost{background:var(--surface);color:var(--text);border-color:var(--border-2)}
-.btn--ghost:hover{border-color:var(--border-strong);transform:translateY(-1px)}
+.btn--ghost:hover{border-color:var(--border-strong)}
 .btn--danger{background:transparent;color:var(--danger);border-color:color-mix(in srgb,var(--danger) 35%,transparent)}
-.btn--danger:hover{background:color-mix(in srgb,var(--danger) 10%,transparent);transform:translateY(-1px)}
+.btn--danger:hover{background:color-mix(in srgb,var(--danger) 10%,transparent)}
 .btn--sm{padding:8px 14px;font-size:11.5px}
 
 /* Inputs */
@@ -735,7 +722,7 @@ body{
   border:1px solid var(--border);
 }
 .tag--success{background:color-mix(in srgb,var(--success) 12%,transparent);color:var(--success);border-color:color-mix(in srgb,var(--success) 28%,transparent)}
-.tag--success::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--success);animation:pulseDotSmall 2s ease-out infinite;box-shadow:0 0 5px var(--success)}
+.tag--success::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--success)}
 .tag--warning{background:color-mix(in srgb,var(--warning) 12%,transparent);color:var(--warning);border-color:color-mix(in srgb,var(--warning) 28%,transparent)}
 .tag--danger{background:color-mix(in srgb,var(--danger) 12%,transparent);color:var(--danger);border-color:color-mix(in srgb,var(--danger) 28%,transparent)}
 .tag--info{background:color-mix(in srgb,var(--info) 12%,transparent);color:var(--info);border-color:color-mix(in srgb,var(--info) 28%,transparent)}
@@ -758,7 +745,7 @@ body{
   border:1px solid color-mix(in srgb,var(--primary) 28%,transparent);
   text-transform:uppercase;display:inline-flex;align-items:center;gap:5px;
 }
-.section-header__badge::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--primary);animation:pulseDotSmall 1.8s ease-out infinite}
+.section-header__badge::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--primary)}
 
 /* Toolbar */
 .toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:22px}
@@ -784,10 +771,8 @@ body{
 }
 .tab:hover{color:var(--text);border-color:var(--border-strong);transform:translateY(-1px)}
 .tab.is-active{
-  background:linear-gradient(135deg,var(--primary),var(--primary-deep));
+  background:var(--primary);
   color:#fff;border-color:var(--primary);
-  box-shadow:0 6px 18px var(--primary-glow),inset 0 1px 0 rgba(255,255,255,.18);
-  transform:translateY(-1px);
 }
 
 /* Tabla / lista de filas */
@@ -803,9 +788,8 @@ body{
 .adm-row:hover{transform:translateX(2px);border-color:var(--border-strong);box-shadow:0 6px 18px rgba(0,0,0,.08)}
 .adm-row__thumb{
   width:44px;height:44px;border-radius:11px;
-  background:linear-gradient(135deg,var(--c1,var(--primary)),color-mix(in srgb,var(--c1,var(--primary)) 60%,#000));
+  background:var(--c1,var(--primary));
   color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;
-  box-shadow:0 6px 14px color-mix(in srgb,var(--c1,var(--primary)) 25%,transparent);
 }
 .adm-row__thumb .ic{width:20px;height:20px}
 .adm-row__body{flex:1;min-width:0}
@@ -947,9 +931,8 @@ body{
 .news-card:hover{transform:translateY(-1px);border-color:var(--border-strong);box-shadow:0 6px 18px rgba(0,0,0,.08)}
 .news-card__cover{
   width:64px;height:64px;border-radius:12px;
-  background:linear-gradient(135deg,var(--c1,var(--primary)),color-mix(in srgb,var(--c1,var(--primary)) 60%,#000));
+  background:var(--c1,var(--primary));
   color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;
-  box-shadow:0 6px 14px color-mix(in srgb,var(--c1,var(--primary)) 25%,transparent);
 }
 .news-card__cover .ic{width:24px;height:24px}
 .news-card__body{flex:1;min-width:0}
@@ -975,33 +958,23 @@ body{
 
 /* Cron card especial */
 .cron-card{
-  background:linear-gradient(135deg,#4A2D21 0%,#442A22 100%);
+  background:var(--surface);
   border:1px solid var(--border-2);
-  border-radius:20px;
+  border-radius:12px;
   padding:24px 26px;
   margin-bottom:18px;
-  position:relative;overflow:hidden;
 }
-:root[data-theme="day"] .cron-card{background:linear-gradient(135deg,#FFFFFF 0%,#F6E9D6 100%)}
-.cron-card::before{
-  content:"";position:absolute;inset:0;
-  background:radial-gradient(circle at 80% 30%,color-mix(in srgb,var(--success) 18%,transparent),transparent 50%);
-  filter:blur(40px);pointer-events:none;
-}
-.cron-card__row{display:flex;align-items:center;gap:18px;flex-wrap:wrap;position:relative;z-index:1}
+.cron-card__row{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
 .cron-card__icon{
-  width:54px;height:54px;border-radius:14px;
-  background:linear-gradient(135deg,var(--success),#047857);
+  width:54px;height:54px;border-radius:12px;
+  background:var(--success);
   color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;
-  box-shadow:0 8px 22px color-mix(in srgb,var(--success) 35%,transparent),inset 0 1px 0 rgba(255,255,255,.18);
 }
 .cron-card__info{flex:1;min-width:0}
-.cron-card__lbl{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--success);display:inline-flex;align-items:center;gap:6px}
-.cron-card__lbl::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--success);animation:pulseDotSmall 1.8s ease-out infinite;box-shadow:0 0 8px var(--success)}
+.cron-card__lbl{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1px;color:var(--success);display:inline-flex;align-items:center;gap:6px}
 .cron-card__title{font-family:'Plus Jakarta Sans','Inter',sans-serif;font-size:19px;font-weight:800;letter-spacing:-.4px;margin-top:4px}
 .cron-card__sub{font-size:12.5px;color:var(--text-2);margin-top:4px}
 
-@keyframes pulseDotSmall{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.6);opacity:.4}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 .fade-up{animation:fadeUp .4s ease forwards}
 
@@ -1404,7 +1377,7 @@ const Pages={
             <div class="kpi-card__value">${stats.miembrosActivos}<span style="font-size:18px;color:var(--text-3);margin-left:4px;">/${stats.miembrosTotal}</span></div>
             <div class="kpi-card__sub">${stats.miembrosTotal > 0 ? `<strong>${Math.round(stats.miembrosActivos/stats.miembrosTotal*100)}%</strong> activos` : 'Sin miembros aún'}</div>
           </div>
-          <div class="kpi-card" style="--c1:#C94B68;--c2:#D5A13D;">
+          <div class="kpi-card" style="--c1:#B3542A;--c2:#D5A13D;">
             <div class="kpi-card__label">Ingresos estimados/mes</div>
             <div class="kpi-card__value">$${ingresoMes.toLocaleString('es-MX')}</div>
             <div class="kpi-card__sub">MXN · basado en miembros activos</div>
@@ -1446,7 +1419,7 @@ const Pages={
                 }
                 return arr.map(m => {
                   const planLabel = m.plan === 'anual' || m.plan === 'Anual' ? 'Anual' : 'Mensual';
-                  const c1 = planLabel === 'Anual' ? '#C94B68' : '#3B82F6';
+                  const c1 = planLabel === 'Anual' ? '#B3542A' : '#3B82F6';
                   const activo = m.activo !== false;
                   return `
                     <div class="mini-row" style="--c1:${c1};">
@@ -1506,7 +1479,7 @@ const Pages={
                   return `<div style="padding:24px;text-align:center;color:var(--text-3);font-size:13px;">${ready ? 'Sin cursos publicados' : 'Cargando…'}</div>`;
                 }
                 return arr.map(c => `
-                  <div class="mini-row" style="--c1:#C94B68;">
+                  <div class="mini-row" style="--c1:#B3542A;">
                     <div class="mini-row__dot"><svg class="ic"><use href="#i-book"/></svg></div>
                     <div class="mini-row__body">
                       <div class="mini-row__title">${(c.titulo || 'Sin título').slice(0,55)}${(c.titulo||'').length>55?'…':''}</div>
@@ -1531,8 +1504,8 @@ const Pages={
                   return `<div style="padding:24px;text-align:center;color:var(--text-3);font-size:13px;">${ready ? 'Sin noticias del cron' : 'Cargando…'}</div>`;
                 }
                 return arr.map(n => {
-                  const colorMap = {'cocina':'#EF4444','reposteria':'#C94B68','inocuidad':'#22C55E','negocio':'#3B82F6','bebidas':'#14B8A6'};
-                  const c = colorMap[n.categoria] || colorMap[n.cat] || '#C94B68';
+                  const colorMap = {'cocina':'#EF4444','reposteria':'#B3542A','inocuidad':'#22C55E','negocio':'#3B82F6','bebidas':'#14B8A6'};
+                  const c = colorMap[n.categoria] || colorMap[n.cat] || '#B3542A';
                   const titulo = n.titulo || 'Sin título';
                   const f = n.fechaPublicacion?.toDate ? n.fechaPublicacion.toDate() : (n.fechaPublicacion ? new Date(n.fechaPublicacion) : null);
                   let fechaStr = '—';
@@ -1586,7 +1559,7 @@ const Pages={
 
     // Presets por tipo (color + icono · idénticos al panel VIP)
     const TIPOS = {
-      clase:       { label: 'Clase en vivo', icono: 'i-broadcast', color: '#C94B68' },
+      clase:       { label: 'Clase en vivo', icono: 'i-broadcast', color: '#B3542A' },
       certificado: { label: 'Certificado',   icono: 'i-certificate', color: '#E5C171' },
       logro:       { label: 'Logro / XP',    icono: 'i-trophy', color: '#FBBF24' },
       sistema:     { label: 'Sistema',       icono: 'i-bell', color: '#60A5FA' },
@@ -1603,7 +1576,7 @@ const Pages={
 
         <!-- KPIs rápidos -->
         <div class="kpi-grid">
-          <div class="kpi-card" style="--c1:#C94B68;--c2:#D5A13D;">
+          <div class="kpi-card" style="--c1:#B3542A;--c2:#D5A13D;">
             <div class="kpi-card__label">Total publicadas</div>
             <div class="kpi-card__value">${notifs.length}</div>
             <div class="kpi-card__sub">Últimas 50</div>
@@ -1696,7 +1669,7 @@ const Pages={
                 ">
                   <div id="notif-preview-icon" style="
                     width:34px;height:34px;border-radius:9px;
-                    background:color-mix(in srgb,#C94B68 16%,transparent);color:#C94B68;
+                    background:color-mix(in srgb,#B3542A 16%,transparent);color:#B3542A;
                     display:flex;align-items:center;justify-content:center;flex-shrink:0;
                   "><svg class="ic" style="width:17px;height:17px;"><use href="#i-broadcast"/></svg></div>
                   <div style="flex:1;min-width:0;">
@@ -1709,14 +1682,12 @@ const Pages={
 
               <button id="notif-enviar-btn" style="
                 display:flex;align-items:center;justify-content:center;gap:8px;
-                padding:13px 18px;border-radius:11px;cursor:pointer;
-                background:linear-gradient(135deg,var(--primary),var(--highlight));
-                color:#442A22;font-family:'Plus Jakarta Sans',sans-serif;
+                padding:13px 18px;border-radius:8px;cursor:pointer;
+                background:var(--primary);
+                color:#fff;font-family:'Plus Jakarta Sans',sans-serif;
                 font-size:14px;font-weight:800;letter-spacing:-.2px;
                 border:none;
-                transition:transform .15s, box-shadow .15s;
-                box-shadow:0 4px 14px color-mix(in srgb,var(--primary) 35%, transparent);
-              " onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 8px 22px color-mix(in srgb,var(--primary) 45%, transparent)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 4px 14px color-mix(in srgb,var(--primary) 35%, transparent)'">
+              " onmouseover="this.style.background='var(--primary-deep)'" onmouseout="this.style.background='var(--primary)'">
                 <svg class="ic" style="width:16px;height:16px;"><use href="#i-send"/></svg>
                 Enviar a todos los miembros
               </button>
@@ -2227,7 +2198,7 @@ const Pages={
     const totalHoras = cursos.reduce((s, c) => s + (c.horas || c.sesiones?.length || 0), 0);
 
     wrap.innerHTML = `
-      <div class="kpi-card" style="--c1:#C94B68;--c2:#D5A13D;">
+      <div class="kpi-card" style="--c1:#B3542A;--c2:#D5A13D;">
         <div class="kpi-card__label">Total catálogo</div>
         <div class="kpi-card__value">${cursos.length}</div>
         <div class="kpi-card__sub">${ready ? 'En Firestore' : 'Cargando…'}</div>
@@ -2364,12 +2335,12 @@ const Pages={
     const activo = c.activo !== false && c.disponible !== false;
     const area = c.area || 'Sin área';
     const areaColors = {
-      'Repostería':'#C94B68', 'Panadería':'#D5A13D', 'Cocina mexicana':'#EF4444',
+      'Repostería':'#B3542A', 'Panadería':'#D5A13D', 'Cocina mexicana':'#EF4444',
       'Cocina internacional':'#F97316', 'Alta cocina':'#8B5CF6', 'Control de costos':'#3B82F6',
       'Catering y eventos':'#A855F7', 'Inocuidad y NOM-251':'#22C55E', 'Barismo y bebidas':'#14B8A6',
       'Otro':'#EC4899'
     };
-    const areaColor = areaColors[area] || '#C94B68';
+    const areaColor = areaColors[area] || '#B3542A';
     const tituloEsc = (c.titulo || 'Sin título').replace(/"/g,'&quot;');
 
     return `
@@ -2419,12 +2390,12 @@ const Pages={
     const activo = c.activo !== false && c.disponible !== false;
     const area = c.area || 'Sin área';
     const areaColors = {
-      'Repostería':'#C94B68', 'Panadería':'#D5A13D', 'Cocina mexicana':'#EF4444',
+      'Repostería':'#B3542A', 'Panadería':'#D5A13D', 'Cocina mexicana':'#EF4444',
       'Cocina internacional':'#F97316', 'Alta cocina':'#8B5CF6', 'Control de costos':'#3B82F6',
       'Catering y eventos':'#A855F7', 'Inocuidad y NOM-251':'#22C55E', 'Barismo y bebidas':'#14B8A6',
       'Otro':'#EC4899'
     };
-    const areaColor = areaColors[area] || '#C94B68';
+    const areaColor = areaColors[area] || '#B3542A';
     const tituloEsc = (c.titulo || 'Sin título').replace(/"/g,'&quot;');
 
     return `
@@ -3219,7 +3190,7 @@ const Pages={
         <div class="kpi-card__value">${pasados}</div>
         <div class="kpi-card__sub">Total histórico</div>
       </div>
-      <div class="kpi-card" style="--c1:#C94B68;--c2:#D5A13D;">
+      <div class="kpi-card" style="--c1:#B3542A;--c2:#D5A13D;">
         <div class="kpi-card__label">Total programadas</div>
         <div class="kpi-card__value">${webs.length}</div>
         <div class="kpi-card__sub">${ready ? 'En Firestore' : 'Cargando…'}</div>
@@ -3731,7 +3702,7 @@ const Pages={
     }
 
     const areaColors = {
-      'Repostería':'#C94B68', 'Panadería':'#D5A13D', 'Cocina mexicana':'#EF4444',
+      'Repostería':'#B3542A', 'Panadería':'#D5A13D', 'Cocina mexicana':'#EF4444',
       'Cocina internacional':'#F97316', 'Alta cocina':'#8B5CF6', 'Control de costos':'#3B82F6',
       'Catering y eventos':'#A855F7', 'Inocuidad y NOM-251':'#22C55E', 'Barismo y bebidas':'#14B8A6',
       'Otro':'#EC4899'
@@ -4005,7 +3976,7 @@ const Pages={
         const fecha = c.emitido?.toDate ? c.emitido.toDate() : (c.emitido ? new Date(c.emitido) : null);
         const fechaTxt = fecha ? fecha.toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'}) : '—';
         return `
-        <div class="adm-row" style="--c1:#C94B68;">
+        <div class="adm-row" style="--c1:#B3542A;">
           <div class="adm-row__thumb"><svg class="ic"><use href="#i-certificate"/></svg></div>
           <div class="adm-row__body">
             <div class="adm-row__title">${c.nombre||'—'} · ${c.curso||'—'}</div>
@@ -4120,7 +4091,7 @@ const Pages={
         <div class="curso-pills">
           <button class="curso-pill" data-mb-plan="todos" data-active="1">Todos los planes</button>
           <button class="curso-pill" data-mb-plan="mensual"><span class="curso-pill__dot" style="background:#3B82F6;"></span>Mensual</button>
-          <button class="curso-pill" data-mb-plan="anual"><span class="curso-pill__dot" style="background:#C94B68;"></span>Anual</button>
+          <button class="curso-pill" data-mb-plan="anual"><span class="curso-pill__dot" style="background:#B3542A;"></span>Anual</button>
           <button class="curso-pill" data-mb-plan="regalo"><span class="curso-pill__dot" style="background:#A855F7;"></span>Regalo</button>
           <button class="curso-pill" data-mb-plan="sin-pagar"><span class="curso-pill__dot" style="background:#9CA3AF;"></span>Sin pagar</button>
         </div>
@@ -4255,7 +4226,7 @@ const Pages={
         <div class="kpi-card__value">${mensuales}</div>
         <div class="kpi-card__sub">$${(mensuales * _pm).toLocaleString('es-MX')} MXN/mes</div>
       </div>
-      <div class="kpi-card" style="--c1:#C94B68;--c2:#D5A13D;">
+      <div class="kpi-card" style="--c1:#B3542A;--c2:#D5A13D;">
         <div class="kpi-card__label">Plan Anual</div>
         <div class="kpi-card__value">${anuales}</div>
         <div class="kpi-card__sub">${anuales > 0 ? '$' + (anuales * _pa).toLocaleString('es-MX') + ' MXN al año' : 'Sin anuales'}</div>
@@ -4304,7 +4275,7 @@ const Pages={
           accion = 'Revisa la consola del navegador para más detalles.';
         }
         diagBanner = `
-          <div style="background:linear-gradient(135deg, color-mix(in srgb,#EF4444 18%,var(--surface-2)), var(--surface-2));border:1px solid #EF4444;border-radius:14px;padding:18px 20px;margin-bottom:16px;">
+          <div style="background:color-mix(in srgb,#EF4444 10%,var(--surface-2));border:1px solid #EF4444;border-radius:14px;padding:18px 20px;margin-bottom:16px;">
             <div style="display:flex;gap:12px;align-items:flex-start;">
               <div style="width:36px;height:36px;border-radius:50%;background:#EF4444;color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
@@ -4390,7 +4361,7 @@ const Pages={
 
     const planLabels = {
       mensual: { label:'MENSUAL', color:'#3B82F6' },
-      anual:   { label:'ANUAL',   color:'#C94B68' },
+      anual:   { label:'ANUAL',   color:'#B3542A' },
       regalo:  { label:'REGALO',  color:'#A855F7' },
       admin:   { label:'ADMIN',   color:'#FBBF24' }
     };
@@ -4449,7 +4420,7 @@ const Pages={
 
     return `
       <div class="curso-row" data-mb-uid="${m.uid || m.id}" style="--area-color:${pInfo.color};">
-        <div class="curso-row__thumb" style="background:linear-gradient(135deg, ${pInfo.color}, color-mix(in srgb, ${pInfo.color} 60%, #fff));color:#fff;display:flex;align-items:center;justify-content:center;background-image:none;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:14px;letter-spacing:.3px;">
+        <div class="curso-row__thumb" style="background:${pInfo.color};color:#fff;display:flex;align-items:center;justify-content:center;background-image:none;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:14px;letter-spacing:.3px;">
           ${iniciales}
         </div>
         <div class="curso-row__body">
@@ -4574,9 +4545,9 @@ const Pages={
 
     const body = document.createElement('div');
     body.innerHTML = `
-      <div style="background:linear-gradient(135deg, color-mix(in srgb, var(--primary) 10%, var(--surface-2)), var(--surface-2));border:1px solid color-mix(in srgb, var(--primary) 35%, transparent);border-radius:12px;padding:16px 18px;margin-bottom:18px;">
+      <div style="background:color-mix(in srgb, var(--primary) 8%, var(--surface-2));border:1px solid color-mix(in srgb, var(--primary) 35%, transparent);border-radius:12px;padding:16px 18px;margin-bottom:18px;">
         <div style="display:flex;gap:12px;align-items:center;">
-          <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg, var(--primary), var(--highlight));color:#442A22;display:flex;align-items:center;justify-content:center;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;flex-shrink:0;">
+          <div style="width:44px;height:44px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;flex-shrink:0;">
             ${nombre.split(' ').filter(Boolean).slice(0,2).map(s => s[0]).join('').toUpperCase() || '??'}
           </div>
           <div style="flex:1;min-width:0;">
@@ -4602,7 +4573,7 @@ const Pages={
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="14" height="14" style="color:var(--text-3);"><polyline points="9 18 15 12 9 6"/></svg>
           </button>
 
-          <button class="mb-action-btn" data-act="activar-anual" style="--c:#C94B68;">
+          <button class="mb-action-btn" data-act="activar-anual" style="--c:#B3542A;">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
             <div class="mb-action-btn__body">
               <div class="mb-action-btn__title">Activar Plan Anual</div>
@@ -4730,7 +4701,7 @@ const Pages={
     const planLabel = plan === 'mensual' ? 'Plan Mensual' : 'Plan Anual';
     // MODIFICADO: precio en vivo desde config/club
     const precio = (plan === 'mensual' ? fmtPrecioMXN(window.__preciosClub.mes) : fmtPrecioMXN(window.__preciosClub.ano)) + ' MXN';
-    const color = plan === 'mensual' ? '#3B82F6' : '#C94B68';
+    const color = plan === 'mensual' ? '#3B82F6' : '#B3542A';
     const nombre = (m.nombre || m.email || 'Este miembro').replace(/</g,'&lt;');
     const expiraDate = new Date(Date.now() + days * 86400 * 1000);
     const expiraFmt = expiraDate.toLocaleDateString('es-MX', { day:'numeric', month:'long', year:'numeric' });
@@ -4738,7 +4709,7 @@ const Pages={
     const body = document.createElement('div');
     body.innerHTML = `
       <div style="text-align:center;margin-bottom:18px;">
-        <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg, ${color}, color-mix(in srgb, ${color} 60%, #fff));color:#fff;display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px;">
+        <div style="width:64px;height:64px;border-radius:50%;background:${color};color:#fff;display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px;">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><polyline points="20 6 9 17 4 12"/></svg>
         </div>
         <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:var(--text);margin-bottom:4px;">Activar ${planLabel}</div>
@@ -4798,7 +4769,7 @@ const Pages={
     const body = document.createElement('div');
     body.innerHTML = `
       <div style="text-align:center;margin-bottom:18px;">
-        <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg, #A855F7, #C084FC);color:#fff;display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px;">
+        <div style="width:64px;height:64px;border-radius:50%;background:#A855F7;color:#fff;display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px;">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
         </div>
         <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:var(--text);margin-bottom:4px;">Regalar acceso a</div>
@@ -4859,7 +4830,7 @@ const Pages={
     const body = document.createElement('div');
     body.innerHTML = `
       <div style="text-align:center;margin-bottom:18px;">
-        <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg, #F59E0B, #FBBF24);color:#442A22;display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px;">
+        <div style="width:64px;height:64px;border-radius:50%;background:var(--warning);color:#fff;display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px;">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
         </div>
         <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:var(--text);margin-bottom:4px;">Cancelar suscripción</div>
@@ -4921,7 +4892,7 @@ const Pages={
     const body = document.createElement('div');
     body.innerHTML = `
       <div style="text-align:center;margin-bottom:18px;">
-        <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg, #EF4444, #F87171);color:#fff;display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px;">
+        <div style="width:64px;height:64px;border-radius:50%;background:#EF4444;color:#fff;display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px;">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
         </div>
         <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:var(--text);margin-bottom:4px;">⚠️ Eliminar miembro</div>
@@ -5062,11 +5033,11 @@ const Pages={
             const fp = n.fechaPublicacion?.toDate ? n.fechaPublicacion.toDate() : (n.fechaPublicacion ? new Date(n.fechaPublicacion) : null);
             const fechaTxt = fp ? fp.toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'}) : '—';
             return `
-            <div class="news-card" style="--c1:${n.color||'#C94B68'};">
+            <div class="news-card" style="--c1:${n.color||'#B3542A'};">
               <div class="news-card__cover"><svg class="ic"><use href="#i-news"/></svg></div>
               <div class="news-card__body">
                 <div class="news-card__head">
-                  <span class="tag" style="color:${n.color||'#C94B68'};border-color:${n.color||'#C94B68'}40;background:${n.color||'#C94B68'}14;">${n.categoriaNombre||n.categoria||''}</span>
+                  <span class="tag" style="color:${n.color||'#B3542A'};border-color:${n.color||'#B3542A'}40;background:${n.color||'#B3542A'}14;">${n.categoriaNombre||n.categoria||''}</span>
                   <span class="news-card__date">${fechaTxt}</span>
                 </div>
                 <div class="news-card__title">${n.titulo||''}</div>
@@ -5163,7 +5134,7 @@ const Pages={
             <div id="adm-list" class="adm-list" style="margin-bottom:14px;">
               ${c.admins.map((e,i)=>`
                 <div class="adm-row" style="padding:11px 14px;">
-                  <div class="adm-row__thumb" style="--c1:#C94B68;"><svg class="ic"><use href="#i-shield-check"/></svg></div>
+                  <div class="adm-row__thumb" style="--c1:#B3542A;"><svg class="ic"><use href="#i-shield-check"/></svg></div>
                   <div class="adm-row__body"><div class="adm-row__title" style="font-size:13px;">${e}</div></div>
                   ${e==='teccapitalweb@gmail.com'?'<span class="tag tag--primary">Superadmin</span>':`<button class="icon-action icon-action--danger" data-rm-admin="${i}"><svg class="ic"><use href="#i-trash"/></svg></button>`}
                 </div>
@@ -5398,7 +5369,7 @@ function _admAutor(){
     uid: a.uid || 'admin',
     nombre: 'DulceLab Food',
     iniciales: 'IM',
-    color: '#C94B68',
+    color: '#B3542A',
     esAdmin: true
   };
 }
@@ -5464,7 +5435,7 @@ function foroAdminCargar(){
     if(!posts.length){ cont.innerHTML='<div class="empty-state">Aún no hay publicaciones en el foro.</div>'; return; }
     cont.innerHTML = posts.map(x=>`
       <div class="foro-admin-card" data-fpost="${x.id}">
-        <div class="foro-admin-card__av" style="background:linear-gradient(135deg,${x.color||'#C94B68'},${(x.color||'#C94B68')}aa);">${(x.iniciales||'?')}</div>
+        <div class="foro-admin-card__av" style="background:${x.color||'#B3542A'};">${(x.iniciales||'?')}</div>
         <div class="foro-admin-card__main">
           <div class="foro-admin-card__head">
             <span class="foro-admin-card__name">${(x.nombre||'Miembro')}</span>
@@ -5520,7 +5491,7 @@ function foroAdminVerComentarios(postId){
     const arr=[]; snap.forEach(d=>{ const c=d.data(); c.id=d.id; arr.push(c); });
     list.innerHTML = arr.map(c=>`
       <div class="adm-com">
-        <div class="adm-com__av" style="background:linear-gradient(135deg,${c.color||'#888'},${(c.color||'#888')}aa);">${(c.iniciales||'?')}</div>
+        <div class="adm-com__av" style="background:${c.color||'#888'};">${(c.iniciales||'?')}</div>
         <div class="adm-com__body">
           <div class="adm-com__head"><span class="adm-com__name">${(c.nombre||'Miembro')}</span>${c.esAdmin?'<span class="tag-mini tag-mini--admin" style="font-size:8px;padding:1px 6px;">DulceLab Food</span>':''}<span class="adm-com__time">${foroAdminTiempo(c.createdAt)}</span></div>
           <div class="adm-com__text">${(c.texto||'').replace(/</g,'&lt;').replace(/\n/g,'<br>')}</div>
@@ -5563,7 +5534,7 @@ function dirAdminCargar(){
     cont.innerHTML = cards.map(x=>{
       const ini=(x.nombre||'?').trim().slice(0,2).toUpperCase();
       const foto = x.foto ? `<img class="dir-adm-card__av" src="${x.foto}" alt="">`
-        : `<div class="dir-adm-card__av dir-adm-card__av--ini" style="background:linear-gradient(135deg,${x.color||'#C94B68'},${(x.color||'#C94B68')}aa);">${ini}</div>`;
+        : `<div class="dir-adm-card__av dir-adm-card__av--ini" style="background:${x.color||'#B3542A'};">${ini}</div>`;
       const contactos=[];
       if(x.whatsapp) contactos.push('WhatsApp');
       if(x.email) contactos.push('Correo');
