@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#442A22">
+<meta name="theme-color" content="#6B1526">
 <meta name="description" content="DulceLab Food Admin · Panel de administración">
 <title>DulceLab Food · Admin</title>
 <link rel="icon" type="image/png" href="assets/logo-dulcelab.png">
@@ -24,26 +24,26 @@ input,select,textarea{font:inherit;color:inherit}
 ::selection{background:var(--primary);color:#fff}
 
 :root[data-theme="night"]{
-  --bg:#181614;--bg-deep:#121110;
-  --surface:#201D1A;--surface-2:#272320;--surface-3:#2E2A26;
-  --border:rgba(245,241,232,0.08);--border-2:rgba(245,241,232,0.14);--border-strong:rgba(245,241,232,0.22);
-  --text:#F5F1E8;--text-2:#B5AFA3;--text-3:#7A7468;
-  --primary:#B3542A;--primary-soft:#C97240;--primary-deep:#8A3F1C;
-  --primary-glow:rgba(179,84,42,0.16);--highlight:#C97240;
+  --bg:#0A0908;--bg-deep:#0A0908;
+  --surface:#151210;--surface-2:#1E1915;--surface-3:#241E19;
+  --border:rgba(245,239,232,0.08);--border-2:rgba(245,239,232,0.14);--border-strong:rgba(245,239,232,0.22);
+  --text:#F5EFE8;--text-2:#C9B8AE;--text-3:#8C7A70;
+  --primary:#6B1526;--primary-soft:#C4577A;--primary-deep:#4A0E1A;
+  --primary-glow:rgba(107,21,38,0.18);--highlight:#C4577A;
   --success:#7A9A6E;--danger:#C1594A;--warning:#C99A3D;--whatsapp:#22C55E;
-  --info:#7A93A8;--accent:#8A7F8C;
-  --shadow-card:0 2px 8px rgba(0,0,0,0.35);
+  --info:#7A93A8;--accent:#9E2A47;
+  --shadow-card:0 2px 8px rgba(0,0,0,0.45);
 }
 :root[data-theme="day"]{
-  --bg:#F5F1E8;--bg-deep:#EDE7DA;
-  --surface:#FFFFFF;--surface-2:#F0EAE0;--surface-3:#E8E0D2;
-  --border:rgba(24,22,20,0.08);--border-2:rgba(24,22,20,0.14);--border-strong:rgba(24,22,20,0.22);
-  --text:#181614;--text-2:#524C45;--text-3:#8C8478;
-  --primary:#B3542A;--primary-soft:#C97240;--primary-deep:#8A3F1C;
-  --primary-glow:rgba(179,84,42,0.12);--highlight:#C97240;
+  --bg:#F7EEEC;--bg-deep:#F7EEEC;
+  --surface:#FFFFFF;--surface-2:#F1E1DD;--surface-3:#E9D2CC;
+  --border:rgba(43,10,16,0.08);--border-2:rgba(43,10,16,0.14);--border-strong:rgba(43,10,16,0.22);
+  --text:#2A0D16;--text-2:#6B4A45;--text-3:#9C8078;
+  --primary:#6B1526;--primary-soft:#7A1B30;--primary-deep:#4A0E1A;
+  --primary-glow:rgba(107,21,38,0.12);--highlight:#7A1B30;
   --success:#4E7A44;--danger:#A83A2E;--warning:#A87A1E;--whatsapp:#16A34A;
-  --info:#4A6B85;--accent:#6B5570;
-  --shadow-card:0 1px 4px rgba(24,22,20,0.10);
+  --info:#4A6B85;--accent:#9E2A47;
+  --shadow-card:0 1px 4px rgba(43,10,16,0.10);
 }
 
 body{
@@ -67,7 +67,7 @@ body{
 .sidebar::-webkit-scrollbar{width:6px}
 .sidebar::-webkit-scrollbar-thumb{background:var(--surface-2);border-radius:3px}
 .brand{display:flex;align-items:center;gap:10px;padding:6px 8px 14px;border-bottom:1px solid var(--border);margin-bottom:8px}
-.brand__logo{width:36px;height:36px;border-radius:9px;background:#3B2420;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}
+.brand__logo{width:36px;height:36px;border-radius:9px;background:#2A0D16;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}
 .brand__logo svg{width:24px;height:24px}
 .brand__logo img{width:28px;height:28px;object-fit:contain;display:block}
 .brand__name{font-family:'Plus Jakarta Sans','Inter',sans-serif;font-size:15px;font-weight:800;letter-spacing:-.3px;line-height:1.1}
@@ -434,7 +434,7 @@ body{
 .curso-card__nivel{
   display:inline-flex;align-items:center;
   padding:3px 8px;border-radius:5px;
-  background:rgba(255,255,255,.92);color:#181614;
+  background:rgba(255,255,255,.92);color:#2A0D16;
   font-family:'JetBrains Mono',monospace;
   font-size:9px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;
 }
@@ -1377,7 +1377,7 @@ const Pages={
             <div class="kpi-card__value">${stats.miembrosActivos}<span style="font-size:18px;color:var(--text-3);margin-left:4px;">/${stats.miembrosTotal}</span></div>
             <div class="kpi-card__sub">${stats.miembrosTotal > 0 ? `<strong>${Math.round(stats.miembrosActivos/stats.miembrosTotal*100)}%</strong> activos` : 'Sin miembros aún'}</div>
           </div>
-          <div class="kpi-card" style="--c1:#B3542A;--c2:#D5A13D;">
+          <div class="kpi-card" style="--c1:#6B1526;--c2:#D5A13D;">
             <div class="kpi-card__label">Ingresos estimados/mes</div>
             <div class="kpi-card__value">$${ingresoMes.toLocaleString('es-MX')}</div>
             <div class="kpi-card__sub">MXN · basado en miembros activos</div>
@@ -1419,7 +1419,7 @@ const Pages={
                 }
                 return arr.map(m => {
                   const planLabel = m.plan === 'anual' || m.plan === 'Anual' ? 'Anual' : 'Mensual';
-                  const c1 = planLabel === 'Anual' ? '#B3542A' : '#3B82F6';
+                  const c1 = planLabel === 'Anual' ? '#6B1526' : '#3B82F6';
                   const activo = m.activo !== false;
                   return `
                     <div class="mini-row" style="--c1:${c1};">
@@ -1479,7 +1479,7 @@ const Pages={
                   return `<div style="padding:24px;text-align:center;color:var(--text-3);font-size:13px;">${ready ? 'Sin cursos publicados' : 'Cargando…'}</div>`;
                 }
                 return arr.map(c => `
-                  <div class="mini-row" style="--c1:#B3542A;">
+                  <div class="mini-row" style="--c1:#6B1526;">
                     <div class="mini-row__dot"><svg class="ic"><use href="#i-book"/></svg></div>
                     <div class="mini-row__body">
                       <div class="mini-row__title">${(c.titulo || 'Sin título').slice(0,55)}${(c.titulo||'').length>55?'…':''}</div>
@@ -1504,8 +1504,8 @@ const Pages={
                   return `<div style="padding:24px;text-align:center;color:var(--text-3);font-size:13px;">${ready ? 'Sin noticias del cron' : 'Cargando…'}</div>`;
                 }
                 return arr.map(n => {
-                  const colorMap = {'cocina':'#EF4444','reposteria':'#B3542A','inocuidad':'#22C55E','negocio':'#3B82F6','bebidas':'#14B8A6'};
-                  const c = colorMap[n.categoria] || colorMap[n.cat] || '#B3542A';
+                  const colorMap = {'cocina':'#EF4444','reposteria':'#6B1526','inocuidad':'#22C55E','negocio':'#3B82F6','bebidas':'#14B8A6'};
+                  const c = colorMap[n.categoria] || colorMap[n.cat] || '#6B1526';
                   const titulo = n.titulo || 'Sin título';
                   const f = n.fechaPublicacion?.toDate ? n.fechaPublicacion.toDate() : (n.fechaPublicacion ? new Date(n.fechaPublicacion) : null);
                   let fechaStr = '—';
@@ -1559,7 +1559,7 @@ const Pages={
 
     // Presets por tipo (color + icono · idénticos al panel VIP)
     const TIPOS = {
-      clase:       { label: 'Clase en vivo', icono: 'i-broadcast', color: '#B3542A' },
+      clase:       { label: 'Clase en vivo', icono: 'i-broadcast', color: '#6B1526' },
       certificado: { label: 'Certificado',   icono: 'i-certificate', color: '#E5C171' },
       logro:       { label: 'Logro / XP',    icono: 'i-trophy', color: '#FBBF24' },
       sistema:     { label: 'Sistema',       icono: 'i-bell', color: '#60A5FA' },
@@ -1576,7 +1576,7 @@ const Pages={
 
         <!-- KPIs rápidos -->
         <div class="kpi-grid">
-          <div class="kpi-card" style="--c1:#B3542A;--c2:#D5A13D;">
+          <div class="kpi-card" style="--c1:#6B1526;--c2:#D5A13D;">
             <div class="kpi-card__label">Total publicadas</div>
             <div class="kpi-card__value">${notifs.length}</div>
             <div class="kpi-card__sub">Últimas 50</div>
@@ -1669,7 +1669,7 @@ const Pages={
                 ">
                   <div id="notif-preview-icon" style="
                     width:34px;height:34px;border-radius:9px;
-                    background:color-mix(in srgb,#B3542A 16%,transparent);color:#B3542A;
+                    background:color-mix(in srgb,#6B1526 16%,transparent);color:#6B1526;
                     display:flex;align-items:center;justify-content:center;flex-shrink:0;
                   "><svg class="ic" style="width:17px;height:17px;"><use href="#i-broadcast"/></svg></div>
                   <div style="flex:1;min-width:0;">
@@ -2198,7 +2198,7 @@ const Pages={
     const totalHoras = cursos.reduce((s, c) => s + (c.horas || c.sesiones?.length || 0), 0);
 
     wrap.innerHTML = `
-      <div class="kpi-card" style="--c1:#B3542A;--c2:#D5A13D;">
+      <div class="kpi-card" style="--c1:#6B1526;--c2:#D5A13D;">
         <div class="kpi-card__label">Total catálogo</div>
         <div class="kpi-card__value">${cursos.length}</div>
         <div class="kpi-card__sub">${ready ? 'En Firestore' : 'Cargando…'}</div>
@@ -2335,12 +2335,12 @@ const Pages={
     const activo = c.activo !== false && c.disponible !== false;
     const area = c.area || 'Sin área';
     const areaColors = {
-      'Repostería':'#B3542A', 'Panadería':'#D5A13D', 'Cocina mexicana':'#EF4444',
+      'Repostería':'#6B1526', 'Panadería':'#D5A13D', 'Cocina mexicana':'#EF4444',
       'Cocina internacional':'#F97316', 'Alta cocina':'#8B5CF6', 'Control de costos':'#3B82F6',
       'Catering y eventos':'#A855F7', 'Inocuidad y NOM-251':'#22C55E', 'Barismo y bebidas':'#14B8A6',
       'Otro':'#EC4899'
     };
-    const areaColor = areaColors[area] || '#B3542A';
+    const areaColor = areaColors[area] || '#6B1526';
     const tituloEsc = (c.titulo || 'Sin título').replace(/"/g,'&quot;');
 
     return `
@@ -2390,12 +2390,12 @@ const Pages={
     const activo = c.activo !== false && c.disponible !== false;
     const area = c.area || 'Sin área';
     const areaColors = {
-      'Repostería':'#B3542A', 'Panadería':'#D5A13D', 'Cocina mexicana':'#EF4444',
+      'Repostería':'#6B1526', 'Panadería':'#D5A13D', 'Cocina mexicana':'#EF4444',
       'Cocina internacional':'#F97316', 'Alta cocina':'#8B5CF6', 'Control de costos':'#3B82F6',
       'Catering y eventos':'#A855F7', 'Inocuidad y NOM-251':'#22C55E', 'Barismo y bebidas':'#14B8A6',
       'Otro':'#EC4899'
     };
-    const areaColor = areaColors[area] || '#B3542A';
+    const areaColor = areaColors[area] || '#6B1526';
     const tituloEsc = (c.titulo || 'Sin título').replace(/"/g,'&quot;');
 
     return `
@@ -3190,7 +3190,7 @@ const Pages={
         <div class="kpi-card__value">${pasados}</div>
         <div class="kpi-card__sub">Total histórico</div>
       </div>
-      <div class="kpi-card" style="--c1:#B3542A;--c2:#D5A13D;">
+      <div class="kpi-card" style="--c1:#6B1526;--c2:#D5A13D;">
         <div class="kpi-card__label">Total programadas</div>
         <div class="kpi-card__value">${webs.length}</div>
         <div class="kpi-card__sub">${ready ? 'En Firestore' : 'Cargando…'}</div>
@@ -3702,7 +3702,7 @@ const Pages={
     }
 
     const areaColors = {
-      'Repostería':'#B3542A', 'Panadería':'#D5A13D', 'Cocina mexicana':'#EF4444',
+      'Repostería':'#6B1526', 'Panadería':'#D5A13D', 'Cocina mexicana':'#EF4444',
       'Cocina internacional':'#F97316', 'Alta cocina':'#8B5CF6', 'Control de costos':'#3B82F6',
       'Catering y eventos':'#A855F7', 'Inocuidad y NOM-251':'#22C55E', 'Barismo y bebidas':'#14B8A6',
       'Otro':'#EC4899'
@@ -3976,7 +3976,7 @@ const Pages={
         const fecha = c.emitido?.toDate ? c.emitido.toDate() : (c.emitido ? new Date(c.emitido) : null);
         const fechaTxt = fecha ? fecha.toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'}) : '—';
         return `
-        <div class="adm-row" style="--c1:#B3542A;">
+        <div class="adm-row" style="--c1:#6B1526;">
           <div class="adm-row__thumb"><svg class="ic"><use href="#i-certificate"/></svg></div>
           <div class="adm-row__body">
             <div class="adm-row__title">${c.nombre||'—'} · ${c.curso||'—'}</div>
@@ -4091,7 +4091,7 @@ const Pages={
         <div class="curso-pills">
           <button class="curso-pill" data-mb-plan="todos" data-active="1">Todos los planes</button>
           <button class="curso-pill" data-mb-plan="mensual"><span class="curso-pill__dot" style="background:#3B82F6;"></span>Mensual</button>
-          <button class="curso-pill" data-mb-plan="anual"><span class="curso-pill__dot" style="background:#B3542A;"></span>Anual</button>
+          <button class="curso-pill" data-mb-plan="anual"><span class="curso-pill__dot" style="background:#6B1526;"></span>Anual</button>
           <button class="curso-pill" data-mb-plan="regalo"><span class="curso-pill__dot" style="background:#A855F7;"></span>Regalo</button>
           <button class="curso-pill" data-mb-plan="sin-pagar"><span class="curso-pill__dot" style="background:#9CA3AF;"></span>Sin pagar</button>
         </div>
@@ -4226,7 +4226,7 @@ const Pages={
         <div class="kpi-card__value">${mensuales}</div>
         <div class="kpi-card__sub">$${(mensuales * _pm).toLocaleString('es-MX')} MXN/mes</div>
       </div>
-      <div class="kpi-card" style="--c1:#B3542A;--c2:#D5A13D;">
+      <div class="kpi-card" style="--c1:#6B1526;--c2:#D5A13D;">
         <div class="kpi-card__label">Plan Anual</div>
         <div class="kpi-card__value">${anuales}</div>
         <div class="kpi-card__sub">${anuales > 0 ? '$' + (anuales * _pa).toLocaleString('es-MX') + ' MXN al año' : 'Sin anuales'}</div>
@@ -4361,7 +4361,7 @@ const Pages={
 
     const planLabels = {
       mensual: { label:'MENSUAL', color:'#3B82F6' },
-      anual:   { label:'ANUAL',   color:'#B3542A' },
+      anual:   { label:'ANUAL',   color:'#6B1526' },
       regalo:  { label:'REGALO',  color:'#A855F7' },
       admin:   { label:'ADMIN',   color:'#FBBF24' }
     };
@@ -4573,7 +4573,7 @@ const Pages={
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="14" height="14" style="color:var(--text-3);"><polyline points="9 18 15 12 9 6"/></svg>
           </button>
 
-          <button class="mb-action-btn" data-act="activar-anual" style="--c:#B3542A;">
+          <button class="mb-action-btn" data-act="activar-anual" style="--c:#6B1526;">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
             <div class="mb-action-btn__body">
               <div class="mb-action-btn__title">Activar Plan Anual</div>
@@ -4701,7 +4701,7 @@ const Pages={
     const planLabel = plan === 'mensual' ? 'Plan Mensual' : 'Plan Anual';
     // MODIFICADO: precio en vivo desde config/club
     const precio = (plan === 'mensual' ? fmtPrecioMXN(window.__preciosClub.mes) : fmtPrecioMXN(window.__preciosClub.ano)) + ' MXN';
-    const color = plan === 'mensual' ? '#3B82F6' : '#B3542A';
+    const color = plan === 'mensual' ? '#3B82F6' : '#6B1526';
     const nombre = (m.nombre || m.email || 'Este miembro').replace(/</g,'&lt;');
     const expiraDate = new Date(Date.now() + days * 86400 * 1000);
     const expiraFmt = expiraDate.toLocaleDateString('es-MX', { day:'numeric', month:'long', year:'numeric' });
@@ -5033,11 +5033,11 @@ const Pages={
             const fp = n.fechaPublicacion?.toDate ? n.fechaPublicacion.toDate() : (n.fechaPublicacion ? new Date(n.fechaPublicacion) : null);
             const fechaTxt = fp ? fp.toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'}) : '—';
             return `
-            <div class="news-card" style="--c1:${n.color||'#B3542A'};">
+            <div class="news-card" style="--c1:${n.color||'#6B1526'};">
               <div class="news-card__cover"><svg class="ic"><use href="#i-news"/></svg></div>
               <div class="news-card__body">
                 <div class="news-card__head">
-                  <span class="tag" style="color:${n.color||'#B3542A'};border-color:${n.color||'#B3542A'}40;background:${n.color||'#B3542A'}14;">${n.categoriaNombre||n.categoria||''}</span>
+                  <span class="tag" style="color:${n.color||'#6B1526'};border-color:${n.color||'#6B1526'}40;background:${n.color||'#6B1526'}14;">${n.categoriaNombre||n.categoria||''}</span>
                   <span class="news-card__date">${fechaTxt}</span>
                 </div>
                 <div class="news-card__title">${n.titulo||''}</div>
@@ -5134,7 +5134,7 @@ const Pages={
             <div id="adm-list" class="adm-list" style="margin-bottom:14px;">
               ${c.admins.map((e,i)=>`
                 <div class="adm-row" style="padding:11px 14px;">
-                  <div class="adm-row__thumb" style="--c1:#B3542A;"><svg class="ic"><use href="#i-shield-check"/></svg></div>
+                  <div class="adm-row__thumb" style="--c1:#6B1526;"><svg class="ic"><use href="#i-shield-check"/></svg></div>
                   <div class="adm-row__body"><div class="adm-row__title" style="font-size:13px;">${e}</div></div>
                   ${e==='teccapitalweb@gmail.com'?'<span class="tag tag--primary">Superadmin</span>':`<button class="icon-action icon-action--danger" data-rm-admin="${i}"><svg class="ic"><use href="#i-trash"/></svg></button>`}
                 </div>
@@ -5369,7 +5369,7 @@ function _admAutor(){
     uid: a.uid || 'admin',
     nombre: 'DulceLab Food',
     iniciales: 'IM',
-    color: '#B3542A',
+    color: '#6B1526',
     esAdmin: true
   };
 }
@@ -5435,7 +5435,7 @@ function foroAdminCargar(){
     if(!posts.length){ cont.innerHTML='<div class="empty-state">Aún no hay publicaciones en el foro.</div>'; return; }
     cont.innerHTML = posts.map(x=>`
       <div class="foro-admin-card" data-fpost="${x.id}">
-        <div class="foro-admin-card__av" style="background:${x.color||'#B3542A'};">${(x.iniciales||'?')}</div>
+        <div class="foro-admin-card__av" style="background:${x.color||'#6B1526'};">${(x.iniciales||'?')}</div>
         <div class="foro-admin-card__main">
           <div class="foro-admin-card__head">
             <span class="foro-admin-card__name">${(x.nombre||'Miembro')}</span>
@@ -5534,7 +5534,7 @@ function dirAdminCargar(){
     cont.innerHTML = cards.map(x=>{
       const ini=(x.nombre||'?').trim().slice(0,2).toUpperCase();
       const foto = x.foto ? `<img class="dir-adm-card__av" src="${x.foto}" alt="">`
-        : `<div class="dir-adm-card__av dir-adm-card__av--ini" style="background:${x.color||'#B3542A'};">${ini}</div>`;
+        : `<div class="dir-adm-card__av dir-adm-card__av--ini" style="background:${x.color||'#6B1526'};">${ini}</div>`;
       const contactos=[];
       if(x.whatsapp) contactos.push('WhatsApp');
       if(x.email) contactos.push('Correo');
