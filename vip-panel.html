@@ -103,8 +103,8 @@ body{
 .herramientas-bloqueadas .mobile-drawer__item[data-section="foro"]::after,
 .herramientas-bloqueadas .mobile-drawer__item[data-section="directorio"]::after,
 .herramientas-bloqueadas .mobile-drawer__item[data-section="canal"]::after{
-  content:"";width:12px;height:12px;margin-left:auto;flex:none;opacity:.6;
-  background-color:currentColor;
+  content:"";width:11px;height:11px;margin-left:auto;flex:none;opacity:.5;
+  background-color:var(--text-3);
   -webkit-mask:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>') no-repeat center/contain;
   mask:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>') no-repeat center/contain;
 }
@@ -9948,13 +9948,6 @@ function initNav(){
     if(!DULCELAB_CONTACT.whatsapp){ Toast.info('Aún no está configurado','Pídele al equipo que ponga el WhatsApp en Admin → Configuración'); return; }
     window.open('https://wa.me/'+DULCELAB_CONTACT.whatsapp,'_blank');
   });
-  if(typeof toolEsVIP==='function'&&!toolEsVIP()){
-    document.getElementById('widget-disc')?.style.setProperty('display','none');
-    document.getElementById('widget-next')?.style.setProperty('display','none');
-    document.getElementById('widget-wa')?.style.setProperty('display','none');
-    document.getElementById('widget-activity')?.style.setProperty('display','none');
-    document.body.classList.add('herramientas-bloqueadas');
-  }
   document.addEventListener('click',function(e){ if(e.target.closest && e.target.closest('.bn-viplock-btn')){ window.__showPaywallModal && window.__showPaywallModal({title:'Herramientas Pro · solo VIP',sub:'Hazte miembro de DulceLab Food para usar las calculadoras y descargar tus reportes en PDF.'}); } });
   document.getElementById('btn-disc-wa')?.addEventListener('click',(e)=>{
     e.stopPropagation();
@@ -10240,6 +10233,16 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 
     // 6. Aplicar candados a contenido bloqueado (re-aplica al cambiar de sección)
     setTimeout(applyLocksToCurrentView, 100);
+
+    // 6b. Sidebar (Herramientas Pro / Comunidad) y widgets del panel derecho ·
+    // solo se muestran completos para VIP. Se re-ejecuta cada vez que cambia
+    // el estado real, así que ya no se queda mal pegado si el usuario SÍ es VIP.
+    const esVipReal = typeof toolEsVIP==='function' ? toolEsVIP() : (S.modo === 'vip');
+    document.body.classList.toggle('herramientas-bloqueadas', !esVipReal);
+    ['widget-next','widget-wa','widget-disc','widget-activity'].forEach(id=>{
+      const el = document.getElementById(id);
+      if (el) el.style.display = esVipReal ? '' : 'none';
+    });
 
     // 7. ⚡ Re-cargar el widget "Próxima clase en vivo" AHORA que Firebase auth está listo
     // Antes corría en init() pero las reglas Firestore bloqueaban sin auth.
