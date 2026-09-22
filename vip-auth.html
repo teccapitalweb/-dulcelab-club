@@ -147,8 +147,12 @@ body.modo-dia .logo-day{display:block}
 .hero-marquee .track{display:flex;gap:12px;width:max-content;animation:dulcelabSlide 60s linear infinite}
 .hero-marquee:hover .track{animation-play-state:paused}
 @keyframes dulcelabSlide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-.hero-marquee img{width:94px;height:132px;object-fit:cover;border-radius:12px;flex:none;
-  border:1px solid var(--line);box-shadow:0 10px 26px rgba(0,0,0,.45)}
+.hero-marquee .track{align-items:flex-start}
+.hero-marquee img{width:150px;height:auto;display:block;border-radius:10px;flex:none;
+  border:1px solid var(--line);box-shadow:0 6px 18px rgba(0,0,0,.25)}
+@media(max-width:900px){.hero-marquee img{width:120px}}
+/* Escritorio: la tarjeta de acceso queda centrada en pantalla aunque el hero sea largo */
+@media(min-width:901px){.authside{position:sticky;top:0;align-self:start;min-height:100vh}}
 .hero-hook{margin:18px 0 10px;font-size:.95rem;font-weight:700;color:var(--text)}
 .hero-hook b{color:var(--primary-soft)}
 .hero-benefits{list-style:none;display:flex;flex-direction:column;gap:9px;margin:0 0 6px;padding:0}
