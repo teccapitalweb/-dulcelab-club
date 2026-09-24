@@ -7337,6 +7337,7 @@ const Sections = (function(){
         const res = await _otorgarXP(r.id, r.puntos);
         if(!res.yaCompletado) _avisarResultadoXP(r, res, r.titulo);
         _celebrarLogros(res.nuevosLogros);
+        setTimeout(()=>Modal.close('reto-'+r.id), 1300);
       } else {
         fb.innerHTML = '<span style="color:var(--danger);font-weight:600;">Todavía no es el orden correcto, intenta de nuevo.</span>';
       }
@@ -7399,6 +7400,7 @@ const Sections = (function(){
           const res = await _otorgarXP(r.id, r.puntos);
           if(!res.yaCompletado) _avisarResultadoXP(r, res, '¡Encontraste las '+r.hotspots.length+' fallas!');
           _celebrarLogros(res.nuevosLogros);
+          setTimeout(()=>Modal.close('reto-'+r.id), 1300);
         }
       });
     });
@@ -7439,6 +7441,7 @@ const Sections = (function(){
           const res = await _otorgarXP(r.id, r.puntos);
           if(!res.yaCompletado) _avisarResultadoXP(r, res, r.titulo);
           _celebrarLogros(res.nuevosLogros);
+          setTimeout(()=>Modal.close('reto-'+r.id), 1300);
         } else {
           fb.innerHTML = '<span style="color:var(--danger);font-weight:600;">No es esa, intenta con otra.</span>';
         }
@@ -7482,6 +7485,7 @@ const Sections = (function(){
           const res = await _otorgarXP(r.id, r.puntos);
           if(!res.yaCompletado) _avisarResultadoXP(r, res, r.titulo);
           _celebrarLogros(res.nuevosLogros);
+          setTimeout(()=>Modal.close('reto-'+r.id), 1300);
         } else {
           fb.innerHTML = '<span style="color:var(--danger);font-weight:600;">Esa no era · '+r.explicacion+'</span>';
         }
@@ -11017,6 +11021,9 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     ['widget-next','widget-wa','widget-disc','widget-activity'].forEach(id=>{
       const el = document.getElementById(id);
       if (el) el.style.display = esVipReal ? '' : 'none';
+    });
+    document.querySelectorAll('.nav-item[data-section="retos"], .mobile-drawer__item[data-section="retos"]').forEach(el=>{
+      el.style.display = esVipReal ? '' : 'none';
     });
 
     // 7. ⚡ Re-cargar el widget "Próxima clase en vivo" AHORA que Firebase auth está listo
