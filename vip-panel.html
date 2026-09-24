@@ -3137,6 +3137,7 @@ if (window.__isDemoMode) {
 
     // Cargar noticias reales del home (Firestore noticias_auto)
     setTimeout(()=>{ if(typeof window.__cargarDescubreHoy==='function') window.__cargarDescubreHoy(); }, 300);
+    setTimeout(()=>{ if(typeof window.__cargarProgreso==='function') window.__cargarProgreso(); }, 300);
     // Llenar widgets de actividad con datos reales
     setTimeout(()=>{ if(typeof window.__actualizarWidgetsActividad==='function') window.__actualizarWidgetsActividad(); }, 400);
 
@@ -3452,6 +3453,7 @@ window.__setDisplayName = async (nombre) => {
       <a class="nav-item" data-section="pdfs"><svg class="ic"><use href="#i-news"/></svg>PDFs y material</a>
       <a class="nav-item" data-section="logros"><svg class="ic"><use href="#i-trophy"/></svg>Mis logros</a>
       <a class="nav-item" data-section="certificados"><svg class="ic"><use href="#i-certificate"/></svg>Certificados</a>
+      <a class="nav-item" data-section="retos"><svg class="ic"><use href="#i-bolt"/></svg>Retos</a>
     </div>
 
     <div class="nav-section" data-tour="tools">
@@ -3640,6 +3642,7 @@ window.__setDisplayName = async (nombre) => {
         <a class="mobile-drawer__item" data-section="pdfs"><svg class="ic"><use href="#i-news"/></svg>PDFs y material</a>
         <a class="mobile-drawer__item" data-section="logros"><svg class="ic"><use href="#i-trophy"/></svg>Mis logros</a>
         <a class="mobile-drawer__item" data-section="certificados"><svg class="ic"><use href="#i-certificate"/></svg>Certificados</a>
+        <a class="mobile-drawer__item" data-section="retos"><svg class="ic"><use href="#i-bolt"/></svg>Retos</a>
       </div>
 
       <div class="mobile-drawer__section" data-tour="tools">
@@ -4423,7 +4426,7 @@ const ToolPorcion = (function(){
    ═══════════════════════════════════════════════════════════════════ */
 const SECCIONES_VALIDAS_PANEL = [
   'inicio','cursos','certificados','logros','webinars','pdfs','foro',
-  'directorio','canal','perfil','suscripcion','herramientas',
+  'directorio','canal','perfil','suscripcion','herramientas','retos',
   'tool-costeo','tool-conversor','tool-merma','tool-catering','tool-horno',
   'tool-porcion'
 ];
@@ -6961,7 +6964,407 @@ const Sections = (function(){
     });
   }
 
+  // ═══════════ PROGRESO REAL (XP, racha, retos) · Firestore progreso/{uid} ═══════════
+  // Antes "Mis logros" era 100% decorativo (usuario.xp quedaba fijo en 0). Esto
+  // lo hace real: se guarda por usuario en su propio documento, que solo él
+  // puede leer/escribir (colección aparte de 'miembros' a propósito, para no
+  // tocar nada relacionado con el estado de pago/membresía).
+  let _progreso = { xp:0, racha:0, ultimaActividad:null, retosCompletados:[], logrosDesbloqueados:[] };
+  let _progresoListo = false;
+
+  async function _cargarProgreso(){
+    try{
+      const fs = window.__fs; const db = window.__db;
+      const uid = window.UserState?.uid;
+      if(!fs || !db || !uid) return;
+      const ref = fs.doc(db,'progreso',uid);
+      const snap = await fs.getDoc(ref);
+      if(snap.exists()){
+        _progreso = Object.assign({xp:0,racha:0,ultimaActividad:null,retosCompletados:[],logrosDesbloqueados:[]}, snap.data());
+      } else {
+        await fs.setDoc(ref, _progreso);
+      }
+    } catch(e){ console.warn('[progreso] no se pudo cargar (revisa reglas de Firestore para progreso/{uid}):', e.message); }
+    _progresoListo = true;
+  }
+  window.__cargarProgreso = _cargarProgreso;
+  async function _guardarProgreso(){
+    try{
+      const fs = window.__fs; const db = window.__db;
+      const uid = window.UserState?.uid;
+      if(!fs || !db || !uid) return;
+      await fs.setDoc(fs.doc(db,'progreso',uid), _progreso);
+    } catch(e){ console.warn('[progreso] no se pudo guardar:', e.message); }
+  }
+
+  // Medallas nuevas, ligadas a retos (las 24 de arriba siguen ligadas a cursos,
+  // eso se conecta cuando haya seguimiento real de avance por curso)
+  const LOGROS_RETOS = [
+    {id:'rt1', cat:'Retos', nombre:'Primer reto', desc:'Completaste tu primer reto', xp:0, criterio:'Completa 1 reto'},
+    {id:'rt2', cat:'Retos', nombre:'Retador', desc:'Completaste 5 retos', xp:0, criterio:'Completa 5 retos'}
+  ];
+
+  async function _otorgarXP(retoId, puntos){
+    if(_progreso.retosCompletados.includes(retoId)) return { yaCompletado:true, nuevosLogros:[] };
+    _progreso.xp += puntos;
+    _progreso.retosCompletados.push(retoId);
+    const hoy = new Date().toISOString().slice(0,10);
+    if(_progreso.ultimaActividad !== hoy){
+      const ayer = new Date(Date.now()-86400000).toISOString().slice(0,10);
+      _progreso.racha = (_progreso.ultimaActividad === ayer) ? _progreso.racha + 1 : 1;
+      _progreso.ultimaActividad = hoy;
+    }
+    const nuevosLogros = [];
+    const marcar = (id) => { if(!_progreso.logrosDesbloqueados.includes(id)){ _progreso.logrosDesbloqueados.push(id); nuevosLogros.push(id); } };
+    if(_progreso.retosCompletados.length >= 1) marcar('rt1');
+    if(_progreso.retosCompletados.length >= 5) marcar('rt2');
+    if(_progreso.racha >= 7) marcar('l21');
+    if(_progreso.racha >= 30) marcar('l22');
+    await _guardarProgreso();
+    return { yaCompletado:false, nuevosLogros };
+  }
+
+  // ═══════════ BIBLIOTECA DE RETOS ═══════════
+  // tipo 'secuencia'  · ordenar pasos arrastrando (sin fotos)
+  // tipo 'error'      · encontrar fallas en una ilustración (sin fotos, dibujada)
+  // tipo 'imagen'     · elegir la foto correcta entre 3 (necesita fotos reales)
+  // tipo 'antesdespues' · elegir cuál se ve más profesional entre 2 (necesita fotos reales)
+  const RETOS_LIBRARY = [
+    { id:'sec1', tipo:'secuencia', categoria:'Panadería', titulo:'Ordena el proceso de una masa madre', dificultad:'Intermedio', tiempo:'5 min', puntos:40,
+      pasos:['Alimentar el cultivo con harina y agua','Mezclar la harina, el agua y el cultivo','Reposar y dejar fermentar','Hacer los dobleces a la masa','Formar y boletar','Hornear'] },
+    { id:'sec2', tipo:'secuencia', categoria:'Cocina', titulo:'Ordena cómo se prepara una salsa bechamel', dificultad:'Básico', tiempo:'3 min', puntos:30,
+      pasos:['Derretir la mantequilla','Agregar la harina y cocinar el roux','Incorporar la leche poco a poco','Sazonar y dejar espesar'] },
+    { id:'sec3', tipo:'secuencia', categoria:'Cocina', titulo:'Ordena el montaje correcto de un plato', dificultad:'Básico', tiempo:'3 min', puntos:30,
+      pasos:['Elegir el plato adecuado','Colocar la base o guarnición','Colocar la proteína principal','Agregar la salsa','Decorar con el toque final'] },
+    { id:'sec4', tipo:'secuencia', categoria:'Panadería', titulo:'Ordena el proceso de fermentación del pan', dificultad:'Intermedio', tiempo:'5 min', puntos:40,
+      pasos:['Mezclar los ingredientes','Amasar','Primer levado','Dividir y boletar','Segundo levado','Hornear'] },
+    { id:'sec5', tipo:'secuencia', categoria:'Producción', titulo:'Ordena el control de inventario correcto (FIFO)', dificultad:'Básico', tiempo:'3 min', puntos:30,
+      pasos:['Recibir la mercancía','Etiquetar con fecha de recepción','Colocar lo nuevo hasta atrás','Sacar primero lo más antiguo','Registrar la salida'] },
+
+    { id:'err1', tipo:'error', categoria:'Inocuidad', titulo:'Encuentra 4 errores de inocuidad en esta cocina', dificultad:'Intermedio', tiempo:'4 min', puntos:50,
+      hotspots:[
+        {x:22,y:62,r:9,label:'Pollo crudo junto a verduras listas (contaminación cruzada)'},
+        {x:68,y:22,r:8,label:'Cabello suelto sin cofia ni recogido'},
+        {x:80,y:70,r:8,label:'Termómetro tirado, sin usarse para verificar temperatura'},
+        {x:38,y:85,r:8,label:'Trapo/jerga sucia sobre la superficie de preparación'}
+      ] },
+
+    { id:'img1', tipo:'imagen', categoria:'Panadería', titulo:'¿Cuál masa está en el punto correcto de fermentación?', dificultad:'Intermedio', tiempo:'2 min', puntos:35,
+      opciones:[
+        {label:'Masa sin fermentar (recién mezclada, sin volumen)', correcta:false, imagen:null},
+        {label:'Masa en su punto (duplicó volumen, superficie tersa)', correcta:true, imagen:null},
+        {label:'Masa sobrefermentada (colapsada, huele muy ácido)', correcta:false, imagen:null}
+      ] },
+    { id:'img2', tipo:'imagen', categoria:'Cocina', titulo:'¿Cuál corte corresponde a un brunoise correcto?', dificultad:'Básico', tiempo:'2 min', puntos:30,
+      opciones:[
+        {label:'Cubos parejos de 2-3mm', correcta:true, imagen:null},
+        {label:'Trozos irregulares y de distinto tamaño', correcta:false, imagen:null},
+        {label:'Rodajas delgadas, no en cubo', correcta:false, imagen:null}
+      ] },
+    { id:'img3', tipo:'imagen', categoria:'Cocina', titulo:'¿Cuál salsa tiene la consistencia correcta para "nappe"?', dificultad:'Intermedio', tiempo:'2 min', puntos:35,
+      opciones:[
+        {label:'Muy líquida, escurre de inmediato', correcta:false, imagen:null},
+        {label:'Cubre el dorso de la cuchara y deja rastro al pasar el dedo', correcta:true, imagen:null},
+        {label:'Muy espesa, casi como puré', correcta:false, imagen:null}
+      ] },
+    { id:'img4', tipo:'imagen', categoria:'Panadería', titulo:'¿Cuál pan de masa madre está bien horneado?', dificultad:'Básico', tiempo:'2 min', puntos:30,
+      opciones:[
+        {label:'Pálido, corteza sin color', correcta:false, imagen:null},
+        {label:'Corteza dorada pareja, buena apertura', correcta:true, imagen:null},
+        {label:'Corteza oscura, quemada', correcta:false, imagen:null}
+      ] },
+    { id:'img5', tipo:'imagen', categoria:'Repostería', titulo:'¿Cuál merengue está en el punto de pico firme correcto?', dificultad:'Intermedio', tiempo:'2 min', puntos:35,
+      opciones:[
+        {label:'Blando, no sostiene forma', correcta:false, imagen:null},
+        {label:'Picos firmes, brillante y liso', correcta:true, imagen:null},
+        {label:'Sobre-batido, granuloso y opaco', correcta:false, imagen:null}
+      ] },
+    { id:'img6', tipo:'imagen', categoria:'Cocina', titulo:'¿Cuál emplatado sigue mejor la regla de los tercios?', dificultad:'Básico', tiempo:'2 min', puntos:30,
+      opciones:[
+        {label:'Todo centrado y amontonado', correcta:false, imagen:null},
+        {label:'Elementos distribuidos con espacio negativo', correcta:true, imagen:null},
+        {label:'Todo pegado a una sola orilla del plato', correcta:false, imagen:null}
+      ] },
+
+    { id:'ad1', tipo:'antesdespues', categoria:'Cocina', titulo:'¿Cuál emplatado se ve más vendible?', dificultad:'Básico', tiempo:'2 min', puntos:30,
+      explicacion:'El plato limpio, con espacio y altura se percibe de mayor valor que uno amontonado y con bordes sucios.',
+      opciones:[ {label:'Opción A · limpio, con altura y espacio', correcta:true, imagen:null}, {label:'Opción B · amontonado, bordes sucios', correcta:false, imagen:null} ] },
+    { id:'ad2', tipo:'antesdespues', categoria:'Repostería', titulo:'¿Cuál pastel decorado se ve más profesional?', dificultad:'Básico', tiempo:'2 min', puntos:30,
+      explicacion:'Un acabado parejo y proporciones cuidadas transmiten más calidad que un decorado apresurado.',
+      opciones:[ {label:'Opción A · acabado parejo y cuidado', correcta:true, imagen:null}, {label:'Opción B · decorado apresurado, desigual', correcta:false, imagen:null} ] },
+    { id:'ad3', tipo:'antesdespues', categoria:'Catering', titulo:'¿Cuál montaje de mesa se ve más listo para un evento?', dificultad:'Básico', tiempo:'2 min', puntos:30,
+      explicacion:'El orden y la simetría comunican profesionalismo antes de que el cliente pruebe la comida.',
+      opciones:[ {label:'Opción A · montaje ordenado y simétrico', correcta:true, imagen:null}, {label:'Opción B · montaje a medio terminar', correcta:false, imagen:null} ] },
+    { id:'ad4', tipo:'antesdespues', categoria:'Panadería', titulo:'¿Cuál pieza de pan tiene mejor formado?', dificultad:'Básico', tiempo:'2 min', puntos:30,
+      explicacion:'Un formado parejo hornea de forma uniforme y se ve mejor en vitrina.',
+      opciones:[ {label:'Opción A · formado parejo y tenso', correcta:true, imagen:null}, {label:'Opción B · formado deforme, sin tensión', correcta:false, imagen:null} ] },
+    { id:'ad5', tipo:'antesdespues', categoria:'Producción', titulo:'¿Cuál estación de trabajo está lista para servicio?', dificultad:'Básico', tiempo:'2 min', puntos:30,
+      explicacion:'Un mise en place ordenado reduce errores y tiempos muertos durante el servicio.',
+      opciones:[ {label:'Opción A · mise en place ordenado', correcta:true, imagen:null}, {label:'Opción B · estación desordenada', correcta:false, imagen:null} ] },
+    { id:'ad6', tipo:'antesdespues', categoria:'Cocina', titulo:'¿Cuál presentación de bebida se ve más cuidada?', dificultad:'Básico', tiempo:'2 min', puntos:30,
+      explicacion:'Detalles como el hielo, la guarnición y el cristal limpio elevan la percepción de valor.',
+      opciones:[ {label:'Opción A · cristal limpio, guarnición cuidada', correcta:true, imagen:null}, {label:'Opción B · descuidada, vaso sucio', correcta:false, imagen:null} ] }
+  ];
+
+  const RETO_CAT_META = {
+    'Repostería':{icon:'i-bn-whisk', color:'var(--primary)'},
+    'Panadería':{icon:'i-bn-rollingpin', color:'var(--warning)'},
+    'Cocina':{icon:'i-bn-toque', color:'var(--highlight)'},
+    'Inocuidad':{icon:'i-shield-check', color:'var(--success)'},
+    'Catering':{icon:'i-users', color:'var(--highlight)'},
+    'Producción':{icon:'i-gauge', color:'var(--primary)'}
+  };
+
+  function renderRetos(container){
+    if(!_progresoListo){
+      container.innerHTML = '<div class="fade-up"><div class="foro-empty">Cargando tu progreso…</div></div>';
+      _cargarProgreso().then(()=>renderRetos(container));
+      return;
+    }
+    const completados = _progreso.retosCompletados.length;
+    container.innerHTML = `
+      <div class="fade-up">
+        <div class="sec-hero">
+          <span class="sec-hero__eyebrow">Practica jugando</span>
+          <h1 class="sec-hero__title">Retos</h1>
+          <p class="sec-hero__sub">Pon a prueba lo que sabes de gastronomía. Cada reto completado suma puntos y cuenta para tu racha.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-bottom:26px;">
+          <div style="background:var(--surface);border:1px solid var(--border-2);border-radius:14px;padding:14px;"><div style="font-size:11px;color:var(--text-3);">Tu XP total</div><div style="font-size:22px;font-weight:700;color:var(--primary);">${_progreso.xp}</div></div>
+          <div style="background:var(--surface);border:1px solid var(--border-2);border-radius:14px;padding:14px;"><div style="font-size:11px;color:var(--text-3);">Racha</div><div style="font-size:22px;font-weight:700;">${_progreso.racha} <span style="font-size:12px;font-weight:500;color:var(--text-3);">días</span></div></div>
+          <div style="background:var(--surface);border:1px solid var(--border-2);border-radius:14px;padding:14px;"><div style="font-size:11px;color:var(--text-3);">Retos completados</div><div style="font-size:22px;font-weight:700;">${completados}<span style="font-size:12px;font-weight:500;color:var(--text-3);">/${RETOS_LIBRARY.length}</span></div></div>
+        </div>
+        <div class="discover-grid">
+          ${RETOS_LIBRARY.map(r => {
+            const meta = RETO_CAT_META[r.categoria] || {icon:'i-bolt', color:'var(--primary)'};
+            const hecho = _progreso.retosCompletados.includes(r.id);
+            return `
+            <div class="discover-card" style="--cat-color:${meta.color}" data-reto-id="${r.id}">
+              <div class="discover-card__cover"><svg class="ic"><use href="#${meta.icon}"/></svg>${hecho?'<span style="position:absolute;top:10px;right:10px;background:rgba(0,0,0,.55);color:#fff;border-radius:100px;padding:3px 9px;font-size:10px;font-weight:700;display:flex;align-items:center;gap:4px;"><svg class="ic" style="width:11px;height:11px;"><use href="#i-check-circle"/></svg>Hecho</span>':''}</div>
+              <div class="discover-card__body">
+                <div class="discover-card__tags">
+                  <span class="discover-card__cat">${r.categoria}</span>
+                  <span class="discover-card__tipo">${r.dificultad}</span>
+                </div>
+                <h3 class="discover-card__title">${r.titulo}</h3>
+                <p class="discover-card__resumen"><svg class="ic" style="width:11px;height:11px;vertical-align:-1px;"><use href="#i-clock"/></svg> ${r.tiempo} &nbsp;·&nbsp; <svg class="ic" style="width:11px;height:11px;vertical-align:-1px;color:var(--primary);"><use href="#i-bolt"/></svg> +${r.puntos} pts</p>
+                <button type="button" class="discover-card__more">${hecho?'Volver a intentar':'Iniciar reto'}<svg class="ic"><use href="#i-arrow-right"/></svg></button>
+              </div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
+    `;
+    container.querySelectorAll('[data-reto-id]').forEach(card => {
+      card.addEventListener('click', () => _abrirReto(card.dataset.retoId));
+    });
+  }
+
+  function _placeholderImg(label){
+    return `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;background:var(--surface-2);border:1px dashed var(--border-2);border-radius:10px;padding:10px;text-align:center;">
+      <svg class="ic" style="width:20px;height:20px;color:var(--text-3);"><use href="#i-image"/></svg>
+      <span style="font-size:10px;color:var(--text-3);line-height:1.4;">Falta foto:<br>${label}</span>
+    </div>`;
+  }
+
+  function _celebrarLogros(nuevosLogros){
+    if(!nuevosLogros.length) return;
+    const todos = [...LOGROS_RETOS, {id:'l21',nombre:'Constante'}, {id:'l22',nombre:'Imparable'}];
+    nuevosLogros.forEach(id => {
+      const l = todos.find(x=>x.id===id);
+      if(l) Toast.success('¡Medalla desbloqueada!', l.nombre);
+    });
+  }
+
+  function _abrirReto(retoId){
+    const r = RETOS_LIBRARY.find(x=>x.id===retoId);
+    if(!r) return;
+    if(r.tipo==='secuencia') return _retoSecuencia(r);
+    if(r.tipo==='error') return _retoError(r);
+    if(r.tipo==='imagen') return _retoImagen(r);
+    if(r.tipo==='antesdespues') return _retoAntesDespues(r);
+  }
+
+  // ─── Tipo: ordenar secuencia (arrastrar) ───
+  function _retoSecuencia(r){
+    const orden = r.pasos.map((texto,i)=>({texto,orig:i})).sort(()=>Math.random()-0.5);
+    const body = document.createElement('div');
+    body.innerHTML = `
+      <p style="font-size:12.5px;color:var(--text-2);margin-bottom:12px;">Arrastra los pasos para ponerlos en el orden correcto.</p>
+      <div id="reto-sec-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+      <div id="reto-sec-fb" style="margin-top:12px;font-size:12.5px;"></div>
+    `;
+    const list = body.querySelector('#reto-sec-list');
+    orden.forEach((p,i)=>{
+      const item = document.createElement('div');
+      item.draggable = true;
+      item.dataset.orig = p.orig;
+      item.style.cssText = 'background:var(--surface-2);border:1px solid var(--border-2);border-radius:10px;padding:10px 12px;cursor:grab;display:flex;align-items:center;gap:10px;font-size:12.5px;';
+      item.innerHTML = `<svg class="ic" style="width:14px;height:14px;color:var(--text-3);flex-shrink:0;"><use href="#i-menu"/></svg><span>${p.texto}</span>`;
+      item.addEventListener('dragstart', e => { e.dataTransfer.effectAllowed='move'; item.style.opacity='.4'; e.dataTransfer.setData('text/plain', String(i)); });
+      item.addEventListener('dragend', () => item.style.opacity='1');
+      item.addEventListener('dragover', e => e.preventDefault());
+      item.addEventListener('drop', e => {
+        e.preventDefault();
+        const from = Number(e.dataTransfer.getData('text/plain'));
+        const nodes = Array.from(list.children);
+        const to = nodes.indexOf(item);
+        if(from===to) return;
+        list.insertBefore(nodes[from], nodes[to+(from<to?1:0)] || null);
+      });
+      list.appendChild(item);
+    });
+    const footer = document.createElement('div');
+    footer.innerHTML = `
+      <button class="btn btn--ghost" id="reto-cerrar">Cerrar</button>
+      <button class="btn btn--accent" id="reto-check">Comprobar orden</button>
+    `;
+    Modal.open({ id:'reto-'+r.id, title:r.titulo, subtitle:r.categoria+' · +'+r.puntos+' pts', icon:'i-bolt', size:'md', body, footer });
+    footer.querySelector('#reto-cerrar').addEventListener('click', ()=>Modal.close('reto-'+r.id));
+    footer.querySelector('#reto-check').addEventListener('click', async ()=>{
+      const actual = Array.from(list.children).map(el=>Number(el.dataset.orig));
+      const correcto = actual.every((v,i)=>v===i);
+      const fb = body.querySelector('#reto-sec-fb');
+      if(correcto){
+        fb.innerHTML = '<span style="color:var(--success);font-weight:600;">¡Correcto! Orden perfecto.</span>';
+        const res = await _otorgarXP(r.id, r.puntos);
+        if(!res.yaCompletado) Toast.success('+'+r.puntos+' pts', r.titulo);
+        _celebrarLogros(res.nuevosLogros);
+      } else {
+        fb.innerHTML = '<span style="color:var(--danger);font-weight:600;">Todavía no es el orden correcto, intenta de nuevo.</span>';
+      }
+    });
+  }
+
+  // ─── Tipo: encontrar el error (ilustración con puntos clicables) ───
+  function _retoError(r){
+    const encontrados = new Set();
+    const body = document.createElement('div');
+    const puntosHtml = r.hotspots.map((h,i)=>`<circle class="reto-err-spot" data-i="${i}" cx="${h.x}" cy="${h.y}" r="${h.r}" fill="transparent" stroke="transparent" style="cursor:pointer;"/>`).join('');
+    body.innerHTML = `
+      <p style="font-size:12.5px;color:var(--text-2);margin-bottom:10px;">Toca las ${r.hotspots.length} zonas donde ves una falla de inocuidad.</p>
+      <div style="position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--border-2);">
+        <svg viewBox="0 0 100 100" style="width:100%;display:block;background:#EDE6DA">
+          <rect x="0" y="0" width="100" height="100" fill="#EDE6DA"/>
+          <rect x="0" y="55" width="100" height="45" fill="#C9BBA6"/>
+          <rect x="10" y="45" width="30" height="18" rx="1.5" fill="#8B5A2B"/>
+          <rect x="12" y="47" width="12" height="12" fill="#C1594A" opacity=".85"/>
+          <circle cx="30" cy="50" r="3" fill="#7A9A6E"/><circle cx="34" cy="53" r="3" fill="#7A9A6E"/><circle cx="27" cy="55" r="3" fill="#7A9A6E"/>
+          <circle cx="66" cy="20" r="9" fill="#E9C9A8"/>
+          <path d="M58 14 q8 -10 16 0 q2 6 -2 10 q-6 -10 -14 -10z" fill="#3A2A1E"/>
+          <rect x="60" y="26" width="14" height="20" rx="3" fill="#F5F1E8"/>
+          <rect x="74" y="64" width="16" height="4" rx="2" fill="#8C8478" transform="rotate(25 74 64)"/>
+          <circle cx="88" cy="70" r="4" fill="#F5F1E8" stroke="#8C8478" stroke-width="1"/>
+          <ellipse cx="38" cy="82" rx="10" ry="4" fill="#6B7280" opacity=".8"/>
+          ${puntosHtml}
+        </svg>
+      </div>
+      <div id="reto-err-fb" style="margin-top:10px;font-size:12.5px;color:var(--text-2);">Encontrados: <strong id="reto-err-n">0</strong> de ${r.hotspots.length}</div>
+    `;
+    const footer = document.createElement('div');
+    footer.innerHTML = `<button class="btn btn--ghost" id="reto-cerrar">Cerrar</button>`;
+    Modal.open({ id:'reto-'+r.id, title:r.titulo, subtitle:r.categoria+' · +'+r.puntos+' pts', icon:'i-bolt', size:'md', body, footer });
+    footer.querySelector('#reto-cerrar').addEventListener('click', ()=>Modal.close('reto-'+r.id));
+    body.querySelectorAll('.reto-err-spot').forEach(spot=>{
+      spot.addEventListener('click', async ()=>{
+        const i = Number(spot.dataset.i);
+        if(encontrados.has(i)) return;
+        encontrados.add(i);
+        spot.setAttribute('fill','rgba(122,154,110,.35)');
+        spot.setAttribute('stroke','#7A9A6E');
+        spot.setAttribute('stroke-width','1.5');
+        body.querySelector('#reto-err-n').textContent = String(encontrados.size);
+        if(encontrados.size === r.hotspots.length){
+          const res = await _otorgarXP(r.id, r.puntos);
+          if(!res.yaCompletado) Toast.success('+'+r.puntos+' pts', '¡Encontraste las '+r.hotspots.length+' fallas!');
+          _celebrarLogros(res.nuevosLogros);
+        }
+      });
+    });
+  }
+
+  // ─── Tipo: elegir la imagen correcta ───
+  function _retoImagen(r){
+    const body = document.createElement('div');
+    body.innerHTML = `
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;">
+        ${r.opciones.map((o,i)=>`
+          <div class="reto-img-opt" data-i="${i}" style="cursor:pointer;">
+            <div style="aspect-ratio:1/1;">${o.imagen?`<img src="${o.imagen}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;border:1px solid var(--border-2);">`:_placeholderImg(o.label)}</div>
+          </div>
+        `).join('')}
+      </div>
+      <div id="reto-img-fb" style="margin-top:12px;font-size:12.5px;"></div>
+    `;
+    const footer = document.createElement('div');
+    footer.innerHTML = `<button class="btn btn--ghost" id="reto-cerrar">Cerrar</button>`;
+    Modal.open({ id:'reto-'+r.id, title:r.titulo, subtitle:r.categoria+' · +'+r.puntos+' pts', icon:'i-bolt', size:'md', body, footer });
+    footer.querySelector('#reto-cerrar').addEventListener('click', ()=>Modal.close('reto-'+r.id));
+    body.querySelectorAll('.reto-img-opt').forEach(opt=>{
+      opt.addEventListener('click', async ()=>{
+        const o = r.opciones[Number(opt.dataset.i)];
+        const fb = body.querySelector('#reto-img-fb');
+        if(o.correcta){
+          fb.innerHTML = '<span style="color:var(--success);font-weight:600;">¡Correcto! '+o.label+'</span>';
+          const res = await _otorgarXP(r.id, r.puntos);
+          if(!res.yaCompletado) Toast.success('+'+r.puntos+' pts', r.titulo);
+          _celebrarLogros(res.nuevosLogros);
+        } else {
+          fb.innerHTML = '<span style="color:var(--danger);font-weight:600;">No es esa, intenta con otra.</span>';
+        }
+      });
+    });
+  }
+
+  // ─── Tipo: antes y después (elegir cuál se ve mejor) ───
+  function _retoAntesDespues(r){
+    const body = document.createElement('div');
+    body.innerHTML = `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        ${r.opciones.map((o,i)=>`
+          <div class="reto-ad-opt" data-i="${i}" style="cursor:pointer;">
+            <div style="aspect-ratio:4/3;">${o.imagen?`<img src="${o.imagen}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;border:1px solid var(--border-2);">`:_placeholderImg(o.label)}</div>
+            <div style="font-size:11.5px;color:var(--text-3);text-align:center;margin-top:6px;">${o.label}</div>
+          </div>
+        `).join('')}
+      </div>
+      <div id="reto-ad-fb" style="margin-top:12px;font-size:12.5px;"></div>
+    `;
+    const footer = document.createElement('div');
+    footer.innerHTML = `<button class="btn btn--ghost" id="reto-cerrar">Cerrar</button>`;
+    Modal.open({ id:'reto-'+r.id, title:r.titulo, subtitle:r.categoria+' · +'+r.puntos+' pts', icon:'i-bolt', size:'md', body, footer });
+    footer.querySelector('#reto-cerrar').addEventListener('click', ()=>Modal.close('reto-'+r.id));
+    body.querySelectorAll('.reto-ad-opt').forEach(opt=>{
+      opt.addEventListener('click', async ()=>{
+        const o = r.opciones[Number(opt.dataset.i)];
+        const fb = body.querySelector('#reto-ad-fb');
+        if(o.correcta){
+          fb.innerHTML = '<span style="color:var(--success);font-weight:600;">¡Correcto! '+r.explicacion+'</span>';
+          const res = await _otorgarXP(r.id, r.puntos);
+          if(!res.yaCompletado) Toast.success('+'+r.puntos+' pts', r.titulo);
+          _celebrarLogros(res.nuevosLogros);
+        } else {
+          fb.innerHTML = '<span style="color:var(--danger);font-weight:600;">Esa no era · '+r.explicacion+'</span>';
+        }
+      });
+    });
+  }
+
   function renderLogros(container){
+    if(!_progresoListo){
+      container.innerHTML = '<div class="fade-up"><div class="foro-empty">Cargando tu progreso…</div></div>';
+      _cargarProgreso().then(()=>renderLogros(container));
+      return;
+    }
+    // Sincroniza con el progreso real guardado en Firestore (antes usuario.xp
+    // se quedaba fijo en 0 para siempre; ahora refleja lo que el miembro
+    // realmente ganó completando retos).
+    usuario.xp = _progreso.xp;
+    usuario.racha = _progreso.racha;
+    if(!logros.find(l=>l.id==='rt1')){
+      LOGROS_RETOS.forEach(l => logros.push(l));
+    }
+    logros.forEach(l => { l.unlock = _progreso.logrosDesbloqueados.includes(l.id) ? true : l.unlock; });
     const nivelActual=getNivel(usuario.xp);
     const pct=Math.round(((usuario.xp-nivelActual.desde)/(nivelActual.hasta-nivelActual.desde))*100);
     const xpRest=nivelActual.hasta-usuario.xp;
@@ -9397,6 +9800,7 @@ const Sections = (function(){
       perfil:renderPerfil,
       suscripcion:renderSuscripcion,
       herramientas:renderHerramientas,
+      retos:renderRetos,
       'tool-costeo':(c)=>ToolCosteo.mount(c),
       'tool-conversor':(c)=>ToolConversor.mount(c),
       'tool-merma':(c)=>ToolMerma.mount(c),
