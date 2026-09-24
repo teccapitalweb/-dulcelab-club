@@ -7179,7 +7179,7 @@ const Sections = (function(){
                   <span class="discover-card__tipo">${r.dificultad}</span>
                 </div>
                 <h3 class="discover-card__title">${r.titulo}</h3>
-                <p class="discover-card__resumen"><svg class="ic" style="width:11px;height:11px;vertical-align:-1px;color:var(--primary);"><use href="#i-bolt"/></svg> +${r.puntos} pts</p>
+                <p class="discover-card__resumen"><svg class="ic" style="width:11px;height:11px;vertical-align:-1px;color:var(--primary);"><use href="#i-bolt"/></svg> +${r.puntos} pts &nbsp;·&nbsp; <svg class="ic" style="width:11px;height:11px;vertical-align:-1px;"><use href="#i-clock"/></svg> ${RETO_TIEMPO_POR_TIPO[r.tipo]}s</p>
                 <button type="button" class="discover-card__more">${desbloqueado?(hecho?'Volver a intentar':'Iniciar reto'):'Completa el anterior'}<svg class="ic"><use href="#i-arrow-right"/></svg></button>
               </div>
             </div>`;
@@ -7273,30 +7273,47 @@ const Sections = (function(){
     const body = document.createElement('div');
     body.innerHTML = `
       ${_timerHtml(segundos)}
-      <p style="font-size:12.5px;color:var(--text-2);margin-bottom:12px;">Arrastra los pasos para ponerlos en el orden correcto.</p>
+      <p style="font-size:12.5px;color:var(--text-2);margin-bottom:12px;">Usa las flechas para poner los pasos en el orden correcto.</p>
       <div id="reto-sec-list" style="display:flex;flex-direction:column;gap:8px;"></div>
       <div id="reto-sec-fb" style="margin-top:12px;font-size:12.5px;"></div>
     `;
     const list = body.querySelector('#reto-sec-list');
-    orden.forEach((p,i)=>{
-      const item = document.createElement('div');
-      item.draggable = true;
-      item.dataset.orig = p.orig;
-      item.style.cssText = 'background:var(--surface-2);border:1px solid var(--border-2);border-radius:10px;padding:10px 12px;cursor:grab;display:flex;align-items:center;gap:10px;font-size:12.5px;';
-      item.innerHTML = `<svg class="ic" style="width:14px;height:14px;color:var(--text-3);flex-shrink:0;"><use href="#i-menu"/></svg><span>${p.texto}</span>`;
-      item.addEventListener('dragstart', e => { e.dataTransfer.effectAllowed='move'; item.style.opacity='.4'; e.dataTransfer.setData('text/plain', String(i)); });
-      item.addEventListener('dragend', () => item.style.opacity='1');
-      item.addEventListener('dragover', e => e.preventDefault());
-      item.addEventListener('drop', e => {
-        e.preventDefault();
-        const from = Number(e.dataTransfer.getData('text/plain'));
-        const nodes = Array.from(list.children);
-        const to = nodes.indexOf(item);
-        if(from===to) return;
-        list.insertBefore(nodes[from], nodes[to+(from<to?1:0)] || null);
+    function pintarLista(){
+      list.innerHTML = '';
+      orden.forEach((p,i)=>{
+        const item = document.createElement('div');
+        item.dataset.orig = p.orig;
+        item.style.cssText = 'background:var(--surface-2);border:1px solid var(--border-2);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px;font-size:12.5px;';
+        item.innerHTML = `
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--text-3);flex-shrink:0;width:16px;">${i+1}</span>
+          <span style="flex:1;min-width:0;">${p.texto}</span>
+          <div style="display:flex;flex-direction:column;gap:2px;flex-shrink:0;">
+            <button type="button" class="reto-sec-up" data-i="${i}" ${i===0?'disabled':''} style="width:26px;height:22px;border-radius:6px;border:1px solid var(--border-2);background:var(--surface);color:${i===0?'var(--text-3)':'var(--text)'};cursor:${i===0?'default':'pointer'};display:flex;align-items:center;justify-content:center;opacity:${i===0?'.4':'1'};">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><polyline points="18 15 12 9 6 15"/></svg>
+            </button>
+            <button type="button" class="reto-sec-down" data-i="${i}" ${i===orden.length-1?'disabled':''} style="width:26px;height:22px;border-radius:6px;border:1px solid var(--border-2);background:var(--surface);color:${i===orden.length-1?'var(--text-3)':'var(--text)'};cursor:${i===orden.length-1?'default':'pointer'};display:flex;align-items:center;justify-content:center;opacity:${i===orden.length-1?'.4':'1'};">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+          </div>
+        `;
+        list.appendChild(item);
       });
-      list.appendChild(item);
-    });
+      list.querySelectorAll('.reto-sec-up').forEach(btn=>btn.addEventListener('click', ()=>{
+        if(cronometro.vencido) return;
+        const i = Number(btn.dataset.i);
+        if(i<=0) return;
+        [orden[i-1], orden[i]] = [orden[i], orden[i-1]];
+        pintarLista();
+      }));
+      list.querySelectorAll('.reto-sec-down').forEach(btn=>btn.addEventListener('click', ()=>{
+        if(cronometro.vencido) return;
+        const i = Number(btn.dataset.i);
+        if(i>=orden.length-1) return;
+        [orden[i], orden[i+1]] = [orden[i+1], orden[i]];
+        pintarLista();
+      }));
+    }
+    pintarLista();
     const footer = document.createElement('div');
     footer.innerHTML = `
       <button class="btn btn--ghost" id="reto-cerrar">Cerrar</button>
@@ -7305,7 +7322,7 @@ const Sections = (function(){
     Modal.open({ id:'reto-'+r.id, title:r.titulo, subtitle:r.categoria+' · +'+r.puntos+' pts', icon:'i-bolt', size:'md', body, footer, onClose:()=>cronometro.detener() });
     cronometro.iniciar(body.querySelector('#reto-timer-txt'), () => {
       body.querySelector('#reto-sec-fb').innerHTML = '<span style="color:var(--danger);font-weight:600;">⏰ Se acabó el tiempo. Cierra y vuelve a intentar.</span>';
-      list.querySelectorAll('[draggable]').forEach(el => el.draggable = false);
+      list.querySelectorAll('.reto-sec-up, .reto-sec-down').forEach(el => { el.disabled = true; el.style.cursor='default'; el.style.opacity='.3'; });
       footer.querySelector('#reto-check').disabled = true;
     });
     footer.querySelector('#reto-cerrar').addEventListener('click', ()=>Modal.close('reto-'+r.id));
