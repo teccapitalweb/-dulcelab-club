@@ -7906,7 +7906,14 @@ const Sections = (function(){
       if (fs && fs.db) {
         const snap = await fs.getDocs(fs.collection(fs.db, 'datos_curiosos'));
         if (!snap.empty) {
-          _discoverActiva = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+          // MODIFICADO: Firestore no garantiza el mismo orden en cada lectura,
+          // y la selección diaria depende de que el orden sea siempre igual
+          // (si no, la fecha genera un shuffle sobre un array distinto cada
+          // vez y los 6 cambian aunque sea el mismo día). Se ordena por el id
+          // del documento — es fijo por dato, así el orden siempre es el mismo.
+          _discoverActiva = snap.docs
+            .map(d => ({ id: d.id, ...d.data() }))
+            .sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
         }
       }
     } catch (e) {
