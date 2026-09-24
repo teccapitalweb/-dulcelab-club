@@ -123,6 +123,10 @@
       try { id = this.identity() || ''; } catch (e) {}
       marcarVisto(this.namespace, this.version, id);
     }
+    var drawer = document.getElementById('mobile-drawer');
+    if (drawer && drawer.classList.contains('is-open') && typeof window.cerrarDrawerMovil === 'function') {
+      window.cerrarDrawerMovil();
+    }
     this._destruirOverlay();
   };
 
@@ -198,15 +202,21 @@
     var selector = paso.selectors || (mobile ? paso.mobileSelectors : paso.desktopSelectors);
     if (!selector) { cb(null); return; }
 
-    if (mobile && paso.mobileDrawer) {
-      var drawer = document.getElementById('mobile-drawer');
-      var yaAbierto = drawer && drawer.classList.contains('is-open');
-      if (!yaAbierto) {
-        var abrirBtn = document.getElementById('mobile-nav-more');
-        if (abrirBtn) abrirBtn.click();
-        setTimeout(function () { cb(document.querySelector(selector)); }, DRAWER_OPEN_WAIT_MS);
-        return;
-      }
+    var drawer = document.getElementById('mobile-drawer');
+    var drawerAbierto = drawer && drawer.classList.contains('is-open');
+
+    if (mobile && paso.mobileDrawer && !drawerAbierto) {
+      var abrirBtn = document.getElementById('mobile-nav-more');
+      if (abrirBtn) abrirBtn.click();
+      setTimeout(function () { cb(document.querySelector(selector)); }, DRAWER_OPEN_WAIT_MS);
+      return;
+    }
+    if (drawerAbierto && !(mobile && paso.mobileDrawer)) {
+      // El paso anterior dejó el drawer abierto y este ya no lo necesita: se cierra
+      // antes de medir, si no se queda tapando el siguiente paso (incluido el último).
+      if (typeof window.cerrarDrawerMovil === 'function') window.cerrarDrawerMovil();
+      setTimeout(function () { cb(document.querySelector(selector)); }, DRAWER_OPEN_WAIT_MS);
+      return;
     }
     cb(document.querySelector(selector));
   };
