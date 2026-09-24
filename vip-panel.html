@@ -20,7 +20,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/onboarding-tour.css?v=1">
+<!-- MODIFICADO: onboarding-tour.css aún no existe (daba 404). Comentado hasta que se cree el tour. -->
+<!-- <link rel="stylesheet" href="assets/onboarding-tour.css?v=1"> -->
 
 <style>
 /* DulceLab Food VIP · Layout de 3 columnas */
@@ -2252,8 +2253,8 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 /* =========================================================
    NOTICIAS DIARIAS
    ========================================================= */
-.discover-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
-.discover-card{
+.news-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.news-card{
   background:var(--surface);
   border:0.5px solid var(--border);
   border-radius:16px;
@@ -2263,58 +2264,80 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
   display:flex;flex-direction:column;
   position:relative;
 }
-.discover-card:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--cat-color,var(--primary)) 35%,transparent);box-shadow:0 14px 36px rgba(0,0,0,.14)}
-.discover-card__cover{
-  height:108px;flex:none;position:relative;overflow:hidden;
+.news-card:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--cat-color,var(--primary)) 35%,transparent);box-shadow:0 14px 36px rgba(0,0,0,.14)}
+.news-card__cover{
+  height:120px;
   background:var(--cat-color,var(--primary));
-  display:flex;align-items:center;justify-content:center;color:#fff;
+  position:relative;
+  overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;
 }
-.discover-card__cover.has-img{background-size:cover;background-position:center}
-.discover-card__cover.has-img::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(0,0,0,.45) 100%)}
-.discover-card__cover::before{
+.news-card__cover::before{
   content:"";position:absolute;inset:0;
-  background-image:linear-gradient(to right,rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(to bottom,rgba(255,255,255,.08) 1px,transparent 1px);
-  background-size:26px 26px;
+  background-image:linear-gradient(to right,rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(to bottom,rgba(255,255,255,.07) 1px,transparent 1px);
+  background-size:28px 28px;
   -webkit-mask-image:radial-gradient(ellipse at center,#000 0%,transparent 75%);
   mask-image:radial-gradient(ellipse at center,#000 0%,transparent 75%);
 }
-.discover-card__cover.has-img::before{display:none}
-.discover-card__cover .ic{width:38px;height:38px;position:relative;z-index:1;opacity:.95}
-.discover-card__body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px;flex:1}
-.discover-card__tags{display:flex;flex-wrap:wrap;gap:6px}
-.discover-card__cat,.discover-card__tipo{
+.news-card__cover svg{width:42px;height:42px;position:relative;z-index:1;opacity:.95}
+.news-card__date{
+  position:absolute;top:11px;left:11px;
+  background:rgba(0,0,0,.4);
+  backdrop-filter:blur(8px);
+  border:0.5px solid rgba(255,255,255,.22);
+  color:#fff;
+  border-radius:100px;
+  padding:4px 10px;
   font-family:'JetBrains Mono',monospace;
-  font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
-  border-radius:100px;padding:3px 9px;
+  font-size:9.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;
+  display:inline-flex;align-items:center;gap:5px;
+  z-index:1;
 }
-.discover-card__cat{background:color-mix(in srgb,var(--cat-color,var(--primary)) 14%,transparent);color:var(--cat-color,var(--primary))}
-.discover-card__tipo{background:var(--surface-2);color:var(--text-3);border:0.5px solid var(--border)}
-.discover-card__title{
+.news-card__date::before{
+  content:"";width:5px;height:5px;border-radius:50%;background:#E5C171;
+}
+.news-card__cat{
+  position:absolute;top:11px;right:11px;
+  background:rgba(255,255,255,.92);
+  color:var(--cat-color,var(--primary));
+  border-radius:100px;
+  padding:4px 10px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;
+  z-index:1;
+  backdrop-filter:blur(8px);
+}
+.news-card__body{
+  padding:14px 16px 16px;
+  display:flex;flex-direction:column;gap:8px;
+  flex:1;
+}
+.news-card__title{
   font-size:14px;font-weight:600;letter-spacing:-.2px;line-height:1.35;
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
-}
-.discover-card__resumen{
-  font-size:12px;color:var(--text-2);line-height:1.55;
   display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
 }
-.discover-card__more{
-  margin-top:auto;padding-top:8px;
+.news-card__excerpt{
+  font-size:12px;color:var(--text-2);line-height:1.55;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.news-card__footer{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:auto;padding-top:10px;
   border-top:0.5px solid var(--border);
   font-family:'JetBrains Mono',monospace;
-  font-size:10.5px;font-weight:600;
+  font-size:10.5px;font-weight:500;
+}
+.news-card__source{color:var(--text-3);display:inline-flex;align-items:center;gap:5px}
+.news-card__source .ic{width:11px;height:11px}
+.news-card__more{
   color:var(--cat-color,var(--primary));
+  font-weight:600;
   display:inline-flex;align-items:center;gap:4px;
-  background:none;border-left:0;border-right:0;border-bottom:0;
-  transition:gap .2s;text-align:left;
+  transition:gap .2s;
 }
-.discover-card:hover .discover-card__more{gap:7px}
-.discover-card__more .ic{width:11px;height:11px}
-.discover-modal__tip{
-  margin-top:14px;padding:12px 14px;border-radius:12px;
-  background:var(--surface-2);border:0.5px solid var(--border);
-  font-size:12.5px;line-height:1.6;color:var(--text-2);
-}
-.discover-modal__tip strong{color:var(--text)}
+.news-card:hover .news-card__more{gap:7px}
+.news-card__more .ic{width:11px;height:11px}
 
 /* =========================================================
    PDFs y MATERIAL · cards más vibrantes
@@ -2653,7 +2676,8 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
   .post__time{margin-left:0;flex-basis:100%;order:99}
 
   /* Noticias mobile */
-  .discover-grid{grid-template-columns:1fr}
+  .news-grid{grid-template-columns:1fr}
+  .news-card__cover{height:100px}
 
   /* Nivel path mobile (compactar 5 steps) */
   .nivel-path{padding:18px 14px}
@@ -3136,8 +3160,7 @@ if (window.__isDemoMode) {
     document.body.style.visibility = 'visible';
 
     // Cargar noticias reales del home (Firestore noticias_auto)
-    setTimeout(()=>{ if(typeof window.__cargarDescubreHoy==='function') window.__cargarDescubreHoy(); }, 300);
-    setTimeout(()=>{ if(typeof window.__cargarProgreso==='function') window.__cargarProgreso(); }, 300);
+    setTimeout(()=>{ if(typeof window.__cargarNoticiasHome==='function') window.__cargarNoticiasHome(); }, 300);
     // Llenar widgets de actividad con datos reales
     setTimeout(()=>{ if(typeof window.__actualizarWidgetsActividad==='function') window.__actualizarWidgetsActividad(); }, 400);
 
@@ -3453,7 +3476,6 @@ window.__setDisplayName = async (nombre) => {
       <a class="nav-item" data-section="pdfs"><svg class="ic"><use href="#i-news"/></svg>PDFs y material</a>
       <a class="nav-item" data-section="logros"><svg class="ic"><use href="#i-trophy"/></svg>Mis logros</a>
       <a class="nav-item" data-section="certificados"><svg class="ic"><use href="#i-certificate"/></svg>Certificados</a>
-      <a class="nav-item" data-section="retos"><svg class="ic"><use href="#i-bolt"/></svg>Retos</a>
     </div>
 
     <div class="nav-section" data-tour="tools">
@@ -3527,14 +3549,13 @@ window.__setDisplayName = async (nombre) => {
 
       <div style="height:22px"></div>
 
-      <!-- Descubre algo nuevo hoy (contenido propio DulceLab, rotación diaria) -->
+      <!-- Noticias diarias (reales desde Firestore) -->
       <section>
         <div class="section-header">
-          <h2 class="section-header__title">Descubre algo nuevo hoy<span class="section-header__badge">Hoy</span></h2>
+          <h2 class="section-header__title">Noticias del sector<span class="section-header__badge">Hoy</span></h2>
         </div>
-        <p style="margin:-6px 0 14px;font-size:12.5px;color:var(--text-2);">Datos, técnicas y curiosidades del mundo de la gastronomía.</p>
-        <div class="discover-grid" id="home-discover-grid">
-          <div class="foro-empty" style="grid-column:1/-1;">Cargando…</div>
+        <div class="news-grid" id="home-news-grid">
+          <div class="foro-empty" style="grid-column:1/-1;">Cargando noticias…</div>
         </div>
       </section>
     </div>
@@ -3642,7 +3663,6 @@ window.__setDisplayName = async (nombre) => {
         <a class="mobile-drawer__item" data-section="pdfs"><svg class="ic"><use href="#i-news"/></svg>PDFs y material</a>
         <a class="mobile-drawer__item" data-section="logros"><svg class="ic"><use href="#i-trophy"/></svg>Mis logros</a>
         <a class="mobile-drawer__item" data-section="certificados"><svg class="ic"><use href="#i-certificate"/></svg>Certificados</a>
-        <a class="mobile-drawer__item" data-section="retos"><svg class="ic"><use href="#i-bolt"/></svg>Retos</a>
       </div>
 
       <div class="mobile-drawer__section" data-tour="tools">
@@ -4426,7 +4446,7 @@ const ToolPorcion = (function(){
    ═══════════════════════════════════════════════════════════════════ */
 const SECCIONES_VALIDAS_PANEL = [
   'inicio','cursos','certificados','logros','webinars','pdfs','foro',
-  'directorio','canal','perfil','suscripcion','herramientas','retos',
+  'directorio','canal','perfil','suscripcion','herramientas',
   'tool-costeo','tool-conversor','tool-merma','tool-catering','tool-horno',
   'tool-porcion'
 ];
@@ -4471,7 +4491,7 @@ function navigateToSection(section, opts){
     try { window.__dulcelabCheckout.destroy(); } catch(e) {}
     window.__dulcelabCheckout = null;
   }
-  if(section==='inicio'){inicio.style.display='';dyn.style.display='none';if(typeof window.__cargarDescubreHoy==='function')window.__cargarDescubreHoy();if(typeof window.__actualizarWidgetsActividad==='function')window.__actualizarWidgetsActividad();return;}
+  if(section==='inicio'){inicio.style.display='';dyn.style.display='none';if(typeof window.__cargarNoticiasHome==='function')window.__cargarNoticiasHome();if(typeof window.__actualizarWidgetsActividad==='function')window.__actualizarWidgetsActividad();return;}
   inicio.style.display='none';dyn.style.display='';
   const renderer=Sections.renderers[section];
   if(renderer){dyn.innerHTML='';renderer(dyn);}
@@ -6964,431 +6984,7 @@ const Sections = (function(){
     });
   }
 
-  // ═══════════ PROGRESO REAL (XP, racha, retos) · Firestore progreso/{uid} ═══════════
-  // Antes "Mis logros" era 100% decorativo (usuario.xp quedaba fijo en 0). Esto
-  // lo hace real: se guarda por usuario en su propio documento, que solo él
-  // puede leer/escribir (colección aparte de 'miembros' a propósito, para no
-  // tocar nada relacionado con el estado de pago/membresía).
-  let _progreso = { xp:0, racha:0, ultimaActividad:null, retosCompletados:[], logrosDesbloqueados:[] };
-  let _progresoListo = false;
-
-  let _progresoSinPermiso = false;
-  function _esErrorPermiso(e){ return /permission/i.test(e?.code||'') || /permission/i.test(e?.message||''); }
-
-  async function _cargarProgreso(){
-    try{
-      const fs = window.__fs; const db = window.__db;
-      const uid = window.UserState?.uid;
-      if(!fs || !db || !uid) return;
-      const ref = fs.doc(db,'progreso',uid);
-      const snap = await fs.getDoc(ref);
-      if(snap.exists()){
-        _progreso = Object.assign({xp:0,racha:0,ultimaActividad:null,retosCompletados:[],logrosDesbloqueados:[]}, snap.data());
-      } else {
-        await fs.setDoc(ref, _progreso);
-      }
-    } catch(e){
-      console.warn('[progreso] no se pudo cargar (revisa reglas de Firestore para progreso/{uid}):', e.message);
-      if(_esErrorPermiso(e)) _progresoSinPermiso = true;
-    }
-    _progresoListo = true;
-  }
-  window.__cargarProgreso = _cargarProgreso;
-  async function _guardarProgreso(){
-    try{
-      const fs = window.__fs; const db = window.__db;
-      const uid = window.UserState?.uid;
-      if(!fs || !db || !uid) return false;
-      await fs.setDoc(fs.doc(db,'progreso',uid), _progreso);
-      _progresoSinPermiso = false;
-      return true;
-    } catch(e){
-      console.warn('[progreso] no se pudo guardar:', e.message);
-      if(_esErrorPermiso(e)) _progresoSinPermiso = true;
-      return false;
-    }
-  }
-
-  // Medallas nuevas, ligadas a retos (las 24 de arriba siguen ligadas a cursos,
-  // eso se conecta cuando haya seguimiento real de avance por curso)
-  const LOGROS_RETOS = [
-    {id:'rt1', cat:'Retos', nombre:'Primer reto', desc:'Completaste tu primer reto', xp:0, criterio:'Completa 1 reto'},
-    {id:'rt2', cat:'Retos', nombre:'Retador', desc:'Completaste 5 retos', xp:0, criterio:'Completa 5 retos'}
-  ];
-
-  async function _otorgarXP(retoId, puntos){
-    if(_progreso.retosCompletados.includes(retoId)) return { yaCompletado:true, nuevosLogros:[] };
-    _progreso.xp += puntos;
-    _progreso.retosCompletados.push(retoId);
-    const hoy = new Date().toISOString().slice(0,10);
-    if(_progreso.ultimaActividad !== hoy){
-      const ayer = new Date(Date.now()-86400000).toISOString().slice(0,10);
-      _progreso.racha = (_progreso.ultimaActividad === ayer) ? _progreso.racha + 1 : 1;
-      _progreso.ultimaActividad = hoy;
-    }
-    const nuevosLogros = [];
-    const marcar = (id) => { if(!_progreso.logrosDesbloqueados.includes(id)){ _progreso.logrosDesbloqueados.push(id); nuevosLogros.push(id); } };
-    if(_progreso.retosCompletados.length >= 1) marcar('rt1');
-    if(_progreso.retosCompletados.length >= 5) marcar('rt2');
-    if(_progreso.racha >= 7) marcar('l21');
-    if(_progreso.racha >= 30) marcar('l22');
-    const guardado = await _guardarProgreso();
-    return { yaCompletado:false, nuevosLogros, guardado };
-  }
-
-  // ═══════════ BIBLIOTECA DE RETOS ═══════════
-  // tipo 'secuencia'  · ordenar pasos arrastrando (sin fotos)
-  // tipo 'error'      · encontrar fallas en una ilustración (sin fotos, dibujada)
-  // tipo 'imagen'     · elegir la foto correcta entre 3 (necesita fotos reales)
-  // tipo 'antesdespues' · elegir cuál se ve más profesional entre 2 (necesita fotos reales)
-  const RETOS_LIBRARY = [
-    { id:'sec1', tipo:'secuencia', categoria:'Panadería', titulo:'Ordena el proceso de una masa madre', dificultad:'Intermedio', tiempo:'5 min', puntos:40,
-      pasos:['Alimentar el cultivo con harina y agua','Mezclar la harina, el agua y el cultivo','Reposar y dejar fermentar','Hacer los dobleces a la masa','Formar y boletar','Hornear'] },
-    { id:'sec2', tipo:'secuencia', categoria:'Cocina', titulo:'Ordena cómo se prepara una salsa bechamel', dificultad:'Básico', tiempo:'3 min', puntos:30,
-      pasos:['Derretir la mantequilla','Agregar la harina y cocinar el roux','Incorporar la leche poco a poco','Sazonar y dejar espesar'] },
-    { id:'sec3', tipo:'secuencia', categoria:'Cocina', titulo:'Ordena el montaje correcto de un plato', dificultad:'Básico', tiempo:'3 min', puntos:30,
-      pasos:['Elegir el plato adecuado','Colocar la base o guarnición','Colocar la proteína principal','Agregar la salsa','Decorar con el toque final'] },
-    { id:'sec4', tipo:'secuencia', categoria:'Panadería', titulo:'Ordena el proceso de fermentación del pan', dificultad:'Intermedio', tiempo:'5 min', puntos:40,
-      pasos:['Mezclar los ingredientes','Amasar','Primer levado','Dividir y boletar','Segundo levado','Hornear'] },
-    { id:'sec5', tipo:'secuencia', categoria:'Producción', titulo:'Ordena el control de inventario correcto (FIFO)', dificultad:'Básico', tiempo:'3 min', puntos:30,
-      pasos:['Recibir la mercancía','Etiquetar con fecha de recepción','Colocar lo nuevo hasta atrás','Sacar primero lo más antiguo','Registrar la salida'] },
-
-    { id:'err1', tipo:'error', categoria:'Inocuidad', titulo:'Encuentra 4 errores de inocuidad en esta cocina', dificultad:'Intermedio', tiempo:'4 min', puntos:50,
-      imagen:'assets/retos/err1.jpg',
-      hotspots:[
-        {x:24,y:57,r:8,label:'Pollo crudo junto a verduras listas (contaminación cruzada)'},
-        {x:49,y:26,r:8,label:'Cabello suelto sin cofia ni recogido'},
-        {x:72,y:85,r:6,label:'Termómetro tirado, sin usarse para verificar temperatura'},
-        {x:74,y:71,r:6,label:'Trapo/jerga sucia sobre la superficie de preparación'}
-      ] },
-
-    { id:'img1', tipo:'imagen', categoria:'Panadería', titulo:'¿Cuál masa está en el punto correcto de fermentación?', dificultad:'Intermedio', tiempo:'2 min', puntos:35,
-      opciones:[
-        {label:'Masa sin fermentar (recién mezclada, sin volumen)', correcta:false, imagen:'assets/retos/img1-1.jpg'},
-        {label:'Masa en su punto (duplicó volumen, superficie tersa)', correcta:true, imagen:'assets/retos/img1-2.jpg'},
-        {label:'Masa sobrefermentada (colapsada, huele muy ácido)', correcta:false, imagen:'assets/retos/img1-3.jpg'}
-      ] },
-    { id:'img2', tipo:'imagen', categoria:'Cocina', titulo:'¿Cuál corte corresponde a un brunoise correcto?', dificultad:'Básico', tiempo:'2 min', puntos:30,
-      opciones:[
-        {label:'Cubos parejos de 2-3mm', correcta:true, imagen:'assets/retos/img2-1.jpg'},
-        {label:'Trozos irregulares y de distinto tamaño', correcta:false, imagen:'assets/retos/img2-2.jpg'},
-        {label:'Rodajas delgadas, no en cubo', correcta:false, imagen:'assets/retos/img2-3.jpg'}
-      ] },
-    { id:'img3', tipo:'imagen', categoria:'Cocina', titulo:'¿Cuál salsa tiene la consistencia correcta para "nappe"?', dificultad:'Intermedio', tiempo:'2 min', puntos:35,
-      opciones:[
-        {label:'Muy líquida, escurre de inmediato', correcta:false, imagen:'assets/retos/img3-1.jpg'},
-        {label:'Cubre el dorso de la cuchara y deja rastro al pasar el dedo', correcta:true, imagen:'assets/retos/img3-2.jpg'},
-        {label:'Muy espesa, casi como puré', correcta:false, imagen:'assets/retos/img3-3.jpg'}
-      ] },
-    { id:'img4', tipo:'imagen', categoria:'Panadería', titulo:'¿Cuál pan de masa madre está bien horneado?', dificultad:'Básico', tiempo:'2 min', puntos:30,
-      opciones:[
-        {label:'Pálido, corteza sin color', correcta:false, imagen:'assets/retos/img4-1.jpg'},
-        {label:'Corteza dorada pareja, buena apertura', correcta:true, imagen:'assets/retos/img4-2.jpg'},
-        {label:'Corteza oscura, quemada', correcta:false, imagen:'assets/retos/img4-3.jpg'}
-      ] },
-    { id:'img5', tipo:'imagen', categoria:'Repostería', titulo:'¿Cuál merengue está en el punto de pico firme correcto?', dificultad:'Intermedio', tiempo:'2 min', puntos:35,
-      opciones:[
-        {label:'Blando, no sostiene forma', correcta:false, imagen:'assets/retos/img5-1.jpg'},
-        {label:'Picos firmes, brillante y liso', correcta:true, imagen:'assets/retos/img5-2.jpg'},
-        {label:'Sobre-batido, granuloso y opaco', correcta:false, imagen:'assets/retos/img5-3.jpg'}
-      ] },
-    { id:'img6', tipo:'imagen', categoria:'Cocina', titulo:'¿Cuál emplatado sigue mejor la regla de los tercios?', dificultad:'Básico', tiempo:'2 min', puntos:30,
-      opciones:[
-        {label:'Todo centrado y amontonado', correcta:false, imagen:'assets/retos/img6-1.jpg'},
-        {label:'Elementos distribuidos con espacio negativo', correcta:true, imagen:'assets/retos/img6-2.jpg'},
-        {label:'Todo pegado a una sola orilla del plato', correcta:false, imagen:'assets/retos/img6-3.jpg'}
-      ] },
-
-    { id:'ad1', tipo:'antesdespues', categoria:'Cocina', titulo:'¿Cuál emplatado se ve más vendible?', dificultad:'Básico', tiempo:'2 min', puntos:30,
-      explicacion:'El plato limpio, con espacio y altura se percibe de mayor valor que uno amontonado y con bordes sucios.',
-      opciones:[ {label:'Opción A · limpio, con altura y espacio', correcta:true, imagen:'assets/retos/ad1-1.jpg'}, {label:'Opción B · amontonado, bordes sucios', correcta:false, imagen:'assets/retos/ad1-2.jpg'} ] },
-    { id:'ad2', tipo:'antesdespues', categoria:'Repostería', titulo:'¿Cuál pastel decorado se ve más profesional?', dificultad:'Básico', tiempo:'2 min', puntos:30,
-      explicacion:'Un acabado parejo y proporciones cuidadas transmiten más calidad que un decorado apresurado.',
-      opciones:[ {label:'Opción A · acabado parejo y cuidado', correcta:true, imagen:'assets/retos/ad2-1.jpg'}, {label:'Opción B · decorado apresurado, desigual', correcta:false, imagen:'assets/retos/ad2-2.jpg'} ] },
-    { id:'ad3', tipo:'antesdespues', categoria:'Catering', titulo:'¿Cuál montaje de mesa se ve más listo para un evento?', dificultad:'Básico', tiempo:'2 min', puntos:30,
-      explicacion:'El orden y la simetría comunican profesionalismo antes de que el cliente pruebe la comida.',
-      opciones:[ {label:'Opción A · montaje ordenado y simétrico', correcta:true, imagen:'assets/retos/ad3-1.jpg'}, {label:'Opción B · montaje a medio terminar', correcta:false, imagen:'assets/retos/ad3-2.jpg'} ] },
-    { id:'ad4', tipo:'antesdespues', categoria:'Panadería', titulo:'¿Cuál pieza de pan tiene mejor formado?', dificultad:'Básico', tiempo:'2 min', puntos:30,
-      explicacion:'Un formado parejo hornea de forma uniforme y se ve mejor en vitrina.',
-      opciones:[ {label:'Opción A · formado parejo y tenso', correcta:true, imagen:'assets/retos/ad4-1.jpg'}, {label:'Opción B · formado deforme, sin tensión', correcta:false, imagen:'assets/retos/ad4-2.jpg'} ] },
-    { id:'ad5', tipo:'antesdespues', categoria:'Producción', titulo:'¿Cuál estación de trabajo está lista para servicio?', dificultad:'Básico', tiempo:'2 min', puntos:30,
-      explicacion:'Un mise en place ordenado reduce errores y tiempos muertos durante el servicio.',
-      opciones:[ {label:'Opción A · mise en place ordenado', correcta:true, imagen:'assets/retos/ad5-1.jpg'}, {label:'Opción B · estación desordenada', correcta:false, imagen:'assets/retos/ad5-2.jpg'} ] },
-    { id:'ad6', tipo:'antesdespues', categoria:'Cocina', titulo:'¿Cuál presentación de bebida se ve más cuidada?', dificultad:'Básico', tiempo:'2 min', puntos:30,
-      explicacion:'Detalles como el hielo, la guarnición y el cristal limpio elevan la percepción de valor.',
-      opciones:[ {label:'Opción A · cristal limpio, guarnición cuidada', correcta:true, imagen:'assets/retos/ad6-1.jpg'}, {label:'Opción B · descuidada, vaso sucio', correcta:false, imagen:'assets/retos/ad6-2.jpg'} ] }
-  ];
-
-  const RETO_CAT_META = {
-    'Repostería':{icon:'i-bn-whisk', color:'var(--primary)'},
-    'Panadería':{icon:'i-bn-rollingpin', color:'var(--warning)'},
-    'Cocina':{icon:'i-bn-toque', color:'var(--highlight)'},
-    'Inocuidad':{icon:'i-shield-check', color:'var(--success)'},
-    'Catering':{icon:'i-users', color:'var(--highlight)'},
-    'Producción':{icon:'i-gauge', color:'var(--primary)'}
-  };
-
-  function renderRetos(container){
-    if(!_progresoListo){
-      container.innerHTML = '<div class="fade-up"><div class="foro-empty">Cargando tu progreso…</div></div>';
-      _cargarProgreso().then(()=>renderRetos(container));
-      return;
-    }
-    const completados = _progreso.retosCompletados.length;
-    container.innerHTML = `
-      <div class="fade-up">
-        <div class="sec-hero">
-          <span class="sec-hero__eyebrow">Practica jugando</span>
-          <h1 class="sec-hero__title">Retos</h1>
-          <p class="sec-hero__sub">Pon a prueba lo que sabes de gastronomía. Cada reto completado suma puntos y cuenta para tu racha.</p>
-        </div>
-        ${_progresoSinPermiso ? `<div style="background:color-mix(in srgb,var(--danger) 12%,transparent);border:1px solid color-mix(in srgb,var(--danger) 35%,transparent);border-radius:12px;padding:12px 14px;margin-bottom:18px;font-size:12px;color:var(--danger);">Tu avance no se está guardando (falta permiso en Firestore para <code style="font-family:'JetBrains Mono',monospace;">progreso</code>). Los puntos que ganes ahora se van a perder al recargar.</div>` : ''}
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-bottom:26px;">
-          <div style="background:var(--surface);border:1px solid var(--border-2);border-radius:14px;padding:14px;"><div style="font-size:11px;color:var(--text-3);">Tu XP total</div><div style="font-size:22px;font-weight:700;color:var(--primary);">${_progreso.xp}</div></div>
-          <div style="background:var(--surface);border:1px solid var(--border-2);border-radius:14px;padding:14px;"><div style="font-size:11px;color:var(--text-3);">Racha</div><div style="font-size:22px;font-weight:700;">${_progreso.racha} <span style="font-size:12px;font-weight:500;color:var(--text-3);">días</span></div></div>
-          <div style="background:var(--surface);border:1px solid var(--border-2);border-radius:14px;padding:14px;"><div style="font-size:11px;color:var(--text-3);">Retos completados</div><div style="font-size:22px;font-weight:700;">${completados}<span style="font-size:12px;font-weight:500;color:var(--text-3);">/${RETOS_LIBRARY.length}</span></div></div>
-        </div>
-        <div class="discover-grid">
-          ${RETOS_LIBRARY.map(r => {
-            const meta = RETO_CAT_META[r.categoria] || {icon:'i-bolt', color:'var(--primary)'};
-            const hecho = _progreso.retosCompletados.includes(r.id);
-            return `
-            <div class="discover-card" style="--cat-color:${meta.color}" data-reto-id="${r.id}">
-              <div class="discover-card__cover"><svg class="ic"><use href="#${meta.icon}"/></svg>${hecho?'<span style="position:absolute;top:10px;right:10px;background:rgba(0,0,0,.55);color:#fff;border-radius:100px;padding:3px 9px;font-size:10px;font-weight:700;display:flex;align-items:center;gap:4px;"><svg class="ic" style="width:11px;height:11px;"><use href="#i-check-circle"/></svg>Hecho</span>':''}</div>
-              <div class="discover-card__body">
-                <div class="discover-card__tags">
-                  <span class="discover-card__cat">${r.categoria}</span>
-                  <span class="discover-card__tipo">${r.dificultad}</span>
-                </div>
-                <h3 class="discover-card__title">${r.titulo}</h3>
-                <p class="discover-card__resumen"><svg class="ic" style="width:11px;height:11px;vertical-align:-1px;"><use href="#i-clock"/></svg> ${r.tiempo} &nbsp;·&nbsp; <svg class="ic" style="width:11px;height:11px;vertical-align:-1px;color:var(--primary);"><use href="#i-bolt"/></svg> +${r.puntos} pts</p>
-                <button type="button" class="discover-card__more">${hecho?'Volver a intentar':'Iniciar reto'}<svg class="ic"><use href="#i-arrow-right"/></svg></button>
-              </div>
-            </div>`;
-          }).join('')}
-        </div>
-      </div>
-    `;
-    container.querySelectorAll('[data-reto-id]').forEach(card => {
-      card.addEventListener('click', () => _abrirReto(card.dataset.retoId));
-    });
-  }
-
-  function _placeholderImg(label){
-    return `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;background:var(--surface-2);border:1px dashed var(--border-2);border-radius:10px;padding:10px;text-align:center;">
-      <svg class="ic" style="width:20px;height:20px;color:var(--text-3);"><use href="#i-image"/></svg>
-      <span style="font-size:10px;color:var(--text-3);line-height:1.4;">Falta foto:<br>${label}</span>
-    </div>`;
-  }
-
-  function _avisarResultadoXP(r, res, mensajeExito){
-    if(res.guardado) Toast.success('+'+r.puntos+' pts', mensajeExito);
-    else Toast.error('No se pudo guardar tu avance', 'Ganaste los puntos pero no se guardaron — revisa tu conexión o avísale a soporte');
-  }
-
-  function _celebrarLogros(nuevosLogros){
-    if(!nuevosLogros.length) return;
-    const todos = [...LOGROS_RETOS, {id:'l21',nombre:'Constante'}, {id:'l22',nombre:'Imparable'}];
-    nuevosLogros.forEach(id => {
-      const l = todos.find(x=>x.id===id);
-      if(l) Toast.success('¡Medalla desbloqueada!', l.nombre);
-    });
-  }
-
-  function _abrirReto(retoId){
-    const r = RETOS_LIBRARY.find(x=>x.id===retoId);
-    if(!r) return;
-    if(r.tipo==='secuencia') return _retoSecuencia(r);
-    if(r.tipo==='error') return _retoError(r);
-    if(r.tipo==='imagen') return _retoImagen(r);
-    if(r.tipo==='antesdespues') return _retoAntesDespues(r);
-  }
-
-  // ─── Tipo: ordenar secuencia (arrastrar) ───
-  function _retoSecuencia(r){
-    const orden = r.pasos.map((texto,i)=>({texto,orig:i})).sort(()=>Math.random()-0.5);
-    const body = document.createElement('div');
-    body.innerHTML = `
-      <p style="font-size:12.5px;color:var(--text-2);margin-bottom:12px;">Arrastra los pasos para ponerlos en el orden correcto.</p>
-      <div id="reto-sec-list" style="display:flex;flex-direction:column;gap:8px;"></div>
-      <div id="reto-sec-fb" style="margin-top:12px;font-size:12.5px;"></div>
-    `;
-    const list = body.querySelector('#reto-sec-list');
-    orden.forEach((p,i)=>{
-      const item = document.createElement('div');
-      item.draggable = true;
-      item.dataset.orig = p.orig;
-      item.style.cssText = 'background:var(--surface-2);border:1px solid var(--border-2);border-radius:10px;padding:10px 12px;cursor:grab;display:flex;align-items:center;gap:10px;font-size:12.5px;';
-      item.innerHTML = `<svg class="ic" style="width:14px;height:14px;color:var(--text-3);flex-shrink:0;"><use href="#i-menu"/></svg><span>${p.texto}</span>`;
-      item.addEventListener('dragstart', e => { e.dataTransfer.effectAllowed='move'; item.style.opacity='.4'; e.dataTransfer.setData('text/plain', String(i)); });
-      item.addEventListener('dragend', () => item.style.opacity='1');
-      item.addEventListener('dragover', e => e.preventDefault());
-      item.addEventListener('drop', e => {
-        e.preventDefault();
-        const from = Number(e.dataTransfer.getData('text/plain'));
-        const nodes = Array.from(list.children);
-        const to = nodes.indexOf(item);
-        if(from===to) return;
-        list.insertBefore(nodes[from], nodes[to+(from<to?1:0)] || null);
-      });
-      list.appendChild(item);
-    });
-    const footer = document.createElement('div');
-    footer.innerHTML = `
-      <button class="btn btn--ghost" id="reto-cerrar">Cerrar</button>
-      <button class="btn btn--accent" id="reto-check">Comprobar orden</button>
-    `;
-    Modal.open({ id:'reto-'+r.id, title:r.titulo, subtitle:r.categoria+' · +'+r.puntos+' pts', icon:'i-bolt', size:'md', body, footer });
-    footer.querySelector('#reto-cerrar').addEventListener('click', ()=>Modal.close('reto-'+r.id));
-    footer.querySelector('#reto-check').addEventListener('click', async ()=>{
-      const actual = Array.from(list.children).map(el=>Number(el.dataset.orig));
-      const correcto = actual.every((v,i)=>v===i);
-      const fb = body.querySelector('#reto-sec-fb');
-      if(correcto){
-        fb.innerHTML = '<span style="color:var(--success);font-weight:600;">¡Correcto! Orden perfecto.</span>';
-        const res = await _otorgarXP(r.id, r.puntos);
-        if(!res.yaCompletado) _avisarResultadoXP(r, res, r.titulo);
-        _celebrarLogros(res.nuevosLogros);
-      } else {
-        fb.innerHTML = '<span style="color:var(--danger);font-weight:600;">Todavía no es el orden correcto, intenta de nuevo.</span>';
-      }
-    });
-  }
-
-  // ─── Tipo: encontrar el error (ilustración con puntos clicables) ───
-  function _retoError(r){
-    const encontrados = new Set();
-    const body = document.createElement('div');
-    const puntosHtml = r.hotspots.map((h,i)=>`<circle class="reto-err-spot" data-i="${i}" cx="${h.x}" cy="${h.y}" r="${h.r}" fill="transparent" stroke="transparent" style="cursor:pointer;"/>`).join('');
-    const escena = r.imagen
-      ? `<img src="${r.imagen}" style="width:100%;display:block;">`
-      : `<svg viewBox="0 0 100 100" style="width:100%;display:block;background:#EDE6DA">
-          <rect x="0" y="0" width="100" height="100" fill="#EDE6DA"/>
-          <rect x="0" y="55" width="100" height="45" fill="#C9BBA6"/>
-          <rect x="10" y="45" width="30" height="18" rx="1.5" fill="#8B5A2B"/>
-          <rect x="12" y="47" width="12" height="12" fill="#C1594A" opacity=".85"/>
-          <circle cx="30" cy="50" r="3" fill="#7A9A6E"/><circle cx="34" cy="53" r="3" fill="#7A9A6E"/><circle cx="27" cy="55" r="3" fill="#7A9A6E"/>
-          <circle cx="66" cy="20" r="9" fill="#E9C9A8"/>
-          <path d="M58 14 q8 -10 16 0 q2 6 -2 10 q-6 -10 -14 -10z" fill="#3A2A1E"/>
-          <rect x="60" y="26" width="14" height="20" rx="3" fill="#F5F1E8"/>
-          <rect x="74" y="64" width="16" height="4" rx="2" fill="#8C8478" transform="rotate(25 74 64)"/>
-          <circle cx="88" cy="70" r="4" fill="#F5F1E8" stroke="#8C8478" stroke-width="1"/>
-          <ellipse cx="38" cy="82" rx="10" ry="4" fill="#6B7280" opacity=".8"/>
-        </svg>`;
-    body.innerHTML = `
-      <p style="font-size:12.5px;color:var(--text-2);margin-bottom:10px;">Toca las ${r.hotspots.length} zonas donde ves una falla de inocuidad.</p>
-      <div style="position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--border-2);">
-        ${escena}
-        <svg viewBox="0 0 100 100" style="position:absolute;inset:0;width:100%;height:100%;">
-          ${puntosHtml}
-        </svg>
-      </div>
-      <div id="reto-err-fb" style="margin-top:10px;font-size:12.5px;color:var(--text-2);">Encontrados: <strong id="reto-err-n">0</strong> de ${r.hotspots.length}</div>
-    `;
-    const footer = document.createElement('div');
-    footer.innerHTML = `<button class="btn btn--ghost" id="reto-cerrar">Cerrar</button>`;
-    Modal.open({ id:'reto-'+r.id, title:r.titulo, subtitle:r.categoria+' · +'+r.puntos+' pts', icon:'i-bolt', size:'md', body, footer });
-    footer.querySelector('#reto-cerrar').addEventListener('click', ()=>Modal.close('reto-'+r.id));
-    body.querySelectorAll('.reto-err-spot').forEach(spot=>{
-      spot.addEventListener('click', async ()=>{
-        const i = Number(spot.dataset.i);
-        if(encontrados.has(i)) return;
-        encontrados.add(i);
-        spot.setAttribute('fill','rgba(122,154,110,.35)');
-        spot.setAttribute('stroke','#7A9A6E');
-        spot.setAttribute('stroke-width','1.5');
-        body.querySelector('#reto-err-n').textContent = String(encontrados.size);
-        if(encontrados.size === r.hotspots.length){
-          const res = await _otorgarXP(r.id, r.puntos);
-          if(!res.yaCompletado) _avisarResultadoXP(r, res, '¡Encontraste las '+r.hotspots.length+' fallas!');
-          _celebrarLogros(res.nuevosLogros);
-        }
-      });
-    });
-  }
-
-  // ─── Tipo: elegir la imagen correcta ───
-  function _retoImagen(r){
-    const body = document.createElement('div');
-    body.innerHTML = `
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;">
-        ${r.opciones.map((o,i)=>`
-          <div class="reto-img-opt" data-i="${i}" style="cursor:pointer;">
-            <div style="aspect-ratio:1/1;">${o.imagen?`<img src="${o.imagen}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;border:1px solid var(--border-2);">`:_placeholderImg(o.label)}</div>
-          </div>
-        `).join('')}
-      </div>
-      <div id="reto-img-fb" style="margin-top:12px;font-size:12.5px;"></div>
-    `;
-    const footer = document.createElement('div');
-    footer.innerHTML = `<button class="btn btn--ghost" id="reto-cerrar">Cerrar</button>`;
-    Modal.open({ id:'reto-'+r.id, title:r.titulo, subtitle:r.categoria+' · +'+r.puntos+' pts', icon:'i-bolt', size:'md', body, footer });
-    footer.querySelector('#reto-cerrar').addEventListener('click', ()=>Modal.close('reto-'+r.id));
-    body.querySelectorAll('.reto-img-opt').forEach(opt=>{
-      opt.addEventListener('click', async ()=>{
-        const o = r.opciones[Number(opt.dataset.i)];
-        const fb = body.querySelector('#reto-img-fb');
-        if(o.correcta){
-          fb.innerHTML = '<span style="color:var(--success);font-weight:600;">¡Correcto! '+o.label+'</span>';
-          const res = await _otorgarXP(r.id, r.puntos);
-          if(!res.yaCompletado) _avisarResultadoXP(r, res, r.titulo);
-          _celebrarLogros(res.nuevosLogros);
-        } else {
-          fb.innerHTML = '<span style="color:var(--danger);font-weight:600;">No es esa, intenta con otra.</span>';
-        }
-      });
-    });
-  }
-
-  // ─── Tipo: antes y después (elegir cuál se ve mejor) ───
-  function _retoAntesDespues(r){
-    const body = document.createElement('div');
-    body.innerHTML = `
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-        ${r.opciones.map((o,i)=>`
-          <div class="reto-ad-opt" data-i="${i}" style="cursor:pointer;">
-            <div style="aspect-ratio:4/3;">${o.imagen?`<img src="${o.imagen}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;border:1px solid var(--border-2);">`:_placeholderImg(o.label)}</div>
-            <div style="font-size:11.5px;color:var(--text-3);text-align:center;margin-top:6px;">${o.label}</div>
-          </div>
-        `).join('')}
-      </div>
-      <div id="reto-ad-fb" style="margin-top:12px;font-size:12.5px;"></div>
-    `;
-    const footer = document.createElement('div');
-    footer.innerHTML = `<button class="btn btn--ghost" id="reto-cerrar">Cerrar</button>`;
-    Modal.open({ id:'reto-'+r.id, title:r.titulo, subtitle:r.categoria+' · +'+r.puntos+' pts', icon:'i-bolt', size:'md', body, footer });
-    footer.querySelector('#reto-cerrar').addEventListener('click', ()=>Modal.close('reto-'+r.id));
-    body.querySelectorAll('.reto-ad-opt').forEach(opt=>{
-      opt.addEventListener('click', async ()=>{
-        const o = r.opciones[Number(opt.dataset.i)];
-        const fb = body.querySelector('#reto-ad-fb');
-        if(o.correcta){
-          fb.innerHTML = '<span style="color:var(--success);font-weight:600;">¡Correcto! '+r.explicacion+'</span>';
-          const res = await _otorgarXP(r.id, r.puntos);
-          if(!res.yaCompletado) _avisarResultadoXP(r, res, r.titulo);
-          _celebrarLogros(res.nuevosLogros);
-        } else {
-          fb.innerHTML = '<span style="color:var(--danger);font-weight:600;">Esa no era · '+r.explicacion+'</span>';
-        }
-      });
-    });
-  }
-
   function renderLogros(container){
-    if(!_progresoListo){
-      container.innerHTML = '<div class="fade-up"><div class="foro-empty">Cargando tu progreso…</div></div>';
-      _cargarProgreso().then(()=>renderLogros(container));
-      return;
-    }
-    // Sincroniza con el progreso real guardado en Firestore (antes usuario.xp
-    // se quedaba fijo en 0 para siempre; ahora refleja lo que el miembro
-    // realmente ganó completando retos).
-    usuario.xp = _progreso.xp;
-    usuario.racha = _progreso.racha;
-    if(!logros.find(l=>l.id==='rt1')){
-      LOGROS_RETOS.forEach(l => logros.push(l));
-    }
-    logros.forEach(l => { l.unlock = _progreso.logrosDesbloqueados.includes(l.id) ? true : l.unlock; });
     const nivelActual=getNivel(usuario.xp);
     const pct=Math.round(((usuario.xp-nivelActual.desde)/(nivelActual.hasta-nivelActual.desde))*100);
     const xpRest=nivelActual.hasta-usuario.xp;
@@ -8128,269 +7724,68 @@ const Sections = (function(){
     });
   }
 
-  // ═══════════ DESCUBRE ALGO NUEVO HOY (contenido propio DulceLab, rotación diaria) ═══════════
-  // Biblioteca completa. Se muestran 6 al día, elegidos de forma determinista según
-  // la fecha (mismo día → mismos 6 · día siguiente → puede cambiar). No requiere backend.
-  const DISCOVER_LIBRARY = [
-    { id:1, categoria:'Repostería', tipo:'¿Sabías que?',
-      titulo:'¿Por qué una ganache puede cortarse?',
-      resumen:'La temperatura y la proporción entre grasa y líquido pueden afectar la emulsión.',
-      contenido:'Una ganache es una emulsión entre grasa (chocolate/manteca de cacao) y líquido (crema). Si el chocolate está demasiado frío cuando se mezcla, o si la proporción de líquido es muy alta, la emulsión se rompe y se ve grumosa o aceitosa en vez de lisa.',
-      consejo:'Si se corta, agrega unas gotas de crema tibia y bate en el centro hasta que vuelva a unirse.', cursoRelacionado:null, imagen:'assets/discover/1.jpg' },
-    { id:2, categoria:'Panadería', tipo:'Tip DulceLab',
-      titulo:'La temperatura del agua cambia tu fermentación',
-      resumen:'El agua más fría ralentiza la actividad de la levadura y el agua más caliente puede acelerarla.',
-      contenido:'La levadura es un organismo vivo: su actividad depende de la temperatura. Agua muy fría retrasa la fermentación (útil para masas de larga fermentación); agua muy caliente por encima de 50°C puede matar la levadura por completo.',
-      consejo:'Para una fermentación estándar, busca agua entre 24°C y 27°C.', cursoRelacionado:null, imagen:'assets/discover/8.jpg' },
-    { id:3, categoria:'Cocina', tipo:'Técnica rápida',
-      titulo:'¿Qué es la reacción de Maillard?',
-      resumen:'Es una reacción química que ayuda a desarrollar aromas, sabores y colores dorados durante la cocción.',
-      contenido:'Ocurre cuando aminoácidos y azúcares reaccionan bajo calor seco (a partir de ~140°C), generando cientos de compuestos responsables del dorado y el sabor "tostado" en carnes, pan y verduras salteadas.',
-      consejo:'Seca bien la superficie del alimento antes de sellarlo: el exceso de humedad evita que la temperatura suba lo suficiente para que ocurra Maillard.', cursoRelacionado:null, imagen:'assets/discover/9.jpg' },
-    { id:4, categoria:'Costos', tipo:'Dato de negocio',
-      titulo:'Costo no es lo mismo que precio',
-      resumen:'Antes de fijar un precio debes considerar ingredientes, mermas, gastos operativos y margen de utilidad.',
-      contenido:'El costo es lo que te cuesta producir; el precio es lo que decides cobrar. Entre ambos debe existir un margen que cubra gastos fijos (renta, luz, sueldos) y deje utilidad real, no solo "recuperar lo gastado en ingredientes".',
-      consejo:'Registra siempre la merma como parte del costo, no como una pérdida aparte.', cursoRelacionado:null, imagen:'assets/discover/20.jpg' },
-    { id:5, categoria:'Inocuidad', tipo:'Inocuidad en 1 minuto',
-      titulo:'Evita la contaminación cruzada',
-      resumen:'Separar alimentos crudos de los listos para consumo ayuda a reducir riesgos durante la preparación.',
-      contenido:'La contaminación cruzada ocurre cuando bacterias de un alimento crudo (carne, pollo, huevo) pasan a un alimento ya listo para comer, a través de tablas, cuchillos, manos o superficies compartidas.',
-      consejo:'Usa tablas de colores distintos para crudos y listos, y lávate las manos entre uno y otro.', cursoRelacionado:null, imagen:'assets/discover/16.jpg' },
-    { id:6, categoria:'Cocina', tipo:'Error común',
-      titulo:'Cortar la carne inmediatamente después de cocinarla',
-      resumen:'Dejarla reposar unos minutos ayuda a conservar mejor sus jugos.',
-      contenido:'Al cocinar, los jugos de la carne se concentran hacia el centro por el calor. Si la cortas de inmediato, esos jugos escurren al plato. Al reposar, se redistribuyen por toda la pieza.',
-      consejo:'Deja reposar cortes grandes de 5 a 10 minutos antes de cortar, cubiertos con papel aluminio.', cursoRelacionado:null, imagen:'assets/discover/10.jpg' },
-    { id:7, categoria:'Repostería', tipo:'Tip DulceLab',
-      titulo:'La mantequilla "en punto pomada" no es a temperatura ambiente cualquiera',
-      resumen:'Debe ceder ligeramente al presionarla, sin estar blanda ni derretida.',
-      contenido:'Para cremas batidas (método crema-azúcar), la mantequilla necesita estar entre 18°C y 21°C: lo suficientemente suave para incorporar aire, pero firme para sostener la estructura.',
-      consejo:'Si hace calor, mejor sácala del refrigerador solo 15-20 minutos antes de usarla.', cursoRelacionado:null, imagen:'assets/discover/2.jpg' },
-    { id:8, categoria:'Repostería', tipo:'Ingrediente de la semana',
-      titulo:'Las claras a temperatura ambiente montan mejor',
-      resumen:'Frías, tardan más en formar espuma estable y alcanzan menos volumen.',
-      contenido:'La proteína de la clara se despliega y atrapa aire con más facilidad cuando no está fría. Por eso muchas recetas piden sacar los huevos del refrigerador con anticipación antes de montar merengue.',
-      consejo:'Si tienes prisa, sumerge los huevos enteros (con cáscara) en agua tibia unos minutos.', cursoRelacionado:null, imagen:'assets/discover/3.jpg' },
-    { id:9, categoria:'Panadería', tipo:'Error común',
-      titulo:'Agregar harina de más "porque la masa se pega"',
-      resumen:'Una masa pegajosa al inicio del amasado suele ser normal, no un error.',
-      contenido:'Muchas masas de pan están intencionalmente hidratadas y se sienten pegajosas los primeros minutos de amasado. Agregar harina extra endurece la miga final y reduce el volumen del pan.',
-      consejo:'Amasa unos minutos más antes de decidir agregar harina — el gluten se desarrolla y la pegajosidad baja sola.', cursoRelacionado:null, imagen:'assets/discover/7.jpg' },
-    { id:10, categoria:'Panadería', tipo:'Técnica rápida',
-      titulo:'La prueba de la ventana para revisar el gluten',
-      resumen:'Estira un trozo de masa: si forma una membrana translúcida sin romperse, el gluten está listo.',
-      contenido:'Toma una porción pequeña de masa y estírala suavemente entre los dedos. Si se rompe rápido, necesita más amasado; si forma una "ventana" delgada y translúcida, el gluten ya desarrolló la elasticidad necesaria.',
-      consejo:'Haz la prueba con las manos limpias y sin harina extra, para no falsear el resultado.', cursoRelacionado:null, imagen:'assets/discover/6.jpg' },
-    { id:11, categoria:'Cocina', tipo:'Tip DulceLab',
-      titulo:'No toda la sal se agrega en el mismo momento',
-      resumen:'Salar en distintas etapas de la cocción da más control sobre el sabor final.',
-      contenido:'Salar al inicio ayuda a sazonar desde dentro (carnes, guisos); salar al final resalta sabores frescos (ensaladas, salsas terminadas). Usar solo un momento limita el resultado.',
-      consejo:'Prueba y ajusta sal en al menos dos momentos distintos de una preparación larga.', cursoRelacionado:null, imagen:'assets/discover/11.jpg' },
-    { id:12, categoria:'Cocina', tipo:'Ingrediente de la semana',
-      titulo:'No todos los aceites toleran el mismo calor',
-      resumen:'Cada aceite tiene un "punto de humo" distinto antes de quemarse y volverse amargo.',
-      contenido:'El aceite de oliva extra virgen tiene un punto de humo más bajo que aceites refinados como el de canola o aguacate. Usarlo para sellar a fuego muy alto puede arruinar tanto el sabor como los nutrientes.',
-      consejo:'Reserva el aceite de oliva extra virgen para terminar platillos, no para freír a alta temperatura.', cursoRelacionado:null, imagen:'assets/discover/12.jpg' },
-    { id:13, categoria:'Inocuidad', tipo:'Dato de negocio',
-      titulo:'La "zona de peligro" está entre 4°C y 60°C',
-      resumen:'En ese rango de temperatura las bacterias se multiplican más rápido.',
-      contenido:'Los alimentos perecederos no deben permanecer en ese rango de temperatura por más de 2 horas acumuladas, porque es el intervalo ideal para el crecimiento bacteriano.',
-      consejo:'Mantén el refrigerador a 4°C o menos, y sirve caliente a más de 60°C.', cursoRelacionado:null, imagen:'assets/discover/17.jpg' },
-    { id:14, categoria:'Inocuidad', tipo:'Reto rápido',
-      titulo:'¿Sabes la temperatura real de tu refrigerador?',
-      resumen:'Muchos refrigeradores no mantienen la temperatura que marca el dial.',
-      contenido:'La perilla del refrigerador no siempre corresponde a una temperatura exacta. Un termómetro de refrigerador económico te da certeza real, en vez de asumir que está bien.',
-      consejo:'Revisa la temperatura al menos una vez por semana con un termómetro independiente.', cursoRelacionado:null, imagen:'assets/discover/18.jpg' },
-    { id:15, categoria:'Costos', tipo:'Tip DulceLab',
-      titulo:'La merma también es un costo, aunque no la veas en el ticket',
-      resumen:'Lo que se echa a perder o se recorta también hay que cobrarlo.',
-      contenido:'Si compras 1 kg de verdura y usas solo 800 g después de limpiar y cortar, ese 20% de merma debe reflejarse en el costo real del platillo — de lo contrario, estás subsidiando la merma con tu propia utilidad.',
-      consejo:'Calcula el "costo real" dividiendo el precio de compra entre el rendimiento neto, no el peso bruto.', cursoRelacionado:null, imagen:'assets/discover/21.jpg' },
-    { id:16, categoria:'Costos', tipo:'Dato de negocio',
-      titulo:'Margen y markup no son lo mismo',
-      resumen:'Confundirlos puede hacer que fijes precios más bajos de lo que crees.',
-      contenido:'El margen se calcula sobre el precio de venta; el markup se calcula sobre el costo. Un markup del 100% (duplicar el costo) da un margen real de 50%, no de 100%.',
-      consejo:'Siempre aclara sobre qué base estás calculando antes de comparar cifras.', cursoRelacionado:null, imagen:'assets/discover/22.jpg' },
-    { id:17, categoria:'Emprendimiento', tipo:'Dato de negocio',
-      titulo:'Un cliente recurrente cuesta menos que uno nuevo',
-      resumen:'Retener suele ser más barato que atraer clientes desde cero.',
-      contenido:'Conseguir un cliente nuevo implica publicidad, promociones o descuentos de entrada. Un cliente que ya te conoce y confía en tu producto vuelve con menos fricción y menor costo de adquisición.',
-      consejo:'Antes de invertir todo en atraer gente nueva, revisa qué tan seguido regresan tus clientes actuales.', cursoRelacionado:null, imagen:'assets/discover/23.jpg' },
-    { id:18, categoria:'Emprendimiento', tipo:'Tip DulceLab',
-      titulo:'Conoce tu ticket promedio antes de bajar precios',
-      resumen:'Bajar precios sin saber este número puede reducir tu utilidad sin darte cuenta.',
-      contenido:'El ticket promedio es cuánto gasta un cliente típico en tu negocio. Si lo desconoces, cualquier promoción o descuento es una decisión a ciegas sobre tu margen real.',
-      consejo:'Súmalo una vez al mes: ventas totales del periodo ÷ número de tickets.', cursoRelacionado:null, imagen:'assets/discover/24.jpg' },
-    { id:19, categoria:'Catering', tipo:'Técnica rápida',
-      titulo:'Calcular porciones por evento no es solo "número de invitados"',
-      resumen:'El tipo de evento y el horario cambian cuánto necesita comer cada persona.',
-      contenido:'Un coctel de pie de 2 horas requiere menos porción por persona que una comida sentada de 3 horas. Ignorar el formato del evento lleva a sobreproducir o quedarse corto.',
-      consejo:'Ajusta tu cálculo base según sea coctel, comida sentada, o buffet — cada uno tiene su propia regla.', cursoRelacionado:null, imagen:'assets/discover/25.jpg' },
-    { id:20, categoria:'Catering', tipo:'Error común',
-      titulo:'Subestimar el tiempo de montaje',
-      resumen:'Llegar "a tiempo" no sirve si el montaje toma más de lo planeado.',
-      contenido:'El tiempo de montaje incluye transporte, acomodo de mesas, mantelería, y arreglo final del servicio — no solo cocinar. Calcularlo por debajo genera estrés y errores de último minuto.',
-      consejo:'Agrega siempre un margen de 30-45 minutos extra a tu estimación de montaje.', cursoRelacionado:null, imagen:'assets/discover/26.jpg' },
-    { id:21, categoria:'Técnicas', tipo:'¿Sabías que?',
-      titulo:'Sellar la carne no "atrapa los jugos" como se cree',
-      resumen:'Es un mito muy extendido en cocina — el sellado aporta sabor, no impermeabiliza.',
-      contenido:'Estudios de cocina han demostrado que sellar no crea una "barrera" que retiene líquidos. Lo que sí hace es generar la reacción de Maillard, que aporta sabor y color — el jugo se conserva principalmente por el reposo posterior.',
-      consejo:'Sella por sabor, no por la idea de "sellar jugos".', cursoRelacionado:null, imagen:'assets/discover/13.jpg' },
-    { id:22, categoria:'Técnicas', tipo:'Técnica rápida',
-      titulo:'Mise en place: el paso que ahorra errores en servicio',
-      resumen:'Tener todo pesado, cortado y listo antes de cocinar reduce fallas bajo presión.',
-      contenido:'"Mise en place" significa tener cada ingrediente medido, cortado y organizado antes de encender el fuego. En servicio real, improvisar medidas o buscar ingredientes a medio proceso es una de las causas más comunes de error.',
-      consejo:'Dedica siempre un bloque de tiempo exclusivo para mise en place antes de cocinar.', cursoRelacionado:null, imagen:'assets/discover/14.jpg' },
-    { id:23, categoria:'Ingredientes', tipo:'¿Sabías que?',
-      titulo:'No toda la sal es igual de "salada" por cucharada',
-      resumen:'La sal kosher y la sal fina tienen densidades distintas, aunque se vean parecidas.',
-      contenido:'Por el tamaño de sus cristales, una cucharada de sal kosher pesa menos que una cucharada de sal fina de mesa — usar la misma medida entre ambas puede dejar tu platillo sobre o sub-salado.',
-      consejo:'Si cambias de tipo de sal en una receta, ajusta por peso en vez de por volumen.', cursoRelacionado:null, imagen:'assets/discover/27.jpg' },
-    { id:24, categoria:'Ingredientes', tipo:'Dato de negocio',
-      titulo:'Levadura fresca y levadura seca no se sustituyen 1 a 1',
-      resumen:'La conversión entre ambas tiene una proporción aproximada que conviene conocer.',
-      contenido:'Como referencia general, la levadura seca activa suele usarse en aproximadamente la mitad del peso que pediría la levadura fresca en una receta — aunque siempre conviene validar con la ficha técnica del producto que uses.',
-      consejo:'Anota la equivalencia que uses en tu cocina para no tener que recalcular cada vez.', cursoRelacionado:null, imagen:'assets/discover/28.jpg' },
-    { id:25, categoria:'Producción', tipo:'Inocuidad en 1 minuto',
-      titulo:'FIFO: lo primero que entra es lo primero que sale',
-      resumen:'Rotar el inventario por fecha reduce mermas y riesgos de caducidad.',
-      contenido:'FIFO (First In, First Out) significa usar primero los productos que llegaron antes, colocando los nuevos detrás de los existentes en refrigerador y almacén, no encima.',
-      consejo:'Etiqueta con fecha de recepción todo lo que entra a tu almacén, aunque parezca obvio.', cursoRelacionado:null, imagen:'assets/discover/29.jpg' },
-    { id:26, categoria:'Producción', tipo:'Dato de negocio',
-      titulo:'Estandarizar una receta la hace escalable',
-      resumen:'Sin medidas exactas, cada persona del equipo cocina "a su manera".',
-      contenido:'Una receta estandarizada especifica cantidades exactas, tiempos, temperaturas y rendimiento. Esto permite que cualquier persona capacitada obtenga el mismo resultado, y que el costo se pueda calcular con precisión.',
-      consejo:'Si una receta "solo la sabe hacer" una persona del equipo, es momento de estandarizarla por escrito.', cursoRelacionado:null, imagen:'assets/discover/30.jpg' },
-    { id:27, categoria:'Repostería', tipo:'Error común',
-      titulo:'Abrir el horno antes de tiempo',
-      resumen:'El cambio brusco de temperatura puede hacer que un pastel se baje.',
-      contenido:'Al abrir el horno, entra aire frío de golpe. En preparaciones que dependen de aire atrapado (pasteles, soufflés) ese cambio térmico repentino puede hacer que la estructura colapse antes de fijarse.',
-      consejo:'Espera a que pase al menos el 75% del tiempo de horneado antes de revisar.', cursoRelacionado:null, imagen:'assets/discover/4.jpg' },
-    { id:28, categoria:'Panadería', tipo:'¿Sabías que?',
-      titulo:'Dejar reposar la masa antes de amasar mejora la textura',
-      resumen:'Ese reposo inicial se llama autólisis y facilita el desarrollo del gluten.',
-      contenido:'La autólisis es un reposo de la mezcla de harina y agua (sin sal ni levadura) antes de amasar. Durante ese tiempo, la harina se hidrata y el gluten empieza a formarse solo, con menos esfuerzo de amasado.',
-      consejo:'Prueba un reposo de 20-30 minutos antes de amasar y compara la textura final.', cursoRelacionado:null, imagen:'assets/discover/5.jpg' },
-    { id:29, categoria:'Cocina', tipo:'Reto rápido',
-      titulo:'¿Cuántas técnicas de corte usas sin pensarlo?',
-      resumen:'Brunoise, chiffonade, juliana... identifica cuáles ya dominas.',
-      contenido:'La mayoría de cocineros usan varias técnicas de corte todos los días sin nombrarlas conscientemente. Reconocerlas por su nombre ayuda a comunicarlas con claridad al resto del equipo.',
-      consejo:'La próxima vez que cortes una verdura, identifica en voz alta qué técnica estás usando.', cursoRelacionado:null, imagen:'assets/discover/15.jpg' },
-    { id:30, categoria:'Inocuidad', tipo:'Tip DulceLab',
-      titulo:'Descongela en refrigeración, no en la barra',
-      resumen:'Descongelar a temperatura ambiente favorece el crecimiento bacteriano.',
-      contenido:'Cuando un alimento se descongela sobre la barra, su superficie exterior entra en la "zona de peligro" (4°C-60°C) mucho antes de que el centro termine de descongelarse, dando tiempo de sobra a las bacterias para multiplicarse.',
-      consejo:'Planea con anticipación y descongela dentro del refrigerador, aunque tome más tiempo.', cursoRelacionado:null, imagen:'assets/discover/19.jpg' }
-  ];
-
-  const DISCOVER_CAT_META = {
-    'Repostería':{icon:'i-bn-whisk', color:'var(--primary)'},
-    'Panadería':{icon:'i-bn-rollingpin', color:'var(--warning)'},
-    'Cocina':{icon:'i-bn-toque', color:'var(--highlight)'},
-    'Inocuidad':{icon:'i-shield-check', color:'var(--success)'},
-    'Costos':{icon:'i-credit-card', color:'var(--primary-soft)'},
-    'Emprendimiento':{icon:'i-briefcase', color:'var(--warning)'},
-    'Catering':{icon:'i-users', color:'var(--highlight)'},
-    'Técnicas':{icon:'i-bn-flame', color:'var(--danger)'},
-    'Ingredientes':{icon:'i-bn-leaf', color:'var(--success)'},
-    'Producción':{icon:'i-gauge', color:'var(--primary)'}
-  };
-
-  // PRNG determinista (mulberry32) sembrado con la fecha de hoy: mismo día → mismos
-  // resultados, sin necesitar backend ni localStorage.
-  function _mulberry32(seed){
-    return function(){
-      seed |= 0; seed = seed + 0x6D2B79F5 | 0;
-      let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
-      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
-      return ((t ^ t >>> 14) >>> 0) / 4294967296;
-    };
-  }
-  function _discoverPickDaily(lib, n){
-    const hoy = new Date();
-    const semilla = hoy.getFullYear() * 372 + hoy.getMonth() * 31 + hoy.getDate();
-    const rand = _mulberry32(semilla);
-    const arr = lib.slice();
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(rand() * (i + 1));
-      const tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
-    }
-    return arr.slice(0, n);
-  }
-
-  let _discoverActiva = DISCOVER_LIBRARY; // biblioteca realmente en uso (Firestore si hay datos, si no la fija de respaldo)
-
-  window.__cargarDescubreHoy = async function(){
-    const grid = document.getElementById('home-discover-grid');
+  // ═══════════ NOTICIAS reales en el Home (Firestore noticias_auto) ═══════════
+  let _noticiasCargadas = false;
+  window.__cargarNoticiasHome = async function(force){
+    const grid = document.getElementById('home-news-grid');
     if (!grid) return;
-    // Intenta leer la biblioteca administrable desde Firestore (colección
-    // 'datos_curiosos', editable desde el admin). Si no hay nada ahí todavía
-    // (o falla la lectura), usa la biblioteca fija de respaldo — así el
-    // Inicio nunca se queda vacío.
+    if (_noticiasCargadas && !force) return; // ya están pintadas
     try {
-      const fs = window.__fs;
-      if (fs && fs.db) {
-        const snap = await fs.getDocs(fs.collection(fs.db, 'datos_curiosos'));
-        if (!snap.empty) {
-          // MODIFICADO: Firestore no garantiza el mismo orden en cada lectura,
-          // y la selección diaria depende de que el orden sea siempre igual
-          // (si no, la fecha genera un shuffle sobre un array distinto cada
-          // vez y los 6 cambian aunque sea el mismo día). Se ordena por el id
-          // del documento — es fijo por dato, así el orden siempre es el mismo.
-          _discoverActiva = snap.docs
-            .map(d => ({ id: d.id, ...d.data() }))
-            .sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
-        }
+      // MODIFICADO: Firestore rechaza la lectura de noticias_auto desde el
+      // cliente ("Missing or insufficient permissions"). En vez de tocar las
+      // reglas, se pide la lista al webhook (Admin SDK, mismo patrón que
+      // certificados) — es la misma causa por la que el admin la veía vacía.
+      const res = await fetch(`${WEBHOOK_URL}/noticias/lista?limite=6`);
+      const data = await res.json().catch(()=>({}));
+      if (!res.ok || !data.ok) throw new Error(data.error || res.statusText);
+      const arts = data.noticias || [];
+      if (!arts.length){
+        grid.innerHTML = '<div class="foro-empty" style="grid-column:1/-1;">Aún no hay noticias publicadas. Se actualizan cada mañana.</div>';
+        _noticiasCargadas = true;
+        return;
       }
-    } catch (e) {
-      console.warn('[descubre] Firestore no disponible, usando biblioteca de respaldo', e.message);
-    }
-    _renderDescubreHoy(grid);
-  };
-
-  function _renderDescubreHoy(grid){
-    const seleccion = _discoverPickDaily(_discoverActiva, 6);
-    grid.innerHTML = seleccion.map(item => {
-      const meta = DISCOVER_CAT_META[item.categoria] || { icon:'i-info', color:'var(--primary)' };
-      const cover = item.imagen
-        ? `<div class="discover-card__cover has-img" style="background-image:url('${item.imagen}')"></div>`
-        : `<div class="discover-card__cover"><svg class="ic"><use href="#${meta.icon}"/></svg></div>`;
-      return `
-      <article class="discover-card" style="--cat-color:${meta.color}" data-discover-id="${item.id}">
-        ${cover}
-        <div class="discover-card__body">
-          <div class="discover-card__tags">
-            <span class="discover-card__cat">${item.categoria}</span>
-            <span class="discover-card__tipo">${item.tipo}</span>
+      grid.innerHTML = arts.map(n=>{
+        const fecha = noticiaTiempoRel(n.createdAt || n.fechaPublicacion);
+        const cover = n.imagen
+          ? `<div class="news-card__cover" style="background-image:url('${n.imagen}');background-size:cover;background-position:center;">
+               <span class="news-card__date">${fecha}</span>
+               <span class="news-card__cat">${escapeHtml(n.categoriaNombre||n.categoria||'')}</span>
+             </div>`
+          : `<div class="news-card__cover">
+               <svg class="ic"><use href="#i-news"/></svg>
+               <span class="news-card__date">${fecha}</span>
+               <span class="news-card__cat">${escapeHtml(n.categoriaNombre||n.categoria||'')}</span>
+             </div>`;
+        return `
+        <article class="news-card" style="--cat-color:${n.color||'#C4577A'};">
+          ${cover}
+          <div class="news-card__body">
+            <h3 class="news-card__title">${escapeHtml(n.titulo||'')}</h3>
+            ${n.extracto?`<p class="news-card__excerpt">${escapeHtml(n.extracto).slice(0,140)}${(n.extracto||'').length>140?'…':''}</p>`:''}
+            <div class="news-card__footer">
+              <span class="news-card__source"><svg class="ic"><use href="#i-news"/></svg>${escapeHtml(n.fuente||'Fuente')}</span>
+              <a class="news-card__more" href="${n.link||'#'}" target="_blank" rel="noopener">Leer más<svg class="ic"><use href="#i-arrow-right"/></svg></a>
+            </div>
           </div>
-          <h3 class="discover-card__title">${item.titulo}</h3>
-          <p class="discover-card__resumen">${item.resumen}</p>
-          <button type="button" class="discover-card__more">Descubrir más<svg class="ic"><use href="#i-arrow-right"/></svg></button>
-        </div>
-      </article>`;
-    }).join('');
-    grid.querySelectorAll('[data-discover-id]').forEach(card => {
-      card.addEventListener('click', () => _abrirDiscoverModal(card.dataset.discoverId));
-    });
+        </article>`;
+      }).join('');
+      _noticiasCargadas = true;
+    } catch(e){
+      console.error('noticias home', e);
+      grid.innerHTML = '<div class="foro-empty" style="grid-column:1/-1;">No se pudieron cargar las noticias.</div>';
+    }
+  };
+  function noticiaTiempoRel(ts){
+    if(!ts) return 'Hoy';
+    let d; try{ d=ts.toDate?ts.toDate():new Date(ts); }catch(e){ return 'Hoy'; }
+    const h=Math.floor((Date.now()-d.getTime())/3600000);
+    if(h<1) return 'Ahora';
+    if(h<24) return 'Hace '+h+' h';
+    const dias=Math.floor(h/24);
+    if(dias===1) return 'Ayer';
+    if(dias<8) return 'Hace '+dias+' días';
+    return d.toLocaleDateString('es-MX',{day:'numeric',month:'short'});
   }
-
-  function _abrirDiscoverModal(id){
-    const item = _discoverActiva.find(x => String(x.id) === String(id));
-    if (!item) return;
-    const meta = DISCOVER_CAT_META[item.categoria] || { icon:'i-info' };
-    const cursoBtn = item.cursoRelacionado
-      ? `<a class="btn btn--ghost btn--block" style="margin-top:10px;" href="#" data-navigate-curso="${item.cursoRelacionado}">Ver curso relacionado<svg class="ic"><use href="#i-arrow-right"/></svg></a>`
-      : ''; // preparado para agregar cursoRelacionado más adelante, sin inventar enlaces
-    const body = `
-      <p style="font-size:13.5px;line-height:1.65;color:var(--text-2);">${item.contenido}</p>
-      <div class="discover-modal__tip"><strong>Consejo práctico:</strong> ${item.consejo}</div>
-      ${cursoBtn}
-    `;
-    const footer = `<button class="btn btn--ghost" onclick="Modal.close('discover-${item.id}')">Cerrar</button>`;
-    Modal.open({ id:'discover-'+item.id, title:item.titulo, subtitle:item.categoria+' · '+item.tipo, icon:meta.icon, size:'md', body, footer });
-  }
-
 
   function dirAbrirCorreo(mail){
     if (!mail) return;
@@ -9824,7 +9219,6 @@ const Sections = (function(){
       perfil:renderPerfil,
       suscripcion:renderSuscripcion,
       herramientas:renderHerramientas,
-      retos:renderRetos,
       'tool-costeo':(c)=>ToolCosteo.mount(c),
       'tool-conversor':(c)=>ToolConversor.mount(c),
       'tool-merma':(c)=>ToolMerma.mount(c),
@@ -11568,11 +10962,16 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   if (overlay) overlay.addEventListener('click', function(){ ocultar(false); });
 })();
 </script>
-<script src="assets/onboarding-tour.js?v=1"></script>
+<!-- MODIFICADO: onboarding-tour.js aún no existe (daba 404). Comentado hasta que se cree el tour. -->
+<!-- <script src="assets/onboarding-tour.js?v=1"></script> -->
 <script>
+// MODIFICADO: el tour vive en assets/onboarding-tour.js (aún no existe → daba 404 y tronaba
+// toda la página con "MembershipTour is not a constructor"). Lo protegemos: si el archivo
+// del tour no está cargado, simplemente no se inicia, en vez de romper el resto del panel.
+if (typeof window.MembershipTour === 'function') {
 window.DulceLabOnboarding = new window.MembershipTour({
   namespace: 'dulcelab',
-  version: 'v3',
+  version: 'v1',
   brand: 'Guía DulceLab Food',
   autoDelay: 1600,
   identity: function(){
@@ -11588,79 +10987,40 @@ window.DulceLabOnboarding = new window.MembershipTour({
       desktopSelectors: '.sidebar .brand',
       mobileSelectors: '.topbar__left',
       title: 'Bienvenido a DulceLab Food',
-      copy: 'Este es tu espacio de formación en gastronomía, repostería y negocio de alimentos. Te mostramos dónde encontrar cada recurso para que empieces con confianza.'
-    },
-    {
-      desktopSelectors: '.sidebar .nav-item[data-section="inicio"]',
-      mobileSelectors: '.mobile-nav .mobile-nav__item[data-section="inicio"]',
-      title: 'Inicio',
-      copy: 'Tu panel principal: un vistazo rápido a tu progreso, noticias del sector y próximas clases en vivo.'
+      copy: 'Este es tu espacio de aprendizaje en biociencias, laboratorio y práctica clínica. Te mostramos dónde encontrar cada recurso para que puedas empezar con confianza.'
     },
     {
       desktopSelectors: '.sidebar .nav-item[data-section="cursos"]',
       mobileSelectors: '.mobile-nav .mobile-nav__item[data-section="cursos"]',
-      title: 'Mis cursos',
-      copy: 'Aquí encontrarás las clases disponibles, tu progreso y los contenidos de repostería, cocina, control de costos e inocuidad alimentaria.'
-    },
-    {
-      desktopSelectors: '.sidebar .nav-item[data-section="webinars"]',
-      mobileSelectors: '.mobile-nav .mobile-nav__item[data-section="webinars"]',
-      title: 'Clases en vivo',
-      copy: 'Consulta próximas transmisiones y sesiones con chefs y especialistas. Desde aquí revisas fechas y entras cuando una clase esté disponible.'
+      title: 'Tus cursos de biociencias',
+      copy: 'En Mis cursos encontrarás las clases disponibles, tu progreso y los contenidos de repostería, cocina, costos e inocuidad.'
     },
     {
       desktopSelectors: '.sidebar .nav-item[data-section="pdfs"]',
       mobileSelectors: '.mobile-drawer .mobile-drawer__item[data-section="pdfs"]',
       mobileDrawer: true,
       title: 'PDFs y material de apoyo',
-      copy: 'Plantillas, checklists, recetarios y formatos descargables para acompañar tus cursos y tu trabajo en cocina.'
+      copy: 'Aquí se reúnen presentaciones, protocolos, guías y recursos descargables para acompañar tus cursos y tu trabajo en laboratorio.'
     },
     {
-      desktopSelectors: '.sidebar .nav-item[data-section="logros"]',
-      mobileSelectors: '.mobile-drawer .mobile-drawer__item[data-section="logros"]',
-      mobileDrawer: true,
-      title: 'Mis logros',
-      copy: 'Aquí vas viendo tu avance: cursos completados, insignias y reconocimientos según sigas aprendiendo.'
-    },
-    {
-      desktopSelectors: '.sidebar .nav-item[data-section="certificados"]',
-      mobileSelectors: '.mobile-drawer .mobile-drawer__item[data-section="certificados"]',
-      mobileDrawer: true,
-      title: 'Certificados',
-      copy: 'Descarga tus certificados digitales con folio y código QR verificable, listos para compartir o imprimir.'
+      desktopSelectors: '.sidebar .nav-item[data-section="webinars"]',
+      mobileSelectors: '.mobile-nav .mobile-nav__item[data-section="webinars"]',
+      title: 'Clases en vivo',
+      copy: 'Consulta próximas transmisiones y sesiones con especialistas. Desde aquí podrás revisar fechas y entrar cuando una clase esté disponible.'
     },
     {
       desktopSelectors: '.sidebar [data-tour="tools"]',
-      mobileSelectors: '.mobile-nav .mobile-nav__item[data-section="herramientas"]',
-      title: 'Tus herramientas pro',
-      copy: 'Calculadoras para costeo de recetas, rendimiento y merma, conversiones de cocina, porciones para catering, temperaturas de horno y costo por porción.'
-    },
-    {
-      desktopSelectors: '.sidebar .nav-item[data-section="foro"]',
-      mobileSelectors: '.mobile-drawer .mobile-drawer__item[data-section="foro"]',
+      mobileSelectors: '.mobile-drawer [data-tour="tools"]',
       mobileDrawer: true,
-      title: 'Comunidad',
-      copy: 'Foro VIP para compartir con otros profesionales, Directorio VIP para hacer networking, y el Canal de WhatsApp para avisos del grupo.'
+      title: 'Tu panel de herramientas',
+      copy: 'Usa calculadoras para diluciones, UFC/mL, dosis, TFG, molaridad y Ley de Beer, además del generador de reportes de laboratorio.'
     },
     {
       desktopSelectors: '.sidebar .nav-item[data-section="perfil"]',
       mobileSelectors: '.mobile-drawer .mobile-drawer__item[data-section="perfil"]',
       mobileDrawer: true,
-      title: 'Mi perfil',
-      copy: 'Revisa tus datos, preferencias, seguridad y el estado de tu membresía.'
-    },
-    {
-      desktopSelectors: '.sidebar .nav-item[data-section="suscripcion"]',
-      mobileSelectors: '.mobile-nav .mobile-nav__item[data-section="suscripcion"]',
-      title: 'Suscripción',
-      copy: 'Gestiona tu plan, revisa tu fecha de renovación o actualiza tu método de pago.'
-    },
-    {
-      desktopSelectors: '#btn-logout',
-      mobileSelectors: '.mobile-drawer #drawer-logout-btn',
-      mobileDrawer: true,
-      title: 'Cerrar sesión',
-      copy: 'Cuando termines, puedes salir de tu cuenta desde aquí de forma segura.'
+      title: 'Perfil y configuración de tu cuenta',
+      copy: 'En Mi perfil puedes revisar tus datos, preferencias, seguridad y estado de membresía. La sección Suscripción está justo debajo para gestionar tu plan.'
     },
     {
       selectors: '#btn-tour-help',
@@ -11669,6 +11029,7 @@ window.DulceLabOnboarding = new window.MembershipTour({
     }
   ]
 });
+} // fin del if (MembershipTour existe)
 </script>
 </body>
 </html>
