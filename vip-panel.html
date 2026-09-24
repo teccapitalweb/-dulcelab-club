@@ -6972,6 +6972,9 @@ const Sections = (function(){
   let _progreso = { xp:0, racha:0, ultimaActividad:null, retosCompletados:[], logrosDesbloqueados:[] };
   let _progresoListo = false;
 
+  let _progresoSinPermiso = false;
+  function _esErrorPermiso(e){ return /permission/i.test(e?.code||'') || /permission/i.test(e?.message||''); }
+
   async function _cargarProgreso(){
     try{
       const fs = window.__fs; const db = window.__db;
@@ -6984,7 +6987,10 @@ const Sections = (function(){
       } else {
         await fs.setDoc(ref, _progreso);
       }
-    } catch(e){ console.warn('[progreso] no se pudo cargar (revisa reglas de Firestore para progreso/{uid}):', e.message); }
+    } catch(e){
+      console.warn('[progreso] no se pudo cargar (revisa reglas de Firestore para progreso/{uid}):', e.message);
+      if(_esErrorPermiso(e)) _progresoSinPermiso = true;
+    }
     _progresoListo = true;
   }
   window.__cargarProgreso = _cargarProgreso;
@@ -6992,9 +6998,15 @@ const Sections = (function(){
     try{
       const fs = window.__fs; const db = window.__db;
       const uid = window.UserState?.uid;
-      if(!fs || !db || !uid) return;
+      if(!fs || !db || !uid) return false;
       await fs.setDoc(fs.doc(db,'progreso',uid), _progreso);
-    } catch(e){ console.warn('[progreso] no se pudo guardar:', e.message); }
+      _progresoSinPermiso = false;
+      return true;
+    } catch(e){
+      console.warn('[progreso] no se pudo guardar:', e.message);
+      if(_esErrorPermiso(e)) _progresoSinPermiso = true;
+      return false;
+    }
   }
 
   // Medallas nuevas, ligadas a retos (las 24 de arriba siguen ligadas a cursos,
@@ -7020,8 +7032,8 @@ const Sections = (function(){
     if(_progreso.retosCompletados.length >= 5) marcar('rt2');
     if(_progreso.racha >= 7) marcar('l21');
     if(_progreso.racha >= 30) marcar('l22');
-    await _guardarProgreso();
-    return { yaCompletado:false, nuevosLogros };
+    const guardado = await _guardarProgreso();
+    return { yaCompletado:false, nuevosLogros, guardado };
   }
 
   // ═══════════ BIBLIOTECA DE RETOS ═══════════
@@ -7042,68 +7054,69 @@ const Sections = (function(){
       pasos:['Recibir la mercancía','Etiquetar con fecha de recepción','Colocar lo nuevo hasta atrás','Sacar primero lo más antiguo','Registrar la salida'] },
 
     { id:'err1', tipo:'error', categoria:'Inocuidad', titulo:'Encuentra 4 errores de inocuidad en esta cocina', dificultad:'Intermedio', tiempo:'4 min', puntos:50,
+      imagen:'assets/retos/err1.jpg',
       hotspots:[
-        {x:22,y:62,r:9,label:'Pollo crudo junto a verduras listas (contaminación cruzada)'},
-        {x:68,y:22,r:8,label:'Cabello suelto sin cofia ni recogido'},
-        {x:80,y:70,r:8,label:'Termómetro tirado, sin usarse para verificar temperatura'},
-        {x:38,y:85,r:8,label:'Trapo/jerga sucia sobre la superficie de preparación'}
+        {x:24,y:57,r:8,label:'Pollo crudo junto a verduras listas (contaminación cruzada)'},
+        {x:49,y:26,r:8,label:'Cabello suelto sin cofia ni recogido'},
+        {x:72,y:85,r:6,label:'Termómetro tirado, sin usarse para verificar temperatura'},
+        {x:74,y:71,r:6,label:'Trapo/jerga sucia sobre la superficie de preparación'}
       ] },
 
     { id:'img1', tipo:'imagen', categoria:'Panadería', titulo:'¿Cuál masa está en el punto correcto de fermentación?', dificultad:'Intermedio', tiempo:'2 min', puntos:35,
       opciones:[
-        {label:'Masa sin fermentar (recién mezclada, sin volumen)', correcta:false, imagen:null},
-        {label:'Masa en su punto (duplicó volumen, superficie tersa)', correcta:true, imagen:null},
-        {label:'Masa sobrefermentada (colapsada, huele muy ácido)', correcta:false, imagen:null}
+        {label:'Masa sin fermentar (recién mezclada, sin volumen)', correcta:false, imagen:'assets/retos/img1-1.jpg'},
+        {label:'Masa en su punto (duplicó volumen, superficie tersa)', correcta:true, imagen:'assets/retos/img1-2.jpg'},
+        {label:'Masa sobrefermentada (colapsada, huele muy ácido)', correcta:false, imagen:'assets/retos/img1-3.jpg'}
       ] },
     { id:'img2', tipo:'imagen', categoria:'Cocina', titulo:'¿Cuál corte corresponde a un brunoise correcto?', dificultad:'Básico', tiempo:'2 min', puntos:30,
       opciones:[
-        {label:'Cubos parejos de 2-3mm', correcta:true, imagen:null},
-        {label:'Trozos irregulares y de distinto tamaño', correcta:false, imagen:null},
-        {label:'Rodajas delgadas, no en cubo', correcta:false, imagen:null}
+        {label:'Cubos parejos de 2-3mm', correcta:true, imagen:'assets/retos/img2-1.jpg'},
+        {label:'Trozos irregulares y de distinto tamaño', correcta:false, imagen:'assets/retos/img2-2.jpg'},
+        {label:'Rodajas delgadas, no en cubo', correcta:false, imagen:'assets/retos/img2-3.jpg'}
       ] },
     { id:'img3', tipo:'imagen', categoria:'Cocina', titulo:'¿Cuál salsa tiene la consistencia correcta para "nappe"?', dificultad:'Intermedio', tiempo:'2 min', puntos:35,
       opciones:[
-        {label:'Muy líquida, escurre de inmediato', correcta:false, imagen:null},
-        {label:'Cubre el dorso de la cuchara y deja rastro al pasar el dedo', correcta:true, imagen:null},
-        {label:'Muy espesa, casi como puré', correcta:false, imagen:null}
+        {label:'Muy líquida, escurre de inmediato', correcta:false, imagen:'assets/retos/img3-1.jpg'},
+        {label:'Cubre el dorso de la cuchara y deja rastro al pasar el dedo', correcta:true, imagen:'assets/retos/img3-2.jpg'},
+        {label:'Muy espesa, casi como puré', correcta:false, imagen:'assets/retos/img3-3.jpg'}
       ] },
     { id:'img4', tipo:'imagen', categoria:'Panadería', titulo:'¿Cuál pan de masa madre está bien horneado?', dificultad:'Básico', tiempo:'2 min', puntos:30,
       opciones:[
-        {label:'Pálido, corteza sin color', correcta:false, imagen:null},
-        {label:'Corteza dorada pareja, buena apertura', correcta:true, imagen:null},
-        {label:'Corteza oscura, quemada', correcta:false, imagen:null}
+        {label:'Pálido, corteza sin color', correcta:false, imagen:'assets/retos/img4-1.jpg'},
+        {label:'Corteza dorada pareja, buena apertura', correcta:true, imagen:'assets/retos/img4-2.jpg'},
+        {label:'Corteza oscura, quemada', correcta:false, imagen:'assets/retos/img4-3.jpg'}
       ] },
     { id:'img5', tipo:'imagen', categoria:'Repostería', titulo:'¿Cuál merengue está en el punto de pico firme correcto?', dificultad:'Intermedio', tiempo:'2 min', puntos:35,
       opciones:[
-        {label:'Blando, no sostiene forma', correcta:false, imagen:null},
-        {label:'Picos firmes, brillante y liso', correcta:true, imagen:null},
-        {label:'Sobre-batido, granuloso y opaco', correcta:false, imagen:null}
+        {label:'Blando, no sostiene forma', correcta:false, imagen:'assets/retos/img5-1.jpg'},
+        {label:'Picos firmes, brillante y liso', correcta:true, imagen:'assets/retos/img5-2.jpg'},
+        {label:'Sobre-batido, granuloso y opaco', correcta:false, imagen:'assets/retos/img5-3.jpg'}
       ] },
     { id:'img6', tipo:'imagen', categoria:'Cocina', titulo:'¿Cuál emplatado sigue mejor la regla de los tercios?', dificultad:'Básico', tiempo:'2 min', puntos:30,
       opciones:[
-        {label:'Todo centrado y amontonado', correcta:false, imagen:null},
-        {label:'Elementos distribuidos con espacio negativo', correcta:true, imagen:null},
-        {label:'Todo pegado a una sola orilla del plato', correcta:false, imagen:null}
+        {label:'Todo centrado y amontonado', correcta:false, imagen:'assets/retos/img6-1.jpg'},
+        {label:'Elementos distribuidos con espacio negativo', correcta:true, imagen:'assets/retos/img6-2.jpg'},
+        {label:'Todo pegado a una sola orilla del plato', correcta:false, imagen:'assets/retos/img6-3.jpg'}
       ] },
 
     { id:'ad1', tipo:'antesdespues', categoria:'Cocina', titulo:'¿Cuál emplatado se ve más vendible?', dificultad:'Básico', tiempo:'2 min', puntos:30,
       explicacion:'El plato limpio, con espacio y altura se percibe de mayor valor que uno amontonado y con bordes sucios.',
-      opciones:[ {label:'Opción A · limpio, con altura y espacio', correcta:true, imagen:null}, {label:'Opción B · amontonado, bordes sucios', correcta:false, imagen:null} ] },
+      opciones:[ {label:'Opción A · limpio, con altura y espacio', correcta:true, imagen:'assets/retos/ad1-1.jpg'}, {label:'Opción B · amontonado, bordes sucios', correcta:false, imagen:'assets/retos/ad1-2.jpg'} ] },
     { id:'ad2', tipo:'antesdespues', categoria:'Repostería', titulo:'¿Cuál pastel decorado se ve más profesional?', dificultad:'Básico', tiempo:'2 min', puntos:30,
       explicacion:'Un acabado parejo y proporciones cuidadas transmiten más calidad que un decorado apresurado.',
-      opciones:[ {label:'Opción A · acabado parejo y cuidado', correcta:true, imagen:null}, {label:'Opción B · decorado apresurado, desigual', correcta:false, imagen:null} ] },
+      opciones:[ {label:'Opción A · acabado parejo y cuidado', correcta:true, imagen:'assets/retos/ad2-1.jpg'}, {label:'Opción B · decorado apresurado, desigual', correcta:false, imagen:'assets/retos/ad2-2.jpg'} ] },
     { id:'ad3', tipo:'antesdespues', categoria:'Catering', titulo:'¿Cuál montaje de mesa se ve más listo para un evento?', dificultad:'Básico', tiempo:'2 min', puntos:30,
       explicacion:'El orden y la simetría comunican profesionalismo antes de que el cliente pruebe la comida.',
-      opciones:[ {label:'Opción A · montaje ordenado y simétrico', correcta:true, imagen:null}, {label:'Opción B · montaje a medio terminar', correcta:false, imagen:null} ] },
+      opciones:[ {label:'Opción A · montaje ordenado y simétrico', correcta:true, imagen:'assets/retos/ad3-1.jpg'}, {label:'Opción B · montaje a medio terminar', correcta:false, imagen:'assets/retos/ad3-2.jpg'} ] },
     { id:'ad4', tipo:'antesdespues', categoria:'Panadería', titulo:'¿Cuál pieza de pan tiene mejor formado?', dificultad:'Básico', tiempo:'2 min', puntos:30,
       explicacion:'Un formado parejo hornea de forma uniforme y se ve mejor en vitrina.',
-      opciones:[ {label:'Opción A · formado parejo y tenso', correcta:true, imagen:null}, {label:'Opción B · formado deforme, sin tensión', correcta:false, imagen:null} ] },
+      opciones:[ {label:'Opción A · formado parejo y tenso', correcta:true, imagen:'assets/retos/ad4-1.jpg'}, {label:'Opción B · formado deforme, sin tensión', correcta:false, imagen:'assets/retos/ad4-2.jpg'} ] },
     { id:'ad5', tipo:'antesdespues', categoria:'Producción', titulo:'¿Cuál estación de trabajo está lista para servicio?', dificultad:'Básico', tiempo:'2 min', puntos:30,
       explicacion:'Un mise en place ordenado reduce errores y tiempos muertos durante el servicio.',
-      opciones:[ {label:'Opción A · mise en place ordenado', correcta:true, imagen:null}, {label:'Opción B · estación desordenada', correcta:false, imagen:null} ] },
+      opciones:[ {label:'Opción A · mise en place ordenado', correcta:true, imagen:'assets/retos/ad5-1.jpg'}, {label:'Opción B · estación desordenada', correcta:false, imagen:'assets/retos/ad5-2.jpg'} ] },
     { id:'ad6', tipo:'antesdespues', categoria:'Cocina', titulo:'¿Cuál presentación de bebida se ve más cuidada?', dificultad:'Básico', tiempo:'2 min', puntos:30,
       explicacion:'Detalles como el hielo, la guarnición y el cristal limpio elevan la percepción de valor.',
-      opciones:[ {label:'Opción A · cristal limpio, guarnición cuidada', correcta:true, imagen:null}, {label:'Opción B · descuidada, vaso sucio', correcta:false, imagen:null} ] }
+      opciones:[ {label:'Opción A · cristal limpio, guarnición cuidada', correcta:true, imagen:'assets/retos/ad6-1.jpg'}, {label:'Opción B · descuidada, vaso sucio', correcta:false, imagen:'assets/retos/ad6-2.jpg'} ] }
   ];
 
   const RETO_CAT_META = {
@@ -7129,6 +7142,7 @@ const Sections = (function(){
           <h1 class="sec-hero__title">Retos</h1>
           <p class="sec-hero__sub">Pon a prueba lo que sabes de gastronomía. Cada reto completado suma puntos y cuenta para tu racha.</p>
         </div>
+        ${_progresoSinPermiso ? `<div style="background:color-mix(in srgb,var(--danger) 12%,transparent);border:1px solid color-mix(in srgb,var(--danger) 35%,transparent);border-radius:12px;padding:12px 14px;margin-bottom:18px;font-size:12px;color:var(--danger);">Tu avance no se está guardando (falta permiso en Firestore para <code style="font-family:'JetBrains Mono',monospace;">progreso</code>). Los puntos que ganes ahora se van a perder al recargar.</div>` : ''}
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-bottom:26px;">
           <div style="background:var(--surface);border:1px solid var(--border-2);border-radius:14px;padding:14px;"><div style="font-size:11px;color:var(--text-3);">Tu XP total</div><div style="font-size:22px;font-weight:700;color:var(--primary);">${_progreso.xp}</div></div>
           <div style="background:var(--surface);border:1px solid var(--border-2);border-radius:14px;padding:14px;"><div style="font-size:11px;color:var(--text-3);">Racha</div><div style="font-size:22px;font-weight:700;">${_progreso.racha} <span style="font-size:12px;font-weight:500;color:var(--text-3);">días</span></div></div>
@@ -7165,6 +7179,11 @@ const Sections = (function(){
       <svg class="ic" style="width:20px;height:20px;color:var(--text-3);"><use href="#i-image"/></svg>
       <span style="font-size:10px;color:var(--text-3);line-height:1.4;">Falta foto:<br>${label}</span>
     </div>`;
+  }
+
+  function _avisarResultadoXP(r, res, mensajeExito){
+    if(res.guardado) Toast.success('+'+r.puntos+' pts', mensajeExito);
+    else Toast.error('No se pudo guardar tu avance', 'Ganaste los puntos pero no se guardaron — revisa tu conexión o avísale a soporte');
   }
 
   function _celebrarLogros(nuevosLogros){
@@ -7228,7 +7247,7 @@ const Sections = (function(){
       if(correcto){
         fb.innerHTML = '<span style="color:var(--success);font-weight:600;">¡Correcto! Orden perfecto.</span>';
         const res = await _otorgarXP(r.id, r.puntos);
-        if(!res.yaCompletado) Toast.success('+'+r.puntos+' pts', r.titulo);
+        if(!res.yaCompletado) _avisarResultadoXP(r, res, r.titulo);
         _celebrarLogros(res.nuevosLogros);
       } else {
         fb.innerHTML = '<span style="color:var(--danger);font-weight:600;">Todavía no es el orden correcto, intenta de nuevo.</span>';
@@ -7241,10 +7260,9 @@ const Sections = (function(){
     const encontrados = new Set();
     const body = document.createElement('div');
     const puntosHtml = r.hotspots.map((h,i)=>`<circle class="reto-err-spot" data-i="${i}" cx="${h.x}" cy="${h.y}" r="${h.r}" fill="transparent" stroke="transparent" style="cursor:pointer;"/>`).join('');
-    body.innerHTML = `
-      <p style="font-size:12.5px;color:var(--text-2);margin-bottom:10px;">Toca las ${r.hotspots.length} zonas donde ves una falla de inocuidad.</p>
-      <div style="position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--border-2);">
-        <svg viewBox="0 0 100 100" style="width:100%;display:block;background:#EDE6DA">
+    const escena = r.imagen
+      ? `<img src="${r.imagen}" style="width:100%;display:block;">`
+      : `<svg viewBox="0 0 100 100" style="width:100%;display:block;background:#EDE6DA">
           <rect x="0" y="0" width="100" height="100" fill="#EDE6DA"/>
           <rect x="0" y="55" width="100" height="45" fill="#C9BBA6"/>
           <rect x="10" y="45" width="30" height="18" rx="1.5" fill="#8B5A2B"/>
@@ -7256,6 +7274,12 @@ const Sections = (function(){
           <rect x="74" y="64" width="16" height="4" rx="2" fill="#8C8478" transform="rotate(25 74 64)"/>
           <circle cx="88" cy="70" r="4" fill="#F5F1E8" stroke="#8C8478" stroke-width="1"/>
           <ellipse cx="38" cy="82" rx="10" ry="4" fill="#6B7280" opacity=".8"/>
+        </svg>`;
+    body.innerHTML = `
+      <p style="font-size:12.5px;color:var(--text-2);margin-bottom:10px;">Toca las ${r.hotspots.length} zonas donde ves una falla de inocuidad.</p>
+      <div style="position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--border-2);">
+        ${escena}
+        <svg viewBox="0 0 100 100" style="position:absolute;inset:0;width:100%;height:100%;">
           ${puntosHtml}
         </svg>
       </div>
@@ -7276,7 +7300,7 @@ const Sections = (function(){
         body.querySelector('#reto-err-n').textContent = String(encontrados.size);
         if(encontrados.size === r.hotspots.length){
           const res = await _otorgarXP(r.id, r.puntos);
-          if(!res.yaCompletado) Toast.success('+'+r.puntos+' pts', '¡Encontraste las '+r.hotspots.length+' fallas!');
+          if(!res.yaCompletado) _avisarResultadoXP(r, res, '¡Encontraste las '+r.hotspots.length+' fallas!');
           _celebrarLogros(res.nuevosLogros);
         }
       });
@@ -7307,7 +7331,7 @@ const Sections = (function(){
         if(o.correcta){
           fb.innerHTML = '<span style="color:var(--success);font-weight:600;">¡Correcto! '+o.label+'</span>';
           const res = await _otorgarXP(r.id, r.puntos);
-          if(!res.yaCompletado) Toast.success('+'+r.puntos+' pts', r.titulo);
+          if(!res.yaCompletado) _avisarResultadoXP(r, res, r.titulo);
           _celebrarLogros(res.nuevosLogros);
         } else {
           fb.innerHTML = '<span style="color:var(--danger);font-weight:600;">No es esa, intenta con otra.</span>';
@@ -7341,7 +7365,7 @@ const Sections = (function(){
         if(o.correcta){
           fb.innerHTML = '<span style="color:var(--success);font-weight:600;">¡Correcto! '+r.explicacion+'</span>';
           const res = await _otorgarXP(r.id, r.puntos);
-          if(!res.yaCompletado) Toast.success('+'+r.puntos+' pts', r.titulo);
+          if(!res.yaCompletado) _avisarResultadoXP(r, res, r.titulo);
           _celebrarLogros(res.nuevosLogros);
         } else {
           fb.innerHTML = '<span style="color:var(--danger);font-weight:600;">Esa no era · '+r.explicacion+'</span>';
