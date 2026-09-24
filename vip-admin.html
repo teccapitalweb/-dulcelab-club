@@ -1158,7 +1158,7 @@ window.__signOut = async () => {
     <div class="nav-section">
       <div class="nav-label">Comunidad</div>
       <a class="nav-item" data-section="miembros"><svg class="ic"><use href="#i-users"/></svg>Miembros VIP<span class="nav-item__badge" id="badge-miembros">0</span></a>
-      <a class="nav-item" data-section="noticias"><svg class="ic"><use href="#i-news"/></svg>Noticias</a>
+      <a class="nav-item" data-section="noticias"><svg class="ic"><use href="#i-news"/></svg>Descubre algo nuevo</a>
       <a class="nav-item" data-section="foro"><svg class="ic"><use href="#i-users"/></svg>Foro<span class="nav-item__badge" id="badge-foro">0</span></a>
       <a class="nav-item" data-section="directorio"><svg class="ic"><use href="#i-user"/></svg>Directorio<span class="nav-item__badge" id="badge-dir">0</span></a>
     </div>
@@ -1328,6 +1328,194 @@ window.addEventListener('adminready', cargarPreciosClub);
 /* =========================================================
    PAGES
    ========================================================= */
+const DISCOVER_LIBRARY = [
+    { id:1, categoria:'Repostería', tipo:'¿Sabías que?',
+      titulo:'¿Por qué una ganache puede cortarse?',
+      resumen:'La temperatura y la proporción entre grasa y líquido pueden afectar la emulsión.',
+      contenido:'Una ganache es una emulsión entre grasa (chocolate/manteca de cacao) y líquido (crema). Si el chocolate está demasiado frío cuando se mezcla, o si la proporción de líquido es muy alta, la emulsión se rompe y se ve grumosa o aceitosa en vez de lisa.',
+      consejo:'Si se corta, agrega unas gotas de crema tibia y bate en el centro hasta que vuelva a unirse.', cursoRelacionado:null },
+    { id:2, categoria:'Panadería', tipo:'Tip DulceLab',
+      titulo:'La temperatura del agua cambia tu fermentación',
+      resumen:'El agua más fría ralentiza la actividad de la levadura y el agua más caliente puede acelerarla.',
+      contenido:'La levadura es un organismo vivo: su actividad depende de la temperatura. Agua muy fría retrasa la fermentación (útil para masas de larga fermentación); agua muy caliente por encima de 50°C puede matar la levadura por completo.',
+      consejo:'Para una fermentación estándar, busca agua entre 24°C y 27°C.', cursoRelacionado:null },
+    { id:3, categoria:'Cocina', tipo:'Técnica rápida',
+      titulo:'¿Qué es la reacción de Maillard?',
+      resumen:'Es una reacción química que ayuda a desarrollar aromas, sabores y colores dorados durante la cocción.',
+      contenido:'Ocurre cuando aminoácidos y azúcares reaccionan bajo calor seco (a partir de ~140°C), generando cientos de compuestos responsables del dorado y el sabor "tostado" en carnes, pan y verduras salteadas.',
+      consejo:'Seca bien la superficie del alimento antes de sellarlo: el exceso de humedad evita que la temperatura suba lo suficiente para que ocurra Maillard.', cursoRelacionado:null },
+    { id:4, categoria:'Costos', tipo:'Dato de negocio',
+      titulo:'Costo no es lo mismo que precio',
+      resumen:'Antes de fijar un precio debes considerar ingredientes, mermas, gastos operativos y margen de utilidad.',
+      contenido:'El costo es lo que te cuesta producir; el precio es lo que decides cobrar. Entre ambos debe existir un margen que cubra gastos fijos (renta, luz, sueldos) y deje utilidad real, no solo "recuperar lo gastado en ingredientes".',
+      consejo:'Registra siempre la merma como parte del costo, no como una pérdida aparte.', cursoRelacionado:null },
+    { id:5, categoria:'Inocuidad', tipo:'Inocuidad en 1 minuto',
+      titulo:'Evita la contaminación cruzada',
+      resumen:'Separar alimentos crudos de los listos para consumo ayuda a reducir riesgos durante la preparación.',
+      contenido:'La contaminación cruzada ocurre cuando bacterias de un alimento crudo (carne, pollo, huevo) pasan a un alimento ya listo para comer, a través de tablas, cuchillos, manos o superficies compartidas.',
+      consejo:'Usa tablas de colores distintos para crudos y listos, y lávate las manos entre uno y otro.', cursoRelacionado:null },
+    { id:6, categoria:'Cocina', tipo:'Error común',
+      titulo:'Cortar la carne inmediatamente después de cocinarla',
+      resumen:'Dejarla reposar unos minutos ayuda a conservar mejor sus jugos.',
+      contenido:'Al cocinar, los jugos de la carne se concentran hacia el centro por el calor. Si la cortas de inmediato, esos jugos escurren al plato. Al reposar, se redistribuyen por toda la pieza.',
+      consejo:'Deja reposar cortes grandes de 5 a 10 minutos antes de cortar, cubiertos con papel aluminio.', cursoRelacionado:null },
+    { id:7, categoria:'Repostería', tipo:'Tip DulceLab',
+      titulo:'La mantequilla "en punto pomada" no es a temperatura ambiente cualquiera',
+      resumen:'Debe ceder ligeramente al presionarla, sin estar blanda ni derretida.',
+      contenido:'Para cremas batidas (método crema-azúcar), la mantequilla necesita estar entre 18°C y 21°C: lo suficientemente suave para incorporar aire, pero firme para sostener la estructura.',
+      consejo:'Si hace calor, mejor sácala del refrigerador solo 15-20 minutos antes de usarla.', cursoRelacionado:null },
+    { id:8, categoria:'Repostería', tipo:'Ingrediente de la semana',
+      titulo:'Las claras a temperatura ambiente montan mejor',
+      resumen:'Frías, tardan más en formar espuma estable y alcanzan menos volumen.',
+      contenido:'La proteína de la clara se despliega y atrapa aire con más facilidad cuando no está fría. Por eso muchas recetas piden sacar los huevos del refrigerador con anticipación antes de montar merengue.',
+      consejo:'Si tienes prisa, sumerge los huevos enteros (con cáscara) en agua tibia unos minutos.', cursoRelacionado:null },
+    { id:9, categoria:'Panadería', tipo:'Error común',
+      titulo:'Agregar harina de más "porque la masa se pega"',
+      resumen:'Una masa pegajosa al inicio del amasado suele ser normal, no un error.',
+      contenido:'Muchas masas de pan están intencionalmente hidratadas y se sienten pegajosas los primeros minutos de amasado. Agregar harina extra endurece la miga final y reduce el volumen del pan.',
+      consejo:'Amasa unos minutos más antes de decidir agregar harina — el gluten se desarrolla y la pegajosidad baja sola.', cursoRelacionado:null },
+    { id:10, categoria:'Panadería', tipo:'Técnica rápida',
+      titulo:'La prueba de la ventana para revisar el gluten',
+      resumen:'Estira un trozo de masa: si forma una membrana translúcida sin romperse, el gluten está listo.',
+      contenido:'Toma una porción pequeña de masa y estírala suavemente entre los dedos. Si se rompe rápido, necesita más amasado; si forma una "ventana" delgada y translúcida, el gluten ya desarrolló la elasticidad necesaria.',
+      consejo:'Haz la prueba con las manos limpias y sin harina extra, para no falsear el resultado.', cursoRelacionado:null },
+    { id:11, categoria:'Cocina', tipo:'Tip DulceLab',
+      titulo:'No toda la sal se agrega en el mismo momento',
+      resumen:'Salar en distintas etapas de la cocción da más control sobre el sabor final.',
+      contenido:'Salar al inicio ayuda a sazonar desde dentro (carnes, guisos); salar al final resalta sabores frescos (ensaladas, salsas terminadas). Usar solo un momento limita el resultado.',
+      consejo:'Prueba y ajusta sal en al menos dos momentos distintos de una preparación larga.', cursoRelacionado:null },
+    { id:12, categoria:'Cocina', tipo:'Ingrediente de la semana',
+      titulo:'No todos los aceites toleran el mismo calor',
+      resumen:'Cada aceite tiene un "punto de humo" distinto antes de quemarse y volverse amargo.',
+      contenido:'El aceite de oliva extra virgen tiene un punto de humo más bajo que aceites refinados como el de canola o aguacate. Usarlo para sellar a fuego muy alto puede arruinar tanto el sabor como los nutrientes.',
+      consejo:'Reserva el aceite de oliva extra virgen para terminar platillos, no para freír a alta temperatura.', cursoRelacionado:null },
+    { id:13, categoria:'Inocuidad', tipo:'Dato de negocio',
+      titulo:'La "zona de peligro" está entre 4°C y 60°C',
+      resumen:'En ese rango de temperatura las bacterias se multiplican más rápido.',
+      contenido:'Los alimentos perecederos no deben permanecer en ese rango de temperatura por más de 2 horas acumuladas, porque es el intervalo ideal para el crecimiento bacteriano.',
+      consejo:'Mantén el refrigerador a 4°C o menos, y sirve caliente a más de 60°C.', cursoRelacionado:null },
+    { id:14, categoria:'Inocuidad', tipo:'Reto rápido',
+      titulo:'¿Sabes la temperatura real de tu refrigerador?',
+      resumen:'Muchos refrigeradores no mantienen la temperatura que marca el dial.',
+      contenido:'La perilla del refrigerador no siempre corresponde a una temperatura exacta. Un termómetro de refrigerador económico te da certeza real, en vez de asumir que está bien.',
+      consejo:'Revisa la temperatura al menos una vez por semana con un termómetro independiente.', cursoRelacionado:null },
+    { id:15, categoria:'Costos', tipo:'Tip DulceLab',
+      titulo:'La merma también es un costo, aunque no la veas en el ticket',
+      resumen:'Lo que se echa a perder o se recorta también hay que cobrarlo.',
+      contenido:'Si compras 1 kg de verdura y usas solo 800 g después de limpiar y cortar, ese 20% de merma debe reflejarse en el costo real del platillo — de lo contrario, estás subsidiando la merma con tu propia utilidad.',
+      consejo:'Calcula el "costo real" dividiendo el precio de compra entre el rendimiento neto, no el peso bruto.', cursoRelacionado:null },
+    { id:16, categoria:'Costos', tipo:'Dato de negocio',
+      titulo:'Margen y markup no son lo mismo',
+      resumen:'Confundirlos puede hacer que fijes precios más bajos de lo que crees.',
+      contenido:'El margen se calcula sobre el precio de venta; el markup se calcula sobre el costo. Un markup del 100% (duplicar el costo) da un margen real de 50%, no de 100%.',
+      consejo:'Siempre aclara sobre qué base estás calculando antes de comparar cifras.', cursoRelacionado:null },
+    { id:17, categoria:'Emprendimiento', tipo:'Dato de negocio',
+      titulo:'Un cliente recurrente cuesta menos que uno nuevo',
+      resumen:'Retener suele ser más barato que atraer clientes desde cero.',
+      contenido:'Conseguir un cliente nuevo implica publicidad, promociones o descuentos de entrada. Un cliente que ya te conoce y confía en tu producto vuelve con menos fricción y menor costo de adquisición.',
+      consejo:'Antes de invertir todo en atraer gente nueva, revisa qué tan seguido regresan tus clientes actuales.', cursoRelacionado:null },
+    { id:18, categoria:'Emprendimiento', tipo:'Tip DulceLab',
+      titulo:'Conoce tu ticket promedio antes de bajar precios',
+      resumen:'Bajar precios sin saber este número puede reducir tu utilidad sin darte cuenta.',
+      contenido:'El ticket promedio es cuánto gasta un cliente típico en tu negocio. Si lo desconoces, cualquier promoción o descuento es una decisión a ciegas sobre tu margen real.',
+      consejo:'Súmalo una vez al mes: ventas totales del periodo ÷ número de tickets.', cursoRelacionado:null },
+    { id:19, categoria:'Catering', tipo:'Técnica rápida',
+      titulo:'Calcular porciones por evento no es solo "número de invitados"',
+      resumen:'El tipo de evento y el horario cambian cuánto necesita comer cada persona.',
+      contenido:'Un coctel de pie de 2 horas requiere menos porción por persona que una comida sentada de 3 horas. Ignorar el formato del evento lleva a sobreproducir o quedarse corto.',
+      consejo:'Ajusta tu cálculo base según sea coctel, comida sentada, o buffet — cada uno tiene su propia regla.', cursoRelacionado:null },
+    { id:20, categoria:'Catering', tipo:'Error común',
+      titulo:'Subestimar el tiempo de montaje',
+      resumen:'Llegar "a tiempo" no sirve si el montaje toma más de lo planeado.',
+      contenido:'El tiempo de montaje incluye transporte, acomodo de mesas, mantelería, y arreglo final del servicio — no solo cocinar. Calcularlo por debajo genera estrés y errores de último minuto.',
+      consejo:'Agrega siempre un margen de 30-45 minutos extra a tu estimación de montaje.', cursoRelacionado:null },
+    { id:21, categoria:'Técnicas', tipo:'¿Sabías que?',
+      titulo:'Sellar la carne no "atrapa los jugos" como se cree',
+      resumen:'Es un mito muy extendido en cocina — el sellado aporta sabor, no impermeabiliza.',
+      contenido:'Estudios de cocina han demostrado que sellar no crea una "barrera" que retiene líquidos. Lo que sí hace es generar la reacción de Maillard, que aporta sabor y color — el jugo se conserva principalmente por el reposo posterior.',
+      consejo:'Sella por sabor, no por la idea de "sellar jugos".', cursoRelacionado:null },
+    { id:22, categoria:'Técnicas', tipo:'Técnica rápida',
+      titulo:'Mise en place: el paso que ahorra errores en servicio',
+      resumen:'Tener todo pesado, cortado y listo antes de cocinar reduce fallas bajo presión.',
+      contenido:'"Mise en place" significa tener cada ingrediente medido, cortado y organizado antes de encender el fuego. En servicio real, improvisar medidas o buscar ingredientes a medio proceso es una de las causas más comunes de error.',
+      consejo:'Dedica siempre un bloque de tiempo exclusivo para mise en place antes de cocinar.', cursoRelacionado:null },
+    { id:23, categoria:'Ingredientes', tipo:'¿Sabías que?',
+      titulo:'No toda la sal es igual de "salada" por cucharada',
+      resumen:'La sal kosher y la sal fina tienen densidades distintas, aunque se vean parecidas.',
+      contenido:'Por el tamaño de sus cristales, una cucharada de sal kosher pesa menos que una cucharada de sal fina de mesa — usar la misma medida entre ambas puede dejar tu platillo sobre o sub-salado.',
+      consejo:'Si cambias de tipo de sal en una receta, ajusta por peso en vez de por volumen.', cursoRelacionado:null },
+    { id:24, categoria:'Ingredientes', tipo:'Dato de negocio',
+      titulo:'Levadura fresca y levadura seca no se sustituyen 1 a 1',
+      resumen:'La conversión entre ambas tiene una proporción aproximada que conviene conocer.',
+      contenido:'Como referencia general, la levadura seca activa suele usarse en aproximadamente la mitad del peso que pediría la levadura fresca en una receta — aunque siempre conviene validar con la ficha técnica del producto que uses.',
+      consejo:'Anota la equivalencia que uses en tu cocina para no tener que recalcular cada vez.', cursoRelacionado:null },
+    { id:25, categoria:'Producción', tipo:'Inocuidad en 1 minuto',
+      titulo:'FIFO: lo primero que entra es lo primero que sale',
+      resumen:'Rotar el inventario por fecha reduce mermas y riesgos de caducidad.',
+      contenido:'FIFO (First In, First Out) significa usar primero los productos que llegaron antes, colocando los nuevos detrás de los existentes en refrigerador y almacén, no encima.',
+      consejo:'Etiqueta con fecha de recepción todo lo que entra a tu almacén, aunque parezca obvio.', cursoRelacionado:null },
+    { id:26, categoria:'Producción', tipo:'Dato de negocio',
+      titulo:'Estandarizar una receta la hace escalable',
+      resumen:'Sin medidas exactas, cada persona del equipo cocina "a su manera".',
+      contenido:'Una receta estandarizada especifica cantidades exactas, tiempos, temperaturas y rendimiento. Esto permite que cualquier persona capacitada obtenga el mismo resultado, y que el costo se pueda calcular con precisión.',
+      consejo:'Si una receta "solo la sabe hacer" una persona del equipo, es momento de estandarizarla por escrito.', cursoRelacionado:null },
+    { id:27, categoria:'Repostería', tipo:'Error común',
+      titulo:'Abrir el horno antes de tiempo',
+      resumen:'El cambio brusco de temperatura puede hacer que un pastel se baje.',
+      contenido:'Al abrir el horno, entra aire frío de golpe. En preparaciones que dependen de aire atrapado (pasteles, soufflés) ese cambio térmico repentino puede hacer que la estructura colapse antes de fijarse.',
+      consejo:'Espera a que pase al menos el 75% del tiempo de horneado antes de revisar.', cursoRelacionado:null },
+    { id:28, categoria:'Panadería', tipo:'¿Sabías que?',
+      titulo:'Dejar reposar la masa antes de amasar mejora la textura',
+      resumen:'Ese reposo inicial se llama autólisis y facilita el desarrollo del gluten.',
+      contenido:'La autólisis es un reposo de la mezcla de harina y agua (sin sal ni levadura) antes de amasar. Durante ese tiempo, la harina se hidrata y el gluten empieza a formarse solo, con menos esfuerzo de amasado.',
+      consejo:'Prueba un reposo de 20-30 minutos antes de amasar y compara la textura final.', cursoRelacionado:null },
+    { id:29, categoria:'Cocina', tipo:'Reto rápido',
+      titulo:'¿Cuántas técnicas de corte usas sin pensarlo?',
+      resumen:'Brunoise, chiffonade, juliana... identifica cuáles ya dominas.',
+      contenido:'La mayoría de cocineros usan varias técnicas de corte todos los días sin nombrarlas conscientemente. Reconocerlas por su nombre ayuda a comunicarlas con claridad al resto del equipo.',
+      consejo:'La próxima vez que cortes una verdura, identifica en voz alta qué técnica estás usando.', cursoRelacionado:null },
+    { id:30, categoria:'Inocuidad', tipo:'Tip DulceLab',
+      titulo:'Descongela en refrigeración, no en la barra',
+      resumen:'Descongelar a temperatura ambiente favorece el crecimiento bacteriano.',
+      contenido:'Cuando un alimento se descongela sobre la barra, su superficie exterior entra en la "zona de peligro" (4°C-60°C) mucho antes de que el centro termine de descongelarse, dando tiempo de sobra a las bacterias para multiplicarse.',
+      consejo:'Planea con anticipación y descongela dentro del refrigerador, aunque tome más tiempo.', cursoRelacionado:null }
+  ];
+
+  const DISCOVER_CAT_META = {
+    'Repostería':{icon:'i-bn-whisk', color:'var(--primary)'},
+    'Panadería':{icon:'i-bn-rollingpin', color:'var(--warning)'},
+    'Cocina':{icon:'i-bn-toque', color:'var(--highlight)'},
+    'Inocuidad':{icon:'i-shield-check', color:'var(--success)'},
+    'Costos':{icon:'i-credit-card', color:'var(--primary-soft)'},
+    'Emprendimiento':{icon:'i-briefcase', color:'var(--warning)'},
+    'Catering':{icon:'i-users', color:'var(--highlight)'},
+    'Técnicas':{icon:'i-bn-flame', color:'var(--danger)'},
+    'Ingredientes':{icon:'i-bn-leaf', color:'var(--success)'},
+    'Producción':{icon:'i-gauge', color:'var(--primary)'}
+  };
+
+  // PRNG determinista (mulberry32) sembrado con la fecha de hoy: mismo día → mismos
+  // resultados, sin necesitar backend ni localStorage.
+  function _mulberry32(seed){
+    return function(){
+      seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+      let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+  function _discoverPickDaily(lib, n){
+    const hoy = new Date();
+    const semilla = hoy.getFullYear() * 372 + hoy.getMonth() * 31 + hoy.getDate();
+    const rand = _mulberry32(semilla);
+    const arr = lib.slice();
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(rand() * (i + 1));
+      const tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+    }
+    return arr.slice(0, n);
+  }
+
 const Pages={
   dashboard(p){
     // Stats reales desde AdminStore (que lee Firestore)
@@ -5064,30 +5252,48 @@ const Pages={
 
   noticias(p){
     const noticiasReales = window.AdminStore?.noticias || [];
+    const hoyDiscover = _discoverPickDaily(DISCOVER_LIBRARY, 6);
     p.innerHTML=`
       <div class="fade-up">
         <div class="sec-hero">
-          <span class="sec-hero__eyebrow">Cron automático</span>
-          <h1 class="sec-hero__title">Noticias</h1>
-          <p class="sec-hero__sub">El cron de Railway publica noticias del sector gastronómico y alimentos en el panel VIP.</p>
+          <span class="sec-hero__eyebrow">Contenido del Inicio</span>
+          <h1 class="sec-hero__title">Descubre algo nuevo</h1>
+          <p class="sec-hero__sub">Esto reemplazó a las noticias externas: datos propios de DulceLab Food que rotan solos cada día, sin backend. Aquí ves exactamente lo mismo que ven tus miembros hoy en el Inicio.</p>
         </div>
 
-        <section class="cron-card">
-          <div class="cron-card__row">
-            <div class="cron-card__icon"><svg class="ic" style="width:24px;height:24px;"><use href="#i-refresh"/></svg></div>
-            <div class="cron-card__info">
-              <span class="cron-card__lbl">Estado sin confirmar</span>
-              <div class="cron-card__title">NewsData → Firestore</div>
-              <div class="cron-card__sub">Aún no hay registro de ejecuciones reales del cron para DulceLab Food. Verifica el cron de Railway en el repo del webhook.</div>
-            </div>
-            <!-- MODIFICADO: reconectado a /admin/ejecutar-noticias ahora que existe el endpoint real -->
-            <button class="btn btn--ghost" id="cron-run"><svg class="ic"><use href="#i-refresh"/></svg>Ejecutar ahora</button>
-          </div>
-        </section>
+        <div class="section-header"><h2 class="section-header__title">Vista previa de hoy<span class="section-header__badge">${new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'short'})}</span></h2></div>
+        <div class="dash-grid" style="grid-template-columns:repeat(auto-fill,minmax(230px,1fr));">
+          ${hoyDiscover.map(item => {
+            const meta = DISCOVER_CAT_META[item.categoria] || { icon:'i-info', color:'var(--primary)' };
+            return `
+            <div class="dash-card" style="padding:14px;">
+              <span class="tag" style="color:${meta.color};border-color:color-mix(in srgb,${meta.color} 40%,transparent);background:color-mix(in srgb,${meta.color} 14%,transparent);margin-bottom:8px;">${item.categoria} · ${item.tipo}</span>
+              <div style="font-size:13px;font-weight:600;line-height:1.4;margin-bottom:4px;">${item.titulo}</div>
+              <div style="font-size:11.5px;color:var(--text-3);line-height:1.5;">${item.resumen}</div>
+            </div>`;
+          }).join('')}
+        </div>
+        <p style="font-size:11.5px;color:var(--text-3);margin:10px 0 28px;">La biblioteca completa tiene ${DISCOVER_LIBRARY.length} datos. Para agregar, quitar o editar alguno, pide el cambio directo en el código de <code style="font-family:'JetBrains Mono',monospace;color:var(--primary);">vip-panel.html</code> (sección <code style="font-family:'JetBrains Mono',monospace;color:var(--primary);">DISCOVER_LIBRARY</code>) — por ahora no tiene formulario propio aquí.</p>
 
-        <div class="section-header"><h2 class="section-header__title">Noticias publicadas${noticiasReales.length?` <span class="section-header__badge">${noticiasReales.length}</span>`:''}</h2></div>
-        <div class="adm-list">
-          ${noticiasReales.length===0?`<div class="empty"><div class="empty__icon"><svg class="ic"><use href="#i-news"/></svg></div><h3>Sin noticias publicadas</h3><p>El cron aún no ha generado noticias reales para DulceLab Food.</p></div>`:noticiasReales.map(n=>{
+        <details style="margin-top:8px;">
+          <summary style="cursor:pointer;font-size:12.5px;font-weight:600;color:var(--text-2);padding:10px 0;">Sistema anterior · noticias externas (ya no se muestran en el Inicio)</summary>
+          <div style="padding-top:14px;">
+            <section class="cron-card">
+              <div class="cron-card__row">
+                <div class="cron-card__icon"><svg class="ic" style="width:24px;height:24px;"><use href="#i-refresh"/></svg></div>
+                <div class="cron-card__info">
+                  <span class="cron-card__lbl">Estado sin confirmar</span>
+                  <div class="cron-card__title">NewsData → Firestore</div>
+                  <div class="cron-card__sub">Este cron sigue existiendo por si lo quieres reactivar más adelante, pero el Inicio del panel VIP ya no lee de aquí.</div>
+                </div>
+                <!-- MODIFICADO: reconectado a /admin/ejecutar-noticias ahora que existe el endpoint real -->
+                <button class="btn btn--ghost" id="cron-run"><svg class="ic"><use href="#i-refresh"/></svg>Ejecutar ahora</button>
+              </div>
+            </section>
+
+            <div class="section-header"><h2 class="section-header__title">Noticias publicadas (archivo)${noticiasReales.length?` <span class="section-header__badge">${noticiasReales.length}</span>`:''}</h2></div>
+            <div class="adm-list">
+              ${noticiasReales.length===0?`<div class="empty"><div class="empty__icon"><svg class="ic"><use href="#i-news"/></svg></div><h3>Sin noticias publicadas</h3><p>El cron aún no ha generado noticias reales para DulceLab Food.</p></div>`:noticiasReales.map(n=>{
             const fp = n.fechaPublicacion?.toDate ? n.fechaPublicacion.toDate() : (n.fechaPublicacion ? new Date(n.fechaPublicacion) : null);
             const fechaTxt = fp ? fp.toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'}) : '—';
             return `
@@ -5106,7 +5312,9 @@ const Pages={
               </div>
             </div>
           `;}).join('')}
-        </div>
+            </div>
+          </div>
+        </details>
       </div>
     `;
     document.getElementById('cron-run')?.addEventListener('click', async (e) => {
