@@ -98,10 +98,12 @@ body{
 .herramientas-bloqueadas .nav-item[data-section="foro"]::after,
 .herramientas-bloqueadas .nav-item[data-section="directorio"]::after,
 .herramientas-bloqueadas .nav-item[data-section="canal"]::after,
+.herramientas-bloqueadas .nav-item[data-section="retos"]::after,
 .herramientas-bloqueadas .mobile-drawer__item[data-tool]::after,
 .herramientas-bloqueadas .mobile-drawer__item[data-section="foro"]::after,
 .herramientas-bloqueadas .mobile-drawer__item[data-section="directorio"]::after,
-.herramientas-bloqueadas .mobile-drawer__item[data-section="canal"]::after{
+.herramientas-bloqueadas .mobile-drawer__item[data-section="canal"]::after,
+.herramientas-bloqueadas .mobile-drawer__item[data-section="retos"]::after{
   content:"";width:11px;height:11px;margin-left:auto;flex:none;opacity:.5;
   background-color:var(--text-3);
   -webkit-mask:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>') no-repeat center/contain;
@@ -7042,18 +7044,18 @@ const Sections = (function(){
   // tipo 'imagen'     · elegir la foto correcta entre 3 (necesita fotos reales)
   // tipo 'antesdespues' · elegir cuál se ve más profesional entre 2 (necesita fotos reales)
   const RETOS_LIBRARY = [
-    { id:'sec1', tipo:'secuencia', categoria:'Panadería', titulo:'Ordena el proceso de una masa madre', dificultad:'Intermedio', tiempo:'5 min', puntos:40,
+    { id:'sec1', tipo:'secuencia', categoria:'Panadería', titulo:'Ordena el proceso de una masa madre', dificultad:'Intermedio', puntos:40,
       pasos:['Alimentar el cultivo con harina y agua','Mezclar la harina, el agua y el cultivo','Reposar y dejar fermentar','Hacer los dobleces a la masa','Formar y boletar','Hornear'] },
-    { id:'sec2', tipo:'secuencia', categoria:'Cocina', titulo:'Ordena cómo se prepara una salsa bechamel', dificultad:'Básico', tiempo:'3 min', puntos:30,
-      pasos:['Derretir la mantequilla','Agregar la harina y cocinar el roux','Incorporar la leche poco a poco','Sazonar y dejar espesar'] },
-    { id:'sec3', tipo:'secuencia', categoria:'Cocina', titulo:'Ordena el montaje correcto de un plato', dificultad:'Básico', tiempo:'3 min', puntos:30,
-      pasos:['Elegir el plato adecuado','Colocar la base o guarnición','Colocar la proteína principal','Agregar la salsa','Decorar con el toque final'] },
-    { id:'sec4', tipo:'secuencia', categoria:'Panadería', titulo:'Ordena el proceso de fermentación del pan', dificultad:'Intermedio', tiempo:'5 min', puntos:40,
-      pasos:['Mezclar los ingredientes','Amasar','Primer levado','Dividir y boletar','Segundo levado','Hornear'] },
-    { id:'sec5', tipo:'secuencia', categoria:'Producción', titulo:'Ordena el control de inventario correcto (FIFO)', dificultad:'Básico', tiempo:'3 min', puntos:30,
-      pasos:['Recibir la mercancía','Etiquetar con fecha de recepción','Colocar lo nuevo hasta atrás','Sacar primero lo más antiguo','Registrar la salida'] },
-
-    { id:'err1', tipo:'error', categoria:'Inocuidad', titulo:'Encuentra 4 errores de inocuidad en esta cocina', dificultad:'Intermedio', tiempo:'4 min', puntos:50,
+    { id:'img1', tipo:'imagen', categoria:'Panadería', titulo:'¿Cuál masa está en el punto correcto de fermentación?', dificultad:'Intermedio', puntos:35,
+      opciones:[
+        {label:'Masa sin fermentar (recién mezclada, sin volumen)', correcta:false, imagen:'assets/img1-1.jpg'},
+        {label:'Masa en su punto (duplicó volumen, superficie tersa)', correcta:true, imagen:'assets/img1-2.jpg'},
+        {label:'Masa sobrefermentada (colapsada, huele muy ácido)', correcta:false, imagen:'assets/img1-3.jpg'}
+      ] },
+    { id:'ad1', tipo:'antesdespues', categoria:'Cocina', titulo:'¿Cuál emplatado se ve más vendible?', dificultad:'Básico', puntos:30,
+      explicacion:'El plato limpio, con espacio y altura se percibe de mayor valor que uno amontonado y con bordes sucios.',
+      opciones:[ {label:'Opción A · limpio, con altura y espacio', correcta:true, imagen:'assets/ad1-1.jpg'}, {label:'Opción B · amontonado, bordes sucios', correcta:false, imagen:'assets/ad1-2.jpg'} ] },
+    { id:'err1', tipo:'error', categoria:'Inocuidad', titulo:'Encuentra 4 errores de inocuidad en esta cocina', dificultad:'Intermedio', puntos:50,
       imagen:'assets/err1.jpg',
       hotspots:[
         {x:24,y:57,r:8,label:'Pollo crudo junto a verduras listas (contaminación cruzada)'},
@@ -7061,60 +7063,57 @@ const Sections = (function(){
         {x:72,y:85,r:6,label:'Termómetro tirado, sin usarse para verificar temperatura'},
         {x:74,y:71,r:6,label:'Trapo/jerga sucia sobre la superficie de preparación'}
       ] },
-
-    { id:'img1', tipo:'imagen', categoria:'Panadería', titulo:'¿Cuál masa está en el punto correcto de fermentación?', dificultad:'Intermedio', tiempo:'2 min', puntos:35,
-      opciones:[
-        {label:'Masa sin fermentar (recién mezclada, sin volumen)', correcta:false, imagen:'assets/img1-1.jpg'},
-        {label:'Masa en su punto (duplicó volumen, superficie tersa)', correcta:true, imagen:'assets/img1-2.jpg'},
-        {label:'Masa sobrefermentada (colapsada, huele muy ácido)', correcta:false, imagen:'assets/img1-3.jpg'}
-      ] },
-    { id:'img2', tipo:'imagen', categoria:'Cocina', titulo:'¿Cuál corte corresponde a un brunoise correcto?', dificultad:'Básico', tiempo:'2 min', puntos:30,
+    { id:'sec2', tipo:'secuencia', categoria:'Cocina', titulo:'Ordena cómo se prepara una salsa bechamel', dificultad:'Básico', puntos:30,
+      pasos:['Derretir la mantequilla','Agregar la harina y cocinar el roux','Incorporar la leche poco a poco','Sazonar y dejar espesar'] },
+    { id:'img2', tipo:'imagen', categoria:'Cocina', titulo:'¿Cuál corte corresponde a un brunoise correcto?', dificultad:'Básico', puntos:30,
       opciones:[
         {label:'Cubos parejos de 2-3mm', correcta:true, imagen:'assets/img2-1.jpg'},
         {label:'Trozos irregulares y de distinto tamaño', correcta:false, imagen:'assets/img2-2.jpg'},
         {label:'Rodajas delgadas, no en cubo', correcta:false, imagen:'assets/img2-3.jpg'}
       ] },
-    { id:'img3', tipo:'imagen', categoria:'Cocina', titulo:'¿Cuál salsa tiene la consistencia correcta para "nappe"?', dificultad:'Intermedio', tiempo:'2 min', puntos:35,
+    { id:'ad2', tipo:'antesdespues', categoria:'Repostería', titulo:'¿Cuál pastel decorado se ve más profesional?', dificultad:'Básico', puntos:30,
+      explicacion:'Un acabado parejo y proporciones cuidadas transmiten más calidad que un decorado apresurado.',
+      opciones:[ {label:'Opción A · acabado parejo y cuidado', correcta:true, imagen:'assets/ad2-1.jpg'}, {label:'Opción B · decorado apresurado, desigual', correcta:false, imagen:'assets/ad2-2.jpg'} ] },
+    { id:'sec3', tipo:'secuencia', categoria:'Cocina', titulo:'Ordena el montaje correcto de un plato', dificultad:'Básico', puntos:30,
+      pasos:['Elegir el plato adecuado','Colocar la base o guarnición','Colocar la proteína principal','Agregar la salsa','Decorar con el toque final'] },
+    { id:'img3', tipo:'imagen', categoria:'Cocina', titulo:'¿Cuál salsa tiene la consistencia correcta para "nappe"?', dificultad:'Intermedio', puntos:35,
       opciones:[
         {label:'Muy líquida, escurre de inmediato', correcta:false, imagen:'assets/img3-1.jpg'},
         {label:'Cubre el dorso de la cuchara y deja rastro al pasar el dedo', correcta:true, imagen:'assets/img3-2.jpg'},
         {label:'Muy espesa, casi como puré', correcta:false, imagen:'assets/img3-3.jpg'}
       ] },
-    { id:'img4', tipo:'imagen', categoria:'Panadería', titulo:'¿Cuál pan de masa madre está bien horneado?', dificultad:'Básico', tiempo:'2 min', puntos:30,
+    { id:'ad3', tipo:'antesdespues', categoria:'Catering', titulo:'¿Cuál montaje de mesa se ve más listo para un evento?', dificultad:'Básico', puntos:30,
+      explicacion:'El orden y la simetría comunican profesionalismo antes de que el cliente pruebe la comida.',
+      opciones:[ {label:'Opción A · montaje ordenado y simétrico', correcta:true, imagen:'assets/ad3-1.jpg'}, {label:'Opción B · montaje a medio terminar', correcta:false, imagen:'assets/ad3-2.jpg'} ] },
+    { id:'sec4', tipo:'secuencia', categoria:'Panadería', titulo:'Ordena el proceso de fermentación del pan', dificultad:'Intermedio', puntos:40,
+      pasos:['Mezclar los ingredientes','Amasar','Primer levado','Dividir y boletar','Segundo levado','Hornear'] },
+    { id:'img4', tipo:'imagen', categoria:'Panadería', titulo:'¿Cuál pan de masa madre está bien horneado?', dificultad:'Básico', puntos:30,
       opciones:[
         {label:'Pálido, corteza sin color', correcta:false, imagen:'assets/img4-1.jpg'},
         {label:'Corteza dorada pareja, buena apertura', correcta:true, imagen:'assets/img4-2.jpg'},
         {label:'Corteza oscura, quemada', correcta:false, imagen:'assets/img4-3.jpg'}
       ] },
-    { id:'img5', tipo:'imagen', categoria:'Repostería', titulo:'¿Cuál merengue está en el punto de pico firme correcto?', dificultad:'Intermedio', tiempo:'2 min', puntos:35,
+    { id:'ad4', tipo:'antesdespues', categoria:'Panadería', titulo:'¿Cuál pieza de pan tiene mejor formado?', dificultad:'Básico', puntos:30,
+      explicacion:'Un formado parejo hornea de forma uniforme y se ve mejor en vitrina.',
+      opciones:[ {label:'Opción A · formado parejo y tenso', correcta:true, imagen:'assets/ad4-1.jpg'}, {label:'Opción B · formado deforme, sin tensión', correcta:false, imagen:'assets/ad4-2.jpg'} ] },
+    { id:'sec5', tipo:'secuencia', categoria:'Producción', titulo:'Ordena el control de inventario correcto (FIFO)', dificultad:'Básico', puntos:30,
+      pasos:['Recibir la mercancía','Etiquetar con fecha de recepción','Colocar lo nuevo hasta atrás','Sacar primero lo más antiguo','Registrar la salida'] },
+    { id:'img5', tipo:'imagen', categoria:'Repostería', titulo:'¿Cuál merengue está en el punto de pico firme correcto?', dificultad:'Intermedio', puntos:35,
       opciones:[
         {label:'Blando, no sostiene forma', correcta:false, imagen:'assets/img5-1.jpg'},
         {label:'Picos firmes, brillante y liso', correcta:true, imagen:'assets/img5-2.jpg'},
         {label:'Sobre-batido, granuloso y opaco', correcta:false, imagen:'assets/img5-3.jpg'}
       ] },
-    { id:'img6', tipo:'imagen', categoria:'Cocina', titulo:'¿Cuál emplatado sigue mejor la regla de los tercios?', dificultad:'Básico', tiempo:'2 min', puntos:30,
+    { id:'ad5', tipo:'antesdespues', categoria:'Producción', titulo:'¿Cuál estación de trabajo está lista para servicio?', dificultad:'Básico', puntos:30,
+      explicacion:'Un mise en place ordenado reduce errores y tiempos muertos durante el servicio.',
+      opciones:[ {label:'Opción A · mise en place ordenado', correcta:true, imagen:'assets/ad5-1.jpg'}, {label:'Opción B · estación desordenada', correcta:false, imagen:'assets/ad5-2.jpg'} ] },
+    { id:'img6', tipo:'imagen', categoria:'Cocina', titulo:'¿Cuál emplatado sigue mejor la regla de los tercios?', dificultad:'Básico', puntos:30,
       opciones:[
         {label:'Todo centrado y amontonado', correcta:false, imagen:'assets/img6-1.jpg'},
         {label:'Elementos distribuidos con espacio negativo', correcta:true, imagen:'assets/img6-2.jpg'},
         {label:'Todo pegado a una sola orilla del plato', correcta:false, imagen:'assets/img6-3.jpg'}
       ] },
-
-    { id:'ad1', tipo:'antesdespues', categoria:'Cocina', titulo:'¿Cuál emplatado se ve más vendible?', dificultad:'Básico', tiempo:'2 min', puntos:30,
-      explicacion:'El plato limpio, con espacio y altura se percibe de mayor valor que uno amontonado y con bordes sucios.',
-      opciones:[ {label:'Opción A · limpio, con altura y espacio', correcta:true, imagen:'assets/ad1-1.jpg'}, {label:'Opción B · amontonado, bordes sucios', correcta:false, imagen:'assets/ad1-2.jpg'} ] },
-    { id:'ad2', tipo:'antesdespues', categoria:'Repostería', titulo:'¿Cuál pastel decorado se ve más profesional?', dificultad:'Básico', tiempo:'2 min', puntos:30,
-      explicacion:'Un acabado parejo y proporciones cuidadas transmiten más calidad que un decorado apresurado.',
-      opciones:[ {label:'Opción A · acabado parejo y cuidado', correcta:true, imagen:'assets/ad2-1.jpg'}, {label:'Opción B · decorado apresurado, desigual', correcta:false, imagen:'assets/ad2-2.jpg'} ] },
-    { id:'ad3', tipo:'antesdespues', categoria:'Catering', titulo:'¿Cuál montaje de mesa se ve más listo para un evento?', dificultad:'Básico', tiempo:'2 min', puntos:30,
-      explicacion:'El orden y la simetría comunican profesionalismo antes de que el cliente pruebe la comida.',
-      opciones:[ {label:'Opción A · montaje ordenado y simétrico', correcta:true, imagen:'assets/ad3-1.jpg'}, {label:'Opción B · montaje a medio terminar', correcta:false, imagen:'assets/ad3-2.jpg'} ] },
-    { id:'ad4', tipo:'antesdespues', categoria:'Panadería', titulo:'¿Cuál pieza de pan tiene mejor formado?', dificultad:'Básico', tiempo:'2 min', puntos:30,
-      explicacion:'Un formado parejo hornea de forma uniforme y se ve mejor en vitrina.',
-      opciones:[ {label:'Opción A · formado parejo y tenso', correcta:true, imagen:'assets/ad4-1.jpg'}, {label:'Opción B · formado deforme, sin tensión', correcta:false, imagen:'assets/ad4-2.jpg'} ] },
-    { id:'ad5', tipo:'antesdespues', categoria:'Producción', titulo:'¿Cuál estación de trabajo está lista para servicio?', dificultad:'Básico', tiempo:'2 min', puntos:30,
-      explicacion:'Un mise en place ordenado reduce errores y tiempos muertos durante el servicio.',
-      opciones:[ {label:'Opción A · mise en place ordenado', correcta:true, imagen:'assets/ad5-1.jpg'}, {label:'Opción B · estación desordenada', correcta:false, imagen:'assets/ad5-2.jpg'} ] },
-    { id:'ad6', tipo:'antesdespues', categoria:'Cocina', titulo:'¿Cuál presentación de bebida se ve más cuidada?', dificultad:'Básico', tiempo:'2 min', puntos:30,
+    { id:'ad6', tipo:'antesdespues', categoria:'Cocina', titulo:'¿Cuál presentación de bebida se ve más cuidada?', dificultad:'Básico', puntos:30,
       explicacion:'Detalles como el hielo, la guarnición y el cristal limpio elevan la percepción de valor.',
       opciones:[ {label:'Opción A · cristal limpio, guarnición cuidada', correcta:true, imagen:'assets/ad6-1.jpg'}, {label:'Opción B · descuidada, vaso sucio', correcta:false, imagen:'assets/ad6-2.jpg'} ] }
   ];
@@ -7129,6 +7128,24 @@ const Sections = (function(){
   };
 
   function renderRetos(container){
+    if(typeof toolEsVIP==='function' && !toolEsVIP()){
+      container.innerHTML = `
+        <div class="fade-up">
+          <div class="sec-hero">
+            <span class="sec-hero__eyebrow">Practica jugando</span>
+            <h1 class="sec-hero__title">Retos</h1>
+            <p class="sec-hero__sub">Pon a prueba lo que sabes de gastronomía. Cada reto completado suma puntos y cuenta para tu racha.</p>
+          </div>
+          <div class="tool-paywall" style="background:var(--surface);border:1px solid var(--border-2);border-radius:16px;padding:36px 24px;">
+            <div class="tool-paywall__ic"><svg class="ic"><use href="#i-bolt"/></svg></div>
+            <h3>Retos exclusivo para miembros VIP</h3>
+            <p>Activa tu membresía para desbloquear los retos, ganar XP y subir en tu camino de Aprendiz a Maestro.</p>
+            <button class="btn btn--accent" data-section="suscripcion">Hazte VIP</button>
+          </div>
+        </div>`;
+      container.querySelector('[data-section="suscripcion"]')?.addEventListener('click', ()=>navigateToSection('suscripcion'));
+      return;
+    }
     if(!_progresoListo){
       container.innerHTML = '<div class="fade-up"><div class="foro-empty">Cargando tu progreso…</div></div>';
       _cargarProgreso().then(()=>renderRetos(container));
@@ -7149,20 +7166,21 @@ const Sections = (function(){
           <div style="background:var(--surface);border:1px solid var(--border-2);border-radius:14px;padding:14px;"><div style="font-size:11px;color:var(--text-3);">Retos completados</div><div style="font-size:22px;font-weight:700;">${completados}<span style="font-size:12px;font-weight:500;color:var(--text-3);">/${RETOS_LIBRARY.length}</span></div></div>
         </div>
         <div class="discover-grid">
-          ${RETOS_LIBRARY.map(r => {
+          ${RETOS_LIBRARY.map((r,i) => {
             const meta = RETO_CAT_META[r.categoria] || {icon:'i-bolt', color:'var(--primary)'};
             const hecho = _progreso.retosCompletados.includes(r.id);
+            const desbloqueado = i===0 || _progreso.retosCompletados.includes(RETOS_LIBRARY[i-1].id);
             return `
-            <div class="discover-card" style="--cat-color:${meta.color}" data-reto-id="${r.id}">
-              <div class="discover-card__cover"><svg class="ic"><use href="#${meta.icon}"/></svg>${hecho?'<span style="position:absolute;top:10px;right:10px;background:rgba(0,0,0,.55);color:#fff;border-radius:100px;padding:3px 9px;font-size:10px;font-weight:700;display:flex;align-items:center;gap:4px;"><svg class="ic" style="width:11px;height:11px;"><use href="#i-check-circle"/></svg>Hecho</span>':''}</div>
+            <div class="discover-card ${desbloqueado?'':'is-reto-locked'}" style="--cat-color:${meta.color};${desbloqueado?'':'opacity:.55;cursor:not-allowed;'}" data-reto-id="${r.id}" data-reto-locked="${!desbloqueado}">
+              <div class="discover-card__cover"><svg class="ic"><use href="#${desbloqueado?meta.icon:'i-tools'}"/></svg>${hecho?'<span style="position:absolute;top:10px;right:10px;background:rgba(0,0,0,.55);color:#fff;border-radius:100px;padding:3px 9px;font-size:10px;font-weight:700;display:flex;align-items:center;gap:4px;"><svg class="ic" style="width:11px;height:11px;"><use href="#i-check-circle"/></svg>Hecho</span>':(!desbloqueado?'<span style="position:absolute;top:10px;right:10px;background:rgba(0,0,0,.55);color:#fff;border-radius:100px;padding:3px 9px;font-size:10px;font-weight:700;display:flex;align-items:center;gap:4px;">🔒 Bloqueado</span>':'')}</div>
               <div class="discover-card__body">
                 <div class="discover-card__tags">
                   <span class="discover-card__cat">${r.categoria}</span>
                   <span class="discover-card__tipo">${r.dificultad}</span>
                 </div>
                 <h3 class="discover-card__title">${r.titulo}</h3>
-                <p class="discover-card__resumen"><svg class="ic" style="width:11px;height:11px;vertical-align:-1px;"><use href="#i-clock"/></svg> ${r.tiempo} &nbsp;·&nbsp; <svg class="ic" style="width:11px;height:11px;vertical-align:-1px;color:var(--primary);"><use href="#i-bolt"/></svg> +${r.puntos} pts</p>
-                <button type="button" class="discover-card__more">${hecho?'Volver a intentar':'Iniciar reto'}<svg class="ic"><use href="#i-arrow-right"/></svg></button>
+                <p class="discover-card__resumen"><svg class="ic" style="width:11px;height:11px;vertical-align:-1px;color:var(--primary);"><use href="#i-bolt"/></svg> +${r.puntos} pts</p>
+                <button type="button" class="discover-card__more">${desbloqueado?(hecho?'Volver a intentar':'Iniciar reto'):'Completa el anterior'}<svg class="ic"><use href="#i-arrow-right"/></svg></button>
               </div>
             </div>`;
           }).join('')}
@@ -7170,8 +7188,51 @@ const Sections = (function(){
       </div>
     `;
     container.querySelectorAll('[data-reto-id]').forEach(card => {
-      card.addEventListener('click', () => _abrirReto(card.dataset.retoId));
+      card.addEventListener('click', () => {
+        if(card.dataset.retoLocked === 'true'){
+          Toast.info('Reto bloqueado', 'Completa el reto anterior para desbloquear este.');
+          return;
+        }
+        _abrirReto(card.dataset.retoId);
+      });
     });
+  }
+
+  const RETO_TIEMPO_POR_TIPO = { secuencia:45, error:60, imagen:20, antesdespues:15 };
+
+  function _crearCronometro(segundos){
+    let restante = segundos;
+    let vencido = false;
+    let intervalId = null;
+    return {
+      iniciar(txtEl, onTimeout){
+        const pintar = () => {
+          const m = Math.floor(restante/60), s = restante%60;
+          txtEl.textContent = m+':'+String(s).padStart(2,'0');
+          txtEl.style.color = restante<=10 ? 'var(--danger)' : '';
+        };
+        pintar();
+        intervalId = setInterval(() => {
+          restante--;
+          if(restante<=0){
+            clearInterval(intervalId);
+            vencido = true;
+            restante = 0;
+            pintar();
+            onTimeout();
+            return;
+          }
+          pintar();
+        }, 1000);
+      },
+      detener(){ if(intervalId) clearInterval(intervalId); },
+      get vencido(){ return vencido; }
+    };
+  }
+
+  function _timerHtml(segundos){
+    const m = Math.floor(segundos/60), s = segundos%60;
+    return `<div style="display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;padding:5px 12px;border-radius:100px;background:var(--surface-2);border:1px solid var(--border-2);margin-bottom:12px;"><svg class="ic" style="width:13px;height:13px;color:var(--primary);"><use href="#i-clock"/></svg><span id="reto-timer-txt">${m}:${String(s).padStart(2,'0')}</span></div>`;
   }
 
   function _placeholderImg(label){
@@ -7207,8 +7268,11 @@ const Sections = (function(){
   // ─── Tipo: ordenar secuencia (arrastrar) ───
   function _retoSecuencia(r){
     const orden = r.pasos.map((texto,i)=>({texto,orig:i})).sort(()=>Math.random()-0.5);
+    const segundos = RETO_TIEMPO_POR_TIPO.secuencia;
+    const cronometro = _crearCronometro(segundos);
     const body = document.createElement('div');
     body.innerHTML = `
+      ${_timerHtml(segundos)}
       <p style="font-size:12.5px;color:var(--text-2);margin-bottom:12px;">Arrastra los pasos para ponerlos en el orden correcto.</p>
       <div id="reto-sec-list" style="display:flex;flex-direction:column;gap:8px;"></div>
       <div id="reto-sec-fb" style="margin-top:12px;font-size:12.5px;"></div>
@@ -7238,13 +7302,20 @@ const Sections = (function(){
       <button class="btn btn--ghost" id="reto-cerrar">Cerrar</button>
       <button class="btn btn--accent" id="reto-check">Comprobar orden</button>
     `;
-    Modal.open({ id:'reto-'+r.id, title:r.titulo, subtitle:r.categoria+' · +'+r.puntos+' pts', icon:'i-bolt', size:'md', body, footer });
+    Modal.open({ id:'reto-'+r.id, title:r.titulo, subtitle:r.categoria+' · +'+r.puntos+' pts', icon:'i-bolt', size:'md', body, footer, onClose:()=>cronometro.detener() });
+    cronometro.iniciar(body.querySelector('#reto-timer-txt'), () => {
+      body.querySelector('#reto-sec-fb').innerHTML = '<span style="color:var(--danger);font-weight:600;">⏰ Se acabó el tiempo. Cierra y vuelve a intentar.</span>';
+      list.querySelectorAll('[draggable]').forEach(el => el.draggable = false);
+      footer.querySelector('#reto-check').disabled = true;
+    });
     footer.querySelector('#reto-cerrar').addEventListener('click', ()=>Modal.close('reto-'+r.id));
     footer.querySelector('#reto-check').addEventListener('click', async ()=>{
+      if(cronometro.vencido) return;
       const actual = Array.from(list.children).map(el=>Number(el.dataset.orig));
       const correcto = actual.every((v,i)=>v===i);
       const fb = body.querySelector('#reto-sec-fb');
       if(correcto){
+        cronometro.detener();
         fb.innerHTML = '<span style="color:var(--success);font-weight:600;">¡Correcto! Orden perfecto.</span>';
         const res = await _otorgarXP(r.id, r.puntos);
         if(!res.yaCompletado) _avisarResultadoXP(r, res, r.titulo);
@@ -7258,6 +7329,8 @@ const Sections = (function(){
   // ─── Tipo: encontrar el error (ilustración con puntos clicables) ───
   function _retoError(r){
     const encontrados = new Set();
+    const segundos = RETO_TIEMPO_POR_TIPO.error;
+    const cronometro = _crearCronometro(segundos);
     const body = document.createElement('div');
     const puntosHtml = r.hotspots.map((h,i)=>`<circle class="reto-err-spot" data-i="${i}" cx="${h.x}" cy="${h.y}" r="${h.r}" fill="transparent" stroke="transparent" style="cursor:pointer;"/>`).join('');
     const escena = r.imagen
@@ -7276,6 +7349,7 @@ const Sections = (function(){
           <ellipse cx="38" cy="82" rx="10" ry="4" fill="#6B7280" opacity=".8"/>
         </svg>`;
     body.innerHTML = `
+      ${_timerHtml(segundos)}
       <p style="font-size:12.5px;color:var(--text-2);margin-bottom:10px;">Toca las ${r.hotspots.length} zonas donde ves una falla de inocuidad.</p>
       <div style="position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--border-2);">
         ${escena}
@@ -7287,10 +7361,15 @@ const Sections = (function(){
     `;
     const footer = document.createElement('div');
     footer.innerHTML = `<button class="btn btn--ghost" id="reto-cerrar">Cerrar</button>`;
-    Modal.open({ id:'reto-'+r.id, title:r.titulo, subtitle:r.categoria+' · +'+r.puntos+' pts', icon:'i-bolt', size:'md', body, footer });
+    Modal.open({ id:'reto-'+r.id, title:r.titulo, subtitle:r.categoria+' · +'+r.puntos+' pts', icon:'i-bolt', size:'md', body, footer, onClose:()=>cronometro.detener() });
+    cronometro.iniciar(body.querySelector('#reto-timer-txt'), () => {
+      body.querySelector('#reto-err-fb').innerHTML = '<span style="color:var(--danger);font-weight:600;">⏰ Se acabó el tiempo. Cierra y vuelve a intentar.</span>';
+      body.querySelectorAll('.reto-err-spot').forEach(spot => spot.style.pointerEvents = 'none');
+    });
     footer.querySelector('#reto-cerrar').addEventListener('click', ()=>Modal.close('reto-'+r.id));
     body.querySelectorAll('.reto-err-spot').forEach(spot=>{
       spot.addEventListener('click', async ()=>{
+        if(cronometro.vencido) return;
         const i = Number(spot.dataset.i);
         if(encontrados.has(i)) return;
         encontrados.add(i);
@@ -7299,6 +7378,7 @@ const Sections = (function(){
         spot.setAttribute('stroke-width','1.5');
         body.querySelector('#reto-err-n').textContent = String(encontrados.size);
         if(encontrados.size === r.hotspots.length){
+          cronometro.detener();
           const res = await _otorgarXP(r.id, r.puntos);
           if(!res.yaCompletado) _avisarResultadoXP(r, res, '¡Encontraste las '+r.hotspots.length+' fallas!');
           _celebrarLogros(res.nuevosLogros);
@@ -7309,8 +7389,11 @@ const Sections = (function(){
 
   // ─── Tipo: elegir la imagen correcta ───
   function _retoImagen(r){
+    const segundos = RETO_TIEMPO_POR_TIPO.imagen;
+    const cronometro = _crearCronometro(segundos);
     const body = document.createElement('div');
     body.innerHTML = `
+      ${_timerHtml(segundos)}
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;">
         ${r.opciones.map((o,i)=>`
           <div class="reto-img-opt" data-i="${i}" style="cursor:pointer;">
@@ -7322,13 +7405,19 @@ const Sections = (function(){
     `;
     const footer = document.createElement('div');
     footer.innerHTML = `<button class="btn btn--ghost" id="reto-cerrar">Cerrar</button>`;
-    Modal.open({ id:'reto-'+r.id, title:r.titulo, subtitle:r.categoria+' · +'+r.puntos+' pts', icon:'i-bolt', size:'md', body, footer });
+    Modal.open({ id:'reto-'+r.id, title:r.titulo, subtitle:r.categoria+' · +'+r.puntos+' pts', icon:'i-bolt', size:'md', body, footer, onClose:()=>cronometro.detener() });
+    cronometro.iniciar(body.querySelector('#reto-timer-txt'), () => {
+      body.querySelector('#reto-img-fb').innerHTML = '<span style="color:var(--danger);font-weight:600;">⏰ Se acabó el tiempo. Cierra y vuelve a intentar.</span>';
+      body.querySelectorAll('.reto-img-opt').forEach(el => el.style.pointerEvents = 'none');
+    });
     footer.querySelector('#reto-cerrar').addEventListener('click', ()=>Modal.close('reto-'+r.id));
     body.querySelectorAll('.reto-img-opt').forEach(opt=>{
       opt.addEventListener('click', async ()=>{
+        if(cronometro.vencido) return;
         const o = r.opciones[Number(opt.dataset.i)];
         const fb = body.querySelector('#reto-img-fb');
         if(o.correcta){
+          cronometro.detener();
           fb.innerHTML = '<span style="color:var(--success);font-weight:600;">¡Correcto! '+o.label+'</span>';
           const res = await _otorgarXP(r.id, r.puntos);
           if(!res.yaCompletado) _avisarResultadoXP(r, res, r.titulo);
@@ -7342,8 +7431,11 @@ const Sections = (function(){
 
   // ─── Tipo: antes y después (elegir cuál se ve mejor) ───
   function _retoAntesDespues(r){
+    const segundos = RETO_TIEMPO_POR_TIPO.antesdespues;
+    const cronometro = _crearCronometro(segundos);
     const body = document.createElement('div');
     body.innerHTML = `
+      ${_timerHtml(segundos)}
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
         ${r.opciones.map((o,i)=>`
           <div class="reto-ad-opt" data-i="${i}" style="cursor:pointer;">
@@ -7356,13 +7448,19 @@ const Sections = (function(){
     `;
     const footer = document.createElement('div');
     footer.innerHTML = `<button class="btn btn--ghost" id="reto-cerrar">Cerrar</button>`;
-    Modal.open({ id:'reto-'+r.id, title:r.titulo, subtitle:r.categoria+' · +'+r.puntos+' pts', icon:'i-bolt', size:'md', body, footer });
+    Modal.open({ id:'reto-'+r.id, title:r.titulo, subtitle:r.categoria+' · +'+r.puntos+' pts', icon:'i-bolt', size:'md', body, footer, onClose:()=>cronometro.detener() });
+    cronometro.iniciar(body.querySelector('#reto-timer-txt'), () => {
+      body.querySelector('#reto-ad-fb').innerHTML = '<span style="color:var(--danger);font-weight:600;">⏰ Se acabó el tiempo. Cierra y vuelve a intentar.</span>';
+      body.querySelectorAll('.reto-ad-opt').forEach(el => el.style.pointerEvents = 'none');
+    });
     footer.querySelector('#reto-cerrar').addEventListener('click', ()=>Modal.close('reto-'+r.id));
     body.querySelectorAll('.reto-ad-opt').forEach(opt=>{
       opt.addEventListener('click', async ()=>{
+        if(cronometro.vencido) return;
         const o = r.opciones[Number(opt.dataset.i)];
         const fb = body.querySelector('#reto-ad-fb');
         if(o.correcta){
+          cronometro.detener();
           fb.innerHTML = '<span style="color:var(--success);font-weight:600;">¡Correcto! '+r.explicacion+'</span>';
           const res = await _otorgarXP(r.id, r.puntos);
           if(!res.yaCompletado) _avisarResultadoXP(r, res, r.titulo);
@@ -10536,7 +10634,7 @@ function initNav(){
         cerrarDrawerMovil();
       }
       // Herramientas Pro y Comunidad: bloqueadas sin membresía activa
-      const seccionesComunidadVIP = ['foro','directorio','canal'];
+      const seccionesComunidadVIP = ['foro','directorio','canal','retos'];
       const esHerramientaPro = !!it.dataset.tool;
       const esComunidadVIP = it.dataset.section && seccionesComunidadVIP.includes(it.dataset.section);
       if((esHerramientaPro || esComunidadVIP) && typeof toolEsVIP==='function' && !toolEsVIP()){
