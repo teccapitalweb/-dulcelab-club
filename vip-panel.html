@@ -7243,8 +7243,19 @@ const Sections = (function(){
   }
 
   function _avisarResultadoXP(r, res, mensajeExito){
-    if(res.guardado) Toast.success('+'+r.puntos+' pts', mensajeExito);
+    if(res.guardado) Toast.success('🎉 ¡Reto logrado!', '+'+r.puntos+' pts · '+mensajeExito);
     else Toast.error('No se pudo guardar tu avance', 'Ganaste los puntos pero no se guardaron — revisa tu conexión o avísale a soporte');
+  }
+
+  function _trasCompletarReto(r){
+    const idx = RETOS_LIBRARY.findIndex(x=>x.id===r.id);
+    const siguiente = RETOS_LIBRARY[idx+1];
+    if(siguiente && !_progreso.retosCompletados.includes(siguiente.id)){
+      setTimeout(()=>Toast.success('🔓 ¡Reto desbloqueado!', siguiente.titulo), 900);
+    }
+    const dyn = document.getElementById('dynamic-section');
+    if(dyn && dyn.querySelector('[data-reto-id]')) renderRetos(dyn);
+    setTimeout(()=>Modal.close('reto-'+r.id), 1500);
   }
 
   function _celebrarLogros(nuevosLogros){
@@ -7337,7 +7348,7 @@ const Sections = (function(){
         const res = await _otorgarXP(r.id, r.puntos);
         if(!res.yaCompletado) _avisarResultadoXP(r, res, r.titulo);
         _celebrarLogros(res.nuevosLogros);
-        setTimeout(()=>Modal.close('reto-'+r.id), 1300);
+        _trasCompletarReto(r);
       } else {
         fb.innerHTML = '<span style="color:var(--danger);font-weight:600;">Todavía no es el orden correcto, intenta de nuevo.</span>';
       }
@@ -7400,7 +7411,7 @@ const Sections = (function(){
           const res = await _otorgarXP(r.id, r.puntos);
           if(!res.yaCompletado) _avisarResultadoXP(r, res, '¡Encontraste las '+r.hotspots.length+' fallas!');
           _celebrarLogros(res.nuevosLogros);
-          setTimeout(()=>Modal.close('reto-'+r.id), 1300);
+          _trasCompletarReto(r);
         }
       });
     });
@@ -7441,7 +7452,7 @@ const Sections = (function(){
           const res = await _otorgarXP(r.id, r.puntos);
           if(!res.yaCompletado) _avisarResultadoXP(r, res, r.titulo);
           _celebrarLogros(res.nuevosLogros);
-          setTimeout(()=>Modal.close('reto-'+r.id), 1300);
+          _trasCompletarReto(r);
         } else {
           fb.innerHTML = '<span style="color:var(--danger);font-weight:600;">No es esa, intenta con otra.</span>';
         }
@@ -7485,7 +7496,7 @@ const Sections = (function(){
           const res = await _otorgarXP(r.id, r.puntos);
           if(!res.yaCompletado) _avisarResultadoXP(r, res, r.titulo);
           _celebrarLogros(res.nuevosLogros);
-          setTimeout(()=>Modal.close('reto-'+r.id), 1300);
+          _trasCompletarReto(r);
         } else {
           fb.innerHTML = '<span style="color:var(--danger);font-weight:600;">Esa no era · '+r.explicacion+'</span>';
         }
