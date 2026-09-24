@@ -2257,20 +2257,30 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
   background:var(--surface);
   border:0.5px solid var(--border);
   border-radius:16px;
-  padding:16px;
+  overflow:hidden;
   cursor:pointer;
   transition:transform .25s cubic-bezier(.2,.8,.25,1),border-color .2s,box-shadow .3s;
-  display:flex;flex-direction:column;gap:10px;
+  display:flex;flex-direction:column;
   position:relative;
 }
 .discover-card:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--cat-color,var(--primary)) 35%,transparent);box-shadow:0 14px 36px rgba(0,0,0,.14)}
-.discover-card__icon{
-  width:42px;height:42px;border-radius:12px;flex:none;
-  background:color-mix(in srgb,var(--cat-color,var(--primary)) 14%,transparent);
-  color:var(--cat-color,var(--primary));
-  display:flex;align-items:center;justify-content:center;
+.discover-card__cover{
+  height:108px;flex:none;position:relative;overflow:hidden;
+  background:var(--cat-color,var(--primary));
+  display:flex;align-items:center;justify-content:center;color:#fff;
 }
-.discover-card__icon .ic{width:22px;height:22px}
+.discover-card__cover.has-img{background-size:cover;background-position:center}
+.discover-card__cover.has-img::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(0,0,0,.45) 100%)}
+.discover-card__cover::before{
+  content:"";position:absolute;inset:0;
+  background-image:linear-gradient(to right,rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(to bottom,rgba(255,255,255,.08) 1px,transparent 1px);
+  background-size:26px 26px;
+  -webkit-mask-image:radial-gradient(ellipse at center,#000 0%,transparent 75%);
+  mask-image:radial-gradient(ellipse at center,#000 0%,transparent 75%);
+}
+.discover-card__cover.has-img::before{display:none}
+.discover-card__cover .ic{width:38px;height:38px;position:relative;z-index:1;opacity:.95}
+.discover-card__body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px;flex:1}
 .discover-card__tags{display:flex;flex-wrap:wrap;gap:6px}
 .discover-card__cat,.discover-card__tipo{
   font-family:'JetBrains Mono',monospace;
@@ -7888,16 +7898,21 @@ const Sections = (function(){
     const seleccion = _discoverPickDaily(DISCOVER_LIBRARY, 6);
     grid.innerHTML = seleccion.map(item => {
       const meta = DISCOVER_CAT_META[item.categoria] || { icon:'i-info', color:'var(--primary)' };
+      const cover = item.imagen
+        ? `<div class="discover-card__cover has-img" style="background-image:url('${item.imagen}')"></div>`
+        : `<div class="discover-card__cover"><svg class="ic"><use href="#${meta.icon}"/></svg></div>`;
       return `
       <article class="discover-card" style="--cat-color:${meta.color}" data-discover-id="${item.id}">
-        <div class="discover-card__icon"><svg class="ic"><use href="#${meta.icon}"/></svg></div>
-        <div class="discover-card__tags">
-          <span class="discover-card__cat">${item.categoria}</span>
-          <span class="discover-card__tipo">${item.tipo}</span>
+        ${cover}
+        <div class="discover-card__body">
+          <div class="discover-card__tags">
+            <span class="discover-card__cat">${item.categoria}</span>
+            <span class="discover-card__tipo">${item.tipo}</span>
+          </div>
+          <h3 class="discover-card__title">${item.titulo}</h3>
+          <p class="discover-card__resumen">${item.resumen}</p>
+          <button type="button" class="discover-card__more">Descubrir más<svg class="ic"><use href="#i-arrow-right"/></svg></button>
         </div>
-        <h3 class="discover-card__title">${item.titulo}</h3>
-        <p class="discover-card__resumen">${item.resumen}</p>
-        <button type="button" class="discover-card__more">Descubrir más<svg class="ic"><use href="#i-arrow-right"/></svg></button>
       </article>`;
     }).join('');
     grid.querySelectorAll('[data-discover-id]').forEach(card => {
