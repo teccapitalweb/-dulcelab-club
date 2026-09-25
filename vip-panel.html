@@ -4861,8 +4861,15 @@ const Sections = (function(){
       const nombre = window.UserState?.nombre || window.UserState?.displayName
                    || (window.UserState?.email || '').split('@')[0] || 'Usuario VIP';
       const sesiones = (curso.sesiones && curso.sesiones.length) || curso.totalClases || 0;
+      // MODIFICADO (revisión de seguridad): se agrega "email" al certificado.
+      // El webhook ahora manda el PDF SIEMPRE al correo guardado aquí (nunca al
+      // que venga en la petición), para que nadie pueda pedir el certificado
+      // de otra persona sabiendo su folio. Se escribe en este único momento
+      // (con la sesión real de quien completó el curso) y el certificado ya no
+      // se puede editar después (regla de Firestore: solo create, no update).
       await fs.setDoc(fs.doc(fs.db, 'certificados', folio), {
         folio, uid, nombre,
+        email: window.UserState?.email || '',
         cursoId: curso.id,
         curso: curso.titulo || '',
         area: curso.area || 'Formación DulceLab Food',
@@ -4897,10 +4904,12 @@ const Sections = (function(){
             console.warn('[cert] no se pudo renderizar el PDF en el navegador, el webhook usará su respaldo:', e.message);
           }
           try {
+            // MODIFICADO (revisión de seguridad): ya no se manda "email" aquí — el
+            // webhook usa siempre el que quedó guardado en el certificado (arriba).
             const r = await fetch(`${base}/certificados/emitir`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ folio, email: emailAlumno, pdfBase64 })
+              body: JSON.stringify({ folio, pdfBase64 })
             });
             const data = await r.json();
             console.log('[cert] correo:', data);
@@ -10117,7 +10126,10 @@ const Sections = (function(){
     try {
       const resp = await fetch(WEBHOOK_BASE_URL + '/stripe/cancel-subscription', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + await window.__currentUser.getIdToken()
+        },
         body: JSON.stringify({ uid: S.uid, email: S.email })
       });
       const data = await resp.json();
@@ -10191,7 +10203,10 @@ const Sections = (function(){
     try {
       const resp = await fetch(WEBHOOK_BASE_URL + '/stripe/reactivate-subscription', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + await window.__currentUser.getIdToken()
+        },
         body: JSON.stringify({ uid: S.uid, email: S.email })
       });
       const data = await resp.json();
@@ -10230,7 +10245,10 @@ const Sections = (function(){
     try {
       const resp = await fetch(WEBHOOK_BASE_URL + '/stripe/create-billing-portal', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + await window.__currentUser.getIdToken()
+        },
         body: JSON.stringify({
           uid: S.uid,
           email: S.email,
