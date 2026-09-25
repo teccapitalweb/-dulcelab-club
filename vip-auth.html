@@ -203,6 +203,32 @@ body.modo-dia .logo-day{display:block}
 </head>
 <body>
 
+<!-- MODIFICADO: pantalla de verificación de correo. Antes createUserWithEmailAndPassword
+     entraba directo al panel sin mandar ni exigir verificación — cualquiera podía poner
+     un correo inventado y tener acceso completo. Ahora se manda el correo de verificación
+     al registrarse, y esta pantalla bloquea el paso al panel hasta que el usuario confirme
+     (se salta sola para quienes entran con Google, porque Google ya verificó ese correo). -->
+<div id="verify-gate" style="display:none;position:fixed;inset:0;z-index:9999;background:var(--bg,#0d0d0f);display:none;align-items:center;justify-content:center;padding:24px;">
+  <div class="auth-card" style="max-width:420px;text-align:center;">
+    <div class="head">
+      <h2>Confirma tu correo</h2>
+      <p id="verify-email-text">Te mandamos un enlace de verificación.</p>
+    </div>
+    <div id="verify-alert-zone"></div>
+    <p style="font-size:13px;color:var(--muted,#888);line-height:1.5;margin:14px 0 20px;">
+      Abre el correo que te mandamos y toca el enlace para confirmar que es tuyo.
+      Si no lo ves, revisa spam o vuelve a mandarlo.
+    </p>
+    <button class="btn primary" id="btn-verify-check" type="button">
+      <span class="btn-label">Ya lo confirm&eacute;, continuar</span>
+    </button>
+    <button class="btn google" id="btn-verify-resend" type="button" style="margin-top:10px;">
+      <span class="btn-label">Reenviar correo</span>
+    </button>
+    <p style="margin-top:18px;"><a href="#" id="verify-logout" style="font-size:13px;color:var(--muted,#888);">Cerrar sesi&oacute;n</a></p>
+  </div>
+</div>
+
 <button class="theme-btn" id="theme-toggle" aria-label="Cambiar tema"></button>
 
 <div class="split">
@@ -437,7 +463,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/fireba
 import {
   getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
   sendPasswordResetEmail, updateProfile, setPersistence, browserLocalPersistence,
-  onAuthStateChanged, GoogleAuthProvider, signInWithPopup
+  onAuthStateChanged, GoogleAuthProvider, signInWithPopup,
+  sendEmailVerification, signOut
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import {
   getFirestore, doc, setDoc, getDoc, serverTimestamp
@@ -534,13 +561,50 @@ async function ensureMiembroDoc(user, displayName, origen){
 }
 
 onAuthStateChanged(auth, async (user) => {
-  if (user){
-    await ensureMiembroDoc(user, user.displayName, 'login-web');
-    try{ localStorage.setItem('dulcelab_last_user', JSON.stringify({ email:user.email||'', nombre:user.displayName||'' })); }catch(e){}
-    const isAdmin = ADMINS.includes((user.email || '').toLowerCase());
-    window.location.href = isAdmin ? 'vip-admin.html' : 'vip-panel.html';
+  if (!user) return;
+  const esConGoogle = user.providerData.some(p => p.providerId === 'google.com');
+  // Google ya verifica el correo por su cuenta — solo bloqueamos cuentas de correo+contraseña sin confirmar
+  if (!esConGoogle && !user.emailVerified){
+    mostrarPuertaVerificacion(user);
+    return;
   }
+  await ensureMiembroDoc(user, user.displayName, 'login-web');
+  try{ localStorage.setItem('dulcelab_last_user', JSON.stringify({ email:user.email||'', nombre:user.displayName||'' })); }catch(e){}
+  const isAdmin = ADMINS.includes((user.email || '').toLowerCase());
+  window.location.href = isAdmin ? 'vip-admin.html' : 'vip-panel.html';
 });
+
+let _gateListenersListos = false;
+function mostrarPuertaVerificacion(user){
+  document.querySelector('.split').style.display = 'none';
+  const gate = document.getElementById('verify-gate');
+  gate.style.display = 'flex';
+  document.getElementById('verify-email-text').textContent = 'Mandamos un enlace a ' + (user.email || 'tu correo') + '.';
+  const elAlert = document.getElementById('verify-alert-zone');
+  if (_gateListenersListos) return;
+  _gateListenersListos = true;
+  document.getElementById('btn-verify-check').addEventListener('click', async () => {
+    try{
+      await user.reload();
+      if (auth.currentUser.emailVerified){
+        window.location.reload();
+      } else {
+        elAlert.innerHTML = '<div class="alert alert--error"><div class="alert__msg">Todav&iacute;a no lo confirmas. Revisa tu correo (y spam) y toca el enlace.</div></div>';
+      }
+    }catch(e){ elAlert.innerHTML = '<div class="alert alert--error"><div class="alert__msg">No pudimos revisar tu correo. Intenta de nuevo.</div></div>'; }
+  });
+  document.getElementById('btn-verify-resend').addEventListener('click', async () => {
+    try{
+      await sendEmailVerification(user);
+      elAlert.innerHTML = '<div class="alert alert--success"><div class="alert__msg">Te mandamos el correo de nuevo.</div></div>';
+    }catch(e){ elAlert.innerHTML = '<div class="alert alert--error"><div class="alert__msg">Espera un momento antes de volver a pedirlo.</div></div>'; }
+  });
+  document.getElementById('verify-logout').addEventListener('click', async (e) => {
+    e.preventDefault();
+    await signOut(auth);
+    window.location.reload();
+  });
+}
 
 function translateError(code){
   const map = {
@@ -572,9 +636,8 @@ document.getElementById('btn-login').addEventListener('click', async () => {
   setLoading(btn, true);
   try{
     await signInWithEmailAndPassword(auth, email, pass);
-    const isAdmin = ADMINS.includes(email);
     showAlert('success', 'Bienvenido!', 'Redirigiendo...');
-    setTimeout(() => { window.location.href = isAdmin ? 'vip-admin.html' : 'vip-panel.html'; }, 600);
+    // La redirección (o la pantalla de verificar correo) la decide onAuthStateChanged abajo.
   }catch(e){
     setLoading(btn, false, 'Iniciar sesion');
     showAlert('error', 'No pudimos iniciar sesion', translateError(e.code));
@@ -596,22 +659,19 @@ document.getElementById('btn-register').addEventListener('click', async () => {
   try{
     const cred = await createUserWithEmailAndPassword(auth, email, pass);
     await updateProfile(cred.user, { displayName: name });
+    try{ await sendEmailVerification(cred.user); }catch(e){ console.warn('[verify] no se pudo mandar el correo:', e.message); }
     const docResult = await ensureMiembroDoc(cred.user, name, 'registro-web');
-    const isAdmin = ADMINS.includes(email);
     if (docResult && docResult.ok === false){
       const motivo = docResult.reason || 'desconocido';
       console.error('DIAGNOSTICO: doc miembro NO se creo. Razon:', motivo);
       const txt = motivo === 'permission-denied'
-        ? 'Tu cuenta SI se creo, pero falta actualizar las reglas Firestore para guardar tu perfil. Entrando a tu panel...'
-        : 'Tu cuenta se creo pero hubo un problema al guardar tu perfil (' + motivo + '). Entrando a tu panel...';
+        ? 'Tu cuenta SI se creo, pero falta actualizar las reglas Firestore para guardar tu perfil.'
+        : 'Tu cuenta se creo pero hubo un problema al guardar tu perfil (' + motivo + ').';
       showAlert('error', 'Cuenta creada - advertencia', txt);
-      setTimeout(() => { window.location.href = isAdmin ? 'vip-admin.html' : 'vip-panel.html'; }, 4000);
       return;
     }
-    showAlert('success', 'Cuenta creada!',
-      isAdmin ? 'Redirigiendo al panel admin...'
-              : (docResult && docResult.action === 'created' ? 'Perfil guardado - entrando a tu panel...' : 'Entrando a tu panel...'));
-    setTimeout(() => { window.location.href = isAdmin ? 'vip-admin.html' : 'vip-panel.html'; }, 900);
+    showAlert('success', 'Cuenta creada!', 'Revisa tu correo para confirmarlo...');
+    // La redirección (o la pantalla de verificar correo) la decide onAuthStateChanged abajo.
   }catch(e){
     setLoading(btn, false, 'Crear cuenta');
     showAlert('error', 'No pudimos crear tu cuenta', translateError(e.code));
