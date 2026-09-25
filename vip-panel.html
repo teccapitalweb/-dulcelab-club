@@ -5111,7 +5111,8 @@ const Sections = (function(){
         <div id="ah-resultado" style="margin-top:16px;font-weight:700;font-size:14px;min-height:22px;"></div>
         <div style="display:flex;gap:8px;justify-content:center;margin-top:10px;flex-wrap:wrap;">
           <button id="ah-ayuda" class="btn btn--ghost" type="button" data-bypass-paywall="true"><svg class="ic"><use href="#i-info"/></svg>Pista</button>
-          <button id="ah-rendirse" class="btn btn--ghost" type="button" style="color:var(--danger);display:none;">Rendirme</button>
+          <button id="ah-rendirse" class="btn btn--ghost" type="button" style="color:var(--danger);display:none;">🏳️ Rendirme</button>
+          <button id="ah-reintentar" class="btn btn--ghost" type="button" style="display:none;">🔄 Volver a intentar</button>
           <button id="ah-continuar" class="btn btn--primary" style="display:none;">Continuar →</button>
         </div>
       </div>`;
@@ -5120,9 +5121,9 @@ const Sections = (function(){
     const palabra = _normalizaLetra(act.palabra||'');
     const letras = palabra.split('');
     const abecedario = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ'.split('');
-    let adivinadas = new Set();
-    let vidas = 6;
-    let terminado = false;
+    const letrasUnicas = [...new Set(letras.filter(l=>l!==' '))];
+    const maxPistas = Math.max(1, Math.ceil(letrasUnicas.length/4));
+    let adivinadas, vidas, terminado, pistasUsadas;
     const elPalabra = root.querySelector('#ah-palabra');
     const elTeclado = root.querySelector('#ah-teclado');
     const elVidas = root.querySelector('#ah-vidas');
@@ -5130,6 +5131,7 @@ const Sections = (function(){
     const elContinuar = root.querySelector('#ah-continuar');
     const elAyuda = root.querySelector('#ah-ayuda');
     const elRendirse = root.querySelector('#ah-rendirse');
+    const elReintentar = root.querySelector('#ah-reintentar');
     function dibujarPalabra(){
       elPalabra.innerHTML = letras.map(l => {
         if (l === ' ') return `<span style="width:14px;"></span>`;
@@ -5138,15 +5140,43 @@ const Sections = (function(){
       }).join('');
     }
     function dibujarVidas(){ elVidas.textContent = '❤️'.repeat(Math.max(0,vidas)) + '🖤'.repeat(6-Math.max(0,vidas)); }
+    function actualizarBotonAyuda(){
+      elAyuda.innerHTML = `<svg class="ic"><use href="#i-info"/></svg>Pista (${maxPistas-pistasUsadas})`;
+      elAyuda.disabled = pistasUsadas>=maxPistas;
+      elAyuda.style.opacity = pistasUsadas>=maxPistas ? '.5' : '1';
+    }
+    function iniciarPartida(){
+      adivinadas = new Set(); vidas = 6; terminado = false; pistasUsadas = 0;
+      elResultado.textContent = '';
+      elRendirse.style.display = 'none';
+      elReintentar.style.display = 'none';
+      elContinuar.style.display = 'none';
+      elAyuda.style.display = 'inline-flex';
+      actualizarBotonAyuda();
+      elTeclado.innerHTML = '';
+      abecedario.forEach(l => {
+        const b = document.createElement('button');
+        b.textContent = l; b.type = 'button';
+        b.style.cssText = 'width:32px;height:32px;border-radius:7px;border:1.5px solid var(--border-2);background:var(--surface-2);color:var(--text);font-weight:700;font-size:13px;cursor:pointer;';
+        b.addEventListener('click', () => tocarLetra(l, b));
+        elTeclado.appendChild(b);
+      });
+      dibujarPalabra(); dibujarVidas();
+    }
     function terminar(gano){
       terminado = true;
       elTeclado.querySelectorAll('button').forEach(b => b.disabled = true);
       elAyuda.style.display = 'none';
-      elRendirse.style.display = 'none';
       elResultado.style.color = gano ? 'var(--success)' : 'var(--danger)';
       elResultado.textContent = gano ? '¡Muy bien! 🎉' : `La palabra era: ${letras.join('')}`;
       if(!gano){ adivinadas = new Set(letras); dibujarPalabra(); }
-      elContinuar.style.display = 'inline-flex';
+      if(gano){
+        elContinuar.style.display = 'inline-flex';
+      } else {
+        // Primer intento fallido · ofrece las dos salidas, no una sola
+        elRendirse.style.display = 'inline-flex';
+        elReintentar.style.display = 'inline-flex';
+      }
     }
     function tocarLetra(l, btn){
       btn.disabled = true;
@@ -5157,32 +5187,27 @@ const Sections = (function(){
       } else {
         vidas--; dibujarVidas();
         btn.style.background = 'var(--danger)'; btn.style.color = '#fff'; btn.style.borderColor = 'var(--danger)';
-        if (vidas <= 2) elRendirse.style.display = 'inline-flex';
         if (vidas <= 0) terminar(false);
       }
     }
-    elTeclado.innerHTML = '';
-    abecedario.forEach(l => {
-      const b = document.createElement('button');
-      b.textContent = l; b.type = 'button';
-      b.style.cssText = 'width:32px;height:32px;border-radius:7px;border:1.5px solid var(--border-2);background:var(--surface-2);color:var(--text);font-weight:700;font-size:13px;cursor:pointer;';
-      b.addEventListener('click', () => tocarLetra(l, b));
-      elTeclado.appendChild(b);
-    });
-    dibujarPalabra(); dibujarVidas();
     elAyuda.addEventListener('click', ()=>{
-      if(terminado) return;
-      const faltante = letras.find(l => l!==' ' && !adivinadas.has(l));
-      if(!faltante) return;
-      adivinadas.add(faltante);
+      if(terminado || pistasUsadas>=maxPistas) return;
+      const faltantes = letrasUnicas.filter(l => !adivinadas.has(l));
+      if(faltantes.length===0) return;
+      // Primera pista siempre da la letra inicial de la palabra; las demás son al azar (no en orden)
+      const letraElegida = pistasUsadas===0 ? letras.find(l=>l!==' ') : faltantes[Math.floor(Math.random()*faltantes.length)];
+      pistasUsadas++;
+      adivinadas.add(letraElegida);
       dibujarPalabra();
-      const btn = Array.from(elTeclado.querySelectorAll('button')).find(b=>b.textContent===faltante);
+      const btn = Array.from(elTeclado.querySelectorAll('button')).find(b=>b.textContent===letraElegida && !b.disabled);
       if(btn){ btn.disabled = true; btn.style.background = 'var(--primary)'; btn.style.color = '#fff'; btn.style.borderColor = 'var(--primary)'; }
       if (letras.every(x => x===' '||adivinadas.has(x))) { terminar(true); return; }
-      elRendirse.style.display = 'inline-flex';
+      actualizarBotonAyuda();
     });
-    elRendirse.addEventListener('click', ()=>{ if(!terminado) terminar(false); });
+    elRendirse.addEventListener('click', onDone);
+    elReintentar.addEventListener('click', iniciarPartida);
     elContinuar.addEventListener('click', onDone);
+    iniciarPartida();
   }
 
   function _renderVF(act){
@@ -5264,14 +5289,17 @@ const Sections = (function(){
     botones.forEach(btn => {
       btn.addEventListener('click', () => terminar(Number(btn.dataset.opIdx), false));
     });
+    let ayudaUsada = false;
     elAyuda.addEventListener('click', ()=>{
+      if(ayudaUsada) return;
       const restantes = botones.filter(b=>!b.disabled && Number(b.dataset.opIdx)!==correcta);
       if(restantes.length<=0) return;
+      ayudaUsada = true;
       const quitar = restantes[Math.floor(Math.random()*restantes.length)];
       quitar.disabled = true;
       quitar.style.opacity = '.35';
       quitar.style.textDecoration = 'line-through';
-      if(botones.filter(b=>!b.disabled).length<=1) elAyuda.style.display = 'none';
+      elAyuda.style.display = 'none';
     });
     elRendirse.addEventListener('click', ()=> terminar(-1, true));
     elContinuar.addEventListener('click', onDone);
@@ -5326,7 +5354,8 @@ const Sections = (function(){
         <div id="sopa-resultado" style="margin-top:16px;font-weight:700;font-size:14px;min-height:22px;"></div>
         <div style="display:flex;gap:8px;justify-content:center;margin-top:8px;flex-wrap:wrap;">
           <button id="sopa-ayuda" class="btn btn--ghost" type="button" data-bypass-paywall="true"><svg class="ic"><use href="#i-info"/></svg>Pista</button>
-          <button id="sopa-rendirse" class="btn btn--ghost" type="button" style="color:var(--danger);">Rendirme</button>
+          <button id="sopa-rendirse" class="btn btn--ghost" type="button" style="color:var(--danger);display:none;">🏳️ Rendirme</button>
+          <button id="sopa-reintentar" class="btn btn--ghost" type="button" style="display:none;">🔄 Volver a intentar</button>
           <button id="sopa-continuar" class="btn btn--primary" style="display:none;">Continuar →</button>
         </div>
       </div>`;
@@ -5342,8 +5371,18 @@ const Sections = (function(){
     const elContinuar = root.querySelector('#sopa-continuar');
     const elAyuda = root.querySelector('#sopa-ayuda');
     const elRendirse = root.querySelector('#sopa-rendirse');
+    const elReintentar = root.querySelector('#sopa-reintentar');
     const cellPx = n >= 12 ? 24 : n >= 10 ? 27 : 30;
     elGrid.style.gridTemplateColumns = `repeat(${n}, ${cellPx}px)`;
+
+    const maxPistas = Math.max(1, Math.ceil(colocadas.length/3));
+    let pistasUsadas = 0;
+    let primerIntentoHecho = false;
+    function actualizarBotonAyuda(){
+      elAyuda.innerHTML = `<svg class="ic"><use href="#i-info"/></svg>Pista (${maxPistas-pistasUsadas})`;
+      elAyuda.disabled = pistasUsadas>=maxPistas;
+      elAyuda.style.opacity = pistasUsadas>=maxPistas ? '.5' : '1';
+    }
 
     function refrescarLista(){
       elLista.innerHTML = colocadas.map(p => `<span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:700;padding:4px 9px;border-radius:7px;background:${encontradas.has(p.palabra)?'var(--success)':'var(--surface-2)'};color:${encontradas.has(p.palabra)?'#fff':'var(--text-2)'};${encontradas.has(p.palabra)?'text-decoration:line-through;':''}">${p.palabra}</span>`).join('');
@@ -5353,6 +5392,7 @@ const Sections = (function(){
       elResultado.textContent = '¡Las encontraste todas! 🎉';
       elAyuda.style.display = 'none';
       elRendirse.style.display = 'none';
+      elReintentar.style.display = 'none';
       elContinuar.style.display = 'inline-flex';
     }
     // Construir celdas
@@ -5404,6 +5444,11 @@ const Sections = (function(){
         if (encontradas.size === colocadas.length) terminarTodas();
       } else {
         limpiarSeleccionVisual();
+        if(!primerIntentoHecho){
+          primerIntentoHecho = true;
+          elRendirse.style.display = 'inline-flex';
+          elReintentar.style.display = 'inline-flex';
+        }
       }
     }
     function onDown(e){
@@ -5433,15 +5478,26 @@ const Sections = (function(){
     elGrid.addEventListener('pointermove', onMove);
     document.addEventListener('pointerup', onUp);
     refrescarLista();
+    actualizarBotonAyuda();
     elAyuda.addEventListener('click', ()=>{
-      const pendiente = colocadas.find(p=>!encontradas.has(p.palabra));
-      if(!pendiente) return;
+      if(pistasUsadas>=maxPistas) return;
+      const pendientes = colocadas.filter(p=>!encontradas.has(p.palabra));
+      if(pendientes.length===0) return;
+      const pendiente = pendientes[Math.floor(Math.random()*pendientes.length)];
       const cel = celdas[pendiente.r0][pendiente.c0];
       cel.style.animation = 'retoHintPulse 1s ease-in-out infinite';
       cel.style.outline = '2px solid var(--primary)';
       setTimeout(()=>{ cel.style.animation=''; cel.style.outline=''; }, 3000);
+      pistasUsadas++;
+      actualizarBotonAyuda();
       elResultado.style.color = 'var(--primary)';
       elResultado.textContent = '💡 "'+pendiente.palabra+'" empieza en la celda marcada.';
+    });
+    elReintentar.addEventListener('click', ()=>{
+      elRendirse.style.display = 'none';
+      elReintentar.style.display = 'none';
+      primerIntentoHecho = false;
+      elResultado.textContent = '';
     });
     elRendirse.addEventListener('click', ()=>{
       colocadas.forEach(p=>{
@@ -5480,7 +5536,8 @@ const Sections = (function(){
         <div id="mem-resultado" style="margin-top:16px;font-weight:700;font-size:14px;min-height:22px;"></div>
         <div style="display:flex;gap:8px;justify-content:center;margin-top:8px;flex-wrap:wrap;">
           <button id="mem-ayuda" class="btn btn--ghost" type="button" data-bypass-paywall="true"><svg class="ic"><use href="#i-info"/></svg>Pista</button>
-          <button id="mem-rendirse" class="btn btn--ghost" type="button" style="color:var(--danger);">Rendirme</button>
+          <button id="mem-rendirse" class="btn btn--ghost" type="button" style="color:var(--danger);display:none;">🏳️ Rendirme</button>
+          <button id="mem-reintentar" class="btn btn--ghost" type="button" style="display:none;">🔄 Volver a intentar</button>
           <button id="mem-continuar" class="btn btn--primary" style="display:none;">Continuar →</button>
         </div>
       </div>`;
@@ -5488,31 +5545,16 @@ const Sections = (function(){
   function _initMemorama(root, act, onDone){
     const pares = _parsePares(act.parejas);
     if (pares.length < 2) { onDone(); return; }
-    let cartas = [];
-    pares.forEach((p, idx) => { cartas.push({ pairIdx: idx, texto: p.a }); cartas.push({ pairIdx: idx, texto: p.b }); });
-    // Barajar (Fisher-Yates)
-    for (let i = cartas.length - 1; i > 0; i--){
-      const j = Math.floor(Math.random() * (i+1));
-      [cartas[i], cartas[j]] = [cartas[j], cartas[i]];
-    }
     const elGrid = root.querySelector('#mem-grid');
     const elResultado = root.querySelector('#mem-resultado');
     const elContinuar = root.querySelector('#mem-continuar');
     const elAyuda = root.querySelector('#mem-ayuda');
     const elRendirse = root.querySelector('#mem-rendirse');
-    const cols = cartas.length <= 8 ? 4 : cartas.length <= 12 ? 4 : 5;
+    const elReintentar = root.querySelector('#mem-reintentar');
+    const cols = pares.length*2 <= 8 ? 4 : pares.length*2 <= 12 ? 4 : 5;
     elGrid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
 
-    let volteadas = [];
-    let emparejadas = new Set();
-    let bloqueado = false;
-    let matches = 0;
-    let ayudaUsada = false;
-
-    elGrid.innerHTML = cartas.map((c, i) => `
-      <button type="button" data-mem-i="${i}" style="min-height:64px;padding:8px 6px;border-radius:9px;border:1.5px solid var(--border-2);background:var(--surface-2);color:var(--text);font-size:11.5px;font-weight:600;line-height:1.25;cursor:pointer;display:flex;align-items:center;justify-content:center;text-align:center;">
-        <span data-mem-cara="${i}">🎴</span>
-      </button>`).join('');
+    let cartas, volteadas, emparejadas, bloqueado, matches, ayudaUsada, primerFalloHecho;
 
     function pintarCarta(i, mostrar){
       const btn = elGrid.querySelector(`[data-mem-i="${i}"]`);
@@ -5529,28 +5571,52 @@ const Sections = (function(){
       elResultado.textContent = '¡Encontraste todas las parejas! 🎉';
       elAyuda.style.display = 'none';
       elRendirse.style.display = 'none';
+      elReintentar.style.display = 'none';
       elContinuar.style.display = 'inline-flex';
     }
-    elGrid.querySelectorAll('[data-mem-i]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const i = Number(btn.dataset.memI);
-        if (bloqueado || emparejadas.has(i) || volteadas.includes(i)) return;
-        pintarCarta(i, true);
-        volteadas.push(i);
-        if (volteadas.length === 2){
-          bloqueado = true;
-          const [x, y] = volteadas;
-          if (cartas[x].pairIdx === cartas[y].pairIdx){
-            emparejadas.add(x); emparejadas.add(y);
-            marcarEmparejada(x); marcarEmparejada(y);
-            volteadas = []; bloqueado = false; matches++;
-            if (matches === pares.length) terminarTodas();
-          } else {
-            setTimeout(() => { pintarCarta(x, false); pintarCarta(y, false); volteadas = []; bloqueado = false; }, 900);
+    function iniciarPartida(){
+      cartas = [];
+      pares.forEach((p, idx) => { cartas.push({ pairIdx: idx, texto: p.a }); cartas.push({ pairIdx: idx, texto: p.b }); });
+      for (let i = cartas.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i+1)); [cartas[i], cartas[j]] = [cartas[j], cartas[i]]; }
+      volteadas = []; emparejadas = new Set(); bloqueado = false; matches = 0; ayudaUsada = false; primerFalloHecho = false;
+      elResultado.textContent = '';
+      elAyuda.style.display = 'inline-flex'; elAyuda.disabled = false;
+      elRendirse.style.display = 'none';
+      elReintentar.style.display = 'none';
+      elContinuar.style.display = 'none';
+      elGrid.innerHTML = cartas.map((c, i) => `
+        <button type="button" data-mem-i="${i}" style="min-height:64px;padding:8px 6px;border-radius:9px;border:1.5px solid var(--border-2);background:var(--surface-2);color:var(--text);font-size:11.5px;font-weight:600;line-height:1.25;cursor:pointer;display:flex;align-items:center;justify-content:center;text-align:center;">
+          <span data-mem-cara="${i}">🎴</span>
+        </button>`).join('');
+      elGrid.querySelectorAll('[data-mem-i]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const i = Number(btn.dataset.memI);
+          if (bloqueado || emparejadas.has(i) || volteadas.includes(i)) return;
+          pintarCarta(i, true);
+          volteadas.push(i);
+          if (volteadas.length === 2){
+            bloqueado = true;
+            const [x, y] = volteadas;
+            if (cartas[x].pairIdx === cartas[y].pairIdx){
+              emparejadas.add(x); emparejadas.add(y);
+              marcarEmparejada(x); marcarEmparejada(y);
+              volteadas = []; bloqueado = false; matches++;
+              if (matches === pares.length) terminarTodas();
+            } else {
+              setTimeout(() => {
+                pintarCarta(x, false); pintarCarta(y, false); volteadas = []; bloqueado = false;
+                if(!primerFalloHecho){
+                  primerFalloHecho = true;
+                  elRendirse.style.display = 'inline-flex';
+                  elReintentar.style.display = 'inline-flex';
+                }
+              }, 900);
+            }
           }
-        }
+        });
       });
-    });
+    }
+    iniciarPartida();
     elAyuda.addEventListener('click', ()=>{
       if(ayudaUsada) return;
       ayudaUsada = true;
@@ -5565,6 +5631,7 @@ const Sections = (function(){
         elResultado.textContent = '';
       }, 1500);
     });
+    elReintentar.addEventListener('click', iniciarPartida);
     elRendirse.addEventListener('click', ()=>{
       cartas.forEach((c,i)=>{ emparejadas.add(i); pintarCarta(i, true); marcarEmparejada(i); });
       matches = pares.length;
@@ -5676,7 +5743,8 @@ const Sections = (function(){
           <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
             <button id="cru-comprobar" class="btn btn--ghost">Comprobar</button>
             <button id="cru-ayuda" class="btn btn--ghost" type="button" data-bypass-paywall="true"><svg class="ic"><use href="#i-info"/></svg>Pista</button>
-            <button id="cru-rendirse" class="btn btn--ghost" type="button" style="color:var(--danger);">Rendirme</button>
+            <button id="cru-rendirse" class="btn btn--ghost" type="button" style="color:var(--danger);display:none;">🏳️ Rendirme</button>
+            <button id="cru-reintentar" class="btn btn--ghost" type="button" style="display:none;">🔄 Volver a intentar</button>
           </div>
           <div id="cru-resultado" style="margin-top:12px;font-weight:700;font-size:14px;min-height:22px;"></div>
           <button id="cru-continuar" class="btn btn--primary" style="display:none;margin-top:8px;">Continuar →</button>
@@ -5694,6 +5762,7 @@ const Sections = (function(){
     const elContinuar = root.querySelector('#cru-continuar');
     const elAyuda = root.querySelector('#cru-ayuda');
     const elRendirse = root.querySelector('#cru-rendirse');
+    const elReintentar = root.querySelector('#cru-reintentar');
     const cellPx = (filas*cols > 140) ? 26 : 32;
     elGrid.style.gridTemplateColumns = `repeat(${cols}, ${cellPx}px)`;
     elGrid.style.gridTemplateRows = `repeat(${filas}, ${cellPx}px)`;
@@ -5732,9 +5801,20 @@ const Sections = (function(){
       <div><div style="font-weight:800;color:var(--text);margin-bottom:6px;">HORIZONTALES</div>${horiz.map(p=>`<div style="margin-bottom:5px;"><strong>${p.numero}.</strong> ${escapeHtml(p.pista)}</div>`).join('')}</div>
       <div><div style="font-weight:800;color:var(--text);margin-bottom:6px;">VERTICALES</div>${vert.map(p=>`<div style="margin-bottom:5px;"><strong>${p.numero}.</strong> ${escapeHtml(p.pista)}</div>`).join('')}</div>`;
 
+    const totalCeldas = inputs.size;
+    const maxPistas = Math.max(1, Math.floor(totalCeldas/6));
+    let pistasUsadas = 0;
+    let primerIntentoHecho = false;
+    function actualizarBotonAyuda(){
+      elAyuda.innerHTML = `<svg class="ic"><use href="#i-info"/></svg>Pista (${maxPistas-pistasUsadas})`;
+      elAyuda.disabled = pistasUsadas>=maxPistas;
+      elAyuda.style.opacity = pistasUsadas>=maxPistas ? '.5' : '1';
+    }
+    actualizarBotonAyuda();
     function terminar(){
       elAyuda.style.display = 'none';
       elRendirse.style.display = 'none';
+      elReintentar.style.display = 'none';
       elComprobar.style.display = 'none';
       elContinuar.style.display = 'inline-flex';
     }
@@ -5748,18 +5828,33 @@ const Sections = (function(){
       });
       elResultado.style.color = correctas === total ? 'var(--success)' : 'var(--text-2)';
       elResultado.textContent = correctas === total ? '¡Completo y correcto! 🎉' : `${correctas} de ${total} celdas correctas`;
-      if (correctas === total) terminar();
-      else elContinuar.style.display = 'inline-flex';
+      if (correctas === total) { terminar(); return; }
+      // Primer intento comprobado y no está perfecto · ofrece las dos salidas
+      if(!primerIntentoHecho){
+        primerIntentoHecho = true;
+        elRendirse.style.display = 'inline-flex';
+        elReintentar.style.display = 'inline-flex';
+      }
     });
     elAyuda.addEventListener('click', ()=>{
-      const vacia = Array.from(inputs.entries()).find(([key,inp]) => inp.value !== celdas.get(key));
-      if(!vacia) return;
-      const [key, inp] = vacia;
+      if(pistasUsadas>=maxPistas) return;
+      const vacias = Array.from(inputs.entries()).filter(([key,inp]) => inp.value !== celdas.get(key));
+      if(vacias.length===0) return;
+      const [key, inp] = vacias[Math.floor(Math.random()*vacias.length)];
       inp.value = celdas.get(key);
       inp.style.borderColor = 'var(--primary)';
       inp.style.background = 'color-mix(in srgb, var(--primary) 14%, transparent)';
+      pistasUsadas++;
+      actualizarBotonAyuda();
       elResultado.style.color = 'var(--primary)';
       elResultado.textContent = '💡 Te regalamos una letra.';
+    });
+    elReintentar.addEventListener('click', ()=>{
+      inputs.forEach(inp => { inp.value=''; inp.style.borderColor='var(--border-2)'; inp.style.background='var(--surface)'; });
+      elRendirse.style.display = 'none';
+      elReintentar.style.display = 'none';
+      primerIntentoHecho = false;
+      elResultado.textContent = '';
     });
     elRendirse.addEventListener('click', ()=>{
       inputs.forEach((inp, key) => {
