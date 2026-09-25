@@ -179,6 +179,7 @@ body{
   70%{box-shadow:0 0 0 8px transparent}
   100%{box-shadow:0 0 0 0 transparent}
 }
+@keyframes retoHintPulse{0%,100%{opacity:1}50%{opacity:.3}}
 .banner__version{
   font-family:'JetBrains Mono',monospace;
   font-size:10px;
@@ -5108,7 +5109,11 @@ const Sections = (function(){
         <div id="ah-palabra" style="display:flex;justify-content:center;flex-wrap:wrap;gap:6px;margin-bottom:20px;"></div>
         <div id="ah-teclado" style="display:flex;flex-wrap:wrap;justify-content:center;gap:6px;max-width:440px;margin:0 auto;"></div>
         <div id="ah-resultado" style="margin-top:16px;font-weight:700;font-size:14px;min-height:22px;"></div>
-        <button id="ah-continuar" class="btn btn--primary" style="display:none;margin-top:14px;">Continuar →</button>
+        <div style="display:flex;gap:8px;justify-content:center;margin-top:10px;flex-wrap:wrap;">
+          <button id="ah-ayuda" class="btn btn--ghost" type="button" data-bypass-paywall="true"><svg class="ic"><use href="#i-info"/></svg>Pista</button>
+          <button id="ah-rendirse" class="btn btn--ghost" type="button" style="color:var(--danger);display:none;">Rendirme</button>
+          <button id="ah-continuar" class="btn btn--primary" style="display:none;">Continuar →</button>
+        </div>
       </div>`;
   }
   function _initAhorcado(root, act, onDone){
@@ -5117,11 +5122,14 @@ const Sections = (function(){
     const abecedario = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ'.split('');
     let adivinadas = new Set();
     let vidas = 6;
+    let terminado = false;
     const elPalabra = root.querySelector('#ah-palabra');
     const elTeclado = root.querySelector('#ah-teclado');
     const elVidas = root.querySelector('#ah-vidas');
     const elResultado = root.querySelector('#ah-resultado');
     const elContinuar = root.querySelector('#ah-continuar');
+    const elAyuda = root.querySelector('#ah-ayuda');
+    const elRendirse = root.querySelector('#ah-rendirse');
     function dibujarPalabra(){
       elPalabra.innerHTML = letras.map(l => {
         if (l === ' ') return `<span style="width:14px;"></span>`;
@@ -5131,7 +5139,10 @@ const Sections = (function(){
     }
     function dibujarVidas(){ elVidas.textContent = '❤️'.repeat(Math.max(0,vidas)) + '🖤'.repeat(6-Math.max(0,vidas)); }
     function terminar(gano){
+      terminado = true;
       elTeclado.querySelectorAll('button').forEach(b => b.disabled = true);
+      elAyuda.style.display = 'none';
+      elRendirse.style.display = 'none';
       elResultado.style.color = gano ? 'var(--success)' : 'var(--danger)';
       elResultado.textContent = gano ? '¡Muy bien! 🎉' : `La palabra era: ${letras.join('')}`;
       if(!gano){ adivinadas = new Set(letras); dibujarPalabra(); }
@@ -5146,6 +5157,7 @@ const Sections = (function(){
       } else {
         vidas--; dibujarVidas();
         btn.style.background = 'var(--danger)'; btn.style.color = '#fff'; btn.style.borderColor = 'var(--danger)';
+        if (vidas <= 2) elRendirse.style.display = 'inline-flex';
         if (vidas <= 0) terminar(false);
       }
     }
@@ -5158,6 +5170,18 @@ const Sections = (function(){
       elTeclado.appendChild(b);
     });
     dibujarPalabra(); dibujarVidas();
+    elAyuda.addEventListener('click', ()=>{
+      if(terminado) return;
+      const faltante = letras.find(l => l!==' ' && !adivinadas.has(l));
+      if(!faltante) return;
+      adivinadas.add(faltante);
+      dibujarPalabra();
+      const btn = Array.from(elTeclado.querySelectorAll('button')).find(b=>b.textContent===faltante);
+      if(btn){ btn.disabled = true; btn.style.background = 'var(--primary)'; btn.style.color = '#fff'; btn.style.borderColor = 'var(--primary)'; }
+      if (letras.every(x => x===' '||adivinadas.has(x))) { terminar(true); return; }
+      elRendirse.style.display = 'inline-flex';
+    });
+    elRendirse.addEventListener('click', ()=>{ if(!terminado) terminar(false); });
     elContinuar.addEventListener('click', onDone);
   }
 
@@ -5171,7 +5195,10 @@ const Sections = (function(){
           <button id="vf-f" class="btn btn--ghost" style="min-width:120px;">Falso</button>
         </div>
         <div id="vf-resultado" style="margin-top:18px;font-weight:700;font-size:14px;min-height:22px;"></div>
-        <button id="vf-continuar" class="btn btn--primary" style="display:none;margin-top:10px;">Continuar →</button>
+        <div style="display:flex;gap:8px;justify-content:center;margin-top:8px;flex-wrap:wrap;">
+          <button id="vf-rendirse" class="btn btn--ghost" type="button" style="color:var(--danger);">No sé, mostrar respuesta</button>
+          <button id="vf-continuar" class="btn btn--primary" style="display:none;">Continuar →</button>
+        </div>
       </div>`;
   }
   function _initVF(root, act, onDone){
@@ -5179,18 +5206,23 @@ const Sections = (function(){
     const elV = root.querySelector('#vf-v'), elF = root.querySelector('#vf-f');
     const elResultado = root.querySelector('#vf-resultado');
     const elContinuar = root.querySelector('#vf-continuar');
-    function responder(esVerdadero, btn, otro){
+    const elRendirse = root.querySelector('#vf-rendirse');
+    function responder(esVerdadero, btn, otro, rendido){
       elV.disabled = true; elF.disabled = true;
-      const ok = esVerdadero === correcta;
-      btn.style.background = ok ? 'var(--success)' : 'var(--danger)';
-      btn.style.color = '#fff'; btn.style.borderColor = btn.style.background;
+      elRendirse.style.display = 'none';
+      const ok = !rendido && esVerdadero === correcta;
+      if(!rendido){
+        btn.style.background = ok ? 'var(--success)' : 'var(--danger)';
+        btn.style.color = '#fff'; btn.style.borderColor = btn.style.background;
+      }
       if (!ok) { otro.style.background='var(--success)'; otro.style.color='#fff'; otro.style.borderColor='var(--success)'; }
       elResultado.style.color = ok ? 'var(--success)' : 'var(--danger)';
-      elResultado.textContent = ok ? '¡Correcto! 🎉' : 'No era así, pero ya quedó claro.';
+      elResultado.textContent = rendido ? 'La respuesta correcta era: '+(correcta?'Verdadero':'Falso') : (ok ? '¡Correcto! 🎉' : 'No era así, pero ya quedó claro.');
       elContinuar.style.display = 'inline-flex';
     }
-    elV.addEventListener('click', () => responder(true, elV, elF));
-    elF.addEventListener('click', () => responder(false, elF, elV));
+    elV.addEventListener('click', () => responder(true, elV, elF, false));
+    elF.addEventListener('click', () => responder(false, elF, elV, false));
+    elRendirse.addEventListener('click', () => responder(correcta, correcta?elV:elF, correcta?elF:elV, true));
     elContinuar.addEventListener('click', onDone);
   }
 
@@ -5204,7 +5236,11 @@ const Sections = (function(){
           ${opts.map((o,i)=>`<button type="button" class="btn btn--ghost" data-op-idx="${i}" style="text-align:left;justify-content:flex-start;">${String.fromCharCode(65+i)}) ${escapeHtml(o)}</button>`).join('')}
         </div>
         <div id="op-resultado" style="margin-top:16px;font-weight:700;font-size:14px;min-height:22px;"></div>
-        <button id="op-continuar" class="btn btn--primary" style="display:none;margin-top:10px;">Continuar →</button>
+        <div style="display:flex;gap:8px;justify-content:center;margin-top:8px;flex-wrap:wrap;">
+          <button id="op-ayuda" class="btn btn--ghost" type="button" data-bypass-paywall="true"><svg class="ic"><use href="#i-info"/></svg>Pista</button>
+          <button id="op-rendirse" class="btn btn--ghost" type="button" style="color:var(--danger);">No sé, mostrar respuesta</button>
+          <button id="op-continuar" class="btn btn--primary" style="display:none;">Continuar →</button>
+        </div>
       </div>`;
   }
   function _initOpcion(root, act, onDone){
@@ -5212,19 +5248,32 @@ const Sections = (function(){
     const botones = Array.from(root.querySelectorAll('[data-op-idx]'));
     const elResultado = root.querySelector('#op-resultado');
     const elContinuar = root.querySelector('#op-continuar');
+    const elAyuda = root.querySelector('#op-ayuda');
+    const elRendirse = root.querySelector('#op-rendirse');
+    function terminar(idx, rendido){
+      botones.forEach(b => b.disabled = true);
+      elAyuda.style.display = 'none';
+      elRendirse.style.display = 'none';
+      const ok = !rendido && idx === correcta;
+      if(!rendido && botones[idx]){ botones[idx].style.background = ok ? 'var(--success)' : 'var(--danger)'; botones[idx].style.color = '#fff'; botones[idx].style.borderColor = botones[idx].style.background; }
+      if ((!ok || rendido) && botones[correcta]) { botones[correcta].style.background='var(--success)'; botones[correcta].style.color='#fff'; botones[correcta].style.borderColor='var(--success)'; }
+      elResultado.style.color = ok ? 'var(--success)' : 'var(--danger)';
+      elResultado.textContent = rendido ? 'La respuesta correcta está marcada en verde.' : (ok ? '¡Correcto! 🎉' : 'Esa no era, pero ya quedó marcada la correcta.');
+      elContinuar.style.display = 'inline-flex';
+    }
     botones.forEach(btn => {
-      btn.addEventListener('click', () => {
-        botones.forEach(b => b.disabled = true);
-        const idx = Number(btn.dataset.opIdx);
-        const ok = idx === correcta;
-        btn.style.background = ok ? 'var(--success)' : 'var(--danger)';
-        btn.style.color = '#fff'; btn.style.borderColor = btn.style.background;
-        if (!ok && botones[correcta]) { botones[correcta].style.background='var(--success)'; botones[correcta].style.color='#fff'; botones[correcta].style.borderColor='var(--success)'; }
-        elResultado.style.color = ok ? 'var(--success)' : 'var(--danger)';
-        elResultado.textContent = ok ? '¡Correcto! 🎉' : 'Esa no era, pero ya quedó marcada la correcta.';
-        elContinuar.style.display = 'inline-flex';
-      });
+      btn.addEventListener('click', () => terminar(Number(btn.dataset.opIdx), false));
     });
+    elAyuda.addEventListener('click', ()=>{
+      const restantes = botones.filter(b=>!b.disabled && Number(b.dataset.opIdx)!==correcta);
+      if(restantes.length<=0) return;
+      const quitar = restantes[Math.floor(Math.random()*restantes.length)];
+      quitar.disabled = true;
+      quitar.style.opacity = '.35';
+      quitar.style.textDecoration = 'line-through';
+      if(botones.filter(b=>!b.disabled).length<=1) elAyuda.style.display = 'none';
+    });
+    elRendirse.addEventListener('click', ()=> terminar(-1, true));
     elContinuar.addEventListener('click', onDone);
   }
 
@@ -5275,7 +5324,11 @@ const Sections = (function(){
         <div id="sopa-lista" style="display:flex;flex-wrap:wrap;justify-content:center;gap:7px;margin-bottom:14px;"></div>
         <div id="sopa-grid" style="display:inline-grid;gap:2px;user-select:none;touch-action:none;margin:0 auto;"></div>
         <div id="sopa-resultado" style="margin-top:16px;font-weight:700;font-size:14px;min-height:22px;"></div>
-        <button id="sopa-continuar" class="btn btn--primary" style="display:none;margin-top:10px;">Continuar →</button>
+        <div style="display:flex;gap:8px;justify-content:center;margin-top:8px;flex-wrap:wrap;">
+          <button id="sopa-ayuda" class="btn btn--ghost" type="button" data-bypass-paywall="true"><svg class="ic"><use href="#i-info"/></svg>Pista</button>
+          <button id="sopa-rendirse" class="btn btn--ghost" type="button" style="color:var(--danger);">Rendirme</button>
+          <button id="sopa-continuar" class="btn btn--primary" style="display:none;">Continuar →</button>
+        </div>
       </div>`;
   }
   function _initSopa(root, act, onDone){
@@ -5287,11 +5340,20 @@ const Sections = (function(){
     const elGrid = root.querySelector('#sopa-grid');
     const elResultado = root.querySelector('#sopa-resultado');
     const elContinuar = root.querySelector('#sopa-continuar');
+    const elAyuda = root.querySelector('#sopa-ayuda');
+    const elRendirse = root.querySelector('#sopa-rendirse');
     const cellPx = n >= 12 ? 24 : n >= 10 ? 27 : 30;
     elGrid.style.gridTemplateColumns = `repeat(${n}, ${cellPx}px)`;
 
     function refrescarLista(){
       elLista.innerHTML = colocadas.map(p => `<span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:700;padding:4px 9px;border-radius:7px;background:${encontradas.has(p.palabra)?'var(--success)':'var(--surface-2)'};color:${encontradas.has(p.palabra)?'#fff':'var(--text-2)'};${encontradas.has(p.palabra)?'text-decoration:line-through;':''}">${p.palabra}</span>`).join('');
+    }
+    function terminarTodas(){
+      elResultado.style.color = 'var(--success)';
+      elResultado.textContent = '¡Las encontraste todas! 🎉';
+      elAyuda.style.display = 'none';
+      elRendirse.style.display = 'none';
+      elContinuar.style.display = 'inline-flex';
     }
     // Construir celdas
     const celdas = [];
@@ -5339,11 +5401,7 @@ const Sections = (function(){
         encontradas.add(match.palabra);
         seleccionActual.forEach(({el}) => { el.style.background = 'var(--success)'; el.style.color = '#fff'; el.dataset.found = '1'; });
         refrescarLista();
-        if (encontradas.size === colocadas.length){
-          elResultado.style.color = 'var(--success)';
-          elResultado.textContent = '¡Las encontraste todas! 🎉';
-          elContinuar.style.display = 'inline-flex';
-        }
+        if (encontradas.size === colocadas.length) terminarTodas();
       } else {
         limpiarSeleccionVisual();
       }
@@ -5375,6 +5433,30 @@ const Sections = (function(){
     elGrid.addEventListener('pointermove', onMove);
     document.addEventListener('pointerup', onUp);
     refrescarLista();
+    elAyuda.addEventListener('click', ()=>{
+      const pendiente = colocadas.find(p=>!encontradas.has(p.palabra));
+      if(!pendiente) return;
+      const cel = celdas[pendiente.r0][pendiente.c0];
+      cel.style.animation = 'retoHintPulse 1s ease-in-out infinite';
+      cel.style.outline = '2px solid var(--primary)';
+      setTimeout(()=>{ cel.style.animation=''; cel.style.outline=''; }, 3000);
+      elResultado.style.color = 'var(--primary)';
+      elResultado.textContent = '💡 "'+pendiente.palabra+'" empieza en la celda marcada.';
+    });
+    elRendirse.addEventListener('click', ()=>{
+      colocadas.forEach(p=>{
+        if(encontradas.has(p.palabra)) return;
+        encontradas.add(p.palabra);
+        for (let i=0;i<p.palabra.length;i++){
+          const r = p.r0 + p.dy*i, c = p.c0 + p.dx*i;
+          const el = celdas[r][c];
+          el.style.background = 'var(--text-3)'; el.style.color = '#fff'; el.dataset.found = '1';
+        }
+      });
+      refrescarLista();
+      terminarTodas();
+      elResultado.textContent = 'Aquí están todas. ¡La próxima las encuentras solo!';
+    });
     elContinuar.addEventListener('click', onDone);
   }
 
@@ -5396,7 +5478,11 @@ const Sections = (function(){
         <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:var(--primary);margin-bottom:12px;">🎮 Actividad · Memorama</div>
         <div id="mem-grid" style="display:grid;gap:8px;margin:0 auto;max-width:460px;"></div>
         <div id="mem-resultado" style="margin-top:16px;font-weight:700;font-size:14px;min-height:22px;"></div>
-        <button id="mem-continuar" class="btn btn--primary" style="display:none;margin-top:10px;">Continuar →</button>
+        <div style="display:flex;gap:8px;justify-content:center;margin-top:8px;flex-wrap:wrap;">
+          <button id="mem-ayuda" class="btn btn--ghost" type="button" data-bypass-paywall="true"><svg class="ic"><use href="#i-info"/></svg>Pista</button>
+          <button id="mem-rendirse" class="btn btn--ghost" type="button" style="color:var(--danger);">Rendirme</button>
+          <button id="mem-continuar" class="btn btn--primary" style="display:none;">Continuar →</button>
+        </div>
       </div>`;
   }
   function _initMemorama(root, act, onDone){
@@ -5412,6 +5498,8 @@ const Sections = (function(){
     const elGrid = root.querySelector('#mem-grid');
     const elResultado = root.querySelector('#mem-resultado');
     const elContinuar = root.querySelector('#mem-continuar');
+    const elAyuda = root.querySelector('#mem-ayuda');
+    const elRendirse = root.querySelector('#mem-rendirse');
     const cols = cartas.length <= 8 ? 4 : cartas.length <= 12 ? 4 : 5;
     elGrid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
 
@@ -5419,6 +5507,7 @@ const Sections = (function(){
     let emparejadas = new Set();
     let bloqueado = false;
     let matches = 0;
+    let ayudaUsada = false;
 
     elGrid.innerHTML = cartas.map((c, i) => `
       <button type="button" data-mem-i="${i}" style="min-height:64px;padding:8px 6px;border-radius:9px;border:1.5px solid var(--border-2);background:var(--surface-2);color:var(--text);font-size:11.5px;font-weight:600;line-height:1.25;cursor:pointer;display:flex;align-items:center;justify-content:center;text-align:center;">
@@ -5435,6 +5524,13 @@ const Sections = (function(){
       const btn = elGrid.querySelector(`[data-mem-i="${i}"]`);
       btn.style.background = 'var(--success)'; btn.style.color = '#fff'; btn.disabled = true;
     }
+    function terminarTodas(){
+      elResultado.style.color = 'var(--success)';
+      elResultado.textContent = '¡Encontraste todas las parejas! 🎉';
+      elAyuda.style.display = 'none';
+      elRendirse.style.display = 'none';
+      elContinuar.style.display = 'inline-flex';
+    }
     elGrid.querySelectorAll('[data-mem-i]').forEach(btn => {
       btn.addEventListener('click', () => {
         const i = Number(btn.dataset.memI);
@@ -5448,16 +5544,32 @@ const Sections = (function(){
             emparejadas.add(x); emparejadas.add(y);
             marcarEmparejada(x); marcarEmparejada(y);
             volteadas = []; bloqueado = false; matches++;
-            if (matches === pares.length){
-              elResultado.style.color = 'var(--success)';
-              elResultado.textContent = '¡Encontraste todas las parejas! 🎉';
-              elContinuar.style.display = 'inline-flex';
-            }
+            if (matches === pares.length) terminarTodas();
           } else {
             setTimeout(() => { pintarCarta(x, false); pintarCarta(y, false); volteadas = []; bloqueado = false; }, 900);
           }
         }
       });
+    });
+    elAyuda.addEventListener('click', ()=>{
+      if(ayudaUsada) return;
+      ayudaUsada = true;
+      elAyuda.disabled = true;
+      elResultado.style.color = 'var(--primary)';
+      elResultado.textContent = '💡 Memorízalas…';
+      cartas.forEach((c,i)=>{ if(!emparejadas.has(i)) pintarCarta(i, true); });
+      bloqueado = true;
+      setTimeout(()=>{
+        cartas.forEach((c,i)=>{ if(!emparejadas.has(i)) pintarCarta(i, false); });
+        bloqueado = false;
+        elResultado.textContent = '';
+      }, 1500);
+    });
+    elRendirse.addEventListener('click', ()=>{
+      cartas.forEach((c,i)=>{ emparejadas.add(i); pintarCarta(i, true); marcarEmparejada(i); });
+      matches = pares.length;
+      terminarTodas();
+      elResultado.textContent = 'Ahí están todas. ¡La próxima la sacas solo!';
     });
     elContinuar.addEventListener('click', onDone);
   }
@@ -5561,7 +5673,11 @@ const Sections = (function(){
         <div id="cru-grid-wrap" style="overflow-x:auto;margin-bottom:16px;"><div id="cru-grid" style="display:inline-grid;gap:1px;margin:0 auto;"></div></div>
         <div id="cru-pistas" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;text-align:left;font-size:12px;color:var(--text-2);margin-bottom:14px;"></div>
         <div style="text-align:center;">
-          <button id="cru-comprobar" class="btn btn--ghost">Comprobar</button>
+          <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+            <button id="cru-comprobar" class="btn btn--ghost">Comprobar</button>
+            <button id="cru-ayuda" class="btn btn--ghost" type="button" data-bypass-paywall="true"><svg class="ic"><use href="#i-info"/></svg>Pista</button>
+            <button id="cru-rendirse" class="btn btn--ghost" type="button" style="color:var(--danger);">Rendirme</button>
+          </div>
           <div id="cru-resultado" style="margin-top:12px;font-weight:700;font-size:14px;min-height:22px;"></div>
           <button id="cru-continuar" class="btn btn--primary" style="display:none;margin-top:8px;">Continuar →</button>
         </div>
@@ -5576,6 +5692,8 @@ const Sections = (function(){
     const elComprobar = root.querySelector('#cru-comprobar');
     const elResultado = root.querySelector('#cru-resultado');
     const elContinuar = root.querySelector('#cru-continuar');
+    const elAyuda = root.querySelector('#cru-ayuda');
+    const elRendirse = root.querySelector('#cru-rendirse');
     const cellPx = (filas*cols > 140) ? 26 : 32;
     elGrid.style.gridTemplateColumns = `repeat(${cols}, ${cellPx}px)`;
     elGrid.style.gridTemplateRows = `repeat(${filas}, ${cellPx}px)`;
@@ -5614,6 +5732,12 @@ const Sections = (function(){
       <div><div style="font-weight:800;color:var(--text);margin-bottom:6px;">HORIZONTALES</div>${horiz.map(p=>`<div style="margin-bottom:5px;"><strong>${p.numero}.</strong> ${escapeHtml(p.pista)}</div>`).join('')}</div>
       <div><div style="font-weight:800;color:var(--text);margin-bottom:6px;">VERTICALES</div>${vert.map(p=>`<div style="margin-bottom:5px;"><strong>${p.numero}.</strong> ${escapeHtml(p.pista)}</div>`).join('')}</div>`;
 
+    function terminar(){
+      elAyuda.style.display = 'none';
+      elRendirse.style.display = 'none';
+      elComprobar.style.display = 'none';
+      elContinuar.style.display = 'inline-flex';
+    }
     elComprobar.addEventListener('click', () => {
       let correctas = 0, total = 0;
       inputs.forEach((inp, key) => {
@@ -5624,7 +5748,28 @@ const Sections = (function(){
       });
       elResultado.style.color = correctas === total ? 'var(--success)' : 'var(--text-2)';
       elResultado.textContent = correctas === total ? '¡Completo y correcto! 🎉' : `${correctas} de ${total} celdas correctas`;
-      elContinuar.style.display = 'inline-flex';
+      if (correctas === total) terminar();
+      else elContinuar.style.display = 'inline-flex';
+    });
+    elAyuda.addEventListener('click', ()=>{
+      const vacia = Array.from(inputs.entries()).find(([key,inp]) => inp.value !== celdas.get(key));
+      if(!vacia) return;
+      const [key, inp] = vacia;
+      inp.value = celdas.get(key);
+      inp.style.borderColor = 'var(--primary)';
+      inp.style.background = 'color-mix(in srgb, var(--primary) 14%, transparent)';
+      elResultado.style.color = 'var(--primary)';
+      elResultado.textContent = '💡 Te regalamos una letra.';
+    });
+    elRendirse.addEventListener('click', ()=>{
+      inputs.forEach((inp, key) => {
+        inp.value = celdas.get(key);
+        inp.style.borderColor = 'var(--success)';
+        inp.style.background = 'color-mix(in srgb, var(--success) 12%, transparent)';
+      });
+      elResultado.style.color = 'var(--text-2)';
+      elResultado.textContent = 'Aquí están todas las respuestas. ¡La próxima te sale!';
+      terminar();
     });
     elContinuar.addEventListener('click', onDone);
   }
@@ -7319,6 +7464,8 @@ const Sections = (function(){
     const orden = r.pasos.map((texto,i)=>({texto,orig:i})).sort(()=>Math.random()-0.5);
     const segundos = RETO_TIEMPO_POR_TIPO.secuencia;
     const cronometro = _crearCronometro(segundos);
+    let intentos = 0;
+    let marcado = false; // true tras el primer "Comprobar" · muestra colores por posición
     const body = document.createElement('div');
     body.innerHTML = `
       ${_timerHtml(segundos)}
@@ -7332,10 +7479,15 @@ const Sections = (function(){
       orden.forEach((p,i)=>{
         const item = document.createElement('div');
         item.dataset.orig = p.orig;
-        item.style.cssText = 'background:var(--surface-2);border:1px solid var(--border-2);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px;font-size:12.5px;';
+        const esCorrecta = marcado && p.orig === i;
+        const esIncorrecta = marcado && p.orig !== i;
+        const borde = esCorrecta ? 'var(--success)' : esIncorrecta ? 'var(--danger)' : 'var(--border-2)';
+        const fondo = esCorrecta ? 'color-mix(in srgb,var(--success) 8%,var(--surface-2))' : esIncorrecta ? 'color-mix(in srgb,var(--danger) 6%,var(--surface-2))' : 'var(--surface-2)';
+        item.style.cssText = `background:${fondo};border:1.5px solid ${borde};border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px;font-size:12.5px;transition:border-color .2s,background .2s;`;
         item.innerHTML = `
           <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--text-3);flex-shrink:0;width:16px;">${i+1}</span>
           <span style="flex:1;min-width:0;">${p.texto}</span>
+          ${esCorrecta?'<svg class="ic" style="width:14px;height:14px;color:var(--success);flex-shrink:0;"><use href="#i-check"/></svg>':''}
           <div style="display:flex;flex-direction:column;gap:2px;flex-shrink:0;">
             <button type="button" class="reto-sec-up" data-i="${i}" ${i===0?'disabled':''} style="width:26px;height:22px;border-radius:6px;border:1px solid var(--border-2);background:var(--surface);color:${i===0?'var(--text-3)':'var(--text)'};cursor:${i===0?'default':'pointer'};display:flex;align-items:center;justify-content:center;opacity:${i===0?'.4':'1'};">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><polyline points="18 15 12 9 6 15"/></svg>
@@ -7352,6 +7504,7 @@ const Sections = (function(){
         const i = Number(btn.dataset.i);
         if(i<=0) return;
         [orden[i-1], orden[i]] = [orden[i], orden[i-1]];
+        marcado = false;
         pintarLista();
       }));
       list.querySelectorAll('.reto-sec-down').forEach(btn=>btn.addEventListener('click', ()=>{
@@ -7359,6 +7512,7 @@ const Sections = (function(){
         const i = Number(btn.dataset.i);
         if(i>=orden.length-1) return;
         [orden[i], orden[i+1]] = [orden[i+1], orden[i]];
+        marcado = false;
         pintarLista();
       }));
     }
@@ -7366,30 +7520,68 @@ const Sections = (function(){
     const footer = document.createElement('div');
     footer.innerHTML = `
       <button class="btn btn--ghost" id="reto-cerrar">Cerrar</button>
+      <button class="btn btn--ghost" id="reto-hint" data-bypass-paywall="true"><svg class="ic"><use href="#i-info"/></svg>Pista</button>
+      <button class="btn btn--ghost" id="reto-giveup" style="display:none;color:var(--danger);">Rendirme</button>
       <button class="btn btn--accent" id="reto-check">Comprobar orden</button>
     `;
     Modal.open({ id:'reto-'+r.id, title:r.titulo, subtitle:r.categoria+' · +'+r.puntos+' pts', icon:'i-bolt', size:'md', body, footer, onClose:()=>cronometro.detener() });
-    cronometro.iniciar(body.querySelector('#reto-timer-txt'), () => {
-      body.querySelector('#reto-sec-fb').innerHTML = '<span style="color:var(--danger);font-weight:600;">⏰ Se acabó el tiempo. Cierra y vuelve a intentar.</span>';
+    function bloquearTodo(){
       list.querySelectorAll('.reto-sec-up, .reto-sec-down').forEach(el => { el.disabled = true; el.style.cursor='default'; el.style.opacity='.3'; });
       footer.querySelector('#reto-check').disabled = true;
+      footer.querySelector('#reto-hint').disabled = true;
+      const gu = footer.querySelector('#reto-giveup'); if(gu) gu.disabled = true;
+    }
+    cronometro.iniciar(body.querySelector('#reto-timer-txt'), () => {
+      body.querySelector('#reto-sec-fb').innerHTML = '<span style="color:var(--danger);font-weight:600;">⏰ Se acabó el tiempo. Cierra y vuelve a intentar.</span>';
+      bloquearTodo();
     });
     footer.querySelector('#reto-cerrar').addEventListener('click', ()=>Modal.close('reto-'+r.id));
+    footer.querySelector('#reto-hint').addEventListener('click', ()=>{
+      if(cronometro.vencido) return;
+      // Encuentra la primera posición mal colocada y la corrige (revela un paso)
+      const i = orden.findIndex((p,idx)=>p.orig!==idx);
+      if(i<0) return;
+      const correcto = orden.findIndex(p=>p.orig===i);
+      [orden[i], orden[correcto]] = [orden[correcto], orden[i]];
+      marcado = false;
+      pintarLista();
+      body.querySelector('#reto-sec-fb').innerHTML = '<span style="color:var(--primary);font-weight:600;">💡 Acomodamos un paso por ti. Sigue con el resto.</span>';
+      footer.querySelector('#reto-giveup').style.display = '';
+    });
     footer.querySelector('#reto-check').addEventListener('click', async ()=>{
       if(cronometro.vencido) return;
-      const actual = Array.from(list.children).map(el=>Number(el.dataset.orig));
-      const correcto = actual.every((v,i)=>v===i);
+      marcado = true;
+      pintarLista();
+      const actual = Array.from(list.children); // ya repintada arriba, usamos "orden" directo
+      const correcto = orden.every((p,i)=>p.orig===i);
       const fb = body.querySelector('#reto-sec-fb');
       if(correcto){
         cronometro.detener();
         fb.innerHTML = '<span style="color:var(--success);font-weight:600;">¡Correcto! Orden perfecto.</span>';
+        bloquearTodo();
         const res = await _otorgarXP(r.id, r.puntos);
         if(!res.yaCompletado) _avisarResultadoXP(r, res, r.titulo);
         _celebrarLogros(res.nuevosLogros);
         _trasCompletarReto(r);
       } else {
-        fb.innerHTML = '<span style="color:var(--danger);font-weight:600;">Todavía no es el orden correcto, intenta de nuevo.</span>';
+        intentos++;
+        fb.innerHTML = '<span style="color:var(--danger);font-weight:600;">Los marcados en rojo están mal — muévelos e intenta de nuevo.</span>';
+        if(intentos>=1) footer.querySelector('#reto-giveup').style.display = '';
       }
+    });
+    footer.querySelector('#reto-giveup').addEventListener('click', async ()=>{
+      if(cronometro.vencido) return;
+      cronometro.detener();
+      orden.sort((a,b)=>a.orig-b.orig);
+      marcado = true;
+      pintarLista();
+      bloquearTodo();
+      const fb = body.querySelector('#reto-sec-fb');
+      fb.innerHTML = '<span style="color:var(--text-2);font-weight:600;">Aquí está el orden correcto. ¡La próxima te sale!</span>';
+      const res = await _otorgarXP(r.id, r.puntos);
+      if(!res.yaCompletado) _avisarResultadoXP(r, res, r.titulo);
+      _celebrarLogros(res.nuevosLogros);
+      _trasCompletarReto(r);
     });
   }
 
@@ -7398,6 +7590,7 @@ const Sections = (function(){
     const encontrados = new Set();
     const segundos = RETO_TIEMPO_POR_TIPO.error;
     const cronometro = _crearCronometro(segundos);
+    let intentosFallidos = 0;
     const body = document.createElement('div');
     const puntosHtml = r.hotspots.map((h,i)=>`<circle class="reto-err-spot" data-i="${i}" cx="${h.x}" cy="${h.y}" r="${h.r}" fill="transparent" stroke="transparent" style="cursor:pointer;"/>`).join('');
     const escena = r.imagen
@@ -7418,7 +7611,7 @@ const Sections = (function(){
     body.innerHTML = `
       ${_timerHtml(segundos)}
       <p style="font-size:12.5px;color:var(--text-2);margin-bottom:10px;">Toca las ${r.hotspots.length} zonas donde ves una falla de inocuidad.</p>
-      <div style="position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--border-2);">
+      <div id="reto-err-wrap" style="position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--border-2);cursor:crosshair;">
         ${escena}
         <svg viewBox="0 0 100 100" style="position:absolute;inset:0;width:100%;height:100%;">
           ${puntosHtml}
@@ -7427,13 +7620,51 @@ const Sections = (function(){
       <div id="reto-err-fb" style="margin-top:10px;font-size:12.5px;color:var(--text-2);">Encontrados: <strong id="reto-err-n">0</strong> de ${r.hotspots.length}</div>
     `;
     const footer = document.createElement('div');
-    footer.innerHTML = `<button class="btn btn--ghost" id="reto-cerrar">Cerrar</button>`;
+    footer.innerHTML = `
+      <button class="btn btn--ghost" id="reto-cerrar">Cerrar</button>
+      <button class="btn btn--ghost" id="reto-hint" data-bypass-paywall="true"><svg class="ic"><use href="#i-info"/></svg>Pista</button>
+      <button class="btn btn--ghost" id="reto-giveup" style="display:none;color:var(--danger);">Rendirme</button>
+    `;
     Modal.open({ id:'reto-'+r.id, title:r.titulo, subtitle:r.categoria+' · +'+r.puntos+' pts', icon:'i-bolt', size:'md', body, footer, onClose:()=>cronometro.detener() });
+    function bloquearTodo(){
+      body.querySelectorAll('.reto-err-spot').forEach(spot => spot.style.pointerEvents = 'none');
+      footer.querySelector('#reto-hint').disabled = true;
+      const gu = footer.querySelector('#reto-giveup'); if(gu) gu.disabled = true;
+    }
     cronometro.iniciar(body.querySelector('#reto-timer-txt'), () => {
       body.querySelector('#reto-err-fb').innerHTML = '<span style="color:var(--danger);font-weight:600;">⏰ Se acabó el tiempo. Cierra y vuelve a intentar.</span>';
-      body.querySelectorAll('.reto-err-spot').forEach(spot => spot.style.pointerEvents = 'none');
+      bloquearTodo();
     });
     footer.querySelector('#reto-cerrar').addEventListener('click', ()=>Modal.close('reto-'+r.id));
+    footer.querySelector('#reto-hint').addEventListener('click', ()=>{
+      if(cronometro.vencido) return;
+      const faltante = r.hotspots.findIndex((h,i)=>!encontrados.has(i));
+      if(faltante<0) return;
+      const spot = body.querySelector(`.reto-err-spot[data-i="${faltante}"]`);
+      if(spot){
+        spot.setAttribute('stroke','#D5A13D');
+        spot.setAttribute('stroke-width','2.5');
+        spot.style.animation = 'retoHintPulse 1s ease-in-out infinite';
+      }
+      body.querySelector('#reto-err-fb').innerHTML = '<span style="color:var(--primary);font-weight:600;">💡 Hay una falla marcada con un círculo dorado.</span>';
+      footer.querySelector('#reto-giveup').style.display = '';
+    });
+    footer.querySelector('#reto-giveup').addEventListener('click', async ()=>{
+      if(cronometro.vencido) return;
+      cronometro.detener();
+      r.hotspots.forEach((h,i)=>{
+        encontrados.add(i);
+        const spot = body.querySelector(`.reto-err-spot[data-i="${i}"]`);
+        if(spot){ spot.setAttribute('fill','rgba(122,154,110,.35)'); spot.setAttribute('stroke','#7A9A6E'); spot.setAttribute('stroke-width','1.5'); spot.style.animation=''; }
+      });
+      body.querySelector('#reto-err-n').textContent = String(r.hotspots.length);
+      bloquearTodo();
+      body.querySelector('#reto-err-fb').innerHTML = '<span style="color:var(--text-2);font-weight:600;">Ahí están las '+r.hotspots.length+' fallas. ¡La próxima las encuentras solo!</span>';
+      const res = await _otorgarXP(r.id, r.puntos);
+      if(!res.yaCompletado) _avisarResultadoXP(r, res, r.titulo);
+      _celebrarLogros(res.nuevosLogros);
+      _trasCompletarReto(r);
+    });
     body.querySelectorAll('.reto-err-spot').forEach(spot=>{
       spot.addEventListener('click', async ()=>{
         if(cronometro.vencido) return;
@@ -7443,15 +7674,26 @@ const Sections = (function(){
         spot.setAttribute('fill','rgba(122,154,110,.35)');
         spot.setAttribute('stroke','#7A9A6E');
         spot.setAttribute('stroke-width','1.5');
+        spot.style.animation = '';
         body.querySelector('#reto-err-n').textContent = String(encontrados.size);
+        body.querySelector('#reto-err-fb').innerHTML = '<span style="color:var(--success);font-weight:600;">¡Esa sí! Encontrados: '+encontrados.size+' de '+r.hotspots.length+'</span>';
         if(encontrados.size === r.hotspots.length){
           cronometro.detener();
+          bloquearTodo();
           const res = await _otorgarXP(r.id, r.puntos);
           if(!res.yaCompletado) _avisarResultadoXP(r, res, '¡Encontraste las '+r.hotspots.length+' fallas!');
           _celebrarLogros(res.nuevosLogros);
           _trasCompletarReto(r);
         }
       });
+    });
+    // Clic en zona vacía (no es ninguna falla) · da feedback de "no es aquí"
+    body.querySelector('#reto-err-wrap').addEventListener('click', (e)=>{
+      if(cronometro.vencido) return;
+      if(e.target.classList && e.target.classList.contains('reto-err-spot')) return;
+      intentosFallidos++;
+      body.querySelector('#reto-err-fb').innerHTML = '<span style="color:var(--danger);font-weight:600;">Ahí no hay ninguna falla, sigue buscando.</span>';
+      if(intentosFallidos>=3) footer.querySelector('#reto-giveup').style.display = '';
     });
   }
 
