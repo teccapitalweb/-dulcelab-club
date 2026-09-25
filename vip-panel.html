@@ -4874,19 +4874,37 @@ const Sections = (function(){
       }, { merge: true });
       console.log('[cert] emitido a Firestore:', folio);
 
-      // MODIFICADO: avisa al webhook para que genere el PDF y lo mande por
-      // correo (Resend). No bloquea ni rompe el flujo si falla — el alumno
-      // ya tiene su certificado visible en pantalla de cualquier forma.
+      // MODIFICADO: antes solo se avisaba {folio, email} y el webhook redibujaba
+      // su propia versión del PDF (con pdfkit) — por eso el correo llegaba con
+      // un diseño distinto, más plano, al certificado bonito que se ve en el
+      // panel. Ahora el PDF se genera AQUÍ, en el navegador, con el mismo motor
+      // (html2canvas + jsPDF) que usa el botón "Descargar PDF", y se manda ya
+      // armado al webhook — es el mismo archivo, no una recreación aparte.
       const emailAlumno = window.UserState?.email;
       if (emailAlumno) {
         const base = window.WEBHOOK_URL || 'https://dulcelab-webhook-production.up.railway.app';
-        fetch(`${base}/certificados/emitir`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ folio, email: emailAlumno })
-        }).then(r => r.json()).then(r => {
-          console.log('[cert] correo:', r);
-        }).catch(e => console.warn('[cert] no se pudo avisar al webhook:', e));
+        (async () => {
+          let pdfBase64 = null;
+          try {
+            const certObj = {
+              id: curso.id, titulo: curso.titulo, area: curso.area || 'Formación DulceLab Food',
+              horas: curso.horas || 0, sesiones, folio, emitido: fecha,
+              instructor: curso.instructor || 'Equipo DulceLab Food'
+            };
+            pdfBase64 = await _generarCertPDFBase64(certObj, nombre);
+          } catch (e) {
+            console.warn('[cert] no se pudo renderizar el PDF en el navegador, el webhook usará su respaldo:', e.message);
+          }
+          try {
+            const r = await fetch(`${base}/certificados/emitir`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ folio, email: emailAlumno, pdfBase64 })
+            });
+            const data = await r.json();
+            console.log('[cert] correo:', data);
+          } catch (e) { console.warn('[cert] no se pudo avisar al webhook:', e); }
+        })();
       }
     } catch (e) { console.warn('[cert] no se pudo emitir a Firestore:', e); }
   }
@@ -6722,6 +6740,26 @@ const Sections = (function(){
     if(![rw,rh,ox,oy].every(Number.isFinite)) throw new Error('dim');
     pdf.addImage(cv.toDataURL('image/jpeg',0.95),'JPEG',ox,oy,rw,rh);
     return pdf;
+  }
+
+  // MODIFICADO: renderiza el certificado fuera de pantalla (sin necesidad de
+  // que haya un modal abierto) y devuelve el PDF ya armado en base64 — es
+  // EXACTAMENTE el mismo archivo que produce el botón "Descargar PDF", así
+  // que lo que se manda por correo se ve idéntico a lo que se ve en pantalla.
+  async function _generarCertPDFBase64(certObj, nombre){
+    if (!window.jspdf || !window.html2canvas) throw new Error('jsPDF/html2canvas no disponibles');
+    ensureCertCSS();
+    const temp = document.createElement('div');
+    temp.style.cssText = 'position:fixed;left:-9999px;top:-9999px;width:1040px;';
+    temp.innerHTML = buildCertPremium(certObj, nombre);
+    document.body.appendChild(temp);
+    try {
+      const node = temp.querySelector('#cp-cert');
+      const pdf = await _buildCertPDF(node);
+      return pdf.output('datauristring');
+    } finally {
+      temp.remove();
+    }
   }
   async function descargarPDFCertReal(node, c){
     if (!window.jspdf || !window.html2canvas){ Toast.error('Generador no disponible','Revisa tu conexión e intenta de nuevo'); return; }
@@ -10229,12 +10267,15 @@ function loadProfileFromLS(){
 // Cache global de notificaciones (se actualiza con onSnapshot)
 window.__notifsState = { items: [], unsubscribe: null, loaded: false };
 
-// Notificaciones de fallback para modo demo/sin-membresia (sin Firebase auth)
-const NOTIFS_DEMO = [
-  {id:'demo-1', tipo:'clase', icono:'i-broadcast', color:'#C4577A', titulo:'Próxima clase en vivo', descripcion:'Hemograma: interpretación de la BH · Dr. Mauricio León · 28 mayo 19:00 hrs', createdAtMs: Date.now()-3600000},
-  {id:'demo-2', tipo:'certificado', icono:'i-certificate', color:'#E5C171', titulo:'¿Sabías qué? Cada curso tiene su certificado', descripcion:'Folio único con código QR verificable', createdAtMs: Date.now()-86400000},
-  {id:'demo-3', tipo:'logro', icono:'i-trophy', color:'#FBBF24', titulo:'5 niveles de progresión', descripcion:'Desde Aprendiz hasta Maestro', createdAtMs: Date.now()-2*86400000}
-];
+// MODIFICADO: antes había 3 notificaciones "de respaldo" hardcodeadas que se mostraban
+// cuando fallaba la conexión a Firestore. Una de ellas ("Hemograma: interpretación de
+// la BH · Dr. Mauricio León") era contenido copiado de otro club (laboratorio clínico),
+// ni siquiera de DulceLab Food — por eso aparecía una "próxima clase" que no existe.
+// Ahora, si falla la conexión, simplemente no se muestra ninguna notificación (el
+// dropdown ya tiene su propio estado vacío "Sin notificaciones" para este caso) en vez
+// de inventar contenido. Si esto se dispara seguido, probablemente falta la regla de
+// Firestore para permitir lectura de la colección `notificaciones`.
+const NOTIFS_DEMO = [];
 
 // Setup del listener de notificaciones — se llama al cargar el panel
 // Es robusto: si __fs aún no está listo (módulo Firebase aún cargando), reintenta hasta 10s
@@ -10248,7 +10289,7 @@ function setupNotificacionesListener(intento = 0) {
       return;
     }
     // Después de 10s sin Firebase = modo demo (sin login o sin internet)
-    console.warn('[notif] Firebase no disponible después de 10s · usando notif demo');
+    console.warn('[notif] Firebase no disponible después de 10s · sin notificaciones');
     window.__notifsState.items = NOTIFS_DEMO;
     window.__notifsState.loaded = true;
     window.__notifsState.source = 'fallback-timeout';
@@ -10287,7 +10328,7 @@ function setupNotificacionesListener(intento = 0) {
       actualizarBadgeNotif();
       console.log(`[notif] ${items.length} notificaciones reales cargadas de Firestore`);
     }, (err) => {
-      console.warn('[notif] Error leyendo Firestore:', err.message, '· usando notif demo de respaldo');
+      console.warn('[notif] Error leyendo Firestore (revisa la regla de la colección notificaciones):', err.message);
       window.__notifsState.items = NOTIFS_DEMO;
       window.__notifsState.loaded = true;
       window.__notifsState.source = 'fallback-error';
