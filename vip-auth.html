@@ -723,7 +723,7 @@ document.getElementById('forgot-link').addEventListener('click', async (e) => {
 <script src="pwa.js" defer></script>
 <!-- ═══════════════════════════════════════════════════════════════
      Aviso de cookies · DulceLab Food (estilo aviso simple, tipo Starbucks:
-     "sigues navegando = aceptas" en vez de botones de elegir).
+     "sigues navegando = aceptas", fondo blanco y limpio, no un bloque oscuro).
      Autocontenido (no depende de las variables CSS del sitio) para
      poder pegarse igual en dulcelabfood.com y club.dulcelabfood.com.
      Se guarda que ya se mostró en localStorage bajo "dlf-cookie-notice"
@@ -733,14 +733,16 @@ document.getElementById('forgot-link').addEventListener('click', async (e) => {
          // aquí va el código del Pixel / Analytics
        }
      ═══════════════════════════════════════════════════════════════ -->
-<div id="dlf-cookie-banner" style="display:none;position:fixed;left:0;right:0;bottom:0;z-index:99999;background:#231C18;color:#F7EEEC;padding:14px 18px;box-shadow:0 -6px 24px rgba(0,0,0,.25);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
-  <div style="max-width:980px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:14px;justify-content:space-between;">
-    <p style="margin:0;font-size:13px;line-height:1.5;flex:1;min-width:240px;color:#F0E4E1;">
-      <strong style="color:#fff;">Este sitio usa cookies.</strong>
-      Al navegar en nuestro sitio aceptas que usemos cookies para personalizar tu experiencia según nuestra
-      <a href="https://club.dulcelabfood.com/terminos.html#cookies" target="_blank" rel="noopener" style="color:#E5A0AE;">Política de Cookies</a>.
+<div id="dlf-cookie-banner" style="display:none;position:fixed;left:0;right:0;bottom:0;z-index:99999;background:#FFFFFF;border-top:1px solid #E7DAD5;box-shadow:0 -8px 28px rgba(35,28,24,.12);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <div style="max-width:1040px;margin:0 auto;padding:20px 24px;display:flex;flex-wrap:wrap;align-items:center;gap:18px;justify-content:space-between;">
+    <p style="margin:0;flex:1;min-width:260px;color:#231C18;">
+      <strong style="display:block;font-size:15px;margin-bottom:3px;">Este sitio usa cookies.</strong>
+      <span style="font-size:13.5px;line-height:1.55;color:#5B5049;">
+        Al navegar en nuestro sitio aceptas que usemos cookies para personalizar tu experiencia según nuestra
+        <a href="https://club.dulcelabfood.com/terminos.html#cookies" target="_blank" rel="noopener" style="color:#6B1526;text-decoration:underline;">Política de Cookies</a>.
+      </span>
     </p>
-    <button type="button" id="dlf-cookie-ok" style="background:#6B1526;border:1.5px solid #6B1526;color:#fff;padding:9px 18px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;">Entendido</button>
+    <button type="button" id="dlf-cookie-ok" style="background:#231C18;border:none;color:#fff;padding:12px 26px;border-radius:100px;font-size:13.5px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;">Acepto</button>
   </div>
 </div>
 <script>
