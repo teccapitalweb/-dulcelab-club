@@ -5163,31 +5163,35 @@ const Sections = (function(){
       });
       dibujarPalabra(); dibujarVidas();
     }
-    function terminar(gano){
+    function ganar(){
       terminado = true;
       elTeclado.querySelectorAll('button').forEach(b => b.disabled = true);
       elAyuda.style.display = 'none';
-      elResultado.style.color = gano ? 'var(--success)' : 'var(--danger)';
-      elResultado.textContent = gano ? '¡Muy bien! 🎉' : `La palabra era: ${letras.join('')}`;
-      if(!gano){ adivinadas = new Set(letras); dibujarPalabra(); }
-      if(gano){
-        elContinuar.style.display = 'inline-flex';
-      } else {
-        // Primer intento fallido · ofrece las dos salidas, no una sola
-        elRendirse.style.display = 'inline-flex';
-        elReintentar.style.display = 'inline-flex';
-      }
+      elResultado.style.color = 'var(--success)';
+      elResultado.textContent = '¡Muy bien! 🎉';
+      elContinuar.style.display = 'inline-flex';
+    }
+    function perder(){
+      terminado = true;
+      elTeclado.querySelectorAll('button').forEach(b => b.disabled = true);
+      elAyuda.style.display = 'none';
+      elResultado.style.color = 'var(--danger)';
+      elResultado.textContent = 'Se acabaron tus corazones 💔';
+      // NO se revela la palabra aquí — solo si elige "Rendirme".
+      // Si elige "Volver a intentar" nunca debe haber visto la respuesta.
+      elRendirse.style.display = 'inline-flex';
+      elReintentar.style.display = 'inline-flex';
     }
     function tocarLetra(l, btn){
       btn.disabled = true;
       if (letras.includes(l)) {
         adivinadas.add(l); dibujarPalabra();
         btn.style.background = 'var(--success)'; btn.style.color = '#fff'; btn.style.borderColor = 'var(--success)';
-        if (letras.every(x => x===' '||adivinadas.has(x))) terminar(true);
+        if (letras.every(x => x===' '||adivinadas.has(x))) ganar();
       } else {
         vidas--; dibujarVidas();
         btn.style.background = 'var(--danger)'; btn.style.color = '#fff'; btn.style.borderColor = 'var(--danger)';
-        if (vidas <= 0) terminar(false);
+        if (vidas <= 0) perder();
       }
     }
     elAyuda.addEventListener('click', ()=>{
@@ -5201,10 +5205,19 @@ const Sections = (function(){
       dibujarPalabra();
       const btn = Array.from(elTeclado.querySelectorAll('button')).find(b=>b.textContent===letraElegida && !b.disabled);
       if(btn){ btn.disabled = true; btn.style.background = 'var(--primary)'; btn.style.color = '#fff'; btn.style.borderColor = 'var(--primary)'; }
-      if (letras.every(x => x===' '||adivinadas.has(x))) { terminar(true); return; }
+      if (letras.every(x => x===' '||adivinadas.has(x))) { ganar(); return; }
       actualizarBotonAyuda();
     });
-    elRendirse.addEventListener('click', onDone);
+    elRendirse.addEventListener('click', ()=>{
+      // Solo aquí se revela la respuesta, al aplastar Rendirme y no antes
+      adivinadas = new Set(letras);
+      dibujarPalabra();
+      elResultado.style.color = 'var(--danger)';
+      elResultado.textContent = `La palabra era: ${letras.join('')}`;
+      elRendirse.style.display = 'none';
+      elReintentar.style.display = 'none';
+      elContinuar.style.display = 'inline-flex';
+    });
     elReintentar.addEventListener('click', iniciarPartida);
     elContinuar.addEventListener('click', onDone);
     iniciarPartida();
