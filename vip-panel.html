@@ -123,30 +123,45 @@ body{
 
 /* MAIN */
 .main{padding:calc(18px + env(safe-area-inset-top)) 24px 40px;display:flex;flex-direction:column;gap:20px;min-width:0;overflow-x:hidden}
-.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.topbar__left{display:flex;align-items:center;gap:10px}
-.topbar__right{display:flex;align-items:center;gap:8px}
+.topbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.topbar__left{display:flex;align-items:center;gap:10px;flex:none}
+.topbar__right{display:flex;align-items:center;gap:6px;flex:none;margin-left:auto}
 
 .pill{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:600;padding:5px 12px 5px 10px;border-radius:100px;background:color-mix(in srgb,var(--primary) 12%,transparent);color:var(--primary);border:0.5px solid color-mix(in srgb,var(--primary) 30%,transparent);letter-spacing:1.2px;text-transform:uppercase}
 .pill .ic{width:11px;height:11px}
 
-/* MODIFICADO (rediseño visual): antes tenían casi el mismo tono que el fondo
-   de la página —casi invisibles—, ahora usan --surface-3 (más saturado) y
-   borde/ícono más marcados para que se noten como botones reales. */
-.icon-btn{width:34px;height:34px;border-radius:100px;background:var(--surface-3);border:0.5px solid var(--border-strong);display:flex;align-items:center;justify-content:center;color:var(--text);transition:color .15s,border-color .15s,background .15s;position:relative}
-.icon-btn:hover{color:var(--primary);border-color:var(--primary);background:var(--surface-2)}
-.icon-btn .ic{width:16px;height:16px}
-.icon-btn .dot{position:absolute;top:8px;right:9px;width:6px;height:6px;border-radius:50%;background:var(--primary);box-shadow:0 0 0 2px var(--surface)}
+/* Buscador global del topbar (rediseño v4, referencia Visión Pecuaria):
+   busca de verdad sobre lo que el alumno ya tiene cargado (cursos, clases,
+   materiales) — ver buscarGlobal()/window.__buscarGlobal en el bloque de
+   cursos, y el binder del input más abajo en el script principal. */
+.topbar__search{position:relative;flex:1 1 auto;min-width:160px;max-width:440px;display:flex;align-items:center}
+.topbar__search > .ic{position:absolute;left:14px;width:15px;height:15px;color:var(--text-3);pointer-events:none}
+.topbar__search input{width:100%;padding:9px 14px 9px 38px;border-radius:100px;border:0.5px solid var(--border-2);background:var(--surface);color:var(--text);font:inherit;font-size:12.5px}
+.topbar__search input::placeholder{color:var(--text-3)}
+.topbar__search input:focus{outline:none;border-color:var(--primary)}
+.topbar__search-results{position:absolute;top:calc(100% + 8px);left:0;right:0;background:var(--surface);border:0.5px solid var(--border-2);border-radius:14px;box-shadow:0 16px 40px rgba(0,0,0,.16);max-height:360px;overflow-y:auto;z-index:60;display:none;padding:6px}
+.topbar__search-results.is-open{display:block}
+.topbar__search-empty{padding:16px;text-align:center;font-size:12px;color:var(--text-3)}
+.topbar__search-group{padding:8px 10px 4px;font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--text-3)}
+.topbar__search-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;cursor:pointer;transition:background .15s}
+.topbar__search-item:hover{background:var(--surface-2)}
+.topbar__search-item__ic{width:30px;height:30px;border-radius:9px;background:color-mix(in srgb,var(--primary) 12%,transparent);color:var(--primary);display:flex;align-items:center;justify-content:center;flex:none}
+.topbar__search-item__ic .ic{width:14px;height:14px}
+.topbar__search-item__body{min-width:0}
+.topbar__search-item__title{display:block;font-size:12.5px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar__search-item__meta{display:block;font-size:10.5px;color:var(--text-3);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-.theme-toggle{display:flex;align-items:center;gap:7px;padding:7px 13px 7px 11px;border-radius:100px;background:var(--surface-3);border:0.5px solid var(--border-strong);font-size:11.5px;color:var(--text);font-weight:500;transition:color .15s,border-color .15s,background .15s}
-.theme-toggle:hover{color:var(--text);border-color:var(--border-strong);background:var(--surface-2)}
-.theme-toggle .ic{width:14px;height:14px}
+/* MODIFICADO (rediseño v4): iconos del topbar (?, tema, campana) pasan de
+   "chip" con fondo/borde propio a íconos sueltos con hover sutil, y el
+   avatar se queda solo como circulito —sin nombre/plan a un lado— igual
+   que en Visión Pecuaria. */
+.icon-btn{width:34px;height:34px;border-radius:100px;background:transparent;border:none;display:flex;align-items:center;justify-content:center;color:var(--text-2);transition:color .15s,background .15s;position:relative}
+.icon-btn:hover{color:var(--primary);background:var(--surface-2)}
+.icon-btn .ic{width:17px;height:17px}
+.icon-btn .dot{position:absolute;top:7px;right:8px;width:6px;height:6px;border-radius:50%;background:var(--primary);box-shadow:0 0 0 2px var(--surface)}
 
-.avatar{display:flex;align-items:center;gap:9px;padding:5px 11px 5px 5px;border-radius:100px;background:var(--surface);border:0.5px solid var(--border-2)}
-.avatar__circle{width:26px;height:26px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;letter-spacing:-.3px}
-.avatar__info{display:flex;flex-direction:column;line-height:1.1}
-.avatar__name{font-size:11px;font-weight:600}
-.avatar__plan{font-size:9px;font-weight:600;color:var(--primary);letter-spacing:.5px}
+.avatar{display:flex;align-items:center;border-radius:100px;margin-left:4px}
+.avatar__circle{width:32px;height:32px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;letter-spacing:-.3px}
 
 /* Banner — hero "Continúa tu curso" (rediseño v3, referencia Visión Pecuaria):
    tarjeta oscura fija en vino (ya no sigue el tema Día/Noche, igual que en
@@ -2699,6 +2714,8 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
   .sidebar{display:none}
   .main{padding:calc(14px + env(safe-area-inset-top)) 14px 140px}
   .topbar__right .avatar{display:none}
+  .topbar__left{display:none}
+  .topbar__search{max-width:none}
   .banner{grid-template-columns:1fr;padding:20px 22px}
   .hero-course{max-width:none}
   .mobile-nav{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:30;background:var(--surface);border-top:0.5px solid var(--border-2);padding:6px 4px max(6px,env(safe-area-inset-bottom));justify-content:space-around;align-items:center}
@@ -3598,6 +3615,11 @@ window.__setDisplayName = async (nombre) => {
       <div class="topbar__left">
         <span class="pill" id="topbar-pill"><svg class="ic"><use href="#i-user"/></svg><span id="topbar-pill-text">Miembro</span></span>
       </div>
+      <div class="topbar__search">
+        <svg class="ic"><use href="#i-search"/></svg>
+        <input type="search" id="global-search-input" placeholder="Buscar cursos, clases o materiales..." autocomplete="off">
+        <div class="topbar__search-results" id="global-search-results"></div>
+      </div>
       <div class="topbar__right">
         <button class="icon-btn" id="btn-tour-help" data-tour-restart type="button" aria-label="Volver a ver el recorrido guiado" title="Recorrido guiado">
           <span class="tour-help-icon" aria-hidden="true">?</span>
@@ -3606,16 +3628,11 @@ window.__setDisplayName = async (nombre) => {
           <svg class="ic"><use href="#i-bell"/></svg>
           <span class="dot"></span>
         </button>
-        <button class="theme-toggle" id="theme-toggle">
+        <button class="icon-btn" id="theme-toggle" aria-label="Cambiar tema" title="Cambiar tema">
           <svg class="ic" id="theme-icon"><use href="#i-moon"/></svg>
-          <span id="theme-label">Noche</span>
         </button>
         <div class="avatar" id="btn-avatar" style="cursor:pointer" title="Mi perfil">
           <div class="avatar__circle">IN</div>
-          <div class="avatar__info">
-            <span class="avatar__name">Miembro</span>
-            <span class="avatar__plan">VIP ANUAL</span>
-          </div>
         </div>
       </div>
     </header>
@@ -6330,6 +6347,37 @@ const Sections = (function(){
     }
   }
   window.__populateHeroCourse = populateHeroCourse;
+
+  // ═══════════════════════════════════════════════════════════════
+  // Buscador global del topbar (rediseño v4) · busca de verdad sobre lo
+  // que el alumno ya tiene cargado: título/área de curso, título de cada
+  // clase y título de cada material. Máx. 8 resultados, cursos primero.
+  // ═══════════════════════════════════════════════════════════════
+  function buscarGlobal(query){
+    const q = (query || '').trim().toLowerCase();
+    if (q.length < 2) return [];
+    const out = [];
+    (cursos || []).forEach(c => {
+      if ((c.titulo || '').toLowerCase().includes(q) || (c.area || '').toLowerCase().includes(q)) {
+        out.push({ tipo:'curso', icon:'i-book', title:c.titulo, meta:c.area || 'Curso',
+          action: () => navigateToSection('cursos') });
+      }
+      (c.sesiones || []).forEach((s, i) => {
+        if ((s.titulo || '').toLowerCase().includes(q)) {
+          out.push({ tipo:'clase', icon:'i-play', title:s.titulo, meta:c.titulo,
+            action: () => { if (typeof window.abrirClaseDulcelab === 'function') window.abrirClaseDulcelab(c.id, i); } });
+        }
+      });
+      (c.materiales || []).forEach((m, i) => {
+        if ((m.titulo || '').toLowerCase().includes(q)) {
+          out.push({ tipo:'material', icon:'i-news', title:m.titulo, meta:c.titulo,
+            action: () => { if (typeof window.abrirMaterialDulcelab === 'function') window.abrirMaterialDulcelab(c.id, i); } });
+        }
+      });
+    });
+    return out.slice(0, 8);
+  }
+  window.__buscarGlobal = buscarGlobal;
 
   const certificados = []; // se llenarán con los certificados reales emitidos
 
@@ -11420,6 +11468,49 @@ function initNav(){
   });
   document.getElementById('btn-notif')?.addEventListener('click',(e)=>{e.stopPropagation();toggleNotifDropdown();});
   document.getElementById('btn-avatar')?.addEventListener('click',()=>navigateToSection('perfil'));
+
+  // ─── Buscador global del topbar (rediseño v4) ───
+  (function initGlobalSearch(){
+    const input = document.getElementById('global-search-input');
+    const results = document.getElementById('global-search-results');
+    if (!input || !results) return;
+    const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const LBL = { curso:'Cursos', clase:'Clases', material:'Materiales' };
+    let items = [], t;
+    function render(query){
+      if (!query || query.trim().length < 2) { results.classList.remove('is-open'); results.innerHTML=''; return; }
+      if (!items.length) { results.innerHTML = `<div class="topbar__search-empty">Sin resultados para "${esc(query)}"</div>`; results.classList.add('is-open'); return; }
+      let lastTipo = null, html = '';
+      items.forEach((it, i) => {
+        if (it.tipo !== lastTipo) { html += `<div class="topbar__search-group">${LBL[it.tipo]||''}</div>`; lastTipo = it.tipo; }
+        html += `<div class="topbar__search-item" data-idx="${i}"><span class="topbar__search-item__ic"><svg class="ic"><use href="#${it.icon}"/></svg></span><span class="topbar__search-item__body"><span class="topbar__search-item__title">${esc(it.title)}</span><span class="topbar__search-item__meta">${esc(it.meta)}</span></span></div>`;
+      });
+      results.innerHTML = html;
+      results.classList.add('is-open');
+    }
+    input.addEventListener('input', () => {
+      clearTimeout(t);
+      const q = input.value;
+      t = setTimeout(() => {
+        items = (typeof window.__buscarGlobal === 'function') ? window.__buscarGlobal(q) : [];
+        render(q);
+      }, 180);
+    });
+    input.addEventListener('focus', () => { if (input.value.trim().length >= 2) render(input.value); });
+    results.addEventListener('click', (e) => {
+      const el = e.target.closest('.topbar__search-item');
+      if (!el) return;
+      const it = items[Number(el.dataset.idx)];
+      if (it && typeof it.action === 'function') it.action();
+      input.value = ''; results.classList.remove('is-open'); results.innerHTML = ''; input.blur();
+    });
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest || !e.target.closest('.topbar__search')) results.classList.remove('is-open');
+    });
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') { input.value=''; results.classList.remove('is-open'); results.innerHTML=''; input.blur(); }
+    });
+  })();
 
   // ─── Calendario .ics (widget panel derecho) · ahora dinámico ───
   // Usa event delegation porque el widget se re-renderea con el webinar real
