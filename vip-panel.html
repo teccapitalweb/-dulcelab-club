@@ -148,39 +148,40 @@ body{
 .avatar__name{font-size:11px;font-weight:600}
 .avatar__plan{font-size:9px;font-weight:600;color:var(--primary);letter-spacing:.5px}
 
-/* Banner — estilo agri-futurista con grid pattern + aurora + glassmorphism */
+/* Banner — hero "Continúa tu curso" (rediseño v3, referencia Visión Pecuaria):
+   tarjeta oscura fija en vino (ya no sigue el tema Día/Noche, igual que en
+   VP), con el curso en progreso a la izquierda y "Tu siguiente meta" a la
+   derecha. Los datos (curso actual, siguiente clase, % de avance) son
+   reales — se calculan del progreso guardado por alumno (getProgresoCurso),
+   no son de adorno. */
 .banner{
-  background:var(--surface);
-  color:var(--text);
-  border-radius:12px;
-  padding:28px 32px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:24px;
-  border:1px solid var(--border-2);
-  flex-wrap:wrap;
+  background:linear-gradient(135deg,var(--primary-deep) 0%,var(--primary) 100%);
+  color:#F5EFE8;
+  border-radius:20px;
+  padding:32px;
+  display:grid;
+  grid-template-columns:1fr 320px;
+  gap:22px;
+  align-items:stretch;
+  border:none;
   position:relative;
   overflow:hidden;
 }
-/* MODIFICADO (rediseño visual): antes era una tarjeta plana, sin ninguna
-   ilustración — tomando como referencia el encabezado con ondas de Visión
-   Pecuaria, se agrega la misma idea pero en tonos vino (sin usar su verde). */
 .banner::before{
   content:"";
-  position:absolute; left:0; right:0; bottom:0; height:70%;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 200' preserveAspectRatio='none'%3E%3Cpath d='M0,140 C150,180 350,100 600,140 L600,200 L0,200 Z' fill='rgba(107,21,38,0.055)'/%3E%3Cpath d='M0,165 C180,198 400,125 600,165 L600,200 L0,200 Z' fill='rgba(107,21,38,0.09)'/%3E%3C/svg%3E");
+  position:absolute; left:0; right:0; bottom:0; height:60%;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 200' preserveAspectRatio='none'%3E%3Cpath d='M0,140 C150,180 350,100 600,140 L600,200 L0,200 Z' fill='rgba(255,255,255,0.035)'/%3E%3Cpath d='M0,165 C180,198 400,125 600,165 L600,200 L0,200 Z' fill='rgba(255,255,255,0.06)'/%3E%3C/svg%3E");
   background-repeat:no-repeat; background-position:bottom; background-size:100% 100%;
   pointer-events:none;
 }
 .banner::after{
   content:"";
-  position:absolute; top:-50px; right:60px;
-  width:170px; height:170px; border-radius:50%;
-  background:rgba(107,21,38,0.05);
+  position:absolute; top:-60px; right:80px;
+  width:200px; height:200px; border-radius:50%;
+  background:rgba(255,255,255,0.04);
   pointer-events:none;
 }
-.banner__info{position:relative;z-index:1;flex:1;min-width:240px}
+.banner__info{position:relative;z-index:1;min-width:0}
 .banner__stats{position:relative;z-index:1}
 
 /* Hero tag glassmorphism con dot pulsante */
@@ -190,25 +191,23 @@ body{
   gap:8px;
   padding:6px 12px 6px 10px;
   border-radius:100px;
-  background:color-mix(in srgb,var(--surface) 60%,transparent);
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
-  border:0.5px solid color-mix(in srgb,var(--primary) 30%,transparent);
+  background:rgba(255,255,255,.12);
+  border:0.5px solid rgba(255,255,255,.18);
   font-size:10px;
   font-weight:600;
   letter-spacing:1.5px;
   text-transform:uppercase;
-  color:var(--primary);
+  color:#F0E4D8;
 }
 .banner__eyebrow__dot{
   width:7px;height:7px;
   border-radius:50%;
-  background:var(--success);
-  box-shadow:0 0 0 0 var(--success);
+  background:#7CD98A;
+  box-shadow:0 0 0 0 #7CD98A;
   animation:pulseDot 1.8s ease-out infinite;
 }
 @keyframes pulseDot{
-  0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--success) 60%,transparent)}
+  0%{box-shadow:0 0 0 0 rgba(124,217,138,.6)}
   70%{box-shadow:0 0 0 8px transparent}
   100%{box-shadow:0 0 0 0 transparent}
 }
@@ -216,35 +215,73 @@ body{
 .banner__version{
   font-family:'JetBrains Mono',monospace;
   font-size:10px;
-  color:var(--text-3);
+  color:rgba(245,239,232,.5);
   font-weight:500;
   letter-spacing:.5px;
   margin-left:6px;
 }
 
 .banner__title{
-  font-size:clamp(24px,2.8vw,32px);
-  font-weight:600;
-  letter-spacing:-.8px;
-  line-height:1.12;
-  margin-top:14px;
-  color:var(--text);
+  font-size:clamp(26px,3.2vw,38px);
+  font-weight:800;
+  letter-spacing:-1px;
+  line-height:1.08;
+  margin-top:16px;
+  color:#fff;
 }
-.banner__sub{font-size:13.5px;color:var(--text-2);margin-top:10px;max-width:560px;line-height:1.55}
+.banner__title-accent{
+  display:inline-block;
+  background:linear-gradient(90deg,#F0C868,#F7DFA0);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
 
-.banner__stats{
-  position:relative;z-index:1;
-  display:flex;gap:10px;flex-wrap:wrap;
-}
+/* Curso en progreso (dato real, viene de getProgresoCurso) */
+.hero-course{margin-top:20px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:16px 18px;max-width:560px}
+.hero-course__lbl{font-size:9.5px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:rgba(245,239,232,.55)}
+.hero-course__name{font-size:15px;font-weight:700;margin-top:4px;color:#fff}
+.hero-course__next{margin-top:13px;width:100%;display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.07);border:0.5px solid rgba(255,255,255,.12);border-radius:12px;padding:9px 13px;text-align:left;transition:background .15s}
+.hero-course__next:hover{background:rgba(255,255,255,.13)}
+.hero-course__next-num{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12.5px;flex:none;color:#fff}
+.hero-course__next-info{display:flex;flex-direction:column;gap:2px;min-width:0}
+.hero-course__next-lbl{font-size:9px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;color:rgba(245,239,232,.5)}
+.hero-course__next-title{font-size:12.5px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.hero-progress{margin-top:13px}
+.hero-progress__top{display:flex;justify-content:space-between;font-size:11px;color:rgba(245,239,232,.65);margin-bottom:6px}
+.hero-progress__top strong{color:#fff;font-size:12px}
+.hero-progress__bar{height:7px;border-radius:100px;background:rgba(255,255,255,.14);overflow:hidden}
+.hero-progress__fill{height:100%;border-radius:100px;background:linear-gradient(90deg,#D9B65C,#F0C868);transition:width .4s ease}
+
+.hero-cta{margin-top:16px;display:flex;align-items:center;gap:14px}
+.hero-cta__btn{width:42px;height:42px;border-radius:50%;background:#fff;color:var(--primary-deep);display:flex;align-items:center;justify-content:center;transition:transform .15s;flex:none}
+.hero-cta__btn:hover{transform:scale(1.06)}
+.hero-cta__btn .ic{width:16px;height:16px}
+.hero-cta__link{font-size:12px;font-weight:600;color:rgba(245,239,232,.85);display:inline-flex;align-items:center;gap:5px;transition:gap .15s,color .15s}
+.hero-cta__link:hover{gap:8px;color:#fff}
+.hero-cta__link .ic{width:12px;height:12px}
+
+/* Tarjeta "Tu siguiente meta" */
+.hero-goal{position:relative;z-index:1;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:20px;display:flex;flex-direction:column;color:#F5EFE8}
+.hero-goal__eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:9.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:rgba(245,239,232,.6)}
+.hero-goal__eyebrow .ic{width:12px;height:12px}
+.hero-goal__title{font-size:16px;font-weight:700;margin-top:8px;color:#fff}
+.hero-goal__steps{list-style:none;margin-top:16px;display:flex;flex-direction:column;gap:13px}
+.hero-goal__step{display:flex;align-items:flex-start;gap:10px;position:relative}
+.hero-goal__step:not(:last-child)::after{content:"";position:absolute;left:13px;top:28px;width:1px;height:19px;background:rgba(255,255,255,.16)}
+.hero-goal__dot{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.1);border:0.5px solid rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;flex:none;color:rgba(245,239,232,.55)}
+.hero-goal__dot .ic{width:12px;height:12px}
+.hero-goal__step.is-active .hero-goal__dot{background:#F0C868;border-color:#F0C868;color:var(--primary-deep)}
+.hero-goal__step-lbl{display:block;font-size:8.5px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;color:rgba(245,239,232,.5)}
+.hero-goal__step-title{display:block;font-size:12px;font-weight:600;margin-top:2px;color:#fff}
+
+.hero-goal__stats{margin-top:auto;padding-top:16px;border-top:0.5px solid rgba(255,255,255,.14);display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+
 .banner__stat{
-  background:color-mix(in srgb,var(--surface) 70%,transparent);
-  backdrop-filter:blur(16px);
-  -webkit-backdrop-filter:blur(16px);
-  border:0.5px solid var(--border-2);
-  border-radius:14px;
-  padding:13px 16px;
-  text-align:left;
-  min-width:78px;
+  background:rgba(255,255,255,.07);
+  border:0.5px solid rgba(255,255,255,.12);
+  border-radius:10px;
+  padding:9px 6px;
+  text-align:center;
   position:relative;
   overflow:hidden;
 }
@@ -253,27 +290,28 @@ body{
   position:absolute;
   top:0;left:0;right:0;
   height:1px;
-  background:linear-gradient(90deg,transparent,var(--primary),transparent);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);
   opacity:.5;
 }
 .banner__stat-lbl{
   font-family:'JetBrains Mono',monospace;
-  font-size:8.5px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;
-  color:var(--text-3);
-  display:flex;align-items:center;gap:5px;
-  margin-bottom:5px;
+  font-size:8px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;
+  color:rgba(245,239,232,.55);
+  display:flex;align-items:center;justify-content:center;gap:4px;
+  margin-bottom:4px;
 }
 .banner__stat-lbl::before{
   content:"";
-  width:5px;height:5px;
+  width:4px;height:4px;
   border-radius:50%;
-  background:var(--success);
+  background:#7CD98A;
 }
 .banner__stat-val{
-  font-size:22px;font-weight:600;line-height:1;letter-spacing:-.6px;
+  font-size:15px;font-weight:700;line-height:1;letter-spacing:-.4px;
   font-feature-settings:"tnum" 1;
-  color:var(--text);
+  color:#fff;
 }
+
 
 /* Section header */
 .section-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
@@ -2661,8 +2699,8 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
   .sidebar{display:none}
   .main{padding:calc(14px + env(safe-area-inset-top)) 14px 140px}
   .topbar__right .avatar{display:none}
-  .banner{flex-direction:column;align-items:flex-start;padding:20px 22px}
-  .banner__stats{align-self:stretch;justify-content:space-between;flex-wrap:wrap}
+  .banner{grid-template-columns:1fr;padding:20px 22px}
+  .hero-course{max-width:none}
   .mobile-nav{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:30;background:var(--surface);border-top:0.5px solid var(--border-2);padding:6px 4px max(6px,env(safe-area-inset-bottom));justify-content:space-around;align-items:center}
   .mobile-nav__item{display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--text-3);padding:5px 8px;border-radius:8px;font-size:9.5px;font-weight:500;letter-spacing:.3px}
   .mobile-nav__item.is-active{color:var(--primary)}
@@ -3587,15 +3625,63 @@ window.__setDisplayName = async (nombre) => {
       <section class="banner fade-up">
         <div class="banner__info">
           <span class="banner__eyebrow"><span class="banner__eyebrow__dot"></span><span id="greeting-label">En vivo</span><span class="banner__version">v.2026.05</span></span>
-          <h1 class="banner__title" id="hero-title">Buenas tardes</h1>
-          <p class="banner__sub">Tu acceso a cursos premium, herramientas pro de cocina y la comunidad de gastronomía, repostería e inocuidad alimentaria más activa de México.</p>
+          <h1 class="banner__title" id="hero-title">Continúa tu<br><span class="banner__title-accent" id="hero-title-accent">curso.</span></h1>
+
+          <div class="hero-course" id="hero-course">
+            <div class="hero-course__lbl">Curso actual</div>
+            <div class="hero-course__name" id="hero-course-name">Cargando…</div>
+
+            <button type="button" class="hero-course__next" id="hero-next-class">
+              <span class="hero-course__next-num" id="hero-next-num">1</span>
+              <span class="hero-course__next-info">
+                <span class="hero-course__next-lbl" id="hero-next-lbl">Siguiente clase</span>
+                <span class="hero-course__next-title" id="hero-next-title">—</span>
+              </span>
+            </button>
+
+            <div class="hero-progress">
+              <div class="hero-progress__top">
+                <span id="hero-progress-txt">0 de 0 clases vistas</span>
+                <strong id="hero-progress-pct">0%</strong>
+              </div>
+              <div class="hero-progress__bar"><div class="hero-progress__fill" id="hero-progress-fill" style="width:0%"></div></div>
+            </div>
+
+            <div class="hero-cta">
+              <button type="button" class="hero-cta__btn" id="hero-continue-btn" aria-label="Continuar clase" title="Continuar clase">
+                <svg class="ic"><use href="#i-play"/></svg>
+              </button>
+              <a class="hero-cta__link" data-section="cursos">Ver todos los cursos<svg class="ic"><use href="#i-arrow-right"/></svg></a>
+            </div>
+          </div>
         </div>
-        <div class="banner__stats">
-          <div class="banner__stat" data-section="cursos" style="cursor:pointer"><div class="banner__stat-lbl">Cursos</div><div class="banner__stat-val" id="bn-stat-cursos">0</div></div>
-          <div class="banner__stat" data-section="webinars" style="cursor:pointer"><div class="banner__stat-lbl">Clases</div><div class="banner__stat-val" id="bn-stat-clases">0</div></div>
-          <div class="banner__stat" data-section="pdfs" style="cursor:pointer"><div class="banner__stat-lbl">PDFs</div><div class="banner__stat-val" id="bn-stat-pdfs">0</div></div>
-          <div class="banner__stat" style="cursor:default"><div class="banner__stat-lbl">Pro</div><div class="banner__stat-val" id="bn-stat-pro">8</div></div>
-        </div>
+
+        <aside class="hero-goal" id="hero-goal">
+          <div class="hero-goal__eyebrow"><svg class="ic"><use href="#i-bolt"/></svg>Tu siguiente meta</div>
+          <div class="hero-goal__title" id="hero-goal-title">Completa la siguiente clase</div>
+
+          <ol class="hero-goal__steps">
+            <li class="hero-goal__step is-active">
+              <span class="hero-goal__dot"><svg class="ic"><use href="#i-play"/></svg></span>
+              <span><span class="hero-goal__step-lbl">Ahora</span><span class="hero-goal__step-title" id="hero-goal-now">—</span></span>
+            </li>
+            <li class="hero-goal__step">
+              <span class="hero-goal__dot"><svg class="ic"><use href="#i-book"/></svg></span>
+              <span><span class="hero-goal__step-lbl">Después</span><span class="hero-goal__step-title" id="hero-goal-next">—</span></span>
+            </li>
+            <li class="hero-goal__step">
+              <span class="hero-goal__dot"><svg class="ic"><use href="#i-certificate"/></svg></span>
+              <span><span class="hero-goal__step-lbl">Al completar</span><span class="hero-goal__step-title">Obtén tu certificado</span></span>
+            </li>
+          </ol>
+
+          <div class="hero-goal__stats" id="hero-goal-stats">
+            <div class="banner__stat" data-section="cursos" style="cursor:pointer"><div class="banner__stat-lbl">Cursos</div><div class="banner__stat-val" id="bn-stat-cursos">0</div></div>
+            <div class="banner__stat" data-section="webinars" style="cursor:pointer"><div class="banner__stat-lbl">Clases</div><div class="banner__stat-val" id="bn-stat-clases">0</div></div>
+            <div class="banner__stat" data-section="pdfs" style="cursor:pointer"><div class="banner__stat-lbl">PDFs</div><div class="banner__stat-val" id="bn-stat-pdfs">0</div></div>
+            <div class="banner__stat" style="cursor:default"><div class="banner__stat-lbl">Pro</div><div class="banner__stat-val" id="bn-stat-pro">8</div></div>
+          </div>
+        </aside>
       </section>
 
       <div style="height:22px"></div>
@@ -3756,10 +3842,12 @@ const Theme={
 };
 
 function applyGreeting(){
+  // MODIFICADO (rediseño v3): el título del hero ya no es el saludo
+  // ("Buenas tardes, nombre") — ahora es fijo ("Continúa tu curso.") y el
+  // saludo por hora sólo vive en el eyebrow. Ver populateHeroCourse() para
+  // el contenido real (curso actual, siguiente clase, avance).
   const h=new Date().getHours();
-  const greet=h<12?'Buen día':h<19?'Buenas tardes':'Buenas noches';
   const eyebrow=h<12?'Modo enfoque · Mañana':h<19?'Modo enfoque · Tarde':'Modo enfoque · Noche';
-  const t=document.getElementById('hero-title');if(t)t.textContent=greet;
   const l=document.getElementById('greeting-label');if(l)l.textContent=eyebrow;
 }
 
@@ -4544,7 +4632,7 @@ function navigateToSection(section, opts){
     try { window.__dulcelabCheckout.destroy(); } catch(e) {}
     window.__dulcelabCheckout = null;
   }
-  if(section==='inicio'){inicio.style.display='';dyn.style.display='none';if(typeof window.__cargarDescubreHoy==='function')window.__cargarDescubreHoy();if(typeof window.__actualizarWidgetsActividad==='function')window.__actualizarWidgetsActividad();return;}
+  if(section==='inicio'){inicio.style.display='';dyn.style.display='none';if(typeof window.__cargarDescubreHoy==='function')window.__cargarDescubreHoy();if(typeof window.__actualizarWidgetsActividad==='function')window.__actualizarWidgetsActividad();if(typeof window.__populateHeroCourse==='function')window.__populateHeroCourse();return;}
   inicio.style.display='none';dyn.style.display='';
   const renderer=Sections.renderers[section];
   if(renderer){dyn.innerHTML='';renderer(dyn);}
@@ -4838,6 +4926,7 @@ const Sections = (function(){
       // Mostrar splash de felicitación
       setTimeout(() => mostrarSplashCompletado(curso), 400);
     }
+    if (typeof populateHeroCourse === 'function') populateHeroCourse();
     return p[cursoId];
   };
 
@@ -6134,9 +6223,113 @@ const Sections = (function(){
       _cursosLoaded = true;
     } finally {
       _cursosLoading = false;
+      if (typeof populateHeroCourse === 'function') populateHeroCourse();
     }
   }
   window.__cargarCursosFirestore = cargarCursosFirestore;
+
+  // ═══════════════════════════════════════════════════════════════
+  // Hero "Continúa tu curso" (rediseño v3) · pinta con datos reales:
+  // elige el curso en progreso (o el primero sin empezar, o el último si
+  // todos están completos) y arma siguiente clase, % de avance y las
+  // acciones de "Continuar clase" / "Ver todos los cursos".
+  // ═══════════════════════════════════════════════════════════════
+  function populateHeroCourse(){
+    try {
+      const elName = document.getElementById('hero-course-name');
+      const elNextNum = document.getElementById('hero-next-num');
+      const elNextLbl = document.getElementById('hero-next-lbl');
+      const elNextTitle = document.getElementById('hero-next-title');
+      const elNextBtn = document.getElementById('hero-next-class');
+      const elProgTxt = document.getElementById('hero-progress-txt');
+      const elProgPct = document.getElementById('hero-progress-pct');
+      const elProgFill = document.getElementById('hero-progress-fill');
+      const elContinueBtn = document.getElementById('hero-continue-btn');
+      const elGoalTitle = document.getElementById('hero-goal-title');
+      const elGoalNow = document.getElementById('hero-goal-now');
+      const elGoalNext = document.getElementById('hero-goal-next');
+      if (!elName) return;
+
+      const irACursos = () => { if (typeof navigateToSection === 'function') navigateToSection('cursos'); };
+
+      const conSesiones = (cursos || []).filter(c => Array.isArray(c.sesiones) && c.sesiones.length);
+      let curso = null, prog = null, total = 0, vistas = 0;
+
+      // 1) primer curso EN PROGRESO (algo visto, no todo)
+      for (const c of conSesiones) {
+        const p = getProgresoCurso(c.id);
+        const v = p.clasesVistas.length;
+        if (v > 0 && v < c.sesiones.length) { curso = c; prog = p; total = c.sesiones.length; vistas = v; break; }
+      }
+      // 2) si ninguno en progreso, el primero SIN EMPEZAR
+      if (!curso) {
+        for (const c of conSesiones) {
+          const p = getProgresoCurso(c.id);
+          if (p.clasesVistas.length === 0) { curso = c; prog = p; total = c.sesiones.length; vistas = 0; break; }
+        }
+      }
+      // 3) si todos están completos, el último (para repasar/certificado)
+      if (!curso && conSesiones.length) {
+        curso = conSesiones[conSesiones.length - 1];
+        prog = getProgresoCurso(curso.id);
+        total = curso.sesiones.length;
+        vistas = prog.clasesVistas.length;
+      }
+
+      if (!curso) {
+        elName.textContent = 'Aún no hay cursos disponibles';
+        elNextTitle.textContent = '—';
+        elProgTxt.textContent = '0 de 0 clases vistas';
+        elProgPct.textContent = '0%';
+        if (elProgFill) elProgFill.style.width = '0%';
+        elGoalTitle.textContent = 'Explora el catálogo de cursos';
+        elGoalNow.textContent = '—';
+        elGoalNext.textContent = '—';
+        elContinueBtn.onclick = irACursos;
+        elNextBtn.onclick = irACursos;
+        return;
+      }
+
+      const pct = progresoCursoPct(curso.id, total);
+      elName.textContent = curso.titulo;
+      elProgTxt.textContent = `${vistas} de ${total} clases vistas`;
+      elProgPct.textContent = pct + '%';
+      if (elProgFill) elProgFill.style.width = pct + '%';
+
+      if (vistas >= total) {
+        elNextNum.textContent = '✓';
+        elNextLbl.textContent = 'Curso completado';
+        elNextTitle.textContent = '¡Ya terminaste este curso!';
+        elGoalTitle.textContent = '¡Curso completado!';
+        elGoalNow.textContent = 'Descarga tu certificado';
+        elGoalNext.textContent = 'Explora otro curso';
+        elContinueBtn.onclick = () => navigateToSection('certificados');
+        elNextBtn.onclick = irACursos;
+        return;
+      }
+
+      let idxSig = curso.sesiones.findIndex((s, i) => !prog.clasesVistas.includes(s.numero || (i + 1)));
+      if (idxSig === -1) idxSig = 0;
+      const sesionSig = curso.sesiones[idxSig];
+      const numSig = sesionSig.numero || (idxSig + 1);
+
+      elNextNum.textContent = numSig;
+      elNextLbl.textContent = `Siguiente clase · ${numSig} de ${total}`;
+      elNextTitle.textContent = sesionSig.titulo || `Clase ${numSig}`;
+
+      elGoalTitle.textContent = `Completa la clase ${numSig}`;
+      elGoalNow.textContent = sesionSig.titulo || `Clase ${numSig}`;
+      const sesionDespues = curso.sesiones[idxSig + 1];
+      elGoalNext.textContent = sesionDespues ? (sesionDespues.titulo || `Clase ${numSig + 1}`) : 'Repasa el material del curso';
+
+      const abrirClase = () => { if (typeof window.abrirClaseDulcelab === 'function') window.abrirClaseDulcelab(curso.id, idxSig); };
+      elContinueBtn.onclick = abrirClase;
+      elNextBtn.onclick = abrirClase;
+    } catch (e) {
+      console.warn('[hero-course] no se pudo pintar:', e.message);
+    }
+  }
+  window.__populateHeroCourse = populateHeroCourse;
 
   const certificados = []; // se llenarán con los certificados reales emitidos
 
@@ -11199,7 +11392,7 @@ function initNav(){
   });
 
   document.querySelectorAll('[data-open-tool]').forEach(btn=>btn.addEventListener('click',()=>{const t=btn.dataset.openTool;if(Tools[t])Tools[t].open();}));
-  document.querySelectorAll('.section-header__link[data-section], .widget [data-section], .banner__stat[data-section]').forEach(el=>{el.addEventListener('click',e=>{e.preventDefault();navigateToSection(el.dataset.section);});});
+  document.querySelectorAll('.section-header__link[data-section], .widget [data-section], .banner__stat[data-section], .hero-cta__link[data-section]').forEach(el=>{el.addEventListener('click',e=>{e.preventDefault();navigateToSection(el.dataset.section);});});
 
   // ─── Botones del DOM estático (topbar, sidebar, widgets siempre presentes) ───
   document.getElementById('btn-logout')?.addEventListener('click',openLogoutModal);
@@ -11440,19 +11633,16 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
       topbarPill.style.display = 'inline-flex';
     }
 
-    // 2. Saludo del banner inicio
+    // 2. Hero "Continúa tu curso" (rediseño v3) — el título ya no es el
+    // saludo (eso vive en el eyebrow, ver applyGreeting); aquí sólo cambia
+    // el mensaje para invitados, y se repinta el curso/progreso real.
     const heroTitle = document.getElementById('hero-title');
     if (heroTitle) {
-      const h = new Date().getHours();
-      const part = h<12 ? 'Buenos días' : (h<19 ? 'Buenas tardes' : 'Buenas noches');
-      if (S.modo === 'invitado') {
-        heroTitle.textContent = 'Estás explorando DulceLab Food VIP';
-      } else if (S.modo === 'sin-membresia') {
-        heroTitle.textContent = `${part}, ${S.displayName?.split(' ')[0]||'miembro'}`;
-      } else {
-        heroTitle.textContent = `${part}, ${S.displayName?.split(' ')[0]||'miembro'}`;
-      }
+      heroTitle.innerHTML = S.modo === 'invitado'
+        ? 'Explora tu<br><span class="banner__title-accent">club.</span>'
+        : 'Continúa tu<br><span class="banner__title-accent">curso.</span>';
     }
+    if (typeof window.__populateHeroCourse === 'function') window.__populateHeroCourse();
 
     // 3. Banner sticky FOMO (solo no-VIP)
     const banner = document.getElementById('fomo-banner');
