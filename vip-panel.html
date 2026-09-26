@@ -793,6 +793,59 @@ body{
 }
 .curso-card__progress-pct{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--primary);font-weight:700;min-width:38px;text-align:right}
 
+/* Barra de progreso delgada pegada al borde inferior de la portada (rediseño v5, ref. VP) */
+.curso-card__cover-progress{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(0,0,0,.25);z-index:1}
+.curso-card__cover-progress-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--highlight))}
+/* Botón circular de la esquina superior derecha (play / abrir catálogo) */
+.curso-card__cover-action{position:absolute;top:12px;right:12px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.94);color:var(--primary);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(0,0,0,.25);z-index:1}
+.curso-card__cover-action .ic{width:13px;height:13px}
+/* Fila inferior: instructor + CTA (sólo cuando hay avance real) */
+.curso-card__footer{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:10px;border-top:1px solid var(--border)}
+.curso-card__instructor{display:flex;align-items:center;gap:8px;min-width:0}
+.curso-card__instructor-av{width:24px;height:24px;border-radius:50%;background:var(--area-color,var(--primary));color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none}
+.curso-card__instructor-name{font-size:11.5px;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.curso-card__cta{font-size:11.5px;font-weight:700;padding:6px 14px;border-radius:100px;background:var(--primary);color:#fff;flex:none}
+
+/* Hero de la sección Cursos (rediseño v5, referencia Visión Pecuaria):
+   mismo lenguaje visual oscuro del hero de Inicio, con los tabs
+   Todos/En progreso/Completados como grupo de pills a la derecha —
+   los conteos son reales (cursoEstado() lee el progreso guardado). */
+.cursos-hero{
+  background:linear-gradient(135deg,var(--primary-deep) 0%,var(--primary) 100%);
+  color:#F5EFE8;border-radius:20px;padding:30px 32px;
+  display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;
+  position:relative;overflow:hidden;
+}
+.cursos-hero::before{
+  content:"";
+  position:absolute; left:0; right:0; bottom:0; height:60%;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 200' preserveAspectRatio='none'%3E%3Cpath d='M0,140 C150,180 350,100 600,140 L600,200 L0,200 Z' fill='rgba(255,255,255,0.035)'/%3E%3Cpath d='M0,165 C180,198 400,125 600,165 L600,200 L0,200 Z' fill='rgba(255,255,255,0.06)'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:bottom; background-size:100% 100%;
+  pointer-events:none;
+}
+.cursos-hero::after{
+  content:"";
+  position:absolute; top:-60px; right:80px;
+  width:200px; height:200px; border-radius:50%;
+  background:rgba(255,255,255,0.04);
+  pointer-events:none;
+}
+.cursos-hero__info{position:relative;z-index:1;min-width:260px}
+.cursos-hero__title{font-size:clamp(24px,3vw,34px);font-weight:800;letter-spacing:-.8px;line-height:1.12;margin-top:14px;color:#fff}
+.cursos-hero__stats{position:relative;z-index:1;display:flex;gap:26px;margin-top:22px;flex-wrap:wrap}
+.cursos-hero__stat strong{display:block;font-size:22px;font-weight:700;color:#fff;line-height:1}
+.cursos-hero__stat span{display:block;font-size:10.5px;color:rgba(245,239,232,.6);margin-top:4px;text-transform:uppercase;letter-spacing:.8px}
+.cursos-hero__tabs{position:relative;z-index:1;display:inline-flex;gap:4px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:100px;padding:4px}
+.cursos-hero__tab{padding:9px 16px;border-radius:100px;font-size:12px;font-weight:600;color:rgba(245,239,232,.75);transition:background .15s,color .15s;white-space:nowrap}
+.cursos-hero__tab:hover{color:#fff}
+.cursos-hero__tab.is-active{background:#fff;color:var(--primary-deep)}
+
+/* Chips de área — reemplazan el dropdown; la búsqueda ahora vive en el topbar global */
+.cursos-chips{display:flex;gap:8px;flex-wrap:wrap;overflow-x:auto;padding-bottom:2px}
+.cursos-chip{flex:none;padding:7px 15px;border-radius:100px;background:var(--surface-2);color:var(--text-2);font-size:12px;font-weight:600;border:0.5px solid var(--border);white-space:nowrap;transition:background .15s,color .15s,border-color .15s}
+.cursos-chip:hover{background:var(--surface-3)}
+.cursos-chip.is-active{background:var(--primary);color:#fff;border-color:var(--primary)}
+
 /* CERTIFICADOS — cards */
 .certs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px}
 /* Banners compactos de certificado (lista) */
@@ -6515,77 +6568,69 @@ const Sections = (function(){
   }
 
   /* ============================ CURSOS ============================ */
-  let cursosState={tab:'catalogo',area:'todas',search:''};
+  let cursosState={tab:'todos',area:'todas'};
   let countdownTimer=null;
 
+  // MODIFICADO (rediseño v5): antes c.status venía hardcodeado en 'catalogo'
+  // desde cargarCursosFirestore (Cursos nunca pasaba a "en progreso" ni a
+  // "completado" solo, aunque el alumno ya llevara clases vistas). Ahora el
+  // estado se calcula de verdad con el progreso guardado (getProgresoCurso).
+  function cursoEstado(c){
+    if (!c.sesiones || !c.sesiones.length) return 'catalogo';
+    const vistas = getProgresoCurso(c.id).clasesVistas.length;
+    if (vistas >= c.sesiones.length) return 'completado';
+    if (vistas > 0) return 'progreso';
+    return 'catalogo';
+  }
   function counts(){
+    const estados = cursos.map(cursoEstado);
     return {
-      progreso:cursos.filter(c=>c.status==='progreso').length,
-      completado:cursos.filter(c=>c.status==='completado').length,
-      catalogo:cursos.filter(c=>c.status==='catalogo').length
+      total: cursos.length,
+      clases: cursos.reduce((s,c)=>s+(c.sesiones?.length||0),0),
+      progreso: estados.filter(e=>e==='progreso').length,
+      completado: estados.filter(e=>e==='completado').length
     };
   }
   function cursosFiltrados(){
     return cursos.filter(c=>{
-      if(cursosState.tab==='progreso'&&c.status!=='progreso')return false;
-      if(cursosState.tab==='completado'&&c.status!=='completado')return false;
-      if(cursosState.tab==='catalogo'&&c.status!=='catalogo')return false;
+      if(cursosState.tab==='progreso'&&cursoEstado(c)!=='progreso')return false;
+      if(cursosState.tab==='completado'&&cursoEstado(c)!=='completado')return false;
       if(cursosState.area!=='todas'&&c.area!==cursosState.area)return false;
-      if(cursosState.search){
-        const q=cursosState.search.toLowerCase();
-        if(!c.titulo.toLowerCase().includes(q)&&!c.instructor.toLowerCase().includes(q))return false;
-      }
       return true;
     });
   }
 
   function renderCursos(container){
     const c=counts();
+    const areas = Array.from(new Set(cursos.map(x=>x.area).filter(Boolean))).sort();
     container.innerHTML=`
       <div class="fade-up">
-        <div class="sec-hero">
-          <span class="sec-hero__eyebrow">Tu camino</span>
-          <h1 class="sec-hero__title">Mis cursos</h1>
-          <p class="sec-hero__sub">Continúa donde lo dejaste, repasa lo que ya dominas o descubre nuevas áreas de especialización.</p>
-        </div>
-        <div class="tabs">
-          <button class="tab ${cursosState.tab==='progreso'?'is-active':''}" data-curtab="progreso">En progreso · ${c.progreso}</button>
-          <button class="tab ${cursosState.tab==='completado'?'is-active':''}" data-curtab="completado">Completados · ${c.completado}</button>
-          <button class="tab ${cursosState.tab==='catalogo'?'is-active':''}" data-curtab="catalogo">Catálogo · ${c.catalogo}</button>
-        </div>
-        <div class="toolbar">
-          <div class="searchbar">
-            <svg viewBox="0 0 24 24"><circle cx="10" cy="10" r="7"/><path d="M21 21l-6 -6"/></svg>
-            <input type="text" placeholder="Buscar curso o instructor…" id="cur-search" value="${cursosState.search.replace(/"/g,'&quot;')}">
-          </div>
-          <div class="dd-fancy" data-dd="cur-area">
-            <button type="button" class="dd-fancy__trigger" id="cur-area-trigger" aria-haspopup="listbox" aria-expanded="false">
-              <svg class="dd-fancy__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-              <span class="dd-fancy__label" id="cur-area-label">${cursosState.area === 'todas' ? 'Todas las áreas' : cursosState.area}</span>
-              <svg class="dd-fancy__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-            </button>
-            <div class="dd-fancy__menu" id="cur-area-menu" role="listbox">
-              ${(function(){
-                const areas = ['todas', ...Array.from(new Set(cursos.map(c=>c.area).filter(Boolean))).sort()];
-                return areas.map(a => {
-                  const label = a === 'todas' ? 'Todas las áreas' : a;
-                  const sel = cursosState.area === a ? 'is-selected' : '';
-                  return `<button type="button" class="dd-fancy__item ${sel}" data-value="${a}" role="option">${label}</button>`;
-                }).join('');
-              })()}
+        <div class="cursos-hero">
+          <div class="cursos-hero__info">
+            <span class="banner__eyebrow"><svg class="ic ic--sm"><use href="#i-book"/></svg>Catálogo DulceLab Food</span>
+            <h1 class="cursos-hero__title">Cursos grabados,<span class="banner__title-accent"> a tu ritmo.</span></h1>
+            <div class="cursos-hero__stats">
+              <div class="cursos-hero__stat"><strong>${c.total}</strong><span>Cursos</span></div>
+              <div class="cursos-hero__stat"><strong>${c.clases}</strong><span>Clases</span></div>
+              <div class="cursos-hero__stat"><strong>${c.progreso}</strong><span>En progreso</span></div>
+              <div class="cursos-hero__stat"><strong>${c.completado}</strong><span>Completados</span></div>
             </div>
           </div>
+          <div class="cursos-hero__tabs">
+            <button class="cursos-hero__tab ${cursosState.tab==='todos'?'is-active':''}" data-curtab="todos">Todos</button>
+            <button class="cursos-hero__tab ${cursosState.tab==='progreso'?'is-active':''}" data-curtab="progreso">En progreso</button>
+            <button class="cursos-hero__tab ${cursosState.tab==='completado'?'is-active':''}" data-curtab="completado">Completados</button>
+          </div>
+        </div>
+        <div class="cursos-chips">
+          <button class="cursos-chip ${cursosState.area==='todas'?'is-active':''}" data-area="todas">Todas las áreas</button>
+          ${areas.map(a=>`<button class="cursos-chip ${cursosState.area===a?'is-active':''}" data-area="${a}">${a}</button>`).join('')}
         </div>
         <div id="cur-list"></div>
       </div>
     `;
     container.querySelectorAll('[data-curtab]').forEach(b=>b.addEventListener('click',()=>{cursosState.tab=b.dataset.curtab;renderCursos(container);}));
-    container.querySelector('#cur-search').addEventListener('input',e=>{cursosState.search=e.target.value;renderCursosList();});
-    // Dropdown custom de áreas
-    bindFancyDropdown('cur-area', (value) => {
-      cursosState.area = value;
-      renderCursosList();
-    });
+    container.querySelectorAll('[data-area]').forEach(b=>b.addEventListener('click',()=>{cursosState.area=b.dataset.area;renderCursos(container);}));
 
     // ─── Cargar cursos de Firestore si aún no se cargaron ───
     if (!_cursosLoaded && !_cursosLoading) {
@@ -6630,27 +6675,49 @@ const Sections = (function(){
       const esCursoMuestra = numClasesGratis > 0 && !accesoCompleto;
       const diasFalta = diasParaDesbloquear(cursoIdx, c);
       const portada = c.portada || coverSVG(c.area, c.titulo);
+      const areaColor = COLOR_AREA[c.area]||'#C4577A';
+      // MODIFICADO (rediseño v5, ref. VP): badge de avance real + barra en el
+      // borde de la portada + fila de instructor/Continuar sólo si hay avance.
+      const estado = cursoEstado(c);
+      const totalSes = c.sesiones?.length || 0;
+      const pct = totalSes ? progresoCursoPct(c.id, totalSes) : 0;
+      const bloqueado = accesoCompleto && !desbloqueado;
       return `
-      <article class="curso-card ${accesoCompleto && !desbloqueado?'curso-card--locked':''}" data-cid="${c.id}" tabindex="0" style="--area-color:${COLOR_AREA[c.area]||'#C4577A'};">
+      <article class="curso-card ${bloqueado?'curso-card--locked':''}" data-cid="${c.id}" tabindex="0" style="--area-color:${areaColor};">
         <div class="curso-card__cover" style="background-image:linear-gradient(180deg,rgba(0,0,0,.15),rgba(0,0,0,.55)),url('${portada}');background-size:cover;background-position:center;">
           <svg class="ic" style="opacity:.85;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5));"><use href="#${ICON_AREA[c.area]||'i-book'}"/></svg>
-          ${esCursoMuestra ? `<span class="curso-card__cover-badge" style="left:12px;right:auto;background:var(--success);color:#fff;border-color:var(--success);">${numClasesGratis} CLASE${numClasesGratis===1?'':'S'} GRATIS</span>` : ''}
-          ${c.disponibleSiempre ? '<span class="curso-card__cover-badge" style="background:var(--success);color:#fff;">DISPONIBLE</span>' : ''}
-          ${accesoCompleto && !desbloqueado && diasFalta > 0 ? `<span class="curso-card__cover-badge" style="background:rgba(14,10,6,.85);color:var(--primary);border:1px solid var(--primary);">🔒 Se desbloquea en ${diasFalta} día${diasFalta!==1?'s':''}</span>` : ''}
+          ${bloqueado && diasFalta > 0
+            ? `<span class="curso-card__cover-badge" style="left:12px;right:auto;background:rgba(14,10,6,.85);color:var(--primary);border:1px solid var(--primary);">🔒 Se desbloquea en ${diasFalta} día${diasFalta!==1?'s':''}</span>`
+            : estado === 'completado'
+              ? `<span class="curso-card__cover-badge" style="left:12px;right:auto;background:var(--success);color:#fff;border-color:var(--success);"><svg class="ic" style="width:10px;height:10px;"><use href="#i-check"/></svg>Completado</span>`
+              : estado === 'progreso'
+                ? `<span class="curso-card__cover-badge" style="left:12px;right:auto;">${pct}%</span>`
+                : esCursoMuestra
+                  ? `<span class="curso-card__cover-badge" style="left:12px;right:auto;background:var(--success);color:#fff;border-color:var(--success);">${numClasesGratis} CLASE${numClasesGratis===1?'':'S'} GRATIS</span>`
+                  : `<span class="curso-card__cover-badge" style="left:12px;right:auto;background:rgba(0,0,0,.45);color:#fff;">${c.area}</span>`
+          }
+          ${!bloqueado ? `<span class="curso-card__cover-action">${estado==='progreso'||estado==='completado' ? '<svg class="ic"><use href="#i-play"/></svg>' : '<svg class="ic"><use href="#i-arrow-right"/></svg>'}</span>` : ''}
+          ${pct > 0 ? `<div class="curso-card__cover-progress"><div class="curso-card__cover-progress-fill" style="width:${pct}%"></div></div>` : ''}
         </div>
         <div class="curso-card__body">
           <div class="curso-card__tags">
-            <span class="tag tag--soon" style="color:${COLOR_AREA[c.area]||'#C4577A'};border-color:${(COLOR_AREA[c.area]||'#C4577A')}40;background:${(COLOR_AREA[c.area]||'#C4577A')}14;">${c.area}</span>
+            <span class="tag tag--soon" style="color:${areaColor};border-color:${areaColor}40;background:${areaColor}14;">${c.area}</span>
             <span class="tag tag--soon">${c.nivel}</span>
           </div>
           <h3 class="curso-card__title">${c.titulo}</h3>
-          <p class="curso-card__desc">${c.desc||c.descripcion||''}</p>
           <div class="curso-card__meta">
-            ${c.instructor ? `<span><svg class="ic"><use href="#i-user"/></svg>${c.instructor.split(' ').slice(-1)[0]}</span>` : ''}
-            ${c.horas ? `<span><svg class="ic"><use href="#i-clock"/></svg>${c.horas}h</span>` : ''}
             ${c.sesiones?.length ? `<span><svg class="ic"><use href="#i-book"/></svg>${c.sesiones.length} clase${c.sesiones.length!==1?'s':''}</span>` : ''}
-            ${c.materiales?.length ? `<span><svg class="ic"><use href="#i-news"/></svg>${c.materiales.length} PDF${c.materiales.length!==1?'s':''}</span>` : ''}
+            ${c.horas ? `<span><svg class="ic"><use href="#i-clock"/></svg>${c.horas}h</span>` : ''}
+            ${c.nivel ? `<span><svg class="ic"><use href="#i-gauge"/></svg>${c.nivel}</span>` : ''}
           </div>
+          ${estado === 'progreso' || estado === 'completado' ? `
+          <div class="curso-card__footer">
+            <div class="curso-card__instructor">
+              <span class="curso-card__instructor-av">${(c.instructor||'DL').split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase()}</span>
+              <span class="curso-card__instructor-name">${c.instructor||'Equipo DulceLab Food'}</span>
+            </div>
+            <span class="curso-card__cta">${estado==='completado'?'Ver certificado':'Continuar'}</span>
+          </div>` : ''}
         </div>
       </article>
     `;}).join('')}</div>`;
