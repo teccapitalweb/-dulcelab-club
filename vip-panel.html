@@ -76,25 +76,15 @@ body{
 .sidebar::-webkit-scrollbar{width:5px}
 .sidebar::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:3px}
 
-/* MODIFICADO (rediseño visual): el sidebar pasa de blanco/crema (igual que el
-   fondo de la página, se sentía "flotando" sin peso propio) a un vino sólido
-   —tomando como referencia la estructura de Visión Pecuaria, donde su sidebar
-   verde le da al panel un ancla visual fuerte— pero con la paleta vino/dorado
-   de DulceLab, sin tocar un solo color de marca nuevo. Todo lo de adentro
-   (texto, íconos, hover, activo) se ajusta para leerse bien sobre fondo oscuro,
-   sin afectar --surface en el resto de la página. */
-.sidebar{background:var(--primary-deep);border-right:none;}
-.sidebar .brand{border-bottom-color:rgba(245,239,232,0.12);}
-.sidebar .brand__name{color:#F5EFE8;}
-.sidebar .brand__logo{background:rgba(0,0,0,0.25);border-color:rgba(245,239,232,0.14);}
-.sidebar .nav-label{color:rgba(245,239,232,0.45);}
-.sidebar .nav-item{color:rgba(245,239,232,0.78);}
-.sidebar .nav-item:hover{background:rgba(255,255,255,0.08);color:#F5EFE8;}
-.sidebar .nav-item.is-active{background:rgba(255,255,255,0.14);color:#F0AFC1;}
-.sidebar .nav-item__badge{background:rgba(255,255,255,0.12);color:rgba(245,239,232,0.8);}
-.sidebar .nav-item__badge.is-new{background:#F0AFC1;color:#4A0E1A;}
-.sidebar .brand__plan{color:#F0AFC1;background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.2);}
-.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.16);}
+/* MODIFICADO (rediseño visual v2): el vino sólido se descartó (Jorge no lo
+   quiso). Ahora, como en el sidebar claro de Visión Pecuaria, el sidebar usa
+   --surface-2 (un tono propio, distinto tanto del fondo de página --bg como
+   de las tarjetas --surface) para separarse sin ser un bloque de color.
+   El resto de los estilos (texto, hover, activo) vuelven a los tokens base
+   —ya diseñados para contrastar bien en ambos temas— así que no hace falta
+   redeclararlos aquí. */
+.sidebar{background:var(--surface-2);border-right:0.5px solid var(--border-2);}
+.sidebar .nav-item.is-active{border-left:2px solid var(--primary);margin-left:-2px;}
 
 .brand{display:flex;align-items:center;gap:11px;padding:6px 16px 16px;border-bottom:0.5px solid var(--border);margin-bottom:6px}
 .brand__logo{width:38px;height:38px;border-radius:10px;background:#2A0D16;border:0.5px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
@@ -2321,23 +2311,37 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 /* =========================================================
    NOTICIAS DIARIAS
    ========================================================= */
-.discover-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.discover-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;perspective:1200px}
 .discover-card{
   background:var(--surface);
   border:0.5px solid var(--border);
   border-radius:16px;
   overflow:hidden;
   cursor:pointer;
-  transition:transform .25s cubic-bezier(.2,.8,.25,1),border-color .2s,box-shadow .3s;
+  transition:transform .3s cubic-bezier(.2,.8,.25,1),border-color .2s,box-shadow .3s;
   display:flex;flex-direction:column;
   position:relative;
+  transform-style:preserve-3d;transform-origin:center bottom;
+  box-shadow:0 1px 2px rgba(0,0,0,.06);
 }
-.discover-card:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--cat-color,var(--primary)) 35%,transparent);box-shadow:0 14px 36px rgba(0,0,0,.14)}
+/* MODIFICADO (rediseño visual v2): la imagen deja de ir a sangre y queda
+   "enmarcada" dentro de la tarjeta (como una foto flotando sobre el fondo);
+   junto con el tilt sutil y la sombra elevada en hover, da sensación de
+   profundidad/3D sin animación pesada ni tocar el HTML/JS que las genera. */
+.discover-card:hover{
+  transform:translateY(-6px) rotateX(3deg);
+  border-color:color-mix(in srgb,var(--cat-color,var(--primary)) 35%,transparent);
+  box-shadow:0 26px 44px -10px rgba(0,0,0,.22),0 0 0 1px color-mix(in srgb,var(--cat-color,var(--primary)) 18%,transparent);
+}
 .discover-card__cover{
-  height:108px;flex:none;position:relative;overflow:hidden;
+  height:100px;flex:none;position:relative;overflow:hidden;
   background:var(--cat-color,var(--primary));
   display:flex;align-items:center;justify-content:center;color:#fff;
+  margin:12px 12px 0;border-radius:12px;
+  box-shadow:0 10px 20px -6px rgba(0,0,0,.28),inset 0 0 0 0.5px rgba(255,255,255,.12);
+  transition:box-shadow .3s;
 }
+.discover-card:hover .discover-card__cover{box-shadow:0 14px 26px -6px rgba(0,0,0,.32),inset 0 0 0 0.5px rgba(255,255,255,.16)}
 .discover-card__cover.has-img{background-size:cover;background-position:center}
 .discover-card__cover.has-img::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(0,0,0,.45) 100%)}
 .discover-card__cover::before{
@@ -2349,14 +2353,14 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 }
 .discover-card__cover.has-img::before{display:none}
 .discover-card__cover .ic{width:38px;height:38px;position:relative;z-index:1;opacity:.95}
-.discover-card__body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px;flex:1}
+.discover-card__body{padding:12px 16px 16px;display:flex;flex-direction:column;gap:8px;flex:1}
 .discover-card__tags{display:flex;flex-wrap:wrap;gap:6px}
 .discover-card__cat,.discover-card__tipo{
   font-family:'JetBrains Mono',monospace;
   font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
   border-radius:100px;padding:3px 9px;
 }
-.discover-card__cat{background:color-mix(in srgb,var(--cat-color,var(--primary)) 14%,transparent);color:var(--cat-color,var(--primary))}
+.discover-card__cat{background:color-mix(in srgb,var(--cat-color,var(--primary)) 14%,transparent);color:var(--cat-color,var(--primary));box-shadow:0 2px 6px color-mix(in srgb,var(--cat-color,var(--primary)) 20%,transparent)}
 .discover-card__tipo{background:var(--surface-2);color:var(--text-3);border:0.5px solid var(--border)}
 .discover-card__title{
   font-size:14px;font-weight:600;letter-spacing:-.2px;line-height:1.35;
