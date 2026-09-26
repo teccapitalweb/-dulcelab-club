@@ -124,7 +124,6 @@ body{
 /* MAIN */
 .main{padding:calc(18px + env(safe-area-inset-top)) 24px 40px;display:flex;flex-direction:column;gap:20px;min-width:0;overflow-x:hidden}
 .topbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.topbar__left{display:flex;align-items:center;gap:10px;flex:none}
 .topbar__right{display:flex;align-items:center;gap:6px;flex:none;margin-left:auto}
 
 .pill{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:600;padding:5px 12px 5px 10px;border-radius:100px;background:color-mix(in srgb,var(--primary) 12%,transparent);color:var(--primary);border:0.5px solid color-mix(in srgb,var(--primary) 30%,transparent);letter-spacing:1.2px;text-transform:uppercase}
@@ -721,7 +720,7 @@ body{
 .toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:22px}
 
 /* CURSOS — cards */
-.cursos-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px}
+.cursos-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,320px));gap:18px}
 .curso-card{
   background:var(--surface);
   border:1px solid var(--border);
@@ -794,8 +793,6 @@ body{
 .curso-card__progress-pct{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--primary);font-weight:700;min-width:38px;text-align:right}
 
 /* Barra de progreso delgada pegada al borde inferior de la portada (rediseño v5, ref. VP) */
-.curso-card__cover-progress{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(0,0,0,.25);z-index:1}
-.curso-card__cover-progress-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--highlight))}
 /* Botón circular de la esquina superior derecha (play / abrir catálogo) */
 .curso-card__cover-action{position:absolute;top:12px;right:12px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.94);color:var(--primary);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(0,0,0,.25);z-index:1}
 .curso-card__cover-action .ic{width:13px;height:13px}
@@ -2767,7 +2764,6 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
   .sidebar{display:none}
   .main{padding:calc(14px + env(safe-area-inset-top)) 14px 140px}
   .topbar__right .avatar{display:none}
-  .topbar__left{display:none}
   .topbar__search{max-width:none}
   .banner{grid-template-columns:1fr;padding:20px 22px}
   .hero-course{max-width:none}
@@ -3665,9 +3661,6 @@ window.__setDisplayName = async (nombre) => {
   <!-- MAIN -->
   <main class="main">
     <header class="topbar">
-      <div class="topbar__left">
-        <span class="pill" id="topbar-pill"><svg class="ic"><use href="#i-user"/></svg><span id="topbar-pill-text">Miembro</span></span>
-      </div>
       <div class="topbar__search">
         <svg class="ic"><use href="#i-search"/></svg>
         <input type="search" id="global-search-input" placeholder="Buscar cursos, clases o materiales..." autocomplete="off">
@@ -6697,27 +6690,22 @@ const Sections = (function(){
                   : `<span class="curso-card__cover-badge" style="left:12px;right:auto;background:rgba(0,0,0,.45);color:#fff;">${c.area}</span>`
           }
           ${!bloqueado ? `<span class="curso-card__cover-action">${estado==='progreso'||estado==='completado' ? '<svg class="ic"><use href="#i-play"/></svg>' : '<svg class="ic"><use href="#i-arrow-right"/></svg>'}</span>` : ''}
-          ${pct > 0 ? `<div class="curso-card__cover-progress"><div class="curso-card__cover-progress-fill" style="width:${pct}%"></div></div>` : ''}
         </div>
         <div class="curso-card__body">
-          <div class="curso-card__tags">
-            <span class="tag tag--soon" style="color:${areaColor};border-color:${areaColor}40;background:${areaColor}14;">${c.area}</span>
-            <span class="tag tag--soon">${c.nivel}</span>
-          </div>
           <h3 class="curso-card__title">${c.titulo}</h3>
           <div class="curso-card__meta">
             ${c.sesiones?.length ? `<span><svg class="ic"><use href="#i-book"/></svg>${c.sesiones.length} clase${c.sesiones.length!==1?'s':''}</span>` : ''}
             ${c.horas ? `<span><svg class="ic"><use href="#i-clock"/></svg>${c.horas}h</span>` : ''}
             ${c.nivel ? `<span><svg class="ic"><use href="#i-gauge"/></svg>${c.nivel}</span>` : ''}
           </div>
-          ${estado === 'progreso' || estado === 'completado' ? `
+          ${pct > 0 ? `<div class="curso-card__progress"><div class="curso-card__progress-bar"><div class="curso-card__progress-fill" style="width:${pct}%"></div></div></div>` : ''}
           <div class="curso-card__footer">
             <div class="curso-card__instructor">
               <span class="curso-card__instructor-av">${(c.instructor||'DL').split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase()}</span>
               <span class="curso-card__instructor-name">${c.instructor||'Equipo DulceLab Food'}</span>
             </div>
-            <span class="curso-card__cta">${estado==='completado'?'Ver certificado':'Continuar'}</span>
-          </div>` : ''}
+            <span class="curso-card__cta">${bloqueado ? 'Bloqueado' : estado==='completado' ? 'Ver certificado' : estado==='progreso' ? 'Continuar' : 'Ver curso'}</span>
+          </div>
         </div>
       </article>
     `;}).join('')}</div>`;
@@ -12546,7 +12534,7 @@ window.DulceLabOnboarding = new window.MembershipTour({
   steps: [
     {
       desktopSelectors: '.sidebar .brand',
-      mobileSelectors: '.topbar__left',
+      mobileSelectors: '.topbar__search',
       title: 'Bienvenido a DulceLab Food',
       copy: 'Este es tu espacio de formación en gastronomía, repostería y negocio de alimentos. Te mostramos dónde encontrar cada recurso para que empieces con confianza.'
     },
