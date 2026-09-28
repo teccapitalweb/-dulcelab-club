@@ -2569,7 +2569,7 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 /* Libro 3D */
 .book{position:relative;width:100%;aspect-ratio:3/4;container-type:inline-size;transform-origin:left center;transform:perspective(900px) rotateY(-6deg);transition:transform .4s cubic-bezier(.2,.8,.25,1)}
 .book__pages{position:absolute;top:5px;bottom:5px;right:-6px;width:12px;border-radius:0 4px 4px 0;background:repeating-linear-gradient(180deg,#F4ECE6 0 2px,#D9CDC4 2px 3px);box-shadow:inset -2px 0 3px rgba(0,0,0,.18);z-index:0}
-.book__cover{position:absolute;inset:0;z-index:1;border-radius:3px 9px 9px 3px;overflow:hidden;background-color:var(--b2);background-image:linear-gradient(180deg,color-mix(in srgb,var(--b1) 38%,transparent) 0%,color-mix(in srgb,var(--b2) 72%,transparent) 50%,color-mix(in srgb,var(--b2) 94%,transparent) 100%),var(--foto,linear-gradient(150deg,var(--b1),var(--b2))),linear-gradient(150deg,var(--b1),var(--b2));background-size:cover;background-position:center;color:#fff;display:flex;flex-direction:column;justify-content:space-between;padding:11cqw 9cqw 9cqw 14cqw;box-shadow:0 2px 3px rgba(0,0,0,.25),8px 12px 18px -6px rgba(0,0,0,.35),20px 28px 34px -14px rgba(50,8,18,.5)}
+.book__cover{position:absolute;inset:0;z-index:1;border-radius:3px 9px 9px 3px;overflow:hidden;background-color:#2B2522;background-image:linear-gradient(180deg,rgba(0,0,0,.28) 0%,rgba(0,0,0,.30) 40%,rgba(0,0,0,.78) 100%),var(--foto,linear-gradient(150deg,#4A403B,#1E1916));background-size:cover;background-position:center;color:#fff;display:flex;flex-direction:column;justify-content:space-between;padding:11cqw 9cqw 9cqw 14cqw;box-shadow:0 2px 3px rgba(0,0,0,.25),8px 12px 18px -6px rgba(0,0,0,.35),20px 28px 34px -14px rgba(0,0,0,.45)}
 .book__cover::before{content:"";position:absolute;left:0;top:0;bottom:0;width:8%;background:linear-gradient(90deg,rgba(0,0,0,.4),rgba(255,255,255,.16) 40%,rgba(0,0,0,.15) 75%,transparent)}
 .book__cover::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.16) 0%,rgba(255,255,255,0) 38%,rgba(0,0,0,.18) 100%);pointer-events:none}
 .book__top{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;gap:2cqw}
@@ -2577,7 +2577,7 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 .book__tipo{font-family:'JetBrains Mono',monospace;font-size:4.6cqw;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#F0C868;border:1px solid rgba(240,200,104,.55);border-radius:100px;padding:.35em .8em}
 .book__mid{position:relative;z-index:1;display:flex;flex-direction:column;gap:3cqw}
 .book__kicker{font-family:'JetBrains Mono',monospace;font-size:5cqw;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#F0C868}
-.book__title{font-size:10cqw;font-weight:800;line-height:1.1;letter-spacing:-.02em;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden;text-shadow:0 1px 3px rgba(0,0,0,.3)}
+.book__title{font-size:10cqw;font-weight:800;line-height:1.1;letter-spacing:-.02em;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden;text-shadow:0 1px 4px rgba(0,0,0,.6)}
 .book__area{position:relative;z-index:1;font-family:'JetBrains Mono',monospace;font-size:4.4cqw;font-weight:600;letter-spacing:.1em;text-transform:uppercase;opacity:.75;padding-top:4cqw;border-top:1px solid rgba(255,255,255,.25);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .book--locked .book__cover{filter:saturate(.55) brightness(.85)}
 .book__lock{position:absolute;inset:0;z-index:2;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.28)}
@@ -12773,3 +12773,4 @@ window.DulceLabOnboarding = new window.MembershipTour({
 </script>
 </body>
 </html>
+          
