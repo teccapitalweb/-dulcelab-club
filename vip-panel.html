@@ -2550,6 +2550,83 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 .pdf-card__meta .ic{width:12px;height:12px}
 .pdf-card__tags{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:auto;padding-top:10px;border-top:1px solid var(--border)}
 
+/* ═══ PDFs y material · biblioteca con libros 3D (rediseño v8, ref. Visión Pecuaria) ═══
+   Un material destacado + estantería de "libros". Las portadas se generan
+   (color según el formato) y el efecto 3D es CSS puro: lomo, canto de hojas,
+   sombra en capas y giro con perspectiva al pasar el cursor. */
+.mat-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:28px}
+.mat-head__eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:var(--text-3)}
+.mat-head__title{font-size:clamp(28px,3.4vw,42px);font-weight:800;letter-spacing:-1.2px;line-height:1.08;margin-top:6px;color:var(--text)}
+.mat-head__title span{color:var(--primary)}
+.mat-head__sub{font-size:13.5px;color:var(--text-2);margin-top:10px;line-height:1.5}
+.mat-head__note{font-size:12px;color:var(--text-3);margin-top:4px}
+.mat-chips{display:flex;gap:6px;flex-wrap:wrap}
+.mat-chip{padding:7px 14px;border-radius:100px;font-size:12px;font-weight:600;color:var(--text-2);background:var(--surface-2);border:0.5px solid transparent;transition:background .15s,color .15s,border-color .15s}
+.mat-chip:hover{background:var(--surface-3)}
+.mat-chip.is-active{background:color-mix(in srgb,var(--primary) 12%,transparent);color:var(--primary);border-color:color-mix(in srgb,var(--primary) 28%,transparent)}
+.mat-areas{margin-bottom:22px}
+
+/* Libro 3D */
+.book{position:relative;width:100%;aspect-ratio:3/4;container-type:inline-size;transform-origin:left center;transform:perspective(900px) rotateY(-6deg);transition:transform .4s cubic-bezier(.2,.8,.25,1)}
+.book__pages{position:absolute;top:5px;bottom:5px;right:-6px;width:12px;border-radius:0 4px 4px 0;background:repeating-linear-gradient(180deg,#F4ECE6 0 2px,#D9CDC4 2px 3px);box-shadow:inset -2px 0 3px rgba(0,0,0,.18);z-index:0}
+.book__cover{position:absolute;inset:0;z-index:1;border-radius:3px 9px 9px 3px;overflow:hidden;background:linear-gradient(150deg,var(--b1) 0%,var(--b2) 100%);color:#fff;display:flex;flex-direction:column;justify-content:space-between;padding:11cqw 9cqw 9cqw 14cqw;box-shadow:0 2px 3px rgba(0,0,0,.25),8px 12px 18px -6px rgba(0,0,0,.35),20px 28px 34px -14px rgba(50,8,18,.5)}
+.book__cover::before{content:"";position:absolute;left:0;top:0;bottom:0;width:8%;background:linear-gradient(90deg,rgba(0,0,0,.4),rgba(255,255,255,.16) 40%,rgba(0,0,0,.15) 75%,transparent)}
+.book__cover::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.16) 0%,rgba(255,255,255,0) 38%,rgba(0,0,0,.18) 100%);pointer-events:none}
+.book__top{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;gap:2cqw}
+.book__brand{font-family:'JetBrains Mono',monospace;font-size:4.6cqw;font-weight:700;letter-spacing:.14em;text-transform:uppercase;opacity:.85}
+.book__tipo{font-family:'JetBrains Mono',monospace;font-size:4.6cqw;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#F0C868;border:1px solid rgba(240,200,104,.55);border-radius:100px;padding:.35em .8em}
+.book__mid{position:relative;z-index:1;display:flex;flex-direction:column;gap:3cqw}
+.book__kicker{font-family:'JetBrains Mono',monospace;font-size:5cqw;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#F0C868}
+.book__title{font-size:10cqw;font-weight:800;line-height:1.1;letter-spacing:-.02em;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden;text-shadow:0 1px 3px rgba(0,0,0,.3)}
+.book__area{position:relative;z-index:1;font-family:'JetBrains Mono',monospace;font-size:4.4cqw;font-weight:600;letter-spacing:.1em;text-transform:uppercase;opacity:.75;padding-top:4cqw;border-top:1px solid rgba(255,255,255,.25);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.book--locked .book__cover{filter:saturate(.55) brightness(.85)}
+.book__lock{position:absolute;inset:0;z-index:2;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.28)}
+.book__lock span{width:22cqw;height:22cqw;border-radius:50%;background:rgba(255,255,255,.92);color:var(--primary);display:flex;align-items:center;justify-content:center}
+.book__lock svg{width:10cqw;height:10cqw}
+
+/* Material destacado */
+.mat-feat{display:grid;grid-template-columns:230px 1fr;gap:48px;align-items:center;margin:4px 0 36px;padding-bottom:32px;border-bottom:1px solid var(--border)}
+.mat-feat__cover{width:230px;padding:6px 12px 22px 0;perspective:1000px}
+.mat-feat .book{transform:perspective(1000px) rotateY(-9deg)}
+.mat-feat .book:hover{transform:perspective(1000px) rotateY(-16deg) translateY(-4px)}
+.mat-feat__eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;color:var(--text-3)}
+.mat-feat__title{font-size:clamp(24px,2.8vw,36px);font-weight:800;letter-spacing:-1px;line-height:1.1;margin-top:10px;color:var(--text)}
+.mat-feat__desc{font-size:14.5px;color:var(--text-2);margin-top:12px;line-height:1.55;max-width:560px}
+.mat-feat__actions{display:flex;align-items:center;gap:10px;margin-top:22px}
+.mat-open{display:inline-flex;align-items:center;gap:14px;padding:6px 6px 6px 24px;border-radius:100px;background:var(--primary);color:#fff;font-weight:700;font-size:14px;transition:transform .15s,opacity .15s}
+.mat-open:hover{transform:translateY(-1px)}
+.mat-open__ic{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center}
+.mat-open__ic .ic{width:16px;height:16px}
+.mat-open--soon{opacity:.6}
+.mat-icon-btn{width:40px;height:40px;border-radius:50%;border:1px solid var(--border-2);background:var(--surface);color:var(--text-2);display:flex;align-items:center;justify-content:center;transition:color .15s,border-color .15s,background .15s}
+.mat-icon-btn:hover{color:var(--primary);border-color:var(--primary)}
+.mat-icon-btn.is-on{color:var(--primary);border-color:var(--primary);background:color-mix(in srgb,var(--primary) 10%,transparent)}
+.mat-icon-btn.is-on svg{fill:currentColor}
+.mat-icon-btn svg{width:17px;height:17px}
+.mat-feat__meta{display:grid;grid-template-columns:1fr 1fr;gap:18px 40px;margin-top:26px;padding-top:22px;border-top:1px solid var(--border);max-width:640px}
+.mat-feat__meta b{display:block;font-size:12px;font-weight:700;color:var(--text)}
+.mat-feat__meta span{display:block;font-size:13px;color:var(--text-2);margin-top:5px;line-height:1.4}
+
+/* Estantería */
+.mat-shelf{display:grid;grid-template-columns:repeat(auto-fill,150px);gap:32px 28px;justify-content:start}
+.mat-item{cursor:pointer;display:flex;flex-direction:column;gap:12px;outline:none}
+.mat-item .book{width:calc(100% - 10px)}
+.mat-item:hover .book{transform:perspective(900px) rotateY(-16deg) translateY(-5px)}
+.mat-item__title{font-size:12.5px;font-weight:600;line-height:1.35;color:var(--text);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.mat-item__meta{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);letter-spacing:.3px}
+.mat-item.is-selected .mat-item__title{color:var(--primary)}
+.mat-item.is-selected .book__cover{outline:2px solid #E5C171;outline-offset:3px}
+.mat-item:focus-visible .book__cover{outline:2px solid var(--primary);outline-offset:3px}
+.mat-empty{text-align:center;padding:56px 24px;background:var(--surface-2);border:1px dashed var(--border-2);border-radius:14px;color:var(--text-3);font-size:13px}
+@media (max-width:880px){
+  .mat-feat{grid-template-columns:1fr;gap:26px;justify-items:center}
+  .mat-feat__info{width:100%}
+  .mat-feat__cover{width:190px}
+  .mat-feat__meta{gap:14px 20px}
+  .mat-shelf{grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:26px 16px}
+}
+
+
 
 /* =========================================================
    LOGROS · camino de niveles — plano, estilo tarjeta de receta
@@ -8694,189 +8771,246 @@ const Sections = (function(){
     return 'pdf'; // default
   }
 
+  /* ═══════════════════════════════════════════════════════════════
+     PDFs y material · biblioteca con libros 3D (rediseño v8, ref. VP "Materiales")
+     Un material destacado + estantería de "libros". No hay imagen por
+     material, así que la portada se genera: color según el formato y, en la
+     tapa, marca / formato / módulo y título / área. La lógica de acceso
+     (gratis, membresía, días de desbloqueo, paywall) es la de siempre.
+     ═══════════════════════════════════════════════════════════════ */
+  const _MAT_TIPOS = {
+    ppt:   { chip:'Presentaciones', nombre:'Presentación',    corto:'PPT',   c:['#7A1A2E','#3E0B16'] },
+    pdf:   { chip:'PDF',            nombre:'Documento PDF',   corto:'PDF',   c:['#4A2A26','#1B1210'] },
+    excel: { chip:'Excel',          nombre:'Plantilla Excel', corto:'Excel', c:['#9A6F1E','#563A0A'] },
+    doc:   { chip:'Documentos',     nombre:'Documento Word',  corto:'DOC',   c:['#8C3A4B','#4E1524'] }
+  };
+  const _MAT_ICON_LOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
+  const _MAT_ICON_MARK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>';
+
+  // "Modulo 1 CONTROL ESTRATÉGICO DE COSTOS." → "Módulo 1 Control Estratégico de Costos"
+  function _matTituloBonito(t){
+    let s = String(t == null ? '' : t).trim();
+    const letras = s.replace(/[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ]/g, '');
+    const mayus = letras.replace(/[^A-ZÁÉÍÓÚÜÑ]/g, '');
+    if (letras.length > 6 && mayus.length / letras.length > 0.6) {
+      const chicas = new Set(['de','del','la','las','el','los','y','e','en','a','al','con','para','por','o','u','un','una']);
+      s = s.split(/\s+/).map((w, i) => {
+        const l = w.toLowerCase();
+        if (/\d/.test(w)) return w;                  // NOM-251, 1, 2 …
+        if (i > 0 && chicas.has(l)) return l;
+        return l.charAt(0).toUpperCase() + l.slice(1);
+      }).join(' ');
+    }
+    return s.replace(/^modulo\b/i, 'Módulo').replace(/[.\s]+$/, '');
+  }
+  // Separa "Módulo 1 y 2" (kicker de la tapa) del resto del título
+  function _matPartirTitulo(t){
+    const p = _matTituloBonito(t);
+    const m = p.match(/^(M[oó]dulos?\s+\d+(?:\s*(?:y|e|-|–|,)\s*\d+)*)\s*[-:.–]?\s*(.+)$/i);
+    return m ? { kicker: m[1].replace(/^m[oó]dulo/i, 'Módulo'), titulo: m[2] } : { kicker: '', titulo: p };
+  }
+
+  function _matInfo(m){
+    const tipo = _inferirTipoMaterial(m.url);
+    const gratis = esMaterialGratis(m.cursoId, m.materialIndex);
+    const disponible = _materialDisponible(m);
+    const requiere = !tieneAccesoVipCompleto() && !gratis;
+    const dias = _diasParaMaterial(m);
+    let estado, desc;
+    if (disponible && gratis) { estado = 'Muestra gratuita'; desc = 'Muestra gratuita: puedes abrirlo sin membresía.'; }
+    else if (disponible) { estado = 'Disponible ahora'; desc = 'Listo para abrir cuando quieras.'; }
+    else if (requiere) { estado = 'Solo con membresía'; desc = 'Activa tu membresía para abrir este material.'; }
+    else {
+      const cuando = dias === 1 ? 'mañana' : `en ${dias} días`;
+      estado = 'Disponible ' + cuando;
+      desc = `Se desbloquea ${cuando}, junto con su curso.`;
+    }
+    return { tipo, T: _MAT_TIPOS[tipo] || _MAT_TIPOS.pdf, gratis, disponible, requiere, dias, estado, desc };
+  }
+
+  function _matBookHTML(m, info){
+    const p = _matPartirTitulo(m.titulo);
+    return `
+      <div class="book ${info.disponible ? '' : 'book--locked'}" style="--b1:${info.T.c[0]};--b2:${info.T.c[1]};">
+        <span class="book__pages"></span>
+        <div class="book__cover">
+          <div class="book__top"><span class="book__brand">DulceLab Food</span><span class="book__tipo">${info.T.corto}</span></div>
+          <div class="book__mid">
+            ${p.kicker ? `<span class="book__kicker">${escapeHtml(p.kicker)}</span>` : ''}
+            <span class="book__title">${escapeHtml(p.titulo)}</span>
+          </div>
+          <div class="book__area">${escapeHtml(m.cursoArea)}</div>
+          ${info.disponible ? '' : `<div class="book__lock"><span>${_MAT_ICON_LOCK}</span></div>`}
+        </div>
+      </div>`;
+  }
+
   async function renderPDFs(container){
     // Asegurar cursos cargados antes de renderizar
     if (!_cursosLoaded && !_cursosLoading) {
       container.innerHTML = `
         <div class="fade-up">
-          <div class="sec-hero">
-            <span class="sec-hero__eyebrow">Descargables</span>
-            <h1 class="sec-hero__title">PDFs y material</h1>
-            <p class="sec-hero__sub">Cargando materiales desde Firestore…</p>
-          </div>
+          <div class="mat-head"><div>
+            <span class="mat-head__eyebrow">Materiales</span>
+            <h1 class="mat-head__title">Tu biblioteca <span>gastronómica.</span></h1>
+            <p class="mat-head__sub">Cargando materiales…</p>
+          </div></div>
         </div>`;
       await cargarCursosFirestore();
     }
 
-    // Re-leer materiales aplanados (de los cursos reales)
+    // Materiales aplanados (de los cursos reales)
     const materialesTodos = _allMaterialesFromCursos();
-    const areasUnicas = Array.from(new Set(materialesTodos.map(m => m.cursoArea).filter(Boolean))).sort();
-
-    // KPIs
     const total = materialesTodos.length;
     const disponiblesAhora = materialesTodos.filter(m => _materialDisponible(m)).length;
     const proximos = total - disponiblesAhora;
-    const tipos = { excel:0, pdf:0, ppt:0, doc:0 };
-    materialesTodos.forEach(m => { const t = _inferirTipoMaterial(m.url); tipos[t]++; });
+    const areasUnicas = Array.from(new Set(materialesTodos.map(m => m.cursoArea).filter(Boolean))).sort();
+    const tiposPresentes = ['pdf','ppt','excel','doc'].filter(t => materialesTodos.some(m => _inferirTipoMaterial(m.url) === t));
     const textoAccesoMateriales = tieneAccesoVipCompleto()
-      ? '<strong style="color:var(--primary);">Se desbloquean según tus días de membresía</strong>, igual que las clases.'
-      : '<strong style="color:var(--success);">El primer material del primer curso es gratis.</strong> Activa tu membresía para abrir los demás.';
+      ? 'Se desbloquean según tus días de membresía, igual que las clases.'
+      : 'El primer material del primer curso es gratis. Activa tu membresía para abrir los demás.';
+
+    if (total === 0) {
+      container.innerHTML = `
+        <div class="fade-up">
+          <div class="mat-head"><div>
+            <span class="mat-head__eyebrow">Materiales</span>
+            <h1 class="mat-head__title">Tu biblioteca <span>gastronómica.</span></h1>
+          </div></div>
+          <div class="mat-empty">Los materiales descargables aparecerán aquí cuando se suban desde el panel de administración.</div>
+        </div>`;
+      return;
+    }
+
+    // ─── Estado de la vista ───
+    const uid = (window.UserState && (window.UserState.uid || window.UserState.email)) || 'anon';
+    const GKEY = 'dulcelab:mat-guardados:' + uid;
+    const leerGuardados = () => { try { return new Set(JSON.parse(localStorage.getItem(GKEY) || '[]')); } catch (e) { return new Set(); } };
+    const escribirGuardados = (s) => { try { localStorage.setItem(GKEY, JSON.stringify(Array.from(s))); } catch (e) {} };
+    let guardados = leerGuardados();
+    let fTipo = 'todos', fArea = 'todas', selId = null;
 
     container.innerHTML = `
       <div class="fade-up">
-        <div class="sec-hero">
-          <span class="sec-hero__eyebrow">Descargables</span>
-          <h1 class="sec-hero__title">PDFs y material</h1>
-          <p class="sec-hero__sub">Plantillas en Excel, checklists, procedimientos y formatos oficiales listos para tu cocina o negocio. ${textoAccesoMateriales}</p>
+        <div class="mat-head">
+          <div>
+            <span class="mat-head__eyebrow">Materiales</span>
+            <h1 class="mat-head__title">Tu biblioteca <span>gastronómica.</span></h1>
+            <p class="mat-head__sub">${total} recurso${total !== 1 ? 's' : ''} · ${disponiblesAhora} disponible${disponiblesAhora !== 1 ? 's' : ''} ahora${proximos ? ` · ${proximos} próximamente` : ''} · plantillas, guías y presentaciones de tus cursos.</p>
+            <p class="mat-head__note">${textoAccesoMateriales}</p>
+          </div>
+          <div class="mat-chips" id="mat-chips"></div>
         </div>
-        ${total === 0 ? `
-          <div style="text-align:center;padding:60px 24px;background:var(--surface-2);border:1px dashed var(--border-2);border-radius:14px;margin-top:18px;">
-            <div style="width:64px;height:64px;border-radius:50%;background:color-mix(in srgb, var(--primary) 12%, transparent);color:var(--primary);display:inline-flex;align-items:center;justify-content:center;margin-bottom:14px;">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
-              </svg>
-            </div>
-            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px;">Sin materiales aún</div>
-            <div style="font-size:13px;color:var(--text-3);max-width:360px;margin:0 auto;line-height:1.5;">Los materiales descargables aparecerán aquí cuando se suban desde el panel de administración.</div>
-          </div>
-        ` : `
-          <div class="kpi-grid">
-            <div class="kpi-card"><div class="kpi-card__label">Total materiales</div><div class="kpi-card__value">${total}</div></div>
-            <div class="kpi-card"><div class="kpi-card__label">Disponibles ahora</div><div class="kpi-card__value">${disponiblesAhora}</div></div>
-            <div class="kpi-card"><div class="kpi-card__label">Próximamente</div><div class="kpi-card__value">${proximos}</div></div>
-            <div class="kpi-card"><div class="kpi-card__label">Plantillas Excel</div><div class="kpi-card__value">${tipos.excel}</div></div>
-          </div>
-          <div class="toolbar">
-            <div class="searchbar">
-              <svg viewBox="0 0 24 24"><circle cx="10" cy="10" r="7"/><path d="M21 21l-6 -6"/></svg>
-              <input type="text" id="pdf-search-input" placeholder="Buscar material…">
-            </div>
-            <div class="dd-fancy" data-dd="pdf-area">
-              <button type="button" class="dd-fancy__trigger" id="pdf-area-trigger" aria-haspopup="listbox" aria-expanded="false">
-                <svg class="dd-fancy__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-                <span class="dd-fancy__label" id="pdf-area-label">Todas las áreas</span>
-                <svg class="dd-fancy__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-              </button>
-              <div class="dd-fancy__menu" id="pdf-area-menu" role="listbox">
-                <button type="button" class="dd-fancy__item is-selected" data-value="todas" role="option">Todas las áreas</button>
-                ${areasUnicas.map(a => `<button type="button" class="dd-fancy__item" data-value="${a}" role="option">${a}</button>`).join('')}
-              </div>
-            </div>
-          </div>
-          <div class="pdfs-grid" id="pdfs-grid-container">
-            ${materialesTodos.map(m => _renderPdfCard(m)).join('')}
-          </div>
-        `}
+        <div class="cursos-chips mat-areas" id="mat-areas"></div>
+        <section class="mat-feat" id="mat-feat"></section>
+        <div class="mat-shelf" id="mat-shelf"></div>
       </div>
     `;
+    const $chips = container.querySelector('#mat-chips');
+    const $areas = container.querySelector('#mat-areas');
+    const $feat = container.querySelector('#mat-feat');
+    const $shelf = container.querySelector('#mat-shelf');
 
-    // Bind búsqueda
-    setTimeout(() => {
-      const grid = container.querySelector('#pdfs-grid-container');
-      const search = container.querySelector('#pdf-search-input');
-      let currentArea = 'todas';
+    const filtrar = () => materialesTodos.filter(m => {
+      if (fTipo === 'guardados' && !guardados.has(m.id)) return false;
+      if (fTipo !== 'todos' && fTipo !== 'guardados' && _inferirTipoMaterial(m.url) !== fTipo) return false;
+      if (fArea !== 'todas' && m.cursoArea !== fArea) return false;
+      return true;
+    });
 
-      const aplicarFiltros = () => {
-        if (!grid) return;
-        const q = (search?.value || '').toLowerCase().trim();
-        const cards = grid.querySelectorAll('.pdf-card');
-        cards.forEach(card => {
-          const titulo = (card.dataset.titulo || '').toLowerCase();
-          const curso = (card.dataset.curso || '').toLowerCase();
-          const area = card.dataset.area || '';
-          const matchArea = currentArea === 'todas' || area === currentArea;
-          const matchSearch = !q || titulo.includes(q) || curso.includes(q);
-          card.style.display = (matchArea && matchSearch) ? '' : 'none';
-        });
-      };
-
-      if (search) search.addEventListener('input', aplicarFiltros);
-
-      // Bind del dropdown custom de áreas
-      bindFancyDropdown('pdf-area', (value) => {
-        currentArea = value;
-        aplicarFiltros();
-      });
-
-      // Click en cards: si disponible → abrir visor enbebed (igual que clases) · si no → toast con días restantes
-      container.querySelectorAll('.pdf-card[data-disponible="true"]').forEach(card => {
-        card.addEventListener('click', () => {
-          const url = card.dataset.url;
-          const titulo = card.dataset.titulo;
-          if (url && typeof window.abrirVisor === 'function') {
-            window.abrirVisor(url, titulo);
-          }
-        });
-      });
-      container.querySelectorAll('.pdf-card[data-disponible="false"]').forEach(card => {
-        card.addEventListener('click', () => {
-          if (card.dataset.requiereMembresia === 'true') {
-            mostrarPaywallCurso(cursos.find(c => c.id === card.dataset.cursoId));
-            return;
-          }
-          const dias = parseInt(card.dataset.diasFaltan, 10);
-          if (Toast) {
-            Toast.info(
-              dias === 1 ? 'Disponible mañana' : `Disponible en ${dias} días`,
-              'Este material se desbloqueará junto con su curso · sigue avanzando'
-            );
-          }
-        });
-      });
-    }, 50);
-  }
-
-  function _renderPdfCard(m) {
-    const colorMap = {
-      'Repostería':'#C4577A','Panadería':'#D5A13D','Cocina':'#fbbf24',
-      'Costos':'#38bdf8','Inocuidad':'#22C55E','Catering':'#A855F7',
-      'Bebidas':'#EC4899','Tendencias':'#F97316','Comunidad':'#F59E0B',
-      'General':'#C4577A'
+    const abrirMaterial = (m) => {
+      const info = _matInfo(m);
+      if (info.disponible) {
+        if (m.url && typeof window.abrirVisor === 'function') window.abrirVisor(m.url, m.titulo);
+      } else if (info.requiere) {
+        mostrarPaywallCurso(cursos.find(c => c.id === m.cursoId));
+      } else if (Toast) {
+        Toast.info(info.dias === 1 ? 'Disponible mañana' : `Disponible en ${info.dias} días`, 'Este material se desbloqueará junto con su curso · sigue avanzando');
+      }
     };
-    const c = colorMap[m.cursoArea] || '#C4577A';
-    const tipo = _inferirTipoMaterial(m.url);
-    const iconMap = { excel:'i-chart-bar', pdf:'i-news', ppt:'i-chart-bar', doc:'i-news' };
-    const ic = iconMap[tipo] || 'i-news';
-    const tipoLabel = { excel:'Excel', pdf:'PDF', ppt:'PPT', doc:'DOC' }[tipo] || 'Archivo';
-    const muestraGratis = esMaterialGratis(m.cursoId, m.materialIndex);
-    const disponible = _materialDisponible(m);
-    const requiereMembresia = !tieneAccesoVipCompleto() && !muestraGratis;
-    const diasFaltan = _diasParaMaterial(m);
-    const tituloEsc = (m.titulo || '').replace(/"/g,'&quot;').replace(/</g,'&lt;');
-    const cursoEsc = (m.cursoTitulo || '').replace(/"/g,'&quot;').replace(/</g,'&lt;');
 
-    return `
-      <article class="pdf-card ${!disponible ? 'pdf-card--soon' : ''}" style="--pdf-color:${c};cursor:pointer;"
-        data-disponible="${disponible}"
-        data-free="${muestraGratis}"
-        data-requiere-membresia="${requiereMembresia}"
-        data-curso-id="${m.cursoId}"
-        data-url="${(m.url||'').replace(/"/g,'&quot;')}"
-        data-dias-faltan="${diasFaltan}"
-        data-titulo="${tituloEsc}"
-        data-curso="${cursoEsc}"
-        data-area="${m.cursoArea}">
-        <div class="pdf-card__top" style="background-image:url('${coverSVG(m.cursoArea, m.titulo)}');background-size:cover;background-position:center;">
-          <div class="pdf-card__icon"><svg class="ic"><use href="#${ic}"/></svg></div>
-          <span class="pdf-card__size">${tipoLabel}</span>
-        </div>
-        <div class="pdf-card__body">
-          <div class="pdf-card__title">${tituloEsc}</div>
-          <div class="pdf-card__meta">
-            <span><svg class="ic"><use href="#i-folder"/></svg>${m.cursoArea}</span>
-            <span title="${cursoEsc}"><svg class="ic"><use href="#i-book"/></svg>${cursoEsc.length > 28 ? cursoEsc.slice(0,28)+'…' : cursoEsc}</span>
+    function pintar(){
+      // Chips de formato (+ Guardados)
+      const chips = [{ k:'todos', t:'Todo' }, { k:'guardados', t:'Guardados' }].concat(tiposPresentes.map(t => ({ k:t, t:_MAT_TIPOS[t].chip })));
+      $chips.innerHTML = chips.map(c => `<button type="button" class="mat-chip ${fTipo === c.k ? 'is-active' : ''}" data-mtipo="${c.k}">${c.t}</button>`).join('');
+      $chips.querySelectorAll('[data-mtipo]').forEach(b => b.addEventListener('click', () => { fTipo = b.dataset.mtipo; pintar(); }));
+
+      // Chips de área (sólo si hay más de una)
+      if (areasUnicas.length > 1) {
+        $areas.style.display = '';
+        $areas.innerHTML = `<button type="button" class="cursos-chip ${fArea === 'todas' ? 'is-active' : ''}" data-marea="todas">Todas las áreas</button>` +
+          areasUnicas.map(a => `<button type="button" class="cursos-chip ${fArea === a ? 'is-active' : ''}" data-marea="${escapeHtml(a)}">${escapeHtml(a)}</button>`).join('');
+        $areas.querySelectorAll('[data-marea]').forEach(b => b.addEventListener('click', () => { fArea = b.dataset.marea; pintar(); }));
+      } else { $areas.style.display = 'none'; $areas.innerHTML = ''; }
+
+      const lista = filtrar();
+      if (!lista.length) {
+        $feat.style.display = 'none';
+        $shelf.innerHTML = `<div class="mat-empty" style="grid-column:1/-1;">${fTipo === 'guardados' ? 'Aún no guardas materiales. Toca el marcador de un material para tenerlo aquí.' : 'No hay materiales con estos filtros.'}</div>`;
+        return;
+      }
+      $feat.style.display = '';
+
+      // Destacado: el elegido si sigue en la lista; si no, el primero disponible (o el primero)
+      let sel = lista.find(m => m.id === selId);
+      if (!sel) sel = lista.find(m => _materialDisponible(m)) || lista[0];
+      selId = sel.id;
+      const info = _matInfo(sel);
+      const guardado = guardados.has(sel.id);
+      const cursoEsc = escapeHtml(sel.cursoTitulo || '');
+      const btn = info.disponible
+        ? `<button type="button" class="mat-open" id="mat-open">Abrir<span class="mat-open__ic"><svg class="ic"><use href="#i-news"/></svg></span></button>`
+        : info.requiere
+          ? `<button type="button" class="mat-open" id="mat-open">Activar membresía<span class="mat-open__ic"><svg class="ic"><use href="#i-crown"/></svg></span></button>`
+          : `<button type="button" class="mat-open mat-open--soon" id="mat-open">Disponible pronto<span class="mat-open__ic"><svg class="ic"><use href="#i-clock"/></svg></span></button>`;
+      $feat.innerHTML = `
+        <div class="mat-feat__cover">${_matBookHTML(sel, info)}</div>
+        <div class="mat-feat__info">
+          <div class="mat-feat__eyebrow">${escapeHtml(info.T.nombre)} · ${escapeHtml(sel.cursoArea)}</div>
+          <h2 class="mat-feat__title">${escapeHtml(_matTituloBonito(sel.titulo))}</h2>
+          <p class="mat-feat__desc">${escapeHtml(info.desc)}</p>
+          <div class="mat-feat__actions">
+            ${btn}
+            <button type="button" class="mat-icon-btn ${guardado ? 'is-on' : ''}" id="mat-bookmark" aria-label="${guardado ? 'Quitar de guardados' : 'Guardar material'}" title="${guardado ? 'Quitar de guardados' : 'Guardar material'}">${_MAT_ICON_MARK}</button>
           </div>
-          <div class="pdf-card__tags">
-            ${disponible
-              ? `<span class="tag tag--soon" style="color:#fff;border-color:#E5C171;background:#E5C171;font-weight:700;">${muestraGratis ? 'Gratis' : 'Disponible'}</span><button class="row-btn pdf-card__btn-soon" data-bypass-paywall="true" style="margin-left:auto;background:linear-gradient(135deg, var(--primary), var(--highlight));color:#fff;cursor:pointer;" onclick="event.stopPropagation();if(typeof window.abrirVisor==='function'){window.abrirVisor('${(m.url||'').replace(/'/g,'%27')}','${tituloEsc.replace(/'/g,'&apos;')}');}"><svg class="ic"><use href="#i-download"/></svg>Abrir</button>`
-              : (requiereMembresia
-                ? `<span class="tag tag--soon">Solo VIP</span><button class="row-btn pdf-card__btn-soon" style="margin-left:auto;opacity:.55;cursor:not-allowed;" disabled><svg class="ic"><use href="#i-crown"/></svg>Activa tu membresía</button>`
-                : `<span class="tag tag--soon">${diasFaltan === 1 ? 'Mañana' : 'En '+diasFaltan+' días'}</span><button class="row-btn pdf-card__btn-soon" style="margin-left:auto;opacity:.55;cursor:not-allowed;" disabled><svg class="ic"><use href="#i-clock"/></svg>Disponible pronto</button>`)
-            }
+          <div class="mat-feat__meta">
+            <div><b>Formato</b><span>${escapeHtml(info.T.nombre)}</span></div>
+            <div><b>Del curso</b><span>${cursoEsc}</span></div>
+            <div><b>Área</b><span>${escapeHtml(sel.cursoArea)}</span></div>
+            <div><b>Estado</b><span>${escapeHtml(info.estado)}</span></div>
           </div>
-        </div>
-      </article>
-    `;
+        </div>`;
+      $feat.querySelector('#mat-open').addEventListener('click', () => abrirMaterial(sel));
+      $feat.querySelector('#mat-bookmark').addEventListener('click', () => {
+        if (guardados.has(sel.id)) guardados.delete(sel.id); else guardados.add(sel.id);
+        escribirGuardados(guardados);
+        pintar();
+      });
+
+      // Estantería
+      $shelf.innerHTML = lista.map(m => {
+        const inf = _matInfo(m);
+        return `
+          <div class="mat-item ${m.id === selId ? 'is-selected' : ''}" role="button" tabindex="0" data-mid="${escapeHtml(m.id)}" title="${escapeHtml(m.titulo)}">
+            ${_matBookHTML(m, inf)}
+            <span class="mat-item__title">${escapeHtml(_matTituloBonito(m.titulo))}</span>
+            <span class="mat-item__meta">${inf.T.corto} · ${escapeHtml(m.cursoArea)}</span>
+          </div>`;
+      }).join('');
+      $shelf.querySelectorAll('.mat-item').forEach(el => {
+        const activar = () => {
+          const m = materialesTodos.find(x => x.id === el.dataset.mid);
+          if (!m) return;
+          if (m.id === selId) { abrirMaterial(m); return; }   // 2.º clic sobre el ya elegido = abrirlo
+          selId = m.id;
+          pintar();
+          $feat.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        };
+        el.addEventListener('click', activar);
+        el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activar(); } });
+      });
+    }
+    pintar();
   }
 
   /* ============================ BIBLIOTECA POR MES ============================ */
