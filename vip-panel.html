@@ -1002,7 +1002,7 @@ body{
 .logros-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
 
 /* ═══ RETOS · rediseño v10 (ref. Visión Pecuaria "Zona de retos") ═══ */
-.retos2-hero{background:linear-gradient(135deg,var(--primary-deep) 0%,var(--primary) 100%);color:#F5EFE8;border-radius:20px;padding:34px 36px;position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:28px;align-items:center;margin-bottom:18px}
+.retos2-hero{background:linear-gradient(135deg,var(--primary-deep) 0%,var(--primary) 100%);background-size:cover;background-position:center;color:#F5EFE8;border-radius:20px;padding:34px 36px;position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:28px;align-items:center;margin-bottom:18px}
 .retos2-hero::before{content:"";position:absolute;left:0;right:0;bottom:0;height:60%;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 200' preserveAspectRatio='none'%3E%3Cpath d='M0,140 C150,180 350,100 600,140 L600,200 L0,200 Z' fill='rgba(255,255,255,0.035)'/%3E%3Cpath d='M0,165 C180,198 400,125 600,165 L600,200 L0,200 Z' fill='rgba(255,255,255,0.06)'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:bottom;background-size:100% 100%;pointer-events:none}
 .retos2-hero::after{content:"";position:absolute;top:-80px;right:-50px;width:280px;height:280px;border-radius:50%;border:1px solid rgba(255,255,255,.10);pointer-events:none}
 .retos2-hero > *{position:relative;z-index:1}
@@ -1012,7 +1012,7 @@ body{
 .retos2-hero__prog-top{display:flex;justify-content:space-between;font-size:12.5px;color:rgba(245,239,232,.78);margin-bottom:8px}
 .retos2-hero__prog-top strong{color:#fff}
 .retos2-hero__next{font-size:12px;color:rgba(245,239,232,.62);margin-top:9px}
-.retos2-score{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);border-radius:18px;padding:22px}
+.retos2-score{background:rgba(20,6,10,.34);border:1px solid rgba(255,255,255,.18);border-radius:18px;padding:22px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
 .retos2-score__lbl{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:rgba(245,239,232,.7);text-align:center}
 .retos2-score__xp{text-align:center;font-size:54px;font-weight:800;letter-spacing:-1.5px;color:#F0C868;line-height:1;margin-top:12px}
 .retos2-score__xp small{display:block;font-size:12.5px;font-weight:600;letter-spacing:0;color:rgba(245,239,232,.72);margin-top:8px}
@@ -1031,6 +1031,14 @@ body{
 .retos2-next__meta span{display:inline-flex;align-items:center;gap:5px}
 .retos2-next__meta .ic{width:13px;height:13px;color:var(--text-3)}
 .retos2-next .mat-open{margin-top:18px}
+.retos2-next--foto{position:relative;overflow:hidden;min-height:250px;padding:30px 32px;background-color:#1a0a0e;background-size:cover;background-position:center;border:none;align-items:flex-end}
+.retos2-next--foto .retos2-next__eyebrow{color:rgba(255,255,255,.72)}
+.retos2-next--foto .retos2-next__title{color:#fff;font-size:24px;max-width:480px;text-shadow:0 2px 10px rgba(0,0,0,.35)}
+.retos2-next--foto .retos2-next__meta{color:rgba(255,255,255,.85)}
+.retos2-next--foto .retos2-next__meta .ic{color:rgba(255,255,255,.7)}
+.retos2-next--foto .mat-open{background:#fff;color:var(--primary)}
+.retos2-next--foto .mat-open__ic{background:var(--primary);color:#fff}
+.retos2-next--foto:hover{transform:translateY(-3px);box-shadow:0 20px 40px rgba(0,0,0,.28)}
 .retos2-mision{background:linear-gradient(150deg,var(--primary-deep),var(--primary));color:#F5EFE8;border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:15px}
 .retos2-mision__head{display:flex;align-items:center;gap:12px}
 .retos2-mision__ic{flex:none;width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center}
@@ -1051,10 +1059,12 @@ body{
 .retos2-sec__note{font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;color:var(--text-3)}
 
 .retos2-modes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:26px}
-.retos2-mode{text-align:left;background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:6px;transition:transform .25s cubic-bezier(.2,.8,.25,1),box-shadow .25s,border-color .2s,background .2s}
+.retos2-mode{text-align:left;background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:0;overflow:hidden;display:flex;flex-direction:column;gap:0;transition:transform .25s cubic-bezier(.2,.8,.25,1),box-shadow .25s,border-color .2s,background .2s}
 .retos2-mode:hover{transform:translateY(-3px);box-shadow:0 14px 28px rgba(0,0,0,.10)}
 .retos2-mode.is-active{border-color:var(--primary);background:color-mix(in srgb,var(--primary) 6%,var(--surface))}
-.retos2-mode__ic{width:46px;height:46px;border-radius:14px;background:color-mix(in srgb,var(--primary) 12%,transparent);color:var(--primary);display:flex;align-items:center;justify-content:center;margin-bottom:6px}
+.retos2-mode__img{display:block;height:112px;background-size:cover;background-position:center;position:relative;background-color:var(--surface-3)}
+.retos2-mode__ic{position:absolute;left:16px;bottom:-22px;width:46px;height:46px;border-radius:14px;background:var(--surface);color:var(--primary);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 18px rgba(0,0,0,.22)}
+.retos2-mode__body{display:flex;flex-direction:column;gap:5px;padding:32px 16px 16px}
 .retos2-mode__ic .ic{width:22px;height:22px}
 .retos2-mode__name{font-size:14px;font-weight:700;color:var(--text)}
 .retos2-mode__sub{font-size:12px;color:var(--text-3)}
@@ -1065,23 +1075,28 @@ body{
 .cursos-chip.is-active .retos2-chip-n{background:rgba(255,255,255,.25)}
 
 .retos2-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
-.retos2-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:11px;cursor:pointer;min-height:190px;outline:none;transition:transform .25s cubic-bezier(.2,.8,.25,1),box-shadow .25s,border-color .2s}
+.retos2-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:0;overflow:hidden;display:flex;flex-direction:column;gap:0;cursor:pointer;outline:none;transition:transform .25s cubic-bezier(.2,.8,.25,1),box-shadow .25s,border-color .2s}
 .retos2-card:hover{transform:translateY(-4px);box-shadow:0 16px 30px rgba(0,0,0,.14);border-color:color-mix(in srgb,var(--cat-color,var(--primary)) 40%,transparent)}
 .retos2-card:focus-visible{border-color:var(--primary)}
-.retos2-card__top{display:flex;justify-content:space-between;align-items:center;gap:8px}
-.retos2-card__cat{display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--cat-color,var(--primary))}
+.retos2-card__img{position:relative;height:124px;background-size:cover;background-position:center;background-color:var(--surface-3);display:flex;justify-content:space-between;align-items:flex-start;gap:8px;padding:12px}
+.retos2-card__body{display:flex;flex-direction:column;gap:10px;padding:14px 16px 16px;flex:1}
+.retos2-card__lock{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:38px;height:38px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;display:flex;align-items:center;justify-content:center}
+.retos2-card__lock svg{width:17px;height:17px}
+.retos2-card__cat{display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#fff;background:rgba(0,0,0,.45);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:5px 10px;border-radius:100px}
 .retos2-card__cat .ic{width:14px;height:14px}
-.retos2-card__st{display:inline-flex;align-items:center;gap:5px;font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;padding:3px 9px;border-radius:100px;background:var(--surface-2);color:var(--text-2)}
+.retos2-card__st{display:inline-flex;align-items:center;gap:5px;font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;padding:5px 10px;border-radius:100px;background:rgba(255,255,255,.92);color:var(--text-2)}
 .retos2-card__st svg{width:11px;height:11px}
-.retos2-card__st.is-done{background:color-mix(in srgb,var(--success) 15%,transparent);color:var(--success)}
-.retos2-card__st.is-next{background:color-mix(in srgb,var(--primary) 12%,transparent);color:var(--primary)}
+.retos2-card__st.is-done{background:var(--success);color:#fff}
+.retos2-card__st.is-next{background:var(--primary);color:#fff}
 .retos2-card__title{font-size:15px;font-weight:700;line-height:1.3;letter-spacing:-.2px;color:var(--text)}
 .retos2-card__meta{margin-top:auto;display:flex;gap:12px;flex-wrap:wrap;font-size:11.5px;color:var(--text-3)}
 .retos2-card__meta span{display:inline-flex;align-items:center;gap:4px}
 .retos2-card__meta .ic{width:12px;height:12px}
-.retos2-card__cta{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:var(--cat-color,var(--primary));padding-top:11px;border-top:1px solid var(--border)}
+.retos2-card__cta{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:var(--cat-color,var(--primary));padding-top:11px;border-top:1px solid var(--border);margin-top:2px}
 .retos2-card__cta .ic{width:13px;height:13px}
-.retos2-card.is-locked{opacity:.55;cursor:not-allowed}
+.retos2-card.is-locked{opacity:.88;cursor:not-allowed}
+.retos2-card.is-locked .retos2-card__img{filter:grayscale(.75) brightness(.72)}
+.retos2-card__st.is-lock{background:rgba(0,0,0,.6);color:#fff}
 .retos2-card.is-locked .retos2-card__cta{color:var(--text-3)}
 .retos2-card.is-locked:hover{transform:none;box-shadow:none;border-color:var(--border)}
 @media (max-width:880px){
@@ -8162,6 +8177,25 @@ const Sections = (function(){
   const _RETO_LOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
   let _retosF = { tipo:'todos', cat:'todas' };
 
+  // Fotos (Unsplash, uso libre) para darle vida a la zona de retos: una lista por categoría,
+  // se reparten entre los retos de esa categoría; y una foto por modo de juego.
+  const RETO_FOTOS_CAT = {
+    'Panadería':  ['1517686469429-8bdb88b9f907', '1547197309-082bdc50ce8b', '1602325233482-9ce384bed12a', '1537734796389-e1fc293cf856'],
+    'Repostería': ['1621303837174-89787a7d4729', '1540337706094-da10342c93d8', '1702841579337-410618db2715', '1649773289945-93a96051fd18', '1624633941860-a55d17f9fd18'],
+    'Cocina':     ['1767785990437-dfe1fe516fe8', '1789568682937-5df65668d8d3', '1762329924239-e204f101fca4'],
+    'Inocuidad':  ['1784039534969-26e424548f3e', '1782750161991-23529c9462bb'],
+    'Catering':   ['1675647729611-47273e75fff9', '1675647699232-76b8f533b006'],
+    'Producción': ['1780590107744-42e6f234fd7d', '1749478072094-d21cb929490c']
+  };
+  const RETO_FOTO_MODO = { secuencia:'1517686469429-8bdb88b9f907', imagen:'1702841579337-410618db2715', antesdespues:'1675647729611-47273e75fff9', error:'1784039534969-26e424548f3e' };
+  const RETO_FOTO_HERO = '1767785990437-dfe1fe516fe8';
+  const _retoImg = (id, w) => `https://images.unsplash.com/photo-${id}?w=${w || 640}&q=70&auto=format&fit=crop`;
+  function _retoFoto(r, w){
+    const lista = RETO_FOTOS_CAT[r.categoria] || RETO_FOTOS_CAT['Cocina'];
+    const n = RETOS_LIBRARY.filter(x => x.categoria === r.categoria).findIndex(x => x.id === r.id);
+    return _retoImg(lista[(n < 0 ? 0 : n) % lista.length], w);
+  }
+
   function renderRetos(container){
     if(typeof toolEsVIP==='function' && !toolEsVIP()){
       container.innerHTML = `
@@ -8226,8 +8260,7 @@ const Sections = (function(){
       const meta = RETO_CAT_META[sig.categoria] || { icon:'i-bolt', color:'var(--primary)' };
       const tm = RETO_TIPO_META[sig.tipo] || { ic:'i-bolt', nombre:'Reto' };
       nextHtml = `
-        <div class="retos2-next" data-reto-id="${sig.id}" data-reto-locked="false" role="button" tabindex="0" style="--cat-color:${meta.color}">
-          <div class="retos2-next__ic"><svg class="ic"><use href="#${meta.icon}"/></svg></div>
+        <div class="retos2-next retos2-next--foto" data-reto-id="${sig.id}" data-reto-locked="false" role="button" tabindex="0" style="--cat-color:${meta.color};background-image:linear-gradient(90deg,rgba(18,7,10,.92) 0%,rgba(18,7,10,.62) 55%,rgba(18,7,10,.18) 100%),url('${_retoFoto(sig, 900)}')">
           <div>
             <div class="retos2-next__eyebrow">${nHechos === 0 ? 'Empieza aquí' : 'Tu siguiente reto'} · ${escapeHtml(sig.categoria)}</div>
             <div class="retos2-next__title">${escapeHtml(sig.titulo)}</div>
@@ -8254,7 +8287,7 @@ const Sections = (function(){
     container.innerHTML = `
       <div class="fade-up">
         ${_progresoSinPermiso ? `<div style="background:color-mix(in srgb,var(--danger) 12%,transparent);border:1px solid color-mix(in srgb,var(--danger) 35%,transparent);border-radius:12px;padding:12px 14px;margin-bottom:18px;font-size:12px;color:var(--danger);">Tu avance no se está guardando (falta permiso en Firestore para <code style="font-family:'JetBrains Mono',monospace;">progreso</code>). Los puntos que ganes ahora se van a perder al recargar.</div>` : ''}
-        <section class="retos2-hero">
+        <section class="retos2-hero" style="background-image:linear-gradient(100deg,var(--primary-deep) 0%,rgba(74,14,26,.95) 40%,rgba(107,21,38,.55) 100%),url('${_retoImg(RETO_FOTO_HERO, 1400)}')">
           <div>
             <span class="banner__eyebrow"><svg class="ic ic--sm"><use href="#i-bolt"/></svg>Zona de retos</span>
             <h1 class="retos2-hero__title">Practica. Acierta.<br><span class="banner__title-accent">Sube de nivel.</span></h1>
@@ -8339,11 +8372,13 @@ const Sections = (function(){
       }).filter(x => x.total > 0);
       $modes.innerHTML = modos.map(x => `
         <button type="button" class="retos2-mode ${_retosF.tipo === x.t ? 'is-active' : ''}" data-modo="${x.t}">
-          <span class="retos2-mode__ic"><svg class="ic"><use href="#${x.m.ic}"/></svg></span>
-          <span class="retos2-mode__name">${x.m.nombre}</span>
-          <span class="retos2-mode__sub">${x.m.sub}</span>
-          <span class="retos2-mode__bar"><i style="width:${Math.round(x.h / x.total * 100)}%"></i></span>
-          <span class="retos2-mode__count">${x.h}/${x.total} resueltos</span>
+          <span class="retos2-mode__img" style="background-image:linear-gradient(180deg,rgba(0,0,0,.05) 30%,rgba(0,0,0,.5) 100%),url('${_retoImg(RETO_FOTO_MODO[x.t] || RETO_FOTO_HERO, 640)}')"><span class="retos2-mode__ic"><svg class="ic"><use href="#${x.m.ic}"/></svg></span></span>
+          <span class="retos2-mode__body">
+            <span class="retos2-mode__name">${x.m.nombre}</span>
+            <span class="retos2-mode__sub">${x.m.sub}</span>
+            <span class="retos2-mode__bar"><i style="width:${Math.round(x.h / x.total * 100)}%"></i></span>
+            <span class="retos2-mode__count">${x.h}/${x.total} resueltos</span>
+          </span>
         </button>`).join('');
       $modes.querySelectorAll('[data-modo]').forEach(b => b.addEventListener('click', () => {
         _retosF.tipo = (_retosF.tipo === b.dataset.modo) ? 'todos' : b.dataset.modo;
@@ -8368,23 +8403,26 @@ const Sections = (function(){
         const tm = RETO_TIPO_META[r.tipo] || { corto:'Reto' };
         const ok = hecho(r), libre = abierto(i), esSig = sig && sig.id === r.id;
         const estado = ok ? '<span class="retos2-card__st is-done">✓ Resuelto</span>'
-                     : !libre ? `<span class="retos2-card__st is-lock">${_RETO_LOCK}Bloqueado</span>`
+                     : !libre ? '<span class="retos2-card__st is-lock">Bloqueado</span>'
                      : esSig ? '<span class="retos2-card__st is-next">Siguiente</span>'
                      : '<span class="retos2-card__st">Disponible</span>';
         const cta = ok ? 'Repetir' : !libre ? 'Completa el anterior' : 'Jugar';
         return `
           <div class="retos2-card ${ok ? 'is-done' : ''} ${libre ? '' : 'is-locked'}" role="button" tabindex="0" style="--cat-color:${meta.color}" data-reto-id="${r.id}" data-reto-locked="${!libre}">
-            <div class="retos2-card__top">
+            <div class="retos2-card__img" style="background-image:linear-gradient(180deg,rgba(0,0,0,.28) 0%,rgba(0,0,0,.04) 42%,rgba(0,0,0,.5) 100%),url('${_retoFoto(r, 640)}')">
               <span class="retos2-card__cat"><svg class="ic"><use href="#${meta.icon}"/></svg>${escapeHtml(r.categoria)}</span>
               ${estado}
+              ${libre ? '' : `<span class="retos2-card__lock">${_RETO_LOCK}</span>`}
             </div>
-            <h3 class="retos2-card__title">${escapeHtml(r.titulo)}</h3>
-            <div class="retos2-card__meta">
-              <span><svg class="ic"><use href="#i-bolt"/></svg>+${r.puntos} pts</span>
-              <span><svg class="ic"><use href="#i-clock"/></svg>${RETO_TIEMPO_POR_TIPO[r.tipo]} s</span>
-              <span>${escapeHtml(tm.corto)} · ${escapeHtml(r.dificultad)}</span>
+            <div class="retos2-card__body">
+              <h3 class="retos2-card__title">${escapeHtml(r.titulo)}</h3>
+              <div class="retos2-card__meta">
+                <span><svg class="ic"><use href="#i-bolt"/></svg>+${r.puntos} pts</span>
+                <span><svg class="ic"><use href="#i-clock"/></svg>${RETO_TIEMPO_POR_TIPO[r.tipo]} s</span>
+                <span>${escapeHtml(tm.corto)} · ${escapeHtml(r.dificultad)}</span>
+              </div>
+              <div class="retos2-card__cta">${cta}${libre ? '<svg class="ic"><use href="#i-arrow-right"/></svg>' : ''}</div>
             </div>
-            <div class="retos2-card__cta">${cta}${libre ? '<svg class="ic"><use href="#i-arrow-right"/></svg>' : ''}</div>
           </div>`;
       }).join('');
       $grid.querySelectorAll('.retos2-card').forEach(enlazar);
