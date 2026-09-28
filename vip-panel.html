@@ -1001,6 +1001,96 @@ body{
 
 .logros-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
 
+/* ═══ RETOS · rediseño v10 (ref. Visión Pecuaria "Zona de retos") ═══ */
+.retos2-hero{background:linear-gradient(135deg,var(--primary-deep) 0%,var(--primary) 100%);color:#F5EFE8;border-radius:20px;padding:34px 36px;position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:28px;align-items:center;margin-bottom:18px}
+.retos2-hero::before{content:"";position:absolute;left:0;right:0;bottom:0;height:60%;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 200' preserveAspectRatio='none'%3E%3Cpath d='M0,140 C150,180 350,100 600,140 L600,200 L0,200 Z' fill='rgba(255,255,255,0.035)'/%3E%3Cpath d='M0,165 C180,198 400,125 600,165 L600,200 L0,200 Z' fill='rgba(255,255,255,0.06)'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:bottom;background-size:100% 100%;pointer-events:none}
+.retos2-hero::after{content:"";position:absolute;top:-80px;right:-50px;width:280px;height:280px;border-radius:50%;border:1px solid rgba(255,255,255,.10);pointer-events:none}
+.retos2-hero > *{position:relative;z-index:1}
+.retos2-hero__title{font-size:clamp(30px,4.2vw,54px);font-weight:800;letter-spacing:-1.8px;line-height:1.03;margin-top:16px;color:#fff}
+.retos2-hero__sub{font-size:14px;color:rgba(245,239,232,.85);margin-top:14px;max-width:480px;line-height:1.55}
+.retos2-hero__prog{margin-top:24px;max-width:440px}
+.retos2-hero__prog-top{display:flex;justify-content:space-between;font-size:12.5px;color:rgba(245,239,232,.78);margin-bottom:8px}
+.retos2-hero__prog-top strong{color:#fff}
+.retos2-hero__next{font-size:12px;color:rgba(245,239,232,.62);margin-top:9px}
+.retos2-score{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);border-radius:18px;padding:22px}
+.retos2-score__lbl{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:rgba(245,239,232,.7);text-align:center}
+.retos2-score__xp{text-align:center;font-size:54px;font-weight:800;letter-spacing:-1.5px;color:#F0C868;line-height:1;margin-top:12px}
+.retos2-score__xp small{display:block;font-size:12.5px;font-weight:600;letter-spacing:0;color:rgba(245,239,232,.72);margin-top:8px}
+.retos2-score__stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.14);text-align:center}
+.retos2-score__stats strong{display:block;font-size:17px;font-weight:700;color:#fff;line-height:1.1}
+.retos2-score__stats span{display:block;font-size:10.5px;color:rgba(245,239,232,.62);margin-top:4px}
+
+.retos2-row{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:16px;margin-bottom:36px}
+.retos2-next{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:26px;display:flex;gap:22px;align-items:center;cursor:pointer;transition:transform .25s cubic-bezier(.2,.8,.25,1),box-shadow .25s,border-color .2s;outline:none}
+.retos2-next[data-reto-id]:hover{transform:translateY(-3px);box-shadow:0 16px 32px rgba(0,0,0,.12);border-color:color-mix(in srgb,var(--cat-color,var(--primary)) 40%,transparent)}
+.retos2-next__ic{flex:none;width:88px;height:88px;border-radius:24px;background:var(--cat-color,var(--primary));color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 14px 26px -10px color-mix(in srgb,var(--cat-color,var(--primary)) 65%,transparent)}
+.retos2-next__ic .ic{width:40px;height:40px}
+.retos2-next__eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--text-3)}
+.retos2-next__title{font-size:20px;font-weight:800;letter-spacing:-.5px;line-height:1.2;margin-top:7px;color:var(--text)}
+.retos2-next__meta{display:flex;gap:14px;flex-wrap:wrap;margin-top:11px;font-size:12px;color:var(--text-2)}
+.retos2-next__meta span{display:inline-flex;align-items:center;gap:5px}
+.retos2-next__meta .ic{width:13px;height:13px;color:var(--text-3)}
+.retos2-next .mat-open{margin-top:18px}
+.retos2-mision{background:linear-gradient(150deg,var(--primary-deep),var(--primary));color:#F5EFE8;border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:15px}
+.retos2-mision__head{display:flex;align-items:center;gap:12px}
+.retos2-mision__ic{flex:none;width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center}
+.retos2-mision__ic .ic{width:20px;height:20px}
+.retos2-mision__lbl{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:rgba(245,239,232,.7)}
+.retos2-mision__pct{font-size:18px;font-weight:800;color:#fff;margin-top:2px}
+.retos2-tarea{display:flex;align-items:center;gap:12px}
+.retos2-tarea__dot{flex:none;width:24px;height:24px;border-radius:50%;border:1.5px solid rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center}
+.retos2-tarea__dot .ic{width:13px;height:13px}
+.retos2-tarea.is-on .retos2-tarea__dot{background:#F0C868;border-color:#F0C868;color:var(--primary-deep)}
+.retos2-tarea b{display:block;font-size:13px;color:#fff}
+.retos2-tarea small{display:block;font-size:11.5px;color:rgba(245,239,232,.65);margin-top:2px}
+.retos2-mision__foot{margin-top:auto;padding-top:13px;border-top:1px solid rgba(255,255,255,.14);font-size:11.5px;color:rgba(245,239,232,.72)}
+
+.retos2-sec{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:0 0 16px}
+.retos2-sec__eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:var(--text-3)}
+.retos2-sec__title{font-size:22px;font-weight:800;letter-spacing:-.6px;margin-top:5px;color:var(--text)}
+.retos2-sec__note{font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;color:var(--text-3)}
+
+.retos2-modes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:26px}
+.retos2-mode{text-align:left;background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:6px;transition:transform .25s cubic-bezier(.2,.8,.25,1),box-shadow .25s,border-color .2s,background .2s}
+.retos2-mode:hover{transform:translateY(-3px);box-shadow:0 14px 28px rgba(0,0,0,.10)}
+.retos2-mode.is-active{border-color:var(--primary);background:color-mix(in srgb,var(--primary) 6%,var(--surface))}
+.retos2-mode__ic{width:46px;height:46px;border-radius:14px;background:color-mix(in srgb,var(--primary) 12%,transparent);color:var(--primary);display:flex;align-items:center;justify-content:center;margin-bottom:6px}
+.retos2-mode__ic .ic{width:22px;height:22px}
+.retos2-mode__name{font-size:14px;font-weight:700;color:var(--text)}
+.retos2-mode__sub{font-size:12px;color:var(--text-3)}
+.retos2-mode__bar{display:block;height:5px;border-radius:100px;background:var(--surface-3);overflow:hidden;margin-top:8px}
+.retos2-mode__bar i{display:block;height:100%;border-radius:100px;background:linear-gradient(90deg,var(--primary),var(--highlight))}
+.retos2-mode__count{font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;color:var(--text-2);margin-top:4px}
+.retos2-chip-n{margin-left:7px;font-family:'JetBrains Mono',monospace;font-size:10px;padding:1px 7px;border-radius:100px;background:rgba(0,0,0,.07)}
+.cursos-chip.is-active .retos2-chip-n{background:rgba(255,255,255,.25)}
+
+.retos2-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.retos2-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:11px;cursor:pointer;min-height:190px;outline:none;transition:transform .25s cubic-bezier(.2,.8,.25,1),box-shadow .25s,border-color .2s}
+.retos2-card:hover{transform:translateY(-4px);box-shadow:0 16px 30px rgba(0,0,0,.14);border-color:color-mix(in srgb,var(--cat-color,var(--primary)) 40%,transparent)}
+.retos2-card:focus-visible{border-color:var(--primary)}
+.retos2-card__top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.retos2-card__cat{display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--cat-color,var(--primary))}
+.retos2-card__cat .ic{width:14px;height:14px}
+.retos2-card__st{display:inline-flex;align-items:center;gap:5px;font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;padding:3px 9px;border-radius:100px;background:var(--surface-2);color:var(--text-2)}
+.retos2-card__st svg{width:11px;height:11px}
+.retos2-card__st.is-done{background:color-mix(in srgb,var(--success) 15%,transparent);color:var(--success)}
+.retos2-card__st.is-next{background:color-mix(in srgb,var(--primary) 12%,transparent);color:var(--primary)}
+.retos2-card__title{font-size:15px;font-weight:700;line-height:1.3;letter-spacing:-.2px;color:var(--text)}
+.retos2-card__meta{margin-top:auto;display:flex;gap:12px;flex-wrap:wrap;font-size:11.5px;color:var(--text-3)}
+.retos2-card__meta span{display:inline-flex;align-items:center;gap:4px}
+.retos2-card__meta .ic{width:12px;height:12px}
+.retos2-card__cta{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:var(--cat-color,var(--primary));padding-top:11px;border-top:1px solid var(--border)}
+.retos2-card__cta .ic{width:13px;height:13px}
+.retos2-card.is-locked{opacity:.55;cursor:not-allowed}
+.retos2-card.is-locked .retos2-card__cta{color:var(--text-3)}
+.retos2-card.is-locked:hover{transform:none;box-shadow:none;border-color:var(--border)}
+@media (max-width:880px){
+  .retos2-hero{grid-template-columns:1fr;padding:24px 20px}
+  .retos2-row{grid-template-columns:1fr}
+  .retos2-next{flex-direction:column;align-items:flex-start;padding:22px}
+  .retos2-modes{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
 /* ═══ LOGROS · rediseño v9 (ref. Visión Pecuaria) ═══ */
 .logros2-head{margin-bottom:18px}
 .logros2-head__eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:var(--primary)}
@@ -8057,6 +8147,21 @@ const Sections = (function(){
     'Producción':{icon:'i-gauge', color:'var(--primary)'}
   };
 
+  // ═══════════════════════════════════════════════════════════════
+  // RETOS · rediseño v10 (ref. Visión Pecuaria "Zona de retos")
+  // Mismo contenido y mismas reglas de siempre (18 retos, se desbloquean en orden,
+  // XP y racha de Firestore progreso/{uid}); cambia cómo se presenta: marcador,
+  // "tu siguiente reto", misión semanal, modos de juego, filtros y medallas.
+  // ═══════════════════════════════════════════════════════════════
+  const RETO_TIPO_META = {
+    secuencia:    { ic:'i-menu',            nombre:'Ordena el proceso',     sub:'Pon los pasos en orden',   corto:'Ordenar' },
+    imagen:       { ic:'i-image',           nombre:'Elige la foto',         sub:'¿Cuál es la correcta?',    corto:'Elegir foto' },
+    antesdespues: { ic:'i-clipboard-check', nombre:'Antes o después',       sub:'¿Cuál se ve mejor?',       corto:'Comparar' },
+    error:        { ic:'i-search',          nombre:'Encuentra los errores', sub:'Detecta las fallas',       corto:'Errores' }
+  };
+  const _RETO_LOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+  let _retosF = { tipo:'todos', cat:'todas' };
+
   function renderRetos(container){
     if(typeof toolEsVIP==='function' && !toolEsVIP()){
       container.innerHTML = `
@@ -8081,51 +8186,210 @@ const Sections = (function(){
       _cargarProgreso().then(()=>renderRetos(container));
       return;
     }
-    const completados = _progreso.retosCompletados.length;
+
+    // ─── Datos reales ───
+    const hecho = r => _progreso.retosCompletados.includes(r.id);
+    const abierto = i => i === 0 || _progreso.retosCompletados.includes(RETOS_LIBRARY[i-1].id);
+    const total = RETOS_LIBRARY.length;
+    const nHechos = RETOS_LIBRARY.filter(hecho).length;
+    const pct = total ? Math.round(nHechos / total * 100) : 0;
+    const idxSig = RETOS_LIBRARY.findIndex((r, i) => !hecho(r) && abierto(i));
+    const sig = idxSig >= 0 ? RETOS_LIBRARY[idxSig] : null;
+
+    const MED = [
+      { id:'rt1', nombre:'Primer reto', desc:'Completa tu primer reto',    ic:'i-play',     meta:1,  val:nHechos,         unidad:'reto' },
+      { id:'rt2', nombre:'Retador',     desc:'Completa 5 retos',           ic:'i-bolt',     meta:5,  val:nHechos,         unidad:'reto' },
+      { id:'l21', nombre:'Constante',   desc:'7 días seguidos con retos',  ic:'i-bn-flame', meta:7,  val:_progreso.racha, unidad:'día de racha' },
+      { id:'l22', nombre:'Imparable',   desc:'30 días seguidos con retos', ic:'i-trophy',   meta:30, val:_progreso.racha, unidad:'día de racha' }
+    ].map(m => ({ ...m, ok: _progreso.logrosDesbloqueados.includes(m.id) || m.val >= m.meta, val: Math.min(m.val, m.meta) }));
+    const prox = MED.find(m => !m.ok);
+    const falta = prox ? prox.meta - prox.val : 0;
+    const proxTxt = prox
+      ? `${falta} ${prox.unidad}${falta !== 1 ? 's' : ''} para la medalla «${prox.nombre}»`
+      : '¡Tienes todas las medallas de retos!';
+
+    // Misión semanal (con datos reales: retos de hoy + clases vistas esta semana)
+    const hoyUTC = new Date().toISOString().slice(0, 10);   // igual que _otorgarXP guarda ultimaActividad
+    const lunISO = _fechaLocalISO(_lunesDe(new Date()));
+    const diasSem = new Set(_getActividad().filter(d => d >= lunISO));
+    const tareas = [
+      { ok: _progreso.ultimaActividad === hoyUTC, t:'Reto de hoy',   s:'Resuelve un reto y suma XP' },
+      { ok: diasSem.size >= 1,                     t:'Constancia',    s:'Mira una clase esta semana' },
+      { ok: diasSem.size >= 3,                     t:'Semana activa', s:`Estudia 3 días esta semana · ${Math.min(diasSem.size, 3)}/3` }
+    ];
+    const tHechas = tareas.filter(t => t.ok).length;
+    const pctMision = Math.round(tHechas / tareas.length * 100);
+
+    // ─── Tarjeta "siguiente reto" ───
+    let nextHtml;
+    if (sig) {
+      const meta = RETO_CAT_META[sig.categoria] || { icon:'i-bolt', color:'var(--primary)' };
+      const tm = RETO_TIPO_META[sig.tipo] || { ic:'i-bolt', nombre:'Reto' };
+      nextHtml = `
+        <div class="retos2-next" data-reto-id="${sig.id}" data-reto-locked="false" role="button" tabindex="0" style="--cat-color:${meta.color}">
+          <div class="retos2-next__ic"><svg class="ic"><use href="#${meta.icon}"/></svg></div>
+          <div>
+            <div class="retos2-next__eyebrow">${nHechos === 0 ? 'Empieza aquí' : 'Tu siguiente reto'} · ${escapeHtml(sig.categoria)}</div>
+            <div class="retos2-next__title">${escapeHtml(sig.titulo)}</div>
+            <div class="retos2-next__meta">
+              <span><svg class="ic"><use href="#i-bolt"/></svg>+${sig.puntos} pts</span>
+              <span><svg class="ic"><use href="#i-clock"/></svg>${RETO_TIEMPO_POR_TIPO[sig.tipo]} s</span>
+              <span><svg class="ic"><use href="#${tm.ic}"/></svg>${escapeHtml(tm.nombre)}</span>
+            </div>
+            <button type="button" class="mat-open">Jugar ahora<span class="mat-open__ic"><svg class="ic"><use href="#i-play"/></svg></span></button>
+          </div>
+        </div>`;
+    } else {
+      nextHtml = `
+        <div class="retos2-next" style="--cat-color:var(--success);cursor:default">
+          <div class="retos2-next__ic"><svg class="ic"><use href="#i-trophy"/></svg></div>
+          <div>
+            <div class="retos2-next__eyebrow">Zona de retos</div>
+            <div class="retos2-next__title">¡Superaste los ${total} retos!</div>
+            <div class="retos2-next__meta"><span>Puedes repetir cualquiera de la lista para seguir practicando.</span></div>
+          </div>
+        </div>`;
+    }
+
     container.innerHTML = `
       <div class="fade-up">
-        <div class="sec-hero">
-          <span class="sec-hero__eyebrow">Practica jugando</span>
-          <h1 class="sec-hero__title">Retos</h1>
-          <p class="sec-hero__sub">Pon a prueba lo que sabes de gastronomía. Cada reto completado suma puntos y cuenta para tu racha.</p>
-        </div>
         ${_progresoSinPermiso ? `<div style="background:color-mix(in srgb,var(--danger) 12%,transparent);border:1px solid color-mix(in srgb,var(--danger) 35%,transparent);border-radius:12px;padding:12px 14px;margin-bottom:18px;font-size:12px;color:var(--danger);">Tu avance no se está guardando (falta permiso en Firestore para <code style="font-family:'JetBrains Mono',monospace;">progreso</code>). Los puntos que ganes ahora se van a perder al recargar.</div>` : ''}
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-bottom:26px;">
-          <div style="background:var(--surface);border:1px solid var(--border-2);border-radius:14px;padding:14px;"><div style="font-size:11px;color:var(--text-3);">Tu XP total</div><div style="font-size:22px;font-weight:700;color:var(--primary);">${_progreso.xp}</div></div>
-          <div style="background:var(--surface);border:1px solid var(--border-2);border-radius:14px;padding:14px;"><div style="font-size:11px;color:var(--text-3);">Racha</div><div style="font-size:22px;font-weight:700;">${_progreso.racha} <span style="font-size:12px;font-weight:500;color:var(--text-3);">días</span></div></div>
-          <div style="background:var(--surface);border:1px solid var(--border-2);border-radius:14px;padding:14px;"><div style="font-size:11px;color:var(--text-3);">Retos completados</div><div style="font-size:22px;font-weight:700;">${completados}<span style="font-size:12px;font-weight:500;color:var(--text-3);">/${RETOS_LIBRARY.length}</span></div></div>
+        <section class="retos2-hero">
+          <div>
+            <span class="banner__eyebrow"><svg class="ic ic--sm"><use href="#i-bolt"/></svg>Zona de retos</span>
+            <h1 class="retos2-hero__title">Practica. Acierta.<br><span class="banner__title-accent">Sube de nivel.</span></h1>
+            <p class="retos2-hero__sub">Pon a prueba lo que sabes de gastronomía. Cada reto completado suma puntos y cuenta para tu racha.</p>
+            <div class="retos2-hero__prog">
+              <div class="retos2-hero__prog-top"><span><strong>${nHechos}</strong> de ${total} retos superados</span><strong>${pct}%</strong></div>
+              <div class="hero-progress__bar"><div class="hero-progress__fill" style="width:${pct}%"></div></div>
+              <div class="retos2-hero__next">${proxTxt}</div>
+            </div>
+          </div>
+          <aside class="retos2-score">
+            <div class="retos2-score__lbl">Tu marcador</div>
+            <div class="retos2-score__xp">${_progreso.xp}<small>XP de retos</small></div>
+            <div class="retos2-score__stats">
+              <div><strong>${nHechos}/${total}</strong><span>retos</span></div>
+              <div><strong>${_progreso.racha}</strong><span>días de racha</span></div>
+              <div><strong>${MED.filter(m => m.ok).length}/${MED.length}</strong><span>medallas</span></div>
+            </div>
+          </aside>
+        </section>
+
+        <div class="retos2-row">
+          ${nextHtml}
+          <aside class="retos2-mision">
+            <div class="retos2-mision__head">
+              <span class="retos2-mision__ic"><svg class="ic"><use href="#i-check-circle"/></svg></span>
+              <div><div class="retos2-mision__lbl">Misión semanal</div><div class="retos2-mision__pct">${pctMision}% completada</div></div>
+            </div>
+            <div class="hero-progress__bar"><div class="hero-progress__fill" style="width:${pctMision}%"></div></div>
+            ${tareas.map(t => `
+              <div class="retos2-tarea ${t.ok ? 'is-on' : ''}">
+                <span class="retos2-tarea__dot">${t.ok ? '<svg class="ic"><use href="#i-check"/></svg>' : ''}</span>
+                <div><b>${t.t}</b><small>${t.s}</small></div>
+              </div>`).join('')}
+            <div class="retos2-mision__foot">Completa las 3 para dominar la semana</div>
+          </aside>
         </div>
-        <div class="discover-grid">
-          ${RETOS_LIBRARY.map((r,i) => {
-            const meta = RETO_CAT_META[r.categoria] || {icon:'i-bolt', color:'var(--primary)'};
-            const hecho = _progreso.retosCompletados.includes(r.id);
-            const desbloqueado = i===0 || _progreso.retosCompletados.includes(RETOS_LIBRARY[i-1].id);
-            return `
-            <div class="discover-card ${desbloqueado?'':'is-reto-locked'}" style="--cat-color:${meta.color};${desbloqueado?'':'opacity:.55;cursor:not-allowed;'}" data-reto-id="${r.id}" data-reto-locked="${!desbloqueado}">
-              <div class="discover-card__cover"><svg class="ic"><use href="#${desbloqueado?meta.icon:'i-tools'}"/></svg>${hecho?'<span style="position:absolute;top:10px;right:10px;background:rgba(0,0,0,.55);color:#fff;border-radius:100px;padding:3px 9px;font-size:10px;font-weight:700;display:flex;align-items:center;gap:4px;"><svg class="ic" style="width:11px;height:11px;"><use href="#i-check-circle"/></svg>Hecho</span>':(!desbloqueado?'<span style="position:absolute;top:10px;right:10px;background:rgba(0,0,0,.55);color:#fff;border-radius:100px;padding:3px 9px;font-size:10px;font-weight:700;display:flex;align-items:center;gap:4px;">🔒 Bloqueado</span>':'')}</div>
-              <div class="discover-card__body">
-                <div class="discover-card__tags">
-                  <span class="discover-card__cat">${r.categoria}</span>
-                  <span class="discover-card__tipo">${r.dificultad}</span>
-                </div>
-                <h3 class="discover-card__title">${r.titulo}</h3>
-                <p class="discover-card__resumen"><svg class="ic" style="width:11px;height:11px;vertical-align:-1px;color:var(--primary);"><use href="#i-bolt"/></svg> +${r.puntos} pts &nbsp;·&nbsp; <svg class="ic" style="width:11px;height:11px;vertical-align:-1px;"><use href="#i-clock"/></svg> ${RETO_TIEMPO_POR_TIPO[r.tipo]}s</p>
-                <button type="button" class="discover-card__more">${desbloqueado?(hecho?'Volver a intentar':'Iniciar reto'):'Completa el anterior'}<svg class="ic"><use href="#i-arrow-right"/></svg></button>
-              </div>
-            </div>`;
-          }).join('')}
+
+        <div class="retos2-sec">
+          <div><div class="retos2-sec__eyebrow">Entrena tus conocimientos</div><h2 class="retos2-sec__title">Elige cómo practicar</h2></div>
+          <span class="retos2-sec__note">${_progreso.xp} XP acumulados</span>
+        </div>
+        <div class="retos2-modes" id="retos2-modes"></div>
+        <div class="cursos-chips" id="retos2-chips"></div>
+        <div class="retos2-grid" id="retos2-grid"></div>
+
+        <div class="retos2-sec" style="margin-top:38px">
+          <div><div class="retos2-sec__eyebrow">Reconocimientos</div><h2 class="retos2-sec__title">Medallas de retos</h2></div>
+          <span class="retos2-sec__note">${MED.filter(m => m.ok).length}/${MED.length} ganadas</span>
+        </div>
+        <div class="logros2-grid" style="--cols:4">
+          ${MED.map(m => `
+            <div class="logros2-card ${m.ok ? 'is-on' : ''}">
+              <span class="logros2-card__ic"><svg class="ic"><use href="#${m.ic}"/></svg></span>
+              <b>${m.nombre}</b>
+              <span class="logros2-card__desc">${m.desc}</span>
+              ${m.ok ? '<span class="logros2-card__badge is-ok">✓ Logrado</span>' : `<span class="logros2-card__badge">${m.val}/${m.meta}</span>`}
+            </div>`).join('')}
         </div>
       </div>
     `;
-    container.querySelectorAll('[data-reto-id]').forEach(card => {
-      card.addEventListener('click', () => {
-        if(card.dataset.retoLocked === 'true'){
-          Toast.info('Reto bloqueado', 'Completa el reto anterior para desbloquear este.');
-          return;
-        }
-        _abrirReto(card.dataset.retoId);
-      });
-    });
+
+    const $modes = container.querySelector('#retos2-modes');
+    const $chips = container.querySelector('#retos2-chips');
+    const $grid = container.querySelector('#retos2-grid');
+
+    const abrirDesde = (el) => {
+      if (el.dataset.retoLocked === 'true') { Toast.info('Reto bloqueado', 'Completa el reto anterior para desbloquear este.'); return; }
+      _abrirReto(el.dataset.retoId);
+    };
+    const enlazar = (el) => {
+      el.addEventListener('click', () => abrirDesde(el));
+      el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); abrirDesde(el); } });
+    };
+    container.querySelectorAll('.retos2-next[data-reto-id]').forEach(enlazar);
+
+    function pintar(){
+      // Modos de juego (uno por tipo de reto)
+      const modos = Object.keys(RETO_TIPO_META).map(t => {
+        const lista = RETOS_LIBRARY.filter(r => r.tipo === t);
+        return { t, m: RETO_TIPO_META[t], total: lista.length, h: lista.filter(hecho).length };
+      }).filter(x => x.total > 0);
+      $modes.innerHTML = modos.map(x => `
+        <button type="button" class="retos2-mode ${_retosF.tipo === x.t ? 'is-active' : ''}" data-modo="${x.t}">
+          <span class="retos2-mode__ic"><svg class="ic"><use href="#${x.m.ic}"/></svg></span>
+          <span class="retos2-mode__name">${x.m.nombre}</span>
+          <span class="retos2-mode__sub">${x.m.sub}</span>
+          <span class="retos2-mode__bar"><i style="width:${Math.round(x.h / x.total * 100)}%"></i></span>
+          <span class="retos2-mode__count">${x.h}/${x.total} resueltos</span>
+        </button>`).join('');
+      $modes.querySelectorAll('[data-modo]').forEach(b => b.addEventListener('click', () => {
+        _retosF.tipo = (_retosF.tipo === b.dataset.modo) ? 'todos' : b.dataset.modo;
+        pintar();
+      }));
+
+      // Chips de categoría, con conteo dentro del modo elegido
+      const base = RETOS_LIBRARY.filter(r => _retosF.tipo === 'todos' || r.tipo === _retosF.tipo);
+      if (_retosF.cat !== 'todas' && !base.some(r => r.categoria === _retosF.cat)) _retosF.cat = 'todas';
+      const cats = Array.from(new Set(base.map(r => r.categoria)));
+      $chips.innerHTML =
+        `<button type="button" class="cursos-chip ${_retosF.cat === 'todas' ? 'is-active' : ''}" data-cat="todas">Todos<span class="retos2-chip-n">${base.length}</span></button>` +
+        cats.map(c => `<button type="button" class="cursos-chip ${_retosF.cat === c ? 'is-active' : ''}" data-cat="${escapeHtml(c)}">${escapeHtml(c)}<span class="retos2-chip-n">${base.filter(r => r.categoria === c).length}</span></button>`).join('');
+      $chips.querySelectorAll('[data-cat]').forEach(b => b.addEventListener('click', () => { _retosF.cat = b.dataset.cat; pintar(); }));
+
+      // Tarjetas de retos
+      const visibles = RETOS_LIBRARY.map((r, i) => ({ r, i })).filter(({ r }) =>
+        (_retosF.tipo === 'todos' || r.tipo === _retosF.tipo) && (_retosF.cat === 'todas' || r.categoria === _retosF.cat));
+      if (!visibles.length) { $grid.innerHTML = '<div class="mat-empty" style="grid-column:1/-1;">No hay retos con este filtro.</div>'; return; }
+      $grid.innerHTML = visibles.map(({ r, i }) => {
+        const meta = RETO_CAT_META[r.categoria] || { icon:'i-bolt', color:'var(--primary)' };
+        const tm = RETO_TIPO_META[r.tipo] || { corto:'Reto' };
+        const ok = hecho(r), libre = abierto(i), esSig = sig && sig.id === r.id;
+        const estado = ok ? '<span class="retos2-card__st is-done">✓ Resuelto</span>'
+                     : !libre ? `<span class="retos2-card__st is-lock">${_RETO_LOCK}Bloqueado</span>`
+                     : esSig ? '<span class="retos2-card__st is-next">Siguiente</span>'
+                     : '<span class="retos2-card__st">Disponible</span>';
+        const cta = ok ? 'Repetir' : !libre ? 'Completa el anterior' : 'Jugar';
+        return `
+          <div class="retos2-card ${ok ? 'is-done' : ''} ${libre ? '' : 'is-locked'}" role="button" tabindex="0" style="--cat-color:${meta.color}" data-reto-id="${r.id}" data-reto-locked="${!libre}">
+            <div class="retos2-card__top">
+              <span class="retos2-card__cat"><svg class="ic"><use href="#${meta.icon}"/></svg>${escapeHtml(r.categoria)}</span>
+              ${estado}
+            </div>
+            <h3 class="retos2-card__title">${escapeHtml(r.titulo)}</h3>
+            <div class="retos2-card__meta">
+              <span><svg class="ic"><use href="#i-bolt"/></svg>+${r.puntos} pts</span>
+              <span><svg class="ic"><use href="#i-clock"/></svg>${RETO_TIEMPO_POR_TIPO[r.tipo]} s</span>
+              <span>${escapeHtml(tm.corto)} · ${escapeHtml(r.dificultad)}</span>
+            </div>
+            <div class="retos2-card__cta">${cta}${libre ? '<svg class="ic"><use href="#i-arrow-right"/></svg>' : ''}</div>
+          </div>`;
+      }).join('');
+      $grid.querySelectorAll('.retos2-card').forEach(enlazar);
+    }
+    pintar();
   }
 
   const RETO_TIEMPO_POR_TIPO = { secuencia:45, error:60, imagen:20, antesdespues:15 };
