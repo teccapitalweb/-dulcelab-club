@@ -102,6 +102,21 @@ body{
 .nav-item__badge{margin-left:auto;font-size:9px;font-weight:600;padding:1px 7px;border-radius:100px;background:var(--surface-3);color:var(--text-2);letter-spacing:.3px;min-width:20px;text-align:center}
 .nav-item__badge.is-new{background:var(--primary);color:#fff}
 .nav-item__dot{width:7px;height:7px;border-radius:50%;background:var(--danger);margin-left:auto;animation:pulse 1.4s infinite}
+/* MENÚ LATERAL · orden v11 (ref. Visión Pecuaria): Principal → Comunidad → Tu progreso →
+   Herramientas pro, y la cuenta (perfil, suscripción, cerrar sesión) fija abajo, siempre
+   a la vista aunque la lista sea larga. El plan ahora se ve en la tarjeta de usuario. */
+.sidebar{padding-bottom:0}
+.sidebar .brand__plan{display:none}
+.sidebar__foot{margin-top:auto;position:sticky;bottom:0;z-index:2;background:var(--surface-2);border-top:0.5px solid var(--border-2);padding:12px 10px 84px;display:flex;flex-direction:column;gap:2px}
+.side-user{gap:10px;padding:9px 10px;border-radius:12px;background:var(--surface);border:0.5px solid var(--border-2);margin-bottom:6px}
+.side-user:hover{background:var(--surface)}
+.sidebar .side-user.is-active{margin-left:0;border:0.5px solid var(--primary);background:color-mix(in srgb,var(--primary) 8%,var(--surface))}
+.side-user__av{flex:none;width:32px;height:32px;border-radius:50%;background:var(--primary);color:#fff;font-size:11px;font-weight:700;letter-spacing:-.2px;display:flex;align-items:center;justify-content:center}
+.side-user__info{display:flex;flex-direction:column;gap:2px;min-width:0;line-height:1.15}
+.side-user__info b{font-size:12.5px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.side-user__info small{font-size:9px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;color:var(--primary);white-space:nowrap}
+.nav-item--out{color:var(--danger)}
+.nav-item--out:hover{background:color-mix(in srgb,var(--danger) 10%,transparent);color:var(--danger)}
 
 /* Candado visual en Herramientas Pro / Comunidad cuando no hay membresía activa */
 .herramientas-bloqueadas .nav-item[data-tool]::after,
@@ -3840,9 +3855,20 @@ window.__setDisplayName = async (nombre) => {
       <a class="nav-item" data-section="cursos"><svg class="ic"><use href="#i-book"/></svg>Mis cursos</a>
       <a class="nav-item" data-section="webinars"><svg class="ic"><use href="#i-broadcast"/></svg>Clases en vivo<span class="nav-item__dot"></span></a>
       <a class="nav-item" data-section="pdfs"><svg class="ic"><use href="#i-news"/></svg>PDFs y material</a>
+      <a class="nav-item" data-section="retos"><svg class="ic"><use href="#i-bolt"/></svg>Retos</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Comunidad</div>
+      <a class="nav-item" data-section="foro"><svg class="ic"><use href="#i-messages"/></svg>Foro VIP</a>
+      <a class="nav-item" data-section="directorio"><svg class="ic"><use href="#i-users"/></svg>Directorio VIP</a>
+      <a class="nav-item" data-section="canal"><svg class="ic"><use href="#i-whatsapp"/></svg>Canal WhatsApp</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Tu progreso</div>
       <a class="nav-item" data-section="logros"><svg class="ic"><use href="#i-trophy"/></svg>Mis logros</a>
       <a class="nav-item" data-section="certificados"><svg class="ic"><use href="#i-certificate"/></svg>Certificados</a>
-      <a class="nav-item" data-section="retos"><svg class="ic"><use href="#i-bolt"/></svg>Retos</a>
     </div>
 
     <div class="nav-section" data-tour="tools">
@@ -3855,18 +3881,13 @@ window.__setDisplayName = async (nombre) => {
       <a class="nav-item" data-tool="porcion"><svg class="ic"><use href="#i-credit-card"/></svg>Costo por porción</a>
     </div>
 
-    <div class="nav-section">
-      <div class="nav-label">Comunidad</div>
-      <a class="nav-item" data-section="foro"><svg class="ic"><use href="#i-messages"/></svg>Foro VIP</a>
-      <a class="nav-item" data-section="directorio"><svg class="ic"><use href="#i-users"/></svg>Directorio VIP</a>
-      <a class="nav-item" data-section="canal"><svg class="ic"><use href="#i-whatsapp"/></svg>Canal WhatsApp</a>
-    </div>
-
-    <div class="nav-section">
-      <div class="nav-label">Mi cuenta</div>
-      <a class="nav-item" data-section="perfil"><svg class="ic"><use href="#i-user"/></svg>Mi perfil</a>
+    <div class="sidebar__foot">
+      <a class="nav-item side-user" data-section="perfil" title="Mi perfil">
+        <span class="side-user__av" id="side-user-av">IN</span>
+        <span class="side-user__info"><b id="side-user-name">Miembro</b><small id="side-user-plan">VIP</small></span>
+      </a>
       <a class="nav-item" data-section="suscripcion"><svg class="ic"><use href="#i-credit-card"/></svg>Suscripción</a>
-      <a class="nav-item" id="btn-logout"><svg class="ic"><use href="#i-logout"/></svg>Cerrar sesión</a>
+      <a class="nav-item nav-item--out" id="btn-logout"><svg class="ic"><use href="#i-logout"/></svg>Cerrar sesión</a>
     </div>
   </aside>
 
@@ -4074,9 +4095,20 @@ window.__setDisplayName = async (nombre) => {
         <a class="mobile-drawer__item" data-section="cursos"><svg class="ic"><use href="#i-book"/></svg>Mis cursos</a>
         <a class="mobile-drawer__item" data-section="webinars"><svg class="ic"><use href="#i-broadcast"/></svg>Clases en vivo</a>
         <a class="mobile-drawer__item" data-section="pdfs"><svg class="ic"><use href="#i-news"/></svg>PDFs y material</a>
+        <a class="mobile-drawer__item" data-section="retos"><svg class="ic"><use href="#i-bolt"/></svg>Retos</a>
+      </div>
+
+      <div class="mobile-drawer__section">
+        <div class="mobile-drawer__label">Comunidad</div>
+        <a class="mobile-drawer__item" data-section="foro"><svg class="ic"><use href="#i-messages"/></svg>Foro VIP</a>
+        <a class="mobile-drawer__item" data-section="directorio"><svg class="ic"><use href="#i-users"/></svg>Directorio VIP</a>
+        <a class="mobile-drawer__item" data-section="canal"><svg class="ic"><use href="#i-whatsapp"/></svg>Canal WhatsApp</a>
+      </div>
+
+      <div class="mobile-drawer__section">
+        <div class="mobile-drawer__label">Tu progreso</div>
         <a class="mobile-drawer__item" data-section="logros"><svg class="ic"><use href="#i-trophy"/></svg>Mis logros</a>
         <a class="mobile-drawer__item" data-section="certificados"><svg class="ic"><use href="#i-certificate"/></svg>Certificados</a>
-        <a class="mobile-drawer__item" data-section="retos"><svg class="ic"><use href="#i-bolt"/></svg>Retos</a>
       </div>
 
       <div class="mobile-drawer__section" data-tour="tools">
@@ -4087,13 +4119,6 @@ window.__setDisplayName = async (nombre) => {
         <a class="mobile-drawer__item" data-tool="catering"><svg class="ic"><use href="#i-users"/></svg>Porciones para catering</a>
         <a class="mobile-drawer__item" data-tool="horno"><svg class="ic"><use href="#i-gauge"/></svg>Temperaturas de horno</a>
         <a class="mobile-drawer__item" data-tool="porcion"><svg class="ic"><use href="#i-credit-card"/></svg>Costo por porción</a>
-      </div>
-
-      <div class="mobile-drawer__section">
-        <div class="mobile-drawer__label">Comunidad</div>
-        <a class="mobile-drawer__item" data-section="foro"><svg class="ic"><use href="#i-messages"/></svg>Foro VIP</a>
-        <a class="mobile-drawer__item" data-section="directorio"><svg class="ic"><use href="#i-users"/></svg>Directorio VIP</a>
-        <a class="mobile-drawer__item" data-section="canal"><svg class="ic"><use href="#i-whatsapp"/></svg>Canal WhatsApp</a>
       </div>
 
       <div class="mobile-drawer__section">
@@ -12471,6 +12496,14 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
         el.style.color = 'var(--text-3)';
       }
     });
+
+    // ─── Tarjeta de usuario fija abajo del menú lateral (nombre, iniciales y plan) ───
+    const sideAv = document.getElementById('side-user-av');
+    const sideName = document.getElementById('side-user-name');
+    const sidePlan = document.getElementById('side-user-plan');
+    if (sideAv) sideAv.textContent = S.iniciales || 'IN';
+    if (sideName) sideName.textContent = S.modo === 'invitado' ? 'Invitado' : (S.displayName || 'Miembro').split(' ').slice(0,2).join(' ');
+    if (sidePlan && brandPlan) { sidePlan.textContent = brandPlan.textContent; sidePlan.style.color = brandPlan.style.color; }
 
     // ─── Pill del topbar (icono coronita arriba) · muestra NOMBRE del usuario ───
     // (el estado de membresía ya se comunica en el banner naranja superior + drawer)
