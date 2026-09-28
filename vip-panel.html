@@ -2569,7 +2569,7 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 /* Libro 3D */
 .book{position:relative;width:100%;aspect-ratio:3/4;container-type:inline-size;transform-origin:left center;transform:perspective(900px) rotateY(-6deg);transition:transform .4s cubic-bezier(.2,.8,.25,1)}
 .book__pages{position:absolute;top:5px;bottom:5px;right:-6px;width:12px;border-radius:0 4px 4px 0;background:repeating-linear-gradient(180deg,#F4ECE6 0 2px,#D9CDC4 2px 3px);box-shadow:inset -2px 0 3px rgba(0,0,0,.18);z-index:0}
-.book__cover{position:absolute;inset:0;z-index:1;border-radius:3px 9px 9px 3px;overflow:hidden;background:linear-gradient(150deg,var(--b1) 0%,var(--b2) 100%);color:#fff;display:flex;flex-direction:column;justify-content:space-between;padding:11cqw 9cqw 9cqw 14cqw;box-shadow:0 2px 3px rgba(0,0,0,.25),8px 12px 18px -6px rgba(0,0,0,.35),20px 28px 34px -14px rgba(50,8,18,.5)}
+.book__cover{position:absolute;inset:0;z-index:1;border-radius:3px 9px 9px 3px;overflow:hidden;background-color:var(--b2);background-image:linear-gradient(180deg,color-mix(in srgb,var(--b1) 38%,transparent) 0%,color-mix(in srgb,var(--b2) 72%,transparent) 50%,color-mix(in srgb,var(--b2) 94%,transparent) 100%),var(--foto,linear-gradient(150deg,var(--b1),var(--b2))),linear-gradient(150deg,var(--b1),var(--b2));background-size:cover;background-position:center;color:#fff;display:flex;flex-direction:column;justify-content:space-between;padding:11cqw 9cqw 9cqw 14cqw;box-shadow:0 2px 3px rgba(0,0,0,.25),8px 12px 18px -6px rgba(0,0,0,.35),20px 28px 34px -14px rgba(50,8,18,.5)}
 .book__cover::before{content:"";position:absolute;left:0;top:0;bottom:0;width:8%;background:linear-gradient(90deg,rgba(0,0,0,.4),rgba(255,255,255,.16) 40%,rgba(0,0,0,.15) 75%,transparent)}
 .book__cover::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.16) 0%,rgba(255,255,255,0) 38%,rgba(0,0,0,.18) 100%);pointer-events:none}
 .book__top{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;gap:2cqw}
@@ -8730,6 +8730,7 @@ const Sections = (function(){
           cursoDisponibleSiempre: c.disponibleSiempre === true,
           titulo: m.titulo || 'Sin título',
           url: m.url || '',
+          imagen: m.imagen || m.portada || m.cover || '',
           disponibleSiempre: m.disponibleSiempre === true,
           desbloquearEnDias: typeof m.desbloquearEnDias === 'number' ? m.desbloquearEnDias : null
         });
@@ -8810,6 +8811,38 @@ const Sections = (function(){
     return m ? { kicker: m[1].replace(/^m[oó]dulo/i, 'Módulo'), titulo: m[2] } : { kicker: '', titulo: p };
   }
 
+  // Foto de portada según de qué trata el material. Si el material trae su propio
+  // campo `imagen` se usa ese; si no, se busca por palabras clave en el título
+  // (y luego en el curso/área). Todas son fotos de Unsplash (uso libre) de cocina profesional.
+  const _MAT_FOTO_BASE = 'https://images.unsplash.com/photo-';
+  const _MAT_FOTO_Q = '?w=600&q=75&auto=format&fit=crop';
+  const _MAT_FOTOS = {
+    negocio:  '1767785990437-dfe1fe516fe8', // chefs en una cocina de restaurante ocupada
+    receta:   '1762329924239-e204f101fca4', // pasta fresca en cocina profesional
+    almacen:  '1780590107744-42e6f234fd7d', // estantes metálicos, ollas y utensilios
+    merma:    '1675647699232-76b8f533b006', // charolas con distintos alimentos
+    precio:   '1675647729611-47273e75fff9', // mesa buffet con alimentos
+    higiene:  '1784039534969-26e424548f3e', // cocina comercial limpia, acero inoxidable
+    equipo:   '1789568682937-5df65668d8d3', // ollas de acero sobre estufa comercial
+    general:  '1749478072094-d21cb929490c'  // utensilios colgados en cocina profesional
+  };
+  const _MAT_FOTO_REGLAS = [
+    ['merma',   /merma|desperdicio|residuo|desecho|sobrante/],
+    ['almacen', /compra|inventario|insumo|almacen|proveedor|abasto/],
+    ['receta',  /receta|costeo|estandariz|porcion|escandallo|ingrediente|panader|reposter|hornea|masa|pan\b/],
+    ['precio',  /precio|rentabil|menu|venta|utilidad|margen|catering|banquete|evento/],
+    ['higiene', /inocuidad|higiene|sanit|nom-?251|limpieza|desinfec|contaminaci/],
+    ['equipo',  /equipo|maquinaria|estufa|horno|coccion|coccion/],
+    ['negocio', /costo|negocio|estrateg|administr|finanz|gestion|operaci/]
+  ];
+  function _matFoto(m){
+    if (m.imagen) return m.imagen;
+    const norm = (t) => String(t || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const probar = (texto) => { for (const [k, re] of _MAT_FOTO_REGLAS) if (re.test(texto)) return k; return null; };
+    const k = probar(norm(m.titulo)) || probar(norm((m.cursoTitulo || '') + ' ' + (m.cursoArea || ''))) || 'general';
+    return _MAT_FOTO_BASE + _MAT_FOTOS[k] + _MAT_FOTO_Q;
+  }
+
   function _matInfo(m){
     const tipo = _inferirTipoMaterial(m.url);
     const gratis = esMaterialGratis(m.cursoId, m.materialIndex);
@@ -8831,7 +8864,7 @@ const Sections = (function(){
   function _matBookHTML(m, info){
     const p = _matPartirTitulo(m.titulo);
     return `
-      <div class="book ${info.disponible ? '' : 'book--locked'}" style="--b1:${info.T.c[0]};--b2:${info.T.c[1]};">
+      <div class="book ${info.disponible ? '' : 'book--locked'}" style="--b1:${info.T.c[0]};--b2:${info.T.c[1]};--foto:url('${_matFoto(m).replace(/'/g, '%27')}');">
         <span class="book__pages"></span>
         <div class="book__cover">
           <div class="book__top"><span class="book__brand">DulceLab Food</span><span class="book__tipo">${info.T.corto}</span></div>
