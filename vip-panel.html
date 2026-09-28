@@ -3273,7 +3273,7 @@ window.UserState = {
 <script type="module">
 import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence, sendPasswordResetEmail, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, collection, doc, getDoc, getDocs, query, orderBy, onSnapshot, limit, where, addDoc, setDoc, updateDoc, deleteDoc, deleteField, increment, serverTimestamp, Timestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, doc, getDoc, getDocs, query, orderBy, onSnapshot, limit, where, addDoc, setDoc, updateDoc, deleteDoc, deleteField, increment, arrayUnion, serverTimestamp, Timestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDQOWXjkshC2f6io0J8RUSiqAoVVKV-bLA",
@@ -3290,7 +3290,7 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 window.__db = db;
 // Exponer funciones de Firestore para que el script no-module pueda usarlas
-window.__fs = { collection, doc, getDoc, getDocs, query, orderBy, onSnapshot, limit, where, addDoc, setDoc, updateDoc, deleteDoc, deleteField, increment, serverTimestamp, Timestamp, db };
+window.__fs = { collection, doc, getDoc, getDocs, query, orderBy, onSnapshot, limit, where, addDoc, setDoc, updateDoc, deleteDoc, deleteField, increment, arrayUnion, serverTimestamp, Timestamp, db };
 setPersistence(auth, browserLocalPersistence);
 
 /* ══ MODIFICADO · Precios en vivo (Firestore config/club · patrón SYNOVA) ══
@@ -5078,11 +5078,13 @@ const Sections = (function(){
 
   window.marcarClaseVista = function(cursoId, numeroClase) {
     const p = getProgreso();
+    let hayCambio = false;
     if (!p[cursoId]) p[cursoId] = { clasesVistas: [], completado: false, fechaCompletado: null };
     if (!p[cursoId].clasesVistas.includes(numeroClase)) {
       p[cursoId].clasesVistas.push(numeroClase);
       p[cursoId].clasesVistas.sort((a, b) => a - b);
       _registrarActividadHoy();   // para la racha semanal de Logros
+      hayCambio = true;
     }
     setProgreso(p);
 
@@ -5097,9 +5099,164 @@ const Sections = (function(){
       // Mostrar splash de felicitación
       setTimeout(() => mostrarSplashCompletado(curso), 400);
     }
+    if (hayCambio) _encolarSubidaProgreso(cursoId, p);   // también a Firestore (multi-dispositivo)
     if (typeof populateHeroCourse === 'function') populateHeroCourse();
     return p[cursoId];
   };
+
+  // ═══════════════════════════════════════════════════════════════
+  // 🔄 SINCRONIZACIÓN DEL AVANCE CON FIRESTORE (varios dispositivos)
+  // El avance por clase vivía solo en el navegador (localStorage). Ahora se guarda
+  // también en Firestore, en progreso/{uid} (campos `clases` y `actividad`), y al
+  // entrar se UNEN los dos: las clases vistas solo se agregan, nunca se quitan, así
+  // que lo visto en el celular y en la laptop se suma sin pisarse. localStorage
+  // queda como copia para que el panel cargue rápido y siga sirviendo sin internet.
+  // ═══════════════════════════════════════════════════════════════
+  function _progRef(){
+    const fs = window.__fs, uid = window.UserState?.uid;
+    return (fs && fs.db && fs.doc && uid) ? fs.doc(fs.db, 'progreso', uid) : null;
+  }
+  const _igualJSON = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+
+  // Une dos mapas { cursoId: {clasesVistas, completado, fechaCompletado} } sin perder nada
+  function _unirProgreso(a, b){
+    const out = {};
+    new Set([...Object.keys(a || {}), ...Object.keys(b || {})]).forEach(id => {
+      const x = (a && a[id]) || {}, y = (b && b[id]) || {};
+      const vistas = Array.from(new Set([...(x.clasesVistas || []), ...(y.clasesVistas || [])])).sort((m, n) => m - n);
+      const fechas = [x.fechaCompletado, y.fechaCompletado].filter(Boolean).sort();
+      out[id] = { clasesVistas: vistas, completado: !!(x.completado || y.completado), fechaCompletado: fechas[0] || null };
+    });
+    return out;
+  }
+  const _unirActividad = (a, b) => Array.from(new Set([...(a || []), ...(b || [])])).sort().slice(-400);
+
+  // Arma lo que hay que escribir en Firestore (con arrayUnion, para no pisar a otro dispositivo)
+  function _payloadProgreso(deseado, remoto, actividad, actRemota){
+    const fs = window.__fs;
+    const clases = {};
+    Object.entries(deseado || {}).forEach(([id, u]) => {
+      const r = (remoto && remoto[id]) || {};
+      const e = {};
+      const nuevas = (u.clasesVistas || []).filter(n => !(r.clasesVistas || []).includes(n));
+      if (nuevas.length) e.clasesVistas = fs.arrayUnion(...nuevas);
+      if (u.completado && !r.completado) e.completado = true;
+      if (u.fechaCompletado && u.fechaCompletado !== r.fechaCompletado) e.fechaCompletado = u.fechaCompletado;
+      if (Object.keys(e).length) clases[id] = e;
+    });
+    const payload = {};
+    if (Object.keys(clases).length) payload.clases = clases;
+    const actNuevas = (actividad || []).filter(d => !(actRemota || []).includes(d));
+    if (actNuevas.length) payload.actividad = fs.arrayUnion(...actNuevas);
+    if (!Object.keys(payload).length) return null;
+    payload.clasesActualizado = fs.serverTimestamp();
+    return payload;
+  }
+
+  let _syncProgEnCurso = null, _syncProgUltima = 0, _progDocListo = false;
+  window.__progresoSyncSinPermiso = false;
+
+  async function sincronizarProgresoClases(){
+    if (_syncProgEnCurso) return _syncProgEnCurso;
+    const ref = _progRef();
+    if (!ref) return { cambio: false };
+    _syncProgEnCurso = (async () => {
+      const fs = window.__fs;
+      try {
+        const snap = await fs.getDoc(ref);
+        const d = snap.exists() ? snap.data() : {};
+        const remoto = d.clases || {}, actRemota = d.actividad || [];
+        const local = getProgreso(), actLocal = _getActividad();
+        const unido = _unirProgreso(local, remoto);
+        const actUnida = _unirActividad(actLocal, actRemota);
+
+        // Cursos que quedaron completos al juntar dispositivos (p. ej. 2 clases en el cel y 2 en la laptop)
+        const recienCompletos = [];
+        (cursos || []).forEach(c => {
+          const u = unido[c.id];
+          if (u && c.sesiones?.length && u.clasesVistas.length >= c.sesiones.length && !u.completado) {
+            u.completado = true; u.fechaCompletado = u.fechaCompletado || new Date().toISOString();
+            recienCompletos.push(c);
+          }
+        });
+
+        const cambio = !_igualJSON(unido, local) || !_igualJSON(actUnida, actLocal);
+        if (cambio) {
+          setProgreso(unido);
+          try { localStorage.setItem(_actKey(), JSON.stringify(actUnida)); } catch {}
+        }
+        const payload = _payloadProgreso(unido, remoto, actUnida, actRemota);
+        if (payload && !snap.exists()) {
+          // Las reglas de Firestore solo dejan CREAR progreso/{uid} si trae xp:0, racha:0 y retosCompletados vacío
+          Object.assign(payload, { xp: 0, racha: 0, ultimaActividad: null, retosCompletados: [], logrosDesbloqueados: [] });
+        }
+        if (payload) await fs.setDoc(ref, payload, { merge: true });
+        if (payload || snap.exists()) _progDocListo = true;
+        window.__progresoSyncSinPermiso = false;
+        recienCompletos.forEach(c => emitirCertificadoFirestore(c));
+        _syncProgUltima = Date.now();
+        return { cambio };
+      } catch (e) {
+        console.warn('[progreso] no se pudo sincronizar con Firestore (revisa reglas de progreso/{uid}):', e.message);
+        if (/permission/i.test(e?.code || '') || /permission/i.test(e?.message || '')) window.__progresoSyncSinPermiso = true;
+        return { cambio: false, error: true };
+      } finally { _syncProgEnCurso = null; }
+    })();
+    return _syncProgEnCurso;
+  }
+  window.__sincronizarProgresoClases = sincronizarProgresoClases;
+
+  // Sube al momento cada clase que se marca como vista (con un respiro de 0.6 s por si se marcan varias)
+  let _subidaTimer = null;
+  const _subidaPend = { clases: {}, actividad: false };
+  function _encolarSubidaProgreso(cursoId, p){
+    _subidaPend.clases[cursoId] = true;
+    _subidaPend.actividad = true;
+    clearTimeout(_subidaTimer);
+    _subidaTimer = setTimeout(async () => {
+      const ref = _progRef();
+      if (!ref) return;
+      if (!_progDocListo) { await sincronizarProgresoClases(); return; }   // primera vez: crea el documento con sus campos base
+      const fs = window.__fs;
+      const deseado = {};
+      Object.keys(_subidaPend.clases).forEach(id => { deseado[id] = (p && p[id]) || getProgresoCurso(id); });
+      _subidaPend.clases = {}; _subidaPend.actividad = false;
+      try {
+        const payload = _payloadProgreso(deseado, {}, _getActividad(), []);
+        if (payload) await fs.setDoc(ref, payload, { merge: true });
+        window.__progresoSyncSinPermiso = false;
+      } catch (e) {
+        console.warn('[progreso] no se pudo subir el avance (se reintenta en la próxima sincronización):', e.message);
+        if (/permission/i.test(e?.code || '') || /permission/i.test(e?.message || '')) window.__progresoSyncSinPermiso = true;
+      }
+    }, 600);
+  }
+
+  // Refresca lo que se está viendo cuando llega avance de otro dispositivo
+  function _refrescarVistaProgreso(){
+    try {
+      if (typeof populateHeroCourse === 'function') populateHeroCourse();
+      const activa = document.querySelector('.sidebar .nav-item.is-active')?.dataset.section;
+      const dyn = document.getElementById('dynamic-section');
+      if (activa && dyn && dyn.style.display !== 'none' && ['cursos', 'logros'].includes(activa) && Sections.renderers[activa]) {
+        const y = window.scrollY;
+        dyn.innerHTML = ''; Sections.renderers[activa](dyn);
+        window.scrollTo({ top: y, behavior: 'instant' });
+      }
+      if (typeof window.__actualizarWidgetsActividad === 'function') window.__actualizarWidgetsActividad();
+    } catch (e) {}
+  }
+  // Se llama al iniciar sesión y cada vez que el alumno regresa a la pestaña / app
+  window.__iniciarSyncProgreso = async function(){
+    await _asegurarCursos();
+    const r = await sincronizarProgresoClases();
+    if (r && r.cambio) _refrescarVistaProgreso();
+  };
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && window.UserState?.uid && Date.now() - _syncProgUltima > 45000) {
+      sincronizarProgresoClases().then(r => { if (r && r.cambio) _refrescarVistaProgreso(); });
+    }
+  });
 
   function claseDesbloqueada(cursoId, indexClase, sesiones) {
     if (!tieneAccesoVipCompleto()) {
@@ -7758,7 +7915,7 @@ const Sections = (function(){
       if(snap.exists()){
         _progreso = Object.assign({xp:0,racha:0,ultimaActividad:null,retosCompletados:[],logrosDesbloqueados:[]}, snap.data());
       } else {
-        await fs.setDoc(ref, _progreso);
+        await fs.setDoc(ref, _progreso, { merge:true });
       }
     } catch(e){
       console.warn('[progreso] no se pudo cargar (revisa reglas de Firestore para progreso/{uid}):', e.message);
@@ -7772,7 +7929,9 @@ const Sections = (function(){
       const fs = window.__fs; const db = window.__db;
       const uid = window.UserState?.uid;
       if(!fs || !db || !uid) return false;
-      await fs.setDoc(fs.doc(db,'progreso',uid), _progreso);
+      // merge + solo los campos de retos: así no se borra el avance por clase (`clases`, `actividad`)
+      const { xp, racha, ultimaActividad, retosCompletados, logrosDesbloqueados } = _progreso;
+      await fs.setDoc(fs.doc(db,'progreso',uid), { xp, racha, ultimaActividad, retosCompletados, logrosDesbloqueados }, { merge:true });
       _progresoSinPermiso = false;
       return true;
     } catch(e){
@@ -12042,6 +12201,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
         : 'Continúa tu<br><span class="banner__title-accent">curso.</span>';
     }
     if (typeof window.__populateHeroCourse === 'function') window.__populateHeroCourse();
+    if (S.uid && S.modo !== 'invitado' && typeof window.__iniciarSyncProgreso === 'function') window.__iniciarSyncProgreso();
 
     // 3. Banner sticky FOMO (solo no-VIP)
     const banner = document.getElementById('fomo-banner');
