@@ -1000,6 +1000,47 @@ body{
 }
 
 .logros-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+
+/* ═══ LOGROS · rediseño v9 (ref. Visión Pecuaria) ═══ */
+.logros2-head{margin-bottom:18px}
+.logros2-head__eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:var(--primary)}
+.logros2-head__title{font-size:clamp(28px,3.4vw,42px);font-weight:800;letter-spacing:-1.2px;line-height:1.08;margin-top:6px;color:var(--text)}
+.logros2-head__title span{color:var(--primary)}
+.logros2-hero{background:linear-gradient(135deg,var(--primary-deep) 0%,var(--primary) 100%);color:#F5EFE8;border-radius:20px;padding:30px 32px;position:relative;overflow:hidden;margin-bottom:6px}
+.logros2-hero::before{content:"";position:absolute;left:0;right:0;bottom:0;height:60%;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 200' preserveAspectRatio='none'%3E%3Cpath d='M0,140 C150,180 350,100 600,140 L600,200 L0,200 Z' fill='rgba(255,255,255,0.035)'/%3E%3Cpath d='M0,165 C180,198 400,125 600,165 L600,200 L0,200 Z' fill='rgba(255,255,255,0.06)'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:bottom;background-size:100% 100%;pointer-events:none}
+.logros2-hero > *{position:relative;z-index:1}
+.logros2-hero__top{display:flex;justify-content:space-between;align-items:flex-start;gap:20px}
+.logros2-hero__pts{font-size:clamp(34px,4.4vw,52px);font-weight:800;letter-spacing:-1.5px;line-height:1;margin-top:16px;color:#fff}
+.logros2-hero__sub{font-size:13.5px;color:rgba(245,239,232,.85);margin-top:10px;line-height:1.5}
+.logros2-ring{position:relative;flex:none;width:84px;height:84px;border-radius:50%;background:#fff;color:var(--primary-deep);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 22px rgba(0,0,0,.25)}
+.logros2-ring svg{position:absolute;inset:4px;width:76px;height:76px;fill:none}
+.logros2-ring__bg{stroke:rgba(0,0,0,.08);stroke-width:5}
+.logros2-ring__fg{stroke:var(--primary);stroke-width:5;stroke-linecap:round}
+.logros2-ring span{position:relative;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700}
+.logros2-hero .hero-progress__bar{margin-top:22px}
+.logros2-hero__stats{display:flex;align-items:flex-end;gap:32px;flex-wrap:wrap;margin-top:20px;padding-top:18px;border-top:1px solid rgba(255,255,255,.14)}
+.logros2-hero__stats strong{display:block;font-size:22px;font-weight:700;color:#fff;line-height:1}
+.logros2-hero__stats .lbl{display:block;font-size:11.5px;color:rgba(245,239,232,.62);margin-top:5px}
+.logros2-week{display:flex;gap:6px;margin-left:auto}
+.logros2-week i{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-style:normal;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;background:rgba(255,255,255,.12);color:rgba(245,239,232,.7)}
+.logros2-week i.is-on{background:#F0C868;color:var(--primary-deep)}
+.logros2-week i.is-today{outline:1.5px solid rgba(255,255,255,.75);outline-offset:1px}
+.logros2-group{font-size:16px;font-weight:700;letter-spacing:-.2px;margin:30px 0 12px;color:var(--text)}
+.logros2-grid{display:grid;grid-template-columns:repeat(var(--cols,4),1fr);gap:14px}
+.logros2-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:22px 16px 18px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px}
+.logros2-card__ic{width:56px;height:56px;border-radius:50%;background:var(--surface-2);color:var(--text-3);display:flex;align-items:center;justify-content:center;margin-bottom:6px}
+.logros2-card__ic .ic{width:24px;height:24px}
+.logros2-card.is-on .logros2-card__ic{background:var(--primary);color:#fff;box-shadow:0 8px 18px color-mix(in srgb,var(--primary) 40%,transparent)}
+.logros2-card b{font-size:13px;font-weight:700;color:var(--text)}
+.logros2-card__desc{font-size:12px;color:var(--text-3);line-height:1.4}
+.logros2-card__badge{margin-top:6px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;padding:4px 12px;border-radius:100px;background:var(--surface-2);color:var(--text-2)}
+.logros2-card__badge.is-ok{background:color-mix(in srgb,#E5C171 30%,transparent);color:#8A6418}
+@media (max-width:880px){
+  .logros2-hero{padding:22px 20px}
+  .logros2-grid{grid-template-columns:repeat(2,1fr)}
+  .logros2-week{margin-left:0;width:100%}
+}
+
 .logro{
   background:var(--surface);
   border:1px solid var(--border);
@@ -5041,6 +5082,7 @@ const Sections = (function(){
     if (!p[cursoId].clasesVistas.includes(numeroClase)) {
       p[cursoId].clasesVistas.push(numeroClase);
       p[cursoId].clasesVistas.sort((a, b) => a - b);
+      _registrarActividadHoy();   // para la racha semanal de Logros
     }
     setProgreso(p);
 
@@ -6494,11 +6536,11 @@ const Sections = (function(){
   const certificados = []; // se llenarán con los certificados reales emitidos
 
   const niveles = [
-    {id:1,nombre:'Aprendiz',desde:0,hasta:200},
-    {id:2,nombre:'Técnico',desde:200,hasta:600},
-    {id:3,nombre:'Profesional',desde:600,hasta:1200},
-    {id:4,nombre:'Líder',desde:1200,hasta:2400},
-    {id:5,nombre:'Maestro',desde:2400,hasta:99999}
+    {id:1,nombre:'Aprendiz',desde:0,hasta:100},
+    {id:2,nombre:'Técnico',desde:100,hasta:300},
+    {id:3,nombre:'Profesional',desde:300,hasta:600},
+    {id:4,nombre:'Líder',desde:600,hasta:1000},
+    {id:5,nombre:'Maestro',desde:1000,hasta:99999}
   ];
 
   const logros = [
@@ -8330,100 +8372,157 @@ const Sections = (function(){
     });
   }
 
-  function renderLogros(container){
-    if(!_progresoListo){
-      container.innerHTML = '<div class="fade-up"><div class="foro-empty">Cargando tu progreso…</div></div>';
-      _cargarProgreso().then(()=>renderLogros(container));
-      return;
-    }
-    // Sincroniza con el progreso real guardado en Firestore (antes usuario.xp
-    // se quedaba fijo en 0 para siempre; ahora refleja lo que el miembro
-    // realmente ganó completando retos).
-    usuario.xp = _progreso.xp;
-    usuario.racha = _progreso.racha;
-    if(!logros.find(l=>l.id==='rt1')){
-      LOGROS_RETOS.forEach(l => logros.push(l));
-    }
-    logros.forEach(l => { l.unlock = _progreso.logrosDesbloqueados.includes(l.id) ? true : l.unlock; });
-    const nivelActual=getNivel(usuario.xp);
-    const pct=Math.round(((usuario.xp-nivelActual.desde)/(nivelActual.hasta-nivelActual.desde))*100);
-    const xpRest=nivelActual.hasta-usuario.xp;
-    const proxNivel=niveles[nivelActual.id]?.nombre||'Maestro';
-    const ganados=logros.filter(l=>l.unlock).length;
-    const totalXp=logros.filter(l=>l.unlock).reduce((s,l)=>s+l.xp,0);
-    const cats=['Repostería','Panadería','Cocina','Costos','Inocuidad','Catering','Bebidas','Comunidad','Maestría'];
-    container.innerHTML=`
-      <div class="fade-up">
-        <div class="sec-hero">
-          <span class="sec-hero__eyebrow">Tu progreso</span>
-          <h1 class="sec-hero__title">Mis logros</h1>
-          <p class="sec-hero__sub">Cada curso, herramienta y participación te suma XP. Sube de nivel y desbloquea medallas. Llega a <em style="color:var(--primary);">Maestro</em>.</p>
-        </div>
-        <div class="logro-hero">
-          <div class="logro-hero__row">
-            <div class="logro-hero__icon"><svg class="ic ic--xl"><use href="#i-bn-toque"/></svg></div>
-            <div>
-              <div class="logro-hero__lbl">Nivel ${nivelActual.id} de 5</div>
-              <div class="logro-hero__name">${nivelActual.nombre}</div>
-            </div>
-            <div class="logro-hero__racha">
-              <svg class="ic" style="width:14px;height:14px;color:var(--primary);"><use href="#i-bolt"/></svg>
-              <span class="logro-hero__racha-num">${usuario.racha}</span>
-              <span class="logro-hero__racha-lbl">días</span>
-            </div>
-          </div>
-          <div class="logro-hero__xp-bar"><div class="logro-hero__xp-fill" style="width:${pct}%"></div></div>
-          <div class="logro-hero__xp-text"><span><strong>${usuario.xp}</strong> XP</span><span>${xpRest>0?xpRest+' XP para '+proxNivel:'¡Nivel máximo!'}</span><span><strong>${nivelActual.hasta===99999?'∞':nivelActual.hasta}</strong> XP</span></div>
-        </div>
+  // ═══════════════════════════════════════════════════════════════
+  // LOGROS · rediseño v9 (ref. Visión Pecuaria) — ahora se calcula de las CLASES
+  // Antes los puntos y la racha salían de los retos (Firestore progreso/{uid}).
+  // Ahora salen del avance real por clase: 10 puntos por clase vista y 50 por
+  // curso completado. La racha son semanas seguidas con al menos una clase vista;
+  // para eso se guarda el día de cada actividad (a partir de esta versión).
+  // Los retos siguen sumando sus propios puntos en su sección, ya no aquí.
+  // ═══════════════════════════════════════════════════════════════
+  const PUNTOS_POR_CLASE = 10, PUNTOS_POR_CURSO = 50;
 
-        <section class="nivel-path" style="--nivel-progress:${Math.max(7,Math.min(93,((nivelActual.id-1)/(niveles.length-1))*100+(pct/100)*(100/(niveles.length-1))))}%">
-          <div class="nivel-path__title">Tu camino de aprendiz a maestro</div>
-          <div class="nivel-path__track">
-            ${niveles.map((n,idx)=>{
-              const emojis=['<svg class="ic" style="width:22px;height:22px"><use href="#i-bn-toque"/></svg>','<svg class="ic" style="width:22px;height:22px"><use href="#i-bn-whisk"/></svg>','<svg class="ic" style="width:22px;height:22px"><use href="#i-bn-rollingpin"/></svg>','<svg class="ic" style="width:22px;height:22px"><use href="#i-bn-flame"/></svg>','<svg class="ic" style="width:22px;height:22px"><use href="#i-trophy"/></svg>'];
-              const isCurrent=n.id===nivelActual.id;
-              const isDone=n.id<nivelActual.id;
-              const cls=isCurrent?'is-current':isDone?'is-done':'is-locked';
-              return `<div class="nivel-step ${cls}">
-                <div class="nivel-step__icon">${emojis[idx]||'·'}</div>
-                <div class="nivel-step__name">${n.nombre}</div>
-                <div class="nivel-step__xp">${isCurrent?'TÚ':n.desde+'+ XP'}</div>
-              </div>`;
-            }).join('')}
-          </div>
-        </section>
-
-        <div class="kpi-grid">
-          <div class="kpi-card"><div class="kpi-card__label">Logros ganados</div><div class="kpi-card__value">${ganados}<span class="kpi-card__value-sub">/${logros.length}</span></div></div>
-          <div class="kpi-card"><div class="kpi-card__label">XP de logros</div><div class="kpi-card__value">${totalXp}</div></div>
-          <div class="kpi-card"><div class="kpi-card__label">Días activos</div><div class="kpi-card__value">${usuario.diasActivos}</div></div>
-          <div class="kpi-card"><div class="kpi-card__label">Racha</div><div class="kpi-card__value">${usuario.racha}</div></div>
-        </div>
-        ${cats.map(cat=>`
-          <section class="logros-cat" style="--cat-color:${COLOR_CAT[cat]};">
-            <div class="logros-cat__header">
-              <div class="logros-cat__icon"><svg class="ic"><use href="#${ICON_CAT[cat]}"/></svg></div>
-              <h2 class="logros-cat__title">${cat}</h2>
-              <span class="logros-cat__count">${logros.filter(l=>l.cat===cat&&l.unlock).length}/${logros.filter(l=>l.cat===cat).length}</span>
-            </div>
-            <div class="logros-grid">
-              ${logros.filter(l=>l.cat===cat).map(l=>`
-                <div class="logro ${l.unlock?'is-unlocked':'is-locked'}" data-lid="${l.id}" tabindex="0" style="--cat-color:${COLOR_CAT[cat]};">
-                  <div class="logro__icon">${l.unlock?`<svg class="ic"><use href="#${ICON_CAT[cat]}"/></svg>`:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>'}</div>
-                  <div class="logro__name">${l.nombre}</div>
-                  <div class="logro__xp">+${l.xp} XP</div>
-                </div>
-              `).join('')}
-            </div>
-          </section>
-        `).join('')}
-      </div>
-    `;
-    container.querySelectorAll('.logro').forEach(el=>{
-      el.addEventListener('click',()=>openLogroDetalle(el.dataset.lid));
-      el.addEventListener('keydown',e=>{if(e.key==='Enter')openLogroDetalle(el.dataset.lid);});
+  function _fechaLocalISO(d){ return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+  function _actKey(){ return 'dulcelab_actividad_' + (window.UserState?.uid || 'demo'); }
+  function _getActividad(){
+    try { const a = JSON.parse(localStorage.getItem(_actKey()) || '[]'); return Array.isArray(a) ? a : []; }
+    catch { return []; }
+  }
+  function _registrarActividadHoy(){
+    const hoy = _fechaLocalISO(new Date());
+    const a = _getActividad();
+    if (a.includes(hoy)) return;
+    a.push(hoy);
+    try { localStorage.setItem(_actKey(), JSON.stringify(a.slice(-400))); } catch {}
+  }
+  function _lunesDe(d){
+    const x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    x.setDate(x.getDate() - ((x.getDay() + 6) % 7));
+    return x;
+  }
+  function _semanasSeguidas(act){
+    if (!act.length) return 0;
+    const semanas = new Set(act.map(s => { const [y, m, d] = s.split('-').map(Number); return _fechaLocalISO(_lunesDe(new Date(y, m - 1, d))); }));
+    const cursor = _lunesDe(new Date());
+    if (!semanas.has(_fechaLocalISO(cursor))) cursor.setDate(cursor.getDate() - 7);   // la semana en curso todavía puede llenarse
+    let n = 0;
+    while (semanas.has(_fechaLocalISO(cursor))) { n++; cursor.setDate(cursor.getDate() - 7); }
+    return n;
+  }
+  function _diasSemanaActual(act){
+    const lun = _lunesDe(new Date()), set = new Set(act), hoy = _fechaLocalISO(new Date());
+    return Array.from({ length: 7 }, (_, i) => {
+      const d = new Date(lun); d.setDate(lun.getDate() + i);
+      const iso = _fechaLocalISO(d);
+      return { lbl: 'LMMJVSD'[i], on: set.has(iso), hoy: iso === hoy };
     });
   }
+  function _statsLogros(){
+    let clases = 0, completados = 0;
+    const areas = new Set();
+    (cursos || []).forEach(c => {
+      const v = getProgresoCurso(c.id).clasesVistas.length;
+      clases += v;
+      if (c.sesiones?.length && v >= c.sesiones.length) { completados++; if (c.area) areas.add(c.area); }
+    });
+    const act = _getActividad();
+    return {
+      clases, completados, areas: areas.size, totalCursos: (cursos || []).length,
+      puntos: clases * PUNTOS_POR_CLASE + completados * PUNTOS_POR_CURSO,
+      semanas: _semanasSeguidas(act), diasSemana: _diasSemanaActual(act)
+    };
+  }
+  async function _asegurarCursos(){
+    if (_cursosLoaded) return;
+    if (!_cursosLoading) { await cargarCursosFirestore(); return; }
+    for (let i = 0; i < 40 && !_cursosLoaded; i++) await new Promise(r => setTimeout(r, 150));
+  }
+
+  const LOGROS_CLASES = [
+    { grupo: 'Constancia', items: [
+      { id:'c1', nombre:'Primer paso',  desc:'Completaste tu primera clase',   ic:'i-check-circle', meta:1, val:s => s.clases },
+      { id:'c2', nombre:'En marcha',    desc:'5 clases vistas',                ic:'i-play',         meta:5, val:s => s.clases },
+      { id:'c3', nombre:'Constante',    desc:'3 semanas seguidas estudiando',  ic:'i-bn-flame',     meta:3, val:s => s.semanas },
+      { id:'c4', nombre:'Imparable',    desc:'8 semanas seguidas',             ic:'i-bolt',         meta:8, val:s => s.semanas } ] },
+    { grupo: 'Certificación', items: [
+      { id:'k1', nombre:'Certificado',  desc:'Termina tu primer curso',        ic:'i-certificate',  meta:1, val:s => s.completados },
+      { id:'k2', nombre:'Especialista', desc:'3 cursos certificados',          ic:'i-shield-check', meta:3, val:s => s.completados } ] },
+    { grupo: 'Especialización', items: [
+      { id:'e1', nombre:'Multidisciplinar', desc:'Cursos completados en 3 áreas distintas', ic:'i-folder', meta:3, val:s => s.areas } ] },
+    { grupo: 'Maestría', items: [
+      { id:'m1', nombre:'Maestro DulceLab Food', desc:'10 cursos certificados', ic:'i-crown', meta:10, val:s => s.completados },
+      { id:'m2', nombre:'Coleccionista', desc:s => `Todos los cursos del catálogo (${s.totalCursos})`, ic:'i-book', meta:s => Math.max(s.totalCursos, 1), val:s => s.completados } ] }
+  ];
+
+  async function renderLogros(container){
+    if (!_cursosLoaded) {
+      container.innerHTML = '<div class="fade-up"><div class="foro-empty">Cargando tu progreso…</div></div>';
+      await _asegurarCursos();
+    }
+    const S = _statsLogros();
+    usuario.xp = S.puntos;
+    usuario.racha = S.semanas;
+
+    const nivel = getNivel(S.puntos);
+    const esMax = nivel.id === niveles.length;
+    const pct = esMax ? 100 : Math.max(0, Math.min(100, Math.round(((S.puntos - nivel.desde) / (nivel.hasta - nivel.desde)) * 100)));
+    const falta = nivel.hasta - S.puntos;
+    const proxNivel = niveles[nivel.id]?.nombre || '';
+
+    const grupos = LOGROS_CLASES.map(g => ({
+      grupo: g.grupo,
+      items: g.items.map(it => {
+        const meta = typeof it.meta === 'function' ? it.meta(S) : it.meta;
+        const real = it.val(S);
+        return { id: it.id, nombre: it.nombre, ic: it.ic, meta, val: Math.min(real, meta), ok: real >= meta,
+                 desc: typeof it.desc === 'function' ? it.desc(S) : it.desc };
+      })
+    }));
+    const total = grupos.reduce((s, g) => s + g.items.length, 0);
+    const ganados = grupos.reduce((s, g) => s + g.items.filter(i => i.ok).length, 0);
+    const C = 2 * Math.PI * 34, dash = (ganados / total) * C;
+
+    container.innerHTML = `
+      <div class="fade-up">
+        <div class="logros2-head">
+          <span class="logros2-head__eyebrow">Logros</span>
+          <h1 class="logros2-head__title">Tu camino en <span>DulceLab Food</span></h1>
+        </div>
+        <section class="logros2-hero">
+          <div class="logros2-hero__top">
+            <div>
+              <span class="banner__eyebrow"><svg class="ic ic--sm"><use href="#i-crown"/></svg>Nivel ${escapeHtml(nivel.nombre)}</span>
+              <div class="logros2-hero__pts">${S.puntos} puntos</div>
+              <p class="logros2-hero__sub">${esMax ? '¡Alcanzaste el nivel máximo!' : `${falta} puntos para ${escapeHtml(proxNivel)}`} · ${PUNTOS_POR_CLASE} por clase, ${PUNTOS_POR_CURSO} por curso</p>
+            </div>
+            <div class="logros2-ring" title="${ganados} de ${total} logros">
+              <svg viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="34" class="logros2-ring__bg"/><circle cx="40" cy="40" r="34" class="logros2-ring__fg" stroke-dasharray="${dash.toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 40 40)"/></svg>
+              <span>${ganados}/${total}</span>
+            </div>
+          </div>
+          <div class="hero-progress__bar"><div class="hero-progress__fill" style="width:${pct}%"></div></div>
+          <div class="logros2-hero__stats">
+            <div><strong>${S.semanas}</strong><span class="lbl">semanas de racha</span></div>
+            <div><strong>${S.clases}</strong><span class="lbl">clases vistas</span></div>
+            <div><strong>${S.completados}</strong><span class="lbl">de ${S.totalCursos} curso${S.totalCursos !== 1 ? 's' : ''}</span></div>
+            <div class="logros2-week" title="Días de esta semana con actividad">${S.diasSemana.map(d => `<i class="${d.on ? 'is-on' : ''} ${d.hoy ? 'is-today' : ''}">${d.lbl}</i>`).join('')}</div>
+          </div>
+        </section>
+        ${grupos.map(g => `
+          <h2 class="logros2-group">${escapeHtml(g.grupo)}</h2>
+          <div class="logros2-grid" style="--cols:${Math.min(g.items.length, 4)}">
+            ${g.items.map(i => `
+              <div class="logros2-card ${i.ok ? 'is-on' : ''}">
+                <span class="logros2-card__ic"><svg class="ic"><use href="#${i.ic}"/></svg></span>
+                <b>${escapeHtml(i.nombre)}</b>
+                <span class="logros2-card__desc">${escapeHtml(i.desc)}</span>
+                ${i.ok ? '<span class="logros2-card__badge is-ok">✓ Logrado</span>' : `<span class="logros2-card__badge">${i.val}/${i.meta}</span>`}
+              </div>`).join('')}
+          </div>`).join('')}
+      </div>
+    `;
+  }
+
   function openLogroDetalle(id){
     const l=logros.find(x=>x.id===id);if(!l)return;
     const body=`
@@ -10169,6 +10268,7 @@ const Sections = (function(){
     // su plan real. Ahora se calculan con los mismos datos reales que usa el resto del panel.
     const _planLabels = {mensual:'VIP Mensual', anual:'VIP Anual', regalo:'Acceso de regalo', admin:'Administrador'};
     const _planTxt = _planLabels[S.plan] || 'Miembro';
+    try { usuario.xp = _statsLogros().puntos; } catch (e) {}
     const _nivelReal = getNivel(usuario.xp);
     const _nivelTxt = 'Nivel '+_nivelReal.id+' · '+_nivelReal.nombre;
     let _desdeTxt = '';
@@ -12773,4 +12873,3 @@ window.DulceLabOnboarding = new window.MembershipTour({
 </script>
 </body>
 </html>
-          
