@@ -38,8 +38,8 @@ input,select,textarea{font:inherit;color:inherit}
   --surface:#151210;--surface-2:#1E1915;--surface-3:#241E19;
   --border:rgba(245,239,232,0.08);--border-2:rgba(245,239,232,0.14);--border-strong:rgba(245,239,232,0.22);
   --text:#F5EFE8;--text-2:#C9B8AE;--text-3:#8C7A70;
-  --primary:#6B1526;--primary-soft:#C4577A;--primary-deep:#4A0E1A;
-  --primary-glow:rgba(107,21,38,0.18);--highlight:#C4577A;
+  --primary:#B98B52;--primary-soft:#D9B77C;--primary-deep:#34271C;
+  --primary-glow:rgba(185,139,82,0.14);--highlight:#D9B77C;
   --success:#7A9A6E;--danger:#C1594A;--warning:#C99A3D;--whatsapp:#22C55E;
   --shadow-card:0 2px 8px rgba(0,0,0,0.45);
 }
@@ -92,6 +92,9 @@ body{
 .brand__logo img{width:32px;height:32px;object-fit:contain;display:block}
 .brand__name{font-size:14px;font-weight:600;letter-spacing:-.2px;line-height:1.1}
 .brand__plan{display:inline-block;font-size:9px;letter-spacing:1.4px;text-transform:uppercase;color:var(--primary);font-weight:700;margin-top:3px;padding:2px 7px;border-radius:100px;background:color-mix(in srgb,var(--primary) 12%,transparent);border:0.5px solid color-mix(in srgb,var(--primary) 30%,transparent)}
+.brand--logo-only{justify-content:center;padding:12px 16px 14px}
+.brand--logo-only .brand__logo{width:56px;height:56px;background:transparent;border:0;box-shadow:none}
+.brand--logo-only .brand__logo img{width:48px;height:48px}
 
 .nav-section{padding:0 10px;margin-top:10px}
 .nav-label{font-size:9px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:var(--text-3);padding:8px 10px 6px}
@@ -117,6 +120,22 @@ body{
 .side-user__info small{font-size:9px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;color:var(--primary);white-space:nowrap}
 .nav-item--out{color:var(--danger)}
 .nav-item--out:hover{background:color-mix(in srgb,var(--danger) 10%,transparent);color:var(--danger)}
+
+/* Barra lateral compacta: jerarquía clara y herramientas bajo demanda. */
+.sidebar{gap:1px}
+.nav-section{margin-top:5px}
+.nav-label{padding:6px 10px 4px}
+.nav-item{padding:7px 10px}
+.nav-tools__toggle{width:100%;border:0;background:transparent;font-family:inherit;text-align:left}
+.nav-tools__toggle:hover{background:var(--surface)}
+.nav-tools__chevron{margin-left:auto;font-size:18px;line-height:1;color:var(--text-3);transition:transform .18s ease}
+.nav-tools.is-open .nav-tools__chevron{transform:rotate(180deg)}
+.nav-tools__menu{margin:2px 0 0 12px;padding-left:5px;border-left:1px solid var(--border-2)}
+.nav-tools__menu .nav-item{font-size:11.5px;padding:6px 9px}
+.sidebar__foot{padding:10px 10px 12px;gap:3px}
+.sidebar .side-user.is-active{border:1px solid var(--primary);background:var(--surface)}
+.icon-btn--logout{color:var(--danger)}
+.icon-btn--logout:hover{color:var(--danger);background:color-mix(in srgb,var(--danger) 10%,transparent)}
 
 /* Candado visual en Herramientas Pro / Comunidad cuando no hay membresía activa */
 .herramientas-bloqueadas .nav-item[data-tool]::after,
@@ -847,6 +866,22 @@ body{
 .cursos-chip:hover{background:var(--surface-3)}
 .cursos-chip.is-active{background:var(--primary);color:#fff;border-color:var(--primary)}
 
+/* ═══ Mis cursos · presentación editorial (referencia Visión Pecuaria) ═══
+   Los datos, filtros, progreso y eventos siguen siendo los mismos. */
+.cursos-hero{min-height:230px;padding:34px 40px;background:linear-gradient(105deg,color-mix(in srgb,var(--primary-deep) 94%,#080405) 0%,color-mix(in srgb,var(--primary) 88%,#2e080f) 56%,rgba(107,21,38,.78) 100%);box-shadow:0 20px 34px -22px rgba(39,7,15,.65)}
+.cursos-hero::before{height:100%;opacity:.7;background-image:radial-gradient(circle at 78% 23%,rgba(255,255,255,.14) 0 1px,transparent 1.5px),radial-gradient(circle at 75% 48%,rgba(255,255,255,.08) 0 1px,transparent 1.5px);background-size:22px 22px,31px 31px;mask-image:linear-gradient(90deg,transparent 35%,#000)}
+.cursos-hero__info{max-width:620px}.cursos-hero__title{font-size:clamp(28px,3.2vw,39px);letter-spacing:-1.35px}.cursos-hero__stats{gap:30px;margin-top:20px}.cursos-hero__stat strong{font-size:25px}.cursos-hero__tabs{background:rgba(255,255,255,.12);box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}.cursos-hero__tab{padding:10px 18px}.cursos-hero__tab.is-active{box-shadow:0 4px 10px rgba(0,0,0,.16)}
+.cursos-chips{gap:9px;margin:20px 0 22px}.cursos-chip{padding:8px 14px;background:var(--surface);box-shadow:0 2px 5px rgba(0,0,0,.03)}
+.cursos-grid{grid-template-columns:repeat(auto-fit,minmax(280px,380px));justify-content:start;gap:20px}.curso-card{min-height:0;aspect-ratio:1.68;border-radius:20px;isolation:isolate;background-color:var(--primary-deep);box-shadow:0 7px 18px rgba(31,10,14,.16)}
+.curso-card::after{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(180deg,rgba(14,7,8,0) 18%,rgba(14,7,8,.08) 39%,rgba(11,6,8,.91) 100%);pointer-events:none}
+.curso-card:hover{transform:translateY(-5px);box-shadow:0 19px 30px -16px rgba(31,10,14,.62)}.curso-card__cover-badge{top:13px;left:13px!important;padding:6px 10px;background:rgba(255,255,255,.9)!important;color:var(--primary-deep)!important;border:1px solid rgba(255,255,255,.8)!important;box-shadow:0 3px 10px rgba(0,0,0,.12)}
+.curso-card__cover-action{top:13px!important;right:13px!important;left:auto!important;bottom:auto!important;width:34px;height:34px;background:rgba(255,255,255,.91);box-shadow:0 4px 14px rgba(0,0,0,.18)}.curso-card__body{padding:16px 17px 17px;gap:8px}.curso-card__title{font-size:clamp(15px,1.25vw,18px);line-height:1.2;letter-spacing:-.45px}.curso-card__meta{font-size:10.5px;gap:9px}.curso-card__footer{margin-top:1px}.curso-card__instructor{display:flex}.curso-card__cta{display:inline-flex;align-items:center;justify-content:center;padding:7px 13px;font-size:10.5px}.curso-card__progress{gap:7px}.curso-card__progress-bar{height:4px;background:rgba(255,255,255,.3)}.curso-card__progress-fill{background:linear-gradient(90deg,#d891a3,#f1c56d)}
+.course-detail-hero{min-height:280px!important;padding:34px!important;display:flex;flex-direction:column;justify-content:flex-end;border-radius:20px!important;box-shadow:0 16px 30px -18px rgba(0,0,0,.55)}.course-detail-hero h2{font-size:clamp(26px,3vw,38px)!important;letter-spacing:-1.1px!important;max-width:680px}.course-detail-hero .tag{backdrop-filter:blur(8px);border-radius:999px!important;padding:6px 11px!important}.course-detail-hero .ic{width:14px;height:14px;vertical-align:-2px}
+.course-detail-page{max-width:1200px;margin:0 auto;padding:4px 0 42px}.course-detail-back{display:inline-flex;align-items:center;gap:7px;padding:8px 0;margin:0 0 14px;background:none;border:0;color:var(--text-2);font-size:12px;font-weight:700;cursor:pointer}.course-detail-back:hover{color:var(--primary)}.course-detail-back .ic{width:15px;height:15px}.course-detail-page .course-detail-hero{margin-bottom:20px}.course-detail-layout{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:34px;align-items:start}.course-detail-main{min-width:0}.course-detail-description{font-size:15px;color:var(--text-2);line-height:1.6;margin:0 0 24px}.course-detail-progress{position:sticky;top:20px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:22px;box-shadow:0 12px 26px -22px rgba(0,0,0,.35)}.course-detail-progress__eyebrow{display:block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-3)}.course-detail-progress__headline{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:9px}.course-detail-progress__headline strong{font-size:20px;letter-spacing:-.55px}.course-detail-progress__headline span{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--primary)}.course-detail-progress__bar{height:6px;background:var(--surface-3);border-radius:999px;overflow:hidden;margin:18px 0}.course-detail-progress__bar i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--primary),var(--highlight))}.course-detail-progress__items{display:flex;flex-direction:column;gap:12px;font-size:12px;color:var(--text-2)}.course-detail-progress__items span{display:flex;align-items:center;gap:9px}.course-detail-progress__items .ic{width:15px;height:15px;color:var(--primary);flex:none}.course-detail-main .modulos-list{gap:8px}.course-detail-main .modulo{border-radius:12px;padding:13px 15px}.course-detail-main .modulo:hover{border-color:color-mix(in srgb,var(--primary) 35%,var(--border));transform:translateX(2px)}
+@media(max-width:900px){.course-detail-layout{grid-template-columns:1fr;gap:20px}.course-detail-progress{position:static;order:-1}.course-detail-page{padding-bottom:28px}.course-detail-description{font-size:14px}.course-detail-hero{min-height:235px!important}}
+@media(max-width:1100px){.cursos-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cursos-hero{padding:30px}.curso-card{aspect-ratio:1.58}}
+@media(max-width:780px){.cursos-hero{min-height:0;padding:25px 22px;border-radius:18px}.cursos-hero__title{font-size:28px}.cursos-hero__stats{gap:17px}.cursos-hero__stat strong{font-size:21px}.cursos-hero__tabs{width:100%;overflow-x:auto}.cursos-hero__tab{flex:1;padding:9px 12px;font-size:11px}.cursos-grid{grid-template-columns:1fr;gap:14px}.curso-card{aspect-ratio:1.55;border-radius:18px}.curso-card__title{font-size:17px}.course-detail-hero{min-height:225px!important;padding:24px!important}.course-detail-hero h2{font-size:27px!important}}
+
 /* CERTIFICADOS — cards */
 .certs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px}
 /* Banners compactos de certificado (lista) */
@@ -1114,12 +1149,17 @@ body{
 .retos2-card__st.is-lock{background:rgba(0,0,0,.6);color:#fff}
 .retos2-card.is-locked .retos2-card__cta{color:var(--text-3)}
 .retos2-card.is-locked:hover{transform:none;box-shadow:none;border-color:var(--border)}
+.retos-route{position:relative;margin:0 0 20px;padding:20px 22px 18px;background:var(--surface);border:1px solid var(--border);border-radius:20px;overflow:hidden}.retos-route__head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:18px}.retos-route__eyebrow{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-3)}.retos-route__title{font-size:18px;font-weight:800;letter-spacing:-.5px;margin-top:4px}.retos-route__note{font-size:11px;color:var(--text-3)}.retos-route__track{display:flex;align-items:flex-start;min-width:max-content;padding:0 8px}.retos-route__item{position:relative;width:142px;display:flex;flex-direction:column;align-items:center;text-align:center;cursor:pointer;outline:none;border:0;background:transparent;padding:0}.retos-route__item::after{content:"";position:absolute;top:21px;left:50%;width:100%;height:3px;background:var(--border-2);z-index:0}.retos-route__item:last-child::after{display:none}.retos-route__item.is-done::after{background:var(--success)}.retos-route__node{position:relative;z-index:1;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--surface);border:2px solid var(--border-2);color:var(--text-3);font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:800;box-shadow:0 0 0 5px var(--surface);transition:transform .2s,box-shadow .2s}.retos-route__item.is-done .retos-route__node{background:var(--success);border-color:var(--success);color:#fff}.retos-route__item.is-next .retos-route__node{background:var(--primary);border-color:#f1c56d;color:#fff;box-shadow:0 0 0 5px var(--surface),0 0 0 9px color-mix(in srgb,var(--primary) 20%,transparent);animation:routePulse 2.2s ease-in-out infinite}.retos-route__item.is-lock{cursor:not-allowed}.retos-route__item:hover:not(.is-lock) .retos-route__node{transform:translateY(-3px)}.retos-route__label{display:block;margin-top:10px;font-size:11px;font-weight:700;line-height:1.25;max-width:126px}.retos-route__state{display:block;margin-top:4px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.5px;text-transform:uppercase;color:var(--text-3)}.retos-route__item.is-next .retos-route__state{color:var(--primary);font-weight:700}.retos-route__scroll{overflow-x:auto;padding:2px 0 4px;margin:0 -6px;scrollbar-width:thin}@keyframes routePulse{50%{box-shadow:0 0 0 5px var(--surface),0 0 0 13px color-mix(in srgb,var(--primary) 7%,transparent)}}
+.retos2-overview{display:grid;grid-template-columns:minmax(240px,.78fr) minmax(0,1.45fr);gap:16px;margin:0 0 34px}.retos2-overview .retos2-mision{min-height:276px}.retos2-overview .retos-route{margin:0;padding:24px 26px}.retos-route__item{cursor:default}.retos-route__item:hover:not(.is-lock) .retos-route__node{transform:none}.retos-route__item.is-current .retos-route__node{background:var(--primary);border-color:#f1c56d;color:#fff;box-shadow:0 0 0 5px var(--surface),0 0 0 9px color-mix(in srgb,var(--primary) 20%,transparent);animation:routePulse 2.2s ease-in-out infinite}.retos-route__item.is-current .retos-route__state{color:var(--primary);font-weight:700}.retos-route__item.is-done::after{background:var(--success)}.retos-route__item.is-done .retos-route__node{background:var(--success);border-color:var(--success)}.retos2-zone{margin:0 0 16px}.retos2-zone .retos2-sec{margin-bottom:14px}.retos2-zone .retos2-next{min-height:280px;width:100%}.retos2-zone .retos2-next--foto{padding:34px 36px}.retos2-zone .retos2-next__title{font-size:clamp(24px,3vw,34px);max-width:560px}.retos2-hero__level{display:inline-flex;align-items:center;gap:8px;margin-top:18px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#f0c868}.retos2-hero__level::before{content:"";width:8px;height:8px;border-radius:50%;background:#f0c868;box-shadow:0 0 0 5px rgba(240,200,104,.15)}.retos2-score__rank{font-size:13px;font-weight:700;text-align:center;color:#f0c868;margin-top:6px}.retos2-score__xp{margin-top:8px}
 @media (max-width:880px){
   .retos2-hero{grid-template-columns:1fr;padding:24px 20px}
   .retos2-row{grid-template-columns:1fr}
+  .retos2-overview{grid-template-columns:1fr}.retos2-overview .retos2-mision{min-height:0}.retos2-overview .retos-route{padding:20px 16px}
   .retos2-next{flex-direction:column;align-items:flex-start;padding:22px}
   .retos2-modes{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .retos-route{padding:18px 15px}.retos-route__item{width:126px}
 }
+@media(prefers-reduced-motion:reduce){.retos-route__item.is-next .retos-route__node{animation:none}}
 
 /* ═══ LOGROS · rediseño v9 (ref. Visión Pecuaria) ═══ */
 .logros2-head{margin-bottom:18px}
@@ -1283,6 +1323,18 @@ body{
 }
 .webinar-card__meta span{display:inline-flex;align-items:center;gap:5px}
 .webinar-card__meta .ic{width:12px;height:12px}
+
+/* ═══ Clases en vivo · agenda visual ═══ */
+.live-section-heading{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:18px;padding-bottom:3px;border-bottom:1px solid var(--border)}
+.live-section-heading .sec-hero__sub{max-width:560px;margin-bottom:2px}
+.webinar-hero{min-height:316px;padding:32px 34px;background-color:var(--primary-deep);background-size:cover!important;background-position:center!important;border:0;border-radius:22px;overflow:hidden;box-shadow:0 20px 34px -20px rgba(43,7,17,.62);position:relative;isolation:isolate}
+.webinar-hero::before{content:"";inset:0;height:auto;background:linear-gradient(90deg,rgba(35,6,12,.93) 0%,rgba(58,10,22,.77) 48%,rgba(52,9,18,.38) 100%);z-index:0;mask:none}.webinar-hero::after{content:"";position:absolute;inset:auto -70px -130px auto;width:320px;height:320px;border-radius:50%;background:rgba(255,255,255,.08);z-index:0}
+.webinar-hero__info{position:relative;z-index:1;align-self:end;max-width:650px}.webinar-hero .sec-hero__eyebrow{color:#ffe4e9;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);padding:7px 11px;border-radius:999px}.webinar-hero__title{color:#fff;font-size:clamp(26px,3vw,38px);letter-spacing:-1.15px;margin:16px 0 6px}.webinar-hero__meta{color:rgba(255,255,255,.85);font-size:12px;margin-top:12px}.webinar-hero__meta .ic{color:#f4bac7}.webinar-hero__meta-sep{color:rgba(255,255,255,.45)}.webinar-hero__desc{color:rgba(255,255,255,.78);font-size:13px;max-width:580px;margin-top:13px}.webinar-hero__actions{margin-top:18px}.webinar-hero .btn--accent{background:#fff;color:var(--primary-deep);border-color:#fff}.webinar-hero .btn--ghost{color:#fff;border-color:rgba(255,255,255,.35);background:rgba(0,0,0,.16)}
+.webinar-hero__countdown{position:relative;z-index:1;align-self:end;gap:7px}.webinar-hero__cd-box{min-width:62px;padding:12px 8px;background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.22);box-shadow:none}.webinar-hero__cd-num{font-size:24px;color:#fff}.webinar-hero__cd-lbl{color:rgba(255,255,255,.66)}
+.live-webinar-tabs{margin:22px 0 18px;padding:4px;display:inline-flex;width:auto;border-radius:999px;background:var(--surface-2);border:1px solid var(--border)}.live-webinar-tabs .tab{border-radius:999px;padding:9px 15px}.live-webinar-tabs .tab.is-active{background:var(--primary);color:#fff;box-shadow:0 4px 10px color-mix(in srgb,var(--primary) 28%,transparent)}
+.webinars-grid{grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:18px}.webinar-card{border-radius:18px;background:var(--surface);box-shadow:0 4px 12px rgba(0,0,0,.05)}.webinar-card:hover{transform:translateY(-5px);box-shadow:0 18px 30px -18px rgba(32,7,14,.38)}.webinar-card__cover{height:154px;justify-content:flex-start;padding:14px;background-position:center}.webinar-card__cover::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(15,5,8,.08),rgba(15,5,8,.48));pointer-events:none}.webinar-card__date,.webinar-card__play{z-index:1}.webinar-card__date{border-radius:999px;padding:7px 12px;min-width:0;display:flex;align-items:baseline;gap:5px}.webinar-card__date-day{font-size:19px}.webinar-card__date-month{margin:0;font-size:9px}.webinar-card__play{width:42px;height:42px;margin:auto}.webinar-card__body{padding:16px 17px 17px}.webinar-card__title{font-size:15px;margin-top:9px}.webinar-card__meta{margin-top:12px;padding-top:10px}
+.live-empty-state{position:relative;display:grid;place-items:center;min-height:330px;overflow:hidden;text-align:center;padding:48px 28px;background:linear-gradient(135deg,color-mix(in srgb,var(--surface) 94%,var(--primary) 6%),var(--surface));border:1px dashed color-mix(in srgb,var(--primary) 24%,var(--border));border-radius:22px}.live-empty-state::before,.live-empty-state::after{content:"";position:absolute;border-radius:50%;pointer-events:none}.live-empty-state::before{width:300px;height:300px;top:-190px;left:-90px;background:color-mix(in srgb,var(--primary) 10%,transparent)}.live-empty-state::after{width:220px;height:220px;right:-110px;bottom:-120px;border:1px solid color-mix(in srgb,var(--primary) 18%,transparent)}.live-empty-state__content{position:relative;z-index:1;max-width:410px}.live-empty-state__icon{width:70px;height:70px;margin:0 auto 18px;border-radius:22px;background:color-mix(in srgb,var(--primary) 12%,transparent);color:var(--primary);display:grid;place-items:center;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--primary) 16%,transparent)}.live-empty-state__icon svg{width:32px;height:32px}.live-empty-state h2{font-size:19px;letter-spacing:-.4px;margin:0 0 8px}.live-empty-state p{font-size:13px;color:var(--text-2);line-height:1.6;margin:0 auto}.live-empty-state__note{display:inline-flex;align-items:center;gap:7px;margin-top:18px;padding:7px 11px;border-radius:999px;background:var(--surface);border:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--text-3)}.live-empty-state__note::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--primary)}
+@media(max-width:780px){.live-section-heading{display:block;margin-bottom:16px}.live-section-heading .sec-hero__sub{margin-top:8px}.webinar-hero{min-height:0;padding:24px 21px;background-position:60% center!important}.webinar-hero::before{background:linear-gradient(180deg,rgba(35,6,12,.88),rgba(58,10,22,.78))}.webinar-hero__countdown{align-self:stretch;margin-top:4px}.webinar-hero__cd-box{padding:10px 6px}.live-webinar-tabs{display:flex;overflow-x:auto;max-width:100%;margin-top:18px}.live-webinar-tabs .tab{white-space:nowrap;padding:9px 12px}.webinar-card__cover{height:145px}}
 
 /* Modales detalle (reutilizable) */
 .detail-hero{
@@ -2482,6 +2534,83 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 .perfil-field__edit:hover{color:var(--primary)}
 .perfil-field__edit .ic{width:13px;height:13px}
 
+/* Modo noche: carbón y arena, sin las capas vino que endurecían las secciones. */
+:root[data-theme="night"] .sec-hero{
+  background:#191613;
+  border-color:rgba(245,239,232,.10);
+  box-shadow:0 12px 28px rgba(0,0,0,.18);
+}
+:root[data-theme="night"] .sec-hero::before{
+  height:3px;
+  background:#B98B52;
+  background-image:none;
+  opacity:.8;
+}
+:root[data-theme="night"] .sec-hero::after{display:none}
+:root[data-theme="night"] .sec-hero__eyebrow{
+  color:#D9B77C;
+  background:rgba(185,139,82,.08);
+  border-color:rgba(185,139,82,.22);
+}
+:root[data-theme="night"] .sec-hero__eyebrow::before{background:#D9B77C}
+:root[data-theme="night"] .foro-aviso{
+  background:rgba(185,139,82,.06);
+  border-color:rgba(185,139,82,.20);
+}
+:root[data-theme="night"] .foro-aviso .ic,
+:root[data-theme="night"] .foro-aviso strong{color:#D9B77C}
+:root[data-theme="night"] .foro-composer,
+:root[data-theme="night"] .perfil-hero,
+:root[data-theme="night"] .perfil-card,
+:root[data-theme="night"] .wa-rules{
+  background:#151210;
+  border-color:rgba(245,239,232,.11);
+  box-shadow:none;
+}
+:root[data-theme="night"] .foro-composer__avatar,
+:root[data-theme="night"] .perfil-hero__avatar{
+  background:#B98B52 !important;
+  color:#191613;
+}
+:root[data-theme="night"] .foro-composer__tool,
+:root[data-theme="night"] .dir-search,
+:root[data-theme="night"] .dir-chip,
+:root[data-theme="night"] .dir-form__in,
+:root[data-theme="night"] .com-input{
+  background:#1C1814;
+  border-color:rgba(245,239,232,.12);
+}
+:root[data-theme="night"] .dir-card{
+  background:#151210;
+  border-color:rgba(245,239,232,.11);
+  box-shadow:none;
+}
+:root[data-theme="night"] .dir-card::before{background:rgba(185,139,82,.10)}
+:root[data-theme="night"] .dir-card__badge-mia,
+:root[data-theme="night"] .dir-chip.is-active{background:#B98B52;border-color:#B98B52;color:#191613}
+:root[data-theme="night"] .tool-pick-card{
+  background:#151210 !important;
+  border-color:rgba(245,239,232,.11) !important;
+  border-radius:16px !important;
+  box-shadow:none;
+}
+:root[data-theme="night"] .tool-pick-card:hover{
+  border-color:rgba(185,139,82,.5) !important;
+  transform:translateY(-2px);
+}
+:root[data-theme="night"] .tool-pick-card > div:first-child{
+  background:rgba(185,139,82,.12) !important;
+  color:#D9B77C !important;
+}
+:root[data-theme="night"] .wa-hero{
+  background:linear-gradient(135deg,rgba(34,197,94,.10),#151210 72%);
+  border-color:rgba(34,197,94,.26);
+  box-shadow:none;
+}
+:root[data-theme="night"] .wa-hero::before{opacity:.45}
+:root[data-theme="night"] .perfil-hero{padding:24px;border-radius:16px}
+:root[data-theme="night"] .perfil-card{border-radius:16px}
+
 /* =========================================================
    SUSCRIPCIÓN · plan card + historial
    ========================================================= */
@@ -2641,6 +2770,23 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
   font-size:12.5px;line-height:1.6;color:var(--text-2);
 }
 .discover-modal__tip strong{color:var(--text)}
+
+/* ═══ Inicio · Descubre algo nuevo hoy: composición editorial ═══
+   Solo altera la presentación de las tarjetas ya renderizadas. */
+.discover-today{position:relative;padding:20px;border:0.5px solid var(--border);border-radius:20px;background:linear-gradient(135deg,color-mix(in srgb,var(--surface) 96%,var(--primary) 4%),var(--surface));overflow:hidden}
+.discover-today::before{content:"";position:absolute;width:260px;height:260px;border-radius:50%;top:-170px;right:-80px;background:color-mix(in srgb,var(--primary) 10%,transparent);filter:blur(2px);pointer-events:none}
+.discover-today .section-header,.discover-today .discover-intro,.discover-today .discover-grid{position:relative;z-index:1}
+.discover-today .section-header{margin-bottom:3px}.discover-today .section-header__title{letter-spacing:-.04em}.discover-today .section-header__badge{margin-left:10px;background:var(--primary);color:#fff;border:0;box-shadow:0 5px 12px color-mix(in srgb,var(--primary) 27%,transparent)}
+.discover-intro{margin:-2px 0 17px;font-size:12.5px;color:var(--text-2)}
+.discover-today .discover-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;perspective:none}
+.discover-today .discover-card{border-radius:15px;transform:none;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+.discover-today .discover-card:hover{transform:translateY(-4px);box-shadow:0 16px 30px -16px rgba(0,0,0,.3),0 0 0 1px color-mix(in srgb,var(--cat-color,var(--primary)) 22%,transparent)}
+.discover-today .discover-card:first-child{grid-column:span 2;grid-row:span 2;min-height:352px;border-color:color-mix(in srgb,var(--cat-color,var(--primary)) 28%,var(--border));box-shadow:0 12px 25px -18px rgba(0,0,0,.38)}
+.discover-today .discover-card:first-child .discover-card__cover{height:188px;margin:0;border-radius:0;box-shadow:none}.discover-today .discover-card:first-child .discover-card__body{padding:16px 18px 18px;gap:9px}.discover-today .discover-card:first-child .discover-card__title{font-size:19px;line-height:1.22}.discover-today .discover-card:first-child .discover-card__resumen{-webkit-line-clamp:2;font-size:12.5px}.discover-today .discover-card:first-child .discover-card__more{font-size:11px;padding-top:9px}
+.discover-today .discover-card:not(:first-child) .discover-card__cover{height:94px;margin:9px 9px 0;border-radius:10px}.discover-today .discover-card:not(:first-child) .discover-card__body{padding:10px 12px 12px;gap:6px}.discover-today .discover-card:not(:first-child) .discover-card__tags{gap:4px}.discover-today .discover-card:not(:first-child) .discover-card__cat,.discover-today .discover-card:not(:first-child) .discover-card__tipo{font-size:8px;padding:3px 7px}.discover-today .discover-card:not(:first-child) .discover-card__title{font-size:12.5px;-webkit-line-clamp:2}.discover-today .discover-card:not(:first-child) .discover-card__resumen{display:none}.discover-today .discover-card:not(:first-child) .discover-card__more{padding-top:6px;font-size:9.5px}
+@media(max-width:1100px){.discover-today .discover-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.discover-today .discover-card:first-child{grid-column:span 2}}
+@media(max-width:780px){.discover-today{padding:16px;border-radius:17px}.discover-today .discover-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.discover-today .discover-card:first-child{grid-column:1/-1;grid-row:auto;min-height:0}.discover-today .discover-card:first-child .discover-card__cover{height:176px}.discover-today .discover-card:first-child .discover-card__title{font-size:17px}.discover-today .discover-card:not(:first-child) .discover-card__cover{height:82px}.discover-intro{margin-bottom:14px}}
+@media(max-width:420px){.discover-today{padding:13px}.discover-today .discover-grid{gap:8px}.discover-today .discover-card:first-child .discover-card__cover{height:158px}.discover-today .discover-card:not(:first-child) .discover-card__body{padding:9px 10px 10px}.discover-today .discover-card:not(:first-child) .discover-card__title{font-size:12px}}
 
 /* =========================================================
    PDFs y MATERIAL · cards más vibrantes
@@ -2986,6 +3132,17 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
   .app{grid-template-columns:208px 1fr}
   .aside{display:none}
 }
+/* Ventanas medianas: usar navegación compacta antes de que el contenido se comprima. */
+@media (min-width:881px) and (max-width:1100px){
+  .app{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .main{padding:22px 24px 92px}
+  .mobile-nav{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:30;background:var(--surface);border-top:0.5px solid var(--border-2);padding:6px 4px max(6px,env(safe-area-inset-bottom));justify-content:space-around;align-items:center}
+  .mobile-nav__item{display:flex;flex:1;min-width:0;flex-direction:column;align-items:center;gap:2px;color:var(--text-3);padding:5px 2px;border-radius:8px;font-size:9px;font-weight:500;letter-spacing:.15px;white-space:nowrap}
+  .mobile-nav__item.is-active{color:var(--primary)}
+  .mobile-nav__item .ic{width:18px;height:18px}
+  .topbar__right .avatar{display:block}
+}
 @media (max-width:880px){
   .app{grid-template-columns:1fr}
   .sidebar{display:none}
@@ -2995,7 +3152,7 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
   .banner{grid-template-columns:1fr;padding:20px 22px}
   .hero-course{max-width:none}
   .mobile-nav{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:30;background:var(--surface);border-top:0.5px solid var(--border-2);padding:6px 4px max(6px,env(safe-area-inset-bottom));justify-content:space-around;align-items:center}
-  .mobile-nav__item{display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--text-3);padding:5px 8px;border-radius:8px;font-size:9.5px;font-weight:500;letter-spacing:.3px}
+  .mobile-nav__item{display:flex;flex:1;min-width:0;flex-direction:column;align-items:center;gap:2px;color:var(--text-3);padding:5px 2px;border-radius:8px;font-size:9px;font-weight:500;letter-spacing:.15px;white-space:nowrap}
   .mobile-nav__item.is-active{color:var(--primary)}
   .mobile-nav__item .ic{width:18px;height:18px}
 
@@ -3839,14 +3996,11 @@ window.__setDisplayName = async (nombre) => {
 <div class="app">
   <!-- SIDEBAR -->
   <aside class="sidebar">
-    <div class="brand">
+    <div class="brand brand--logo-only">
       <div class="brand__logo">
         <img src="assets/logo-dulcelab.png" alt="DulceLab Food">
       </div>
-      <div>
-        <div class="brand__name">DulceLab Food</div>
-        <div class="brand__plan" id="brand-plan-badge">VIP Anual</div>
-      </div>
+      <span class="brand__plan" id="brand-plan-badge" hidden>VIP Anual</span>
     </div>
 
     <div class="nav-section">
@@ -3859,26 +4013,30 @@ window.__setDisplayName = async (nombre) => {
     </div>
 
     <div class="nav-section">
-      <div class="nav-label">Comunidad</div>
-      <a class="nav-item" data-section="foro"><svg class="ic"><use href="#i-messages"/></svg>Foro VIP</a>
-      <a class="nav-item" data-section="directorio"><svg class="ic"><use href="#i-users"/></svg>Directorio VIP</a>
-      <a class="nav-item" data-section="canal"><svg class="ic"><use href="#i-whatsapp"/></svg>Canal WhatsApp</a>
-    </div>
-
-    <div class="nav-section">
       <div class="nav-label">Tu progreso</div>
       <a class="nav-item" data-section="logros"><svg class="ic"><use href="#i-trophy"/></svg>Mis logros</a>
       <a class="nav-item" data-section="certificados"><svg class="ic"><use href="#i-certificate"/></svg>Certificados</a>
     </div>
 
-    <div class="nav-section" data-tour="tools">
-      <div class="nav-label">Herramientas pro</div>
-      <a class="nav-item" data-tool="costeo"><svg class="ic"><use href="#i-bn-leaf"/></svg>Costeo de receta</a>
-      <a class="nav-item" data-tool="conversor"><svg class="ic"><use href="#i-bn-droplet"/></svg>Conversor de cocina</a>
-      <a class="nav-item" data-tool="merma"><svg class="ic"><use href="#i-bn-leaf"/></svg>Rendimiento y merma</a>
-      <a class="nav-item" data-tool="catering"><svg class="ic"><use href="#i-users"/></svg>Porciones para catering</a>
-      <a class="nav-item" data-tool="horno"><svg class="ic"><use href="#i-gauge"/></svg>Temperaturas de horno</a>
-      <a class="nav-item" data-tool="porcion"><svg class="ic"><use href="#i-credit-card"/></svg>Costo por porción</a>
+    <div class="nav-section nav-tools" data-tour="tools">
+      <button class="nav-item nav-tools__toggle" id="nav-tools-toggle" type="button" aria-expanded="false" aria-controls="nav-tools-menu">
+        <svg class="ic"><use href="#i-tools"/></svg>Herramientas<span class="nav-tools__chevron">⌄</span>
+      </button>
+      <div class="nav-tools__menu" id="nav-tools-menu" hidden>
+        <a class="nav-item" data-tool="costeo"><svg class="ic"><use href="#i-bn-leaf"/></svg>Costeo de receta</a>
+        <a class="nav-item" data-tool="conversor"><svg class="ic"><use href="#i-bn-droplet"/></svg>Conversor de cocina</a>
+        <a class="nav-item" data-tool="merma"><svg class="ic"><use href="#i-bn-leaf"/></svg>Rendimiento y merma</a>
+        <a class="nav-item" data-tool="catering"><svg class="ic"><use href="#i-users"/></svg>Porciones para catering</a>
+        <a class="nav-item" data-tool="horno"><svg class="ic"><use href="#i-gauge"/></svg>Temperaturas de horno</a>
+        <a class="nav-item" data-tool="porcion"><svg class="ic"><use href="#i-credit-card"/></svg>Costo por porción</a>
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Comunidad</div>
+      <a class="nav-item" data-section="foro"><svg class="ic"><use href="#i-messages"/></svg>Foro VIP</a>
+      <a class="nav-item" data-section="directorio"><svg class="ic"><use href="#i-users"/></svg>Directorio VIP</a>
+      <a class="nav-item" data-section="canal"><svg class="ic"><use href="#i-whatsapp"/></svg>Canal WhatsApp</a>
     </div>
 
     <div class="sidebar__foot">
@@ -3913,6 +4071,9 @@ window.__setDisplayName = async (nombre) => {
         <div class="avatar" id="btn-avatar" style="cursor:pointer" title="Mi perfil">
           <div class="avatar__circle">IN</div>
         </div>
+        <button class="icon-btn icon-btn--logout" id="btn-top-logout" data-action="logout" type="button" aria-label="Cerrar sesión" title="Cerrar sesión">
+          <svg class="ic"><use href="#i-logout"/></svg>
+        </button>
       </div>
     </header>
 
@@ -3983,11 +4144,11 @@ window.__setDisplayName = async (nombre) => {
       <div style="height:22px"></div>
 
       <!-- Descubre algo nuevo hoy (contenido propio DulceLab, rotación diaria) -->
-      <section>
+      <section class="discover-today">
         <div class="section-header">
           <h2 class="section-header__title">Descubre algo nuevo hoy<span class="section-header__badge">Hoy</span></h2>
         </div>
-        <p style="margin:-6px 0 14px;font-size:12.5px;color:var(--text-2);">Datos, técnicas y curiosidades del mundo de la gastronomía.</p>
+        <p class="discover-intro">Datos, técnicas y curiosidades del mundo de la gastronomía.</p>
         <div class="discover-grid" id="home-discover-grid">
           <div class="foro-empty" style="grid-column:1/-1;">Cargando…</div>
         </div>
@@ -4063,10 +4224,10 @@ window.__setDisplayName = async (nombre) => {
 <nav class="mobile-nav">
   <a class="mobile-nav__item is-active" data-section="inicio"><svg class="ic"><use href="#i-home"/></svg>Inicio</a>
   <a class="mobile-nav__item" data-section="cursos"><svg class="ic"><use href="#i-book"/></svg>Cursos</a>
-  <a class="mobile-nav__item" data-section="herramientas"><svg class="ic"><use href="#i-tools"/></svg>Pro</a>
-  <a class="mobile-nav__item" data-section="webinars"><svg class="ic"><use href="#i-broadcast"/></svg>Vivo</a>
-  <a class="mobile-nav__item" data-section="suscripcion"><svg class="ic"><use href="#i-credit-card"/></svg>Plan</a>
-  <a class="mobile-nav__item" id="mobile-nav-more" role="button"><svg class="ic"><use href="#i-menu"/></svg>Más</a>
+  <a class="mobile-nav__item" data-section="pdfs"><svg class="ic"><use href="#i-news"/></svg>Materiales</a>
+  <a class="mobile-nav__item" data-section="retos"><svg class="ic"><use href="#i-bolt"/></svg>Retos</a>
+  <a class="mobile-nav__item" data-section="herramientas"><svg class="ic"><use href="#i-tools"/></svg>Herramientas</a>
+  <a class="mobile-nav__item" id="mobile-nav-more" role="button" aria-label="Abrir más opciones"><svg class="ic"><use href="#i-menu"/></svg>Más</a>
 </nav>
 
 <!-- Drawer móvil con TODAS las opciones · se abre al tocar "Más" -->
@@ -7115,13 +7276,16 @@ const Sections = (function(){
     const portada = c.portada || coverSVG(c.area, c.titulo);
     const colorArea = COLOR_AREA[c.area] || '#C4577A';
     const iconArea = ICON_AREA[c.area] || 'i-book';
+    const detalleTotalSesiones = Array.isArray(c.sesiones) ? c.sesiones.length : 0;
+    const detalleProgreso = getProgresoCurso(c.id);
+    const detallePct = detalleTotalSesiones ? progresoCursoPct(c.id, detalleTotalSesiones) : 0;
 
     // Hero con imagen de portada de fondo
     const heroBg = `background:linear-gradient(135deg,rgba(0,0,0,.35),rgba(0,0,0,.7)),url('${portada}');background-size:cover;background-position:center;border-radius:14px;padding:24px;color:#fff;margin-bottom:18px;`;
 
     // Body con sesiones (clases) y materiales reales
     let bodyContent = `
-      <div style="${heroBg}">
+      <div class="course-detail-hero" style="${heroBg}">
         <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
           <span class="tag tag--soon" style="color:#fff;border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.12);">${c.area}</span>
           <span class="tag tag--soon" style="color:#fff;border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.12);">${c.nivel}</span>
@@ -7134,7 +7298,9 @@ const Sections = (function(){
           ${c.sesiones?.length ? `<span><svg class="ic" style="color:#fff;"><use href="#i-book"/></svg> ${c.sesiones.length} clase${c.sesiones.length!==1?'s':''}</span>` : ''}
         </div>
       </div>
-      <p style="font-size:13px;color:var(--text-2);line-height:1.65;margin-bottom:18px;">${c.descripcion || c.desc || ''}</p>
+      <div class="course-detail-layout">
+        <div class="course-detail-main">
+          <p class="course-detail-description">${c.descripcion || c.desc || ''}</p>
     `;
 
     // El desbloqueo progresivo se conserva para miembros. Las personas sin
@@ -7314,18 +7480,31 @@ const Sections = (function(){
       }
     }
 
-    const footer = document.createElement('div');
-    footer.innerHTML = `<button class="btn btn--ghost" id="cd-close">Cerrar</button>`;
-    const m = Modal.open({
-      id: 'curso-' + id,
-      title: 'Detalle del curso',
-      subtitle: c.titulo.length > 40 ? c.titulo.slice(0,40) + '…' : c.titulo,
-      icon: iconArea,
-      size: 'lg',
-      body: bodyContent,
-      footer
-    });
-    footer.querySelector('#cd-close').addEventListener('click', () => m.close());
+    bodyContent += `
+        </div>
+        <aside class="course-detail-progress" aria-label="Tu avance en el curso">
+          <span class="course-detail-progress__eyebrow">Tu avance</span>
+          <div class="course-detail-progress__headline">
+            <strong>${detalleProgreso.clasesVistas.length} de ${detalleTotalSesiones || 0} clases</strong>
+            <span>${detallePct}%</span>
+          </div>
+          <div class="course-detail-progress__bar"><i style="width:${detallePct}%"></i></div>
+          <div class="course-detail-progress__items">
+            <span><svg class="ic"><use href="#i-book"/></svg>${c.nivel || 'Curso'} a tu ritmo</span>
+            <span><svg class="ic"><use href="#i-clock"/></svg>${c.horas ? c.horas + ' horas de contenido' : (detalleTotalSesiones || 0) + ' clases disponibles'}</span>
+            <span><svg class="ic"><use href="#i-check"/></svg>Tu avance se guarda automáticamente</span>
+          </div>
+        </aside>
+      </div>
+    `;
+
+    const detailContainer = document.getElementById('dynamic-section');
+    if (!detailContainer) return;
+    detailContainer.innerHTML = `<div class="course-detail-page fade-up">
+      <button type="button" class="course-detail-back" id="course-detail-back"><svg class="ic"><use href="#i-arrow-left"/></svg>Volver a mis cursos</button>
+      ${bodyContent}
+    </div>`;
+    detailContainer.querySelector('#course-detail-back')?.addEventListener('click', () => renderCursos(detailContainer));
 
     // ─── Handler del toggle de materiales (Ver los X restantes / Ocultar) ───
     setTimeout(() => {
@@ -7356,8 +7535,7 @@ const Sections = (function(){
   // para no chocar con la animación y dejar el modal huérfano (no-cerrable).
   window.__refrescarCursoDetalle = function(cid){
     if (!cid) return;
-    try { if (typeof Modal !== 'undefined' && Modal.close) Modal.close('curso-' + cid); } catch(e){}
-    setTimeout(() => { try { openCursoDetalle(cid); } catch(e){} }, 300);
+    try { openCursoDetalle(cid); } catch(e){}
   };
 
   function moduloTitulo(c,i){
@@ -8254,6 +8432,14 @@ const Sections = (function(){
     const pct = total ? Math.round(nHechos / total * 100) : 0;
     const idxSig = RETOS_LIBRARY.findIndex((r, i) => !hecho(r) && abierto(i));
     const sig = idxSig >= 0 ? RETOS_LIBRARY[idxSig] : null;
+    // Niveles visuales calculados con el XP ya guardado del miembro.
+    const NIVELES_RETO = [
+      { nombre:'Aprendiz', xp:0 }, { nombre:'Bronce', xp:200 }, { nombre:'Plata', xp:600 },
+      { nombre:'Oro', xp:1400 }, { nombre:'Platino', xp:3000 }, { nombre:'Maestro', xp:6000 }
+    ];
+    const nivelIdx = NIVELES_RETO.reduce((actual, nivel, i) => _progreso.xp >= nivel.xp ? i : actual, 0);
+    const nivelActual = NIVELES_RETO[nivelIdx];
+    const nivelSiguiente = NIVELES_RETO[nivelIdx + 1] || null;
 
     const MED = [
       { id:'rt1', nombre:'Primer reto', desc:'Completa tu primer reto',    ic:'i-play',     meta:1,  val:nHechos,         unidad:'reto' },
@@ -8309,14 +8495,30 @@ const Sections = (function(){
         </div>`;
     }
 
+    // Camino a maestría: una lectura visual del nivel real del usuario, sin cambiar el XP.
+    const rutaItems = NIVELES_RETO.map((nivel, i) => {
+      const estado = i < nivelIdx ? 'Superado' : i === nivelIdx ? 'Estás aquí' : `${nivel.xp.toLocaleString('es-MX')} XP`;
+      const clase = i < nivelIdx ? 'is-done' : i === nivelIdx ? 'is-current' : '';
+      return `<div class="retos-route__item ${clase}" aria-label="Nivel ${escapeHtml(nivel.nombre)}: ${estado}">
+        <span class="retos-route__node">${i < nivelIdx ? '✓' : i + 1}</span>
+        <span class="retos-route__label">${escapeHtml(nivel.nombre)}</span>
+        <span class="retos-route__state">${estado}</span>
+      </div>`;
+    }).join('');
+    const rutaHtml = `<section class="retos-route" aria-label="Camino a maestría">
+      <div class="retos-route__head"><div><div class="retos-route__eyebrow">Camino a maestría</div><h2 class="retos-route__title">Seis niveles de dominio</h2></div><span class="retos-route__note">${nivelSiguiente ? `Faltan ${(nivelSiguiente.xp - _progreso.xp).toLocaleString('es-MX')} XP para ${nivelSiguiente.nombre}` : 'Nivel máximo alcanzado'}</span></div>
+      <div class="retos-route__scroll"><div class="retos-route__track">${rutaItems}</div></div>
+    </section>`;
+
     container.innerHTML = `
       <div class="fade-up">
         ${_progresoSinPermiso ? `<div style="background:color-mix(in srgb,var(--danger) 12%,transparent);border:1px solid color-mix(in srgb,var(--danger) 35%,transparent);border-radius:12px;padding:12px 14px;margin-bottom:18px;font-size:12px;color:var(--danger);">Tu avance no se está guardando (falta permiso en Firestore para <code style="font-family:'JetBrains Mono',monospace;">progreso</code>). Los puntos que ganes ahora se van a perder al recargar.</div>` : ''}
         <section class="retos2-hero" style="background-image:linear-gradient(100deg,var(--primary-deep) 0%,rgba(74,14,26,.95) 40%,rgba(107,21,38,.55) 100%),url('${_retoImg(RETO_FOTO_HERO, 1400)}')">
           <div>
-            <span class="banner__eyebrow"><svg class="ic ic--sm"><use href="#i-bolt"/></svg>Zona de retos</span>
-            <h1 class="retos2-hero__title">Practica. Acierta.<br><span class="banner__title-accent">Sube de nivel.</span></h1>
+            <span class="banner__eyebrow"><svg class="ic ic--sm"><use href="#i-trophy"/></svg>Liga DulceLab</span>
+            <h1 class="retos2-hero__title">Aprende. Compite.<br><span class="banner__title-accent">Llega a la cima.</span></h1>
             <p class="retos2-hero__sub">Pon a prueba lo que sabes de gastronomía. Cada reto completado suma puntos y cuenta para tu racha.</p>
+            <div class="retos2-hero__level">Nivel ${nivelIdx + 1} · ${escapeHtml(nivelActual.nombre)}</div>
             <div class="retos2-hero__prog">
               <div class="retos2-hero__prog-top"><span><strong>${nHechos}</strong> de ${total} retos superados</span><strong>${pct}%</strong></div>
               <div class="hero-progress__bar"><div class="hero-progress__fill" style="width:${pct}%"></div></div>
@@ -8324,8 +8526,9 @@ const Sections = (function(){
             </div>
           </div>
           <aside class="retos2-score">
-            <div class="retos2-score__lbl">Tu marcador</div>
-            <div class="retos2-score__xp">${_progreso.xp}<small>XP de retos</small></div>
+            <div class="retos2-score__lbl">Tu nivel actual</div>
+            <div class="retos2-score__xp">${nivelIdx + 1}<small>de ${NIVELES_RETO.length} niveles</small></div>
+            <div class="retos2-score__rank">${escapeHtml(nivelActual.nombre)} · ${_progreso.xp.toLocaleString('es-MX')} XP</div>
             <div class="retos2-score__stats">
               <div><strong>${nHechos}/${total}</strong><span>retos</span></div>
               <div><strong>${_progreso.racha}</strong><span>días de racha</span></div>
@@ -8334,8 +8537,7 @@ const Sections = (function(){
           </aside>
         </section>
 
-        <div class="retos2-row">
-          ${nextHtml}
+        <div class="retos2-overview">
           <aside class="retos2-mision">
             <div class="retos2-mision__head">
               <span class="retos2-mision__ic"><svg class="ic"><use href="#i-check-circle"/></svg></span>
@@ -8349,18 +8551,27 @@ const Sections = (function(){
               </div>`).join('')}
             <div class="retos2-mision__foot">Completa las 3 para dominar la semana</div>
           </aside>
+          ${rutaHtml}
         </div>
 
+        <section class="retos2-zone">
+          <div class="retos2-sec">
+            <div><div class="retos2-sec__eyebrow">Entrena tus conocimientos</div><h2 class="retos2-sec__title">Zona de retos</h2></div>
+            <span class="retos2-sec__note">${_progreso.xp.toLocaleString('es-MX')} XP acumulados</span>
+          </div>
+          ${nextHtml}
+        </section>
+
         <div class="retos2-sec">
-          <div><div class="retos2-sec__eyebrow">Entrena tus conocimientos</div><h2 class="retos2-sec__title">Elige cómo practicar</h2></div>
-          <span class="retos2-sec__note">${_progreso.xp} XP acumulados</span>
+          <div><div class="retos2-sec__eyebrow">Modalidades de juego</div><h2 class="retos2-sec__title">Elige cómo practicar</h2></div>
+          <span class="retos2-sec__note">${total} retos disponibles</span>
         </div>
         <div class="retos2-modes" id="retos2-modes"></div>
         <div class="cursos-chips" id="retos2-chips"></div>
         <div class="retos2-grid" id="retos2-grid"></div>
 
         <div class="retos2-sec" style="margin-top:38px">
-          <div><div class="retos2-sec__eyebrow">Reconocimientos</div><h2 class="retos2-sec__title">Medallas de retos</h2></div>
+          <div><div class="retos2-sec__eyebrow">Avance verificado</div><h2 class="retos2-sec__title">Tus reconocimientos</h2></div>
           <span class="retos2-sec__note">${MED.filter(m => m.ok).length}/${MED.length} ganadas</span>
         </div>
         <div class="logros2-grid" style="--cols:4">
@@ -9050,7 +9261,7 @@ const Sections = (function(){
       await cargarWebinarsFirestore();
     }
 
-    // Sin webinars → empty state limpio
+    // Sin webinars → estado vacío original
     if (webinars.length === 0) {
       container.innerHTML = `
         <div class="fade-up">
@@ -9078,13 +9289,13 @@ const Sections = (function(){
     const prox=proximas[0];
     container.innerHTML=`
       <div class="fade-up">
-        <div class="sec-hero">
+        <div class="sec-hero live-section-heading">
           <span class="sec-hero__eyebrow">Aprende en directo</span>
           <h1 class="sec-hero__title">Clases en vivo</h1>
           <p class="sec-hero__sub">Sesiones en directo con chefs y expertos en gastronomía e inocuidad. Pregunta en vivo, las grabaciones quedan disponibles.</p>
         </div>
         ${prox?renderProxHero(prox):''}
-        <div class="tabs">
+        <div class="tabs live-webinar-tabs">
           <button class="tab ${webState.tab==='proximas'?'is-active':''}" data-wtab="proximas">Próximas · ${proximas.length}</button>
           <button class="tab ${webState.tab==='grabadas'?'is-active':''}" data-wtab="grabadas">Grabaciones · ${grabadas.length}</button>
           <button class="tab ${webState.tab==='registradas'?'is-active':''}" data-wtab="registradas">Mis registradas · ${mias.length}</button>
@@ -9138,7 +9349,7 @@ const Sections = (function(){
   function renderProxHero(w){
     const f=new Date(w.fecha);
     return `
-      <div class="webinar-hero" data-skip-overlay="true">
+      <div class="webinar-hero" data-skip-overlay="true" style="background-image:url('${coverSVG(w.area, w.titulo)}');">
         <div class="webinar-hero__info">
           <span class="sec-hero__eyebrow">Próximo en vivo</span>
           <h2 class="webinar-hero__title">${w.titulo}</h2>
@@ -12198,6 +12409,18 @@ function initNav(){
     });
   });
 
+  // Herramientas: se mantienen disponibles, pero se muestran solo al abrir el grupo.
+  const toolsToggle = document.getElementById('nav-tools-toggle');
+  const toolsMenu = document.getElementById('nav-tools-menu');
+  if (toolsToggle && toolsMenu) {
+    toolsToggle.addEventListener('click', () => {
+      const abierto = toolsToggle.getAttribute('aria-expanded') === 'true';
+      toolsToggle.setAttribute('aria-expanded', String(!abierto));
+      toolsMenu.hidden = abierto;
+      toolsToggle.closest('.nav-tools')?.classList.toggle('is-open', !abierto);
+    });
+  }
+
   // ─── Drawer móvil · botón "Más" + cierre ───
   const moreBtn = document.getElementById('mobile-nav-more');
   const drawer = document.getElementById('mobile-drawer');
@@ -12238,6 +12461,7 @@ function initNav(){
 
   // ─── Botones del DOM estático (topbar, sidebar, widgets siempre presentes) ───
   document.getElementById('btn-logout')?.addEventListener('click',openLogoutModal);
+  document.getElementById('btn-top-logout')?.addEventListener('click',openLogoutModal);
   document.getElementById('btn-wa')?.addEventListener('click',()=>{
     if(!DULCELAB_CONTACT.canal){ Toast.info('Aún no está configurado','Pídele al equipo que ponga el canal de WhatsApp en Admin → Configuración'); return; }
     window.open(DULCELAB_CONTACT.canal,'_blank');
@@ -13061,7 +13285,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 <style>
 /* ═══ Drawer móvil · menú completo con todas las opciones ═══ */
 .mobile-drawer{display:none}
-@media (max-width:768px){
+@media (max-width:1100px){
   .mobile-drawer{display:block}
   .mobile-drawer{position:fixed;inset:0;z-index:9500;visibility:hidden;pointer-events:none}
   .mobile-drawer.is-open{visibility:visible;pointer-events:auto}
