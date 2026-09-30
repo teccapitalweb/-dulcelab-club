@@ -448,7 +448,7 @@ body{
 }
 .content-row:hover .content-row__thumb{transform:scale(1.06) rotate(-3deg)}
 .content-row:hover .content-row__thumb::after{opacity:.55}
-.content-row__thumb--video{background:#3B82F6}
+.content-row__thumb--video{background:#B8862F}
 .content-row__thumb--live{background:#EF4444}
 .content-row__thumb--pdf{background:#D5A13D}
 .content-row__thumb--tool{background:var(--primary)}
@@ -6880,23 +6880,38 @@ const Sections = (function(){
 
   function coverSVG(area, titulo){
     var a=(area||'').toLowerCase(), t=(titulo||'').toLowerCase();
-    var IMG={
-      micro:'https://images.unsplash.com/photo-1596051827487-7b3d6f6df842?w=900&q=80&auto=format&fit=crop',
-      mol:'https://images.unsplash.com/photo-1681911046064-e663d5192921?w=900&q=80&auto=format&fit=crop',
-      lab:'https://images.unsplash.com/photo-1748261348213-62f4c399bb72?w=900&q=80&auto=format&fit=crop',
-      scope:'https://images.unsplash.com/photo-1526930700683-86db0d6bab09?w=900&q=80&auto=format&fit=crop'
+    // Portada generada en c\u00f3digo (gradiente Vino + \u00edcono) \u2014 sin fotos externas,
+    // as\u00ed nunca depende de un hotlink roto ni de fotos que no sean de DulceLab.
+    var ICONS={
+      cocina:'<path d="M9 2v7a2 2 0 0 0 2 2 2 2 0 0 0 2-2V2M13 2v9M17 2v6a2 2 0 0 1-4 0M6 15h20v2a8 8 0 0 1-8 8 8 8 0 0 1-8-8v-2z"/>',
+      reposteria:'<path d="M6 17c0-6 5-11 10-11s10 5 10 11H6z"/><path d="M6 17h20v2a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3v-2z"/><path d="M16 6V3"/>',
+      costos:'<rect x="5" y="4" width="22" height="24" rx="2"/><path d="M10 10h12M10 15h6M10 20h6M19 15h3M19 20h3"/>',
+      catering:'<path d="M4 15h24M16 4v11M6 15a10 10 0 0 0 20 0"/><path d="M11 26h10"/>'
+    };
+    var GRAD={
+      cocina:['#6B1526','#9E2A47'],
+      reposteria:['#9E2A47','#B8862F'],
+      costos:['#6B1526','#B8862F'],
+      catering:['#4A0F1C','#6B1526']
     };
     function pick(){
-      if(a.indexOf('microbi')>=0||a.indexOf('parasit')>=0)return'micro';
-      if(a.indexOf('molecular')>=0||a.indexOf('gen\u00e9t')>=0||a.indexOf('genet')>=0)return'mol';
-      if(a.indexOf('investig')>=0)return'scope';
-      if(a.indexOf('bioqu')>=0||a.indexOf('qu\u00edmic')>=0||a.indexOf('quimic')>=0||a.indexOf('laboratorio')>=0||a.indexOf('hemato')>=0||a.indexOf('inmuno')>=0||a.indexOf('biomedic')>=0)return'lab';
-      if(/microbi|bacteri|gram|cultivo|antibiog|ferment|levadur|petri|agar/.test(t))return'micro';
-      if(/molecular|adn|dna|pcr|crispr|gen\u00e9t|genet|secuenc/.test(t))return'mol';
-      if(/cristal|material|difrac|microsc/.test(t))return'scope';
-      return'lab';
+      if(a.indexOf('reposter')>=0||a.indexOf('pastel')>=0||a.indexOf('panader')>=0)return'reposteria';
+      if(a.indexOf('costo')>=0||a.indexOf('negocio')>=0||a.indexOf('merma')>=0)return'costos';
+      if(a.indexOf('catering')>=0||a.indexOf('volumen')>=0||a.indexOf('brigada')>=0)return'catering';
+      if(/reposter|pastel|panader|conserva|mermelada/.test(t))return'reposteria';
+      if(/costo|merma|inventari|rentabilidad|negocio/.test(t))return'costos';
+      if(/catering|volumen|brigada|producci/.test(t))return'catering';
+      return'cocina';
     }
-    return IMG[pick()];
+    var key=pick(), g=GRAD[key], icon=ICONS[key];
+    var svg='<svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 900 600">'
+      +'<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">'
+      +'<stop offset="0" stop-color="'+g[0]+'"/><stop offset="1" stop-color="'+g[1]+'"/>'
+      +'</linearGradient></defs>'
+      +'<rect width="900" height="600" fill="url(#g)"/>'
+      +'<g transform="translate(330,190) scale(9)" fill="none" stroke="#ffffff" stroke-opacity="0.16" stroke-width="0.6" stroke-linecap="round" stroke-linejoin="round">'+icon+'</g>'
+      +'</svg>';
+    return 'data:image/svg+xml;utf8,'+encodeURIComponent(svg);
   }
   function getPortadaCurso(curso){
     if (curso.portada) return curso.portada;
@@ -7842,7 +7857,7 @@ const Sections = (function(){
             </div>
             <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;letter-spacing:-.6px;line-height:1.2;margin-bottom:10px;">Aún no tienes certificados emitidos</h2>
             <p style="font-size:14px;color:var(--text-2);line-height:1.6;max-width:480px;margin:0 auto 24px;">
-              Para emitir tu primer certificado oficial DulceLab Food, <strong style="color:var(--text);">activa tu membresía VIP</strong> y completa el 100% de las clases de cualquiera de nuestros cursos de biomedicina, microbiología y medicina.
+              Para emitir tu primer certificado oficial DulceLab Food, <strong style="color:var(--text);">activa tu membresía VIP</strong> y completa el 100% de las clases de cualquiera de nuestros cursos de cocina, repostería y gestión gastronómica.
             </p>
             <div style="display:flex;flex-direction:column;gap:10px;align-items:center;max-width:380px;margin:0 auto 24px;text-align:left;">
               <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-2);width:100%;"><span style="color:var(--primary);font-size:18px;flex-shrink:0;">✓</span><span>Folio único <code style="font-family:'JetBrains Mono',monospace;background:var(--surface-3);padding:2px 6px;border-radius:4px;font-size:11px;color:var(--primary);">DulceLab Food-2026-XXXXXX</code></span></div>
@@ -9992,7 +10007,7 @@ const Sections = (function(){
   function renderMes(container, key){
     const m = bibliotecaMeses[key];
     if (!m) return;
-    const COLOR_TIPO = {video:'#3B82F6',live:'#EF4444',pdf:'#D5A13D'};
+    const COLOR_TIPO = {video:'#B8862F',live:'#EF4444',pdf:'#D5A13D'};
     const ICON_TIPO = {video:'i-play',live:'i-broadcast',pdf:'i-news'};
     container.innerHTML = `
       <div class="fade-up">
@@ -11724,7 +11739,7 @@ const Sections = (function(){
 
   function renderVideoteca(container){
     const m = bibliotecaMeses[videotecaState.mes];
-    const COLOR_TIPO = {video:'#3B82F6',live:'#EF4444',pdf:'#D5A13D'};
+    const COLOR_TIPO = {video:'#B8862F',live:'#EF4444',pdf:'#D5A13D'};
     const ICON_TIPO = {video:'i-play',live:'i-broadcast',pdf:'i-news'};
     const totalVideos = Object.values(bibliotecaMeses).reduce((s,x)=>s+x.videos,0);
     const totalPdfs = Object.values(bibliotecaMeses).reduce((s,x)=>s+x.pdfs,0);

@@ -1623,7 +1623,7 @@ const Pages={
                 }
                 return arr.map(m => {
                   const planLabel = m.plan === 'anual' || m.plan === 'Anual' ? 'Anual' : 'Mensual';
-                  const c1 = planLabel === 'Anual' ? '#6B1526' : '#3B82F6';
+                  const c1 = planLabel === 'Anual' ? '#6B1526' : '#B8862F';
                   const activo = m.activo !== false;
                   return `
                     <div class="mini-row" style="--c1:${c1};">
@@ -1708,7 +1708,7 @@ const Pages={
                   return `<div style="padding:24px;text-align:center;color:var(--text-3);font-size:13px;">${ready ? 'Sin noticias del cron' : 'Cargando…'}</div>`;
                 }
                 return arr.map(n => {
-                  const colorMap = {'cocina':'#EF4444','reposteria':'#6B1526','inocuidad':'#22C55E','negocio':'#3B82F6','bebidas':'#14B8A6'};
+                  const colorMap = {'cocina':'#EF4444','reposteria':'#6B1526','inocuidad':'#22C55E','negocio':'#B8862F','bebidas':'#14B8A6'};
                   const c = colorMap[n.categoria] || colorMap[n.cat] || '#6B1526';
                   const titulo = n.titulo || 'Sin título';
                   const f = n.fechaPublicacion?.toDate ? n.fechaPublicacion.toDate() : (n.fechaPublicacion ? new Date(n.fechaPublicacion) : null);
@@ -1793,7 +1793,7 @@ const Pages={
             }).length}</div>
             <div class="kpi-card__sub">Últimas 24 horas</div>
           </div>
-          <div class="kpi-card" style="--c1:#3B82F6;--c2:#60A5FA;">
+          <div class="kpi-card" style="--c1:#B8862F;--c2:#E5C171;">
             <div class="kpi-card__label">Esta semana</div>
             <div class="kpi-card__value">${notifs.filter(n => {
               const ms = n.createdAt?.toDate?.()?.getTime?.() || 0;
@@ -2412,7 +2412,7 @@ const Pages={
         <div class="kpi-card__value">${activos}</div>
         <div class="kpi-card__sub">${inactivos} inactivo${inactivos!==1?'s':''}</div>
       </div>
-      <div class="kpi-card" style="--c1:#3B82F6;--c2:#60A5FA;">
+      <div class="kpi-card" style="--c1:#B8862F;--c2:#E5C171;">
         <div class="kpi-card__label">Total clases</div>
         <div class="kpi-card__value">${totalClases}</div>
         <div class="kpi-card__sub">${cursos.length > 0 ? `${(totalClases/cursos.length).toFixed(1)} prom. por curso` : '—'}</div>
@@ -2540,7 +2540,7 @@ const Pages={
     const area = c.area || 'Sin área';
     const areaColors = {
       'Repostería':'#6B1526', 'Panadería':'#D5A13D', 'Cocina mexicana':'#EF4444',
-      'Cocina internacional':'#F97316', 'Alta cocina':'#8B5CF6', 'Control de costos':'#3B82F6',
+      'Cocina internacional':'#F97316', 'Alta cocina':'#8B5CF6', 'Control de costos':'#B8862F',
       'Catering y eventos':'#A855F7', 'Inocuidad y NOM-251':'#22C55E', 'Barismo y bebidas':'#14B8A6',
       'Otro':'#EC4899'
     };
@@ -2595,7 +2595,7 @@ const Pages={
     const area = c.area || 'Sin área';
     const areaColors = {
       'Repostería':'#6B1526', 'Panadería':'#D5A13D', 'Cocina mexicana':'#EF4444',
-      'Cocina internacional':'#F97316', 'Alta cocina':'#8B5CF6', 'Control de costos':'#3B82F6',
+      'Cocina internacional':'#F97316', 'Alta cocina':'#8B5CF6', 'Control de costos':'#B8862F',
       'Catering y eventos':'#A855F7', 'Inocuidad y NOM-251':'#22C55E', 'Barismo y bebidas':'#14B8A6',
       'Otro':'#EC4899'
     };
@@ -3053,7 +3053,7 @@ const Pages={
     }
     cont.innerHTML = mats.map((m, idx) => `
       <div style="display:flex;gap:8px;align-items:flex-start;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:10px;">
-        <span style="background:color-mix(in srgb,#3B82F6 14%,transparent);color:#3B82F6;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:800;letter-spacing:.6px;padding:5px 8px;border-radius:6px;flex-shrink:0;margin-top:4px;white-space:nowrap;">MAT ${idx + 1}</span>
+        <span style="background:color-mix(in srgb,#B8862F 14%,transparent);color:#B8862F;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:800;letter-spacing:.6px;padding:5px 8px;border-radius:6px;flex-shrink:0;margin-top:4px;white-space:nowrap;">MAT ${idx + 1}</span>
         <div style="flex:1;display:flex;flex-direction:column;gap:6px;min-width:0;">
           <input type="text" class="input" placeholder="Título (ej. Guía de medios de cultivo.pdf)" value="${(m.titulo || '').replace(/"/g,'&quot;')}" data-mat-idx="${idx}" data-mat-campo="titulo" style="font-size:13px;padding:8px 11px;">
           <input type="url" class="input" placeholder="URL de descarga (Google Drive, etc.)" value="${(m.url || '').replace(/"/g,'&quot;')}" data-mat-idx="${idx}" data-mat-campo="url" style="font-size:13px;padding:8px 11px;">
@@ -3806,7 +3806,7 @@ const Pages={
     const progresivo = total - siempre;
     const cursosConMat = new Set(mats.map(m => m.cursoId)).size;
     wrap.innerHTML = `
-      <div class="kpi-card" style="--c1:#3B82F6;--c2:#60A5FA;">
+      <div class="kpi-card" style="--c1:#B8862F;--c2:#E5C171;">
         <div class="kpi-card__label">Total materiales</div>
         <div class="kpi-card__value">${total}</div>
         <div class="kpi-card__sub">${cursosConMat} curso${cursosConMat!==1?'s':''} con material</div>
@@ -3864,7 +3864,7 @@ const Pages={
 
     if (!store?.ready) {
       wrap.innerHTML = `<div class="curso-list">${[1,2,3].map(()=>`
-        <div class="curso-row" style="--area-color:#3B82F6;">
+        <div class="curso-row" style="--area-color:#B8862F;">
           <div class="curso-row__thumb skeleton-shimmer" style="background-image:none;"></div>
           <div class="curso-row__body">
             <div class="skeleton-line skeleton-shimmer" style="width:60%;height:14px;"></div>
@@ -3907,13 +3907,13 @@ const Pages={
 
     const areaColors = {
       'Repostería':'#6B1526', 'Panadería':'#D5A13D', 'Cocina mexicana':'#EF4444',
-      'Cocina internacional':'#F97316', 'Alta cocina':'#8B5CF6', 'Control de costos':'#3B82F6',
+      'Cocina internacional':'#F97316', 'Alta cocina':'#8B5CF6', 'Control de costos':'#B8862F',
       'Catering y eventos':'#A855F7', 'Inocuidad y NOM-251':'#22C55E', 'Barismo y bebidas':'#14B8A6',
       'Otro':'#EC4899'
     };
 
     wrap.innerHTML = `<div class="curso-list">${mats.map(m => {
-      const areaColor = areaColors[m.cursoArea] || '#3B82F6';
+      const areaColor = areaColors[m.cursoArea] || '#B8862F';
       const dispLabel = m.disponibleSiempre
         ? `<span style="color:#E5C171;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;">Siempre</span>`
         : (m.desbloquearEnDias !== null
@@ -4294,7 +4294,7 @@ const Pages={
 
         <div class="curso-pills">
           <button class="curso-pill" data-mb-plan="todos" data-active="1">Todos los planes</button>
-          <button class="curso-pill" data-mb-plan="mensual"><span class="curso-pill__dot" style="background:#3B82F6;"></span>Mensual</button>
+          <button class="curso-pill" data-mb-plan="mensual"><span class="curso-pill__dot" style="background:#B8862F;"></span>Mensual</button>
           <button class="curso-pill" data-mb-plan="anual"><span class="curso-pill__dot" style="background:#6B1526;"></span>Anual</button>
           <button class="curso-pill" data-mb-plan="regalo"><span class="curso-pill__dot" style="background:#A855F7;"></span>Regalo</button>
           <button class="curso-pill" data-mb-plan="sin-pagar"><span class="curso-pill__dot" style="background:#9CA3AF;"></span>Sin pagar</button>
@@ -4425,7 +4425,7 @@ const Pages={
         <div class="kpi-card__value">${registradosSinPagar}</div>
         <div class="kpi-card__sub">${registradosSinPagar > 0 ? 'Oportunidad de venta' : 'Aún no hay'}</div>
       </div>
-      <div class="kpi-card" style="--c1:#3B82F6;--c2:#60A5FA;">
+      <div class="kpi-card" style="--c1:#B8862F;--c2:#E5C171;">
         <div class="kpi-card__label">Plan Mensual</div>
         <div class="kpi-card__value">${mensuales}</div>
         <div class="kpi-card__sub">$${(mensuales * _pm).toLocaleString('es-MX')} MXN/mes</div>
@@ -4564,7 +4564,7 @@ const Pages={
     const esSoloRegistrado = (m.activa !== true && m.activo !== true) && !m.plan;
 
     const planLabels = {
-      mensual: { label:'MENSUAL', color:'#3B82F6' },
+      mensual: { label:'MENSUAL', color:'#B8862F' },
       anual:   { label:'ANUAL',   color:'#6B1526' },
       regalo:  { label:'REGALO',  color:'#A855F7' },
       admin:   { label:'ADMIN',   color:'#FBBF24' }
@@ -4776,7 +4776,7 @@ const Pages={
 
         ${!activo ? `
           <!-- ─── ACCIONES PARA NO-MIEMBRO ─── -->
-          <button class="mb-action-btn" data-act="activar-mensual" style="--c:#3B82F6;">
+          <button class="mb-action-btn" data-act="activar-mensual" style="--c:#B8862F;">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
             <div class="mb-action-btn__body">
               <div class="mb-action-btn__title">Activar Plan Mensual</div>
@@ -4915,7 +4915,7 @@ const Pages={
     const planLabel = plan === 'mensual' ? 'Plan Mensual' : 'Plan Anual';
     // MODIFICADO: precio en vivo desde config/club
     const precio = (plan === 'mensual' ? fmtPrecioMXN(window.__preciosClub.mes) : fmtPrecioMXN(window.__preciosClub.ano)) + ' MXN';
-    const color = plan === 'mensual' ? '#3B82F6' : '#6B1526';
+    const color = plan === 'mensual' ? '#B8862F' : '#6B1526';
     const nombre = (m.nombre || m.email || 'Este miembro').replace(/</g,'&lt;');
     const expiraDate = new Date(Date.now() + days * 86400 * 1000);
     const expiraFmt = expiraDate.toLocaleDateString('es-MX', { day:'numeric', month:'long', year:'numeric' });

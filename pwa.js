@@ -54,7 +54,7 @@
       '#bn-install span{display:block;font-size:.8rem;color:#5b6b88;line-height:1.35;margin-top:2px}',
       '#bn-install button{font-family:inherit;cursor:pointer;border:none;border-radius:12px}',
       '#bn-install .bn-ok{min-height:44px;padding:0 16px;font-weight:800;font-size:.9rem;',
-      '  color:#fff;background:linear-gradient(135deg,#06b6d4,#0891b2);flex:0 0 auto}',
+      '  color:#fff;background:linear-gradient(135deg,#6B1526,#9E2A47);flex:0 0 auto}',
       '#bn-install .bn-no{min-width:44px;min-height:44px;background:none;color:#5b6b88;',
       '  font-size:1.5rem;line-height:1;flex:0 0 auto}',
       '@media (min-width:781px){#bn-install{left:auto;right:18px;max-width:400px}}',
