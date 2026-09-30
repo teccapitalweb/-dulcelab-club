@@ -5717,17 +5717,32 @@ const Sections = (function(){
     );
   };
 
-  window.abrirMaterialDulcelab = function(cursoId, indexMaterial) {
+  // MODIFICADO (revisión de seguridad): igual que abrirMaterial() en
+  // renderPDFs — la URL real ya no vive en curso.materiales[], se pide al
+  // webhook al momento de abrir, y el servidor decide con la misma regla
+  // de acceso que antes solo corría en el navegador.
+  window.abrirMaterialDulcelab = async function(cursoId, indexMaterial) {
     const curso = cursos.find(c => c.id === cursoId);
     const material = curso?.materiales?.[Number(indexMaterial)];
     if (!curso || !material) return;
 
-    if (!tieneAccesoVipCompleto() && !esMaterialGratis(cursoId, indexMaterial)) {
-      mostrarPaywallCurso(curso);
-      return;
+    try {
+      const headers = { 'Content-Type': 'application/json' };
+      if (window.__currentUser) headers.Authorization = 'Bearer ' + await window.__currentUser.getIdToken();
+      const res = await fetch(`${window.WEBHOOK_URL}/api/materiales/url`, {
+        method: 'POST', headers,
+        body: JSON.stringify({ cursoId, materialIndex: Number(indexMaterial) })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.url) {
+        if (res.status === 403) { mostrarPaywallCurso(curso); return; }
+        throw new Error(data.error || `Error HTTP ${res.status}`);
+      }
+      window.abrirVisor(data.url, material.titulo || 'Material del curso');
+    } catch (e) {
+      console.error('[material]', e);
+      if (window.Toast) window.Toast.error('No se pudo abrir', 'Intenta de nuevo en un momento');
     }
-
-    window.abrirVisor(material.url || '', material.titulo || 'Material del curso');
   };
 
   function progresoCursoPct(cursoId, totalClases) {
@@ -7540,19 +7555,20 @@ const Sections = (function(){
 
       // Materiales (PDFs) del curso — con detección de tipo + expansión fancy
       if (c.materiales && c.materiales.length > 0) {
-        // Detector de tipo según la URL
-        const tipoMat = (url) => {
-          const u = (url || '').toLowerCase();
-          if (u.includes('/presentation/')) return { lbl:'Presentación', color:'#C4577A', ic:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>' };
-          if (u.includes('/spreadsheets/')) return { lbl:'Excel', color:'#E5C171', ic:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>' };
-          if (u.includes('/document/')) return { lbl:'Documento', color:'#60A5FA', ic:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>' };
-          if (u.includes('/folders/')) return { lbl:'Carpeta', color:'#D5A13D', ic:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>' };
+        // Detector de tipo · MODIFICADO (revisión de seguridad): ya no hay
+        // m.url aquí (ver abrirMaterialDulcelab), así que se usa m.tipo
+        // (lo guarda el admin) en vez de mirar la URL.
+        const tipoMat = (m) => {
+          const tipo = (m && m.tipo) || 'pdf';
+          if (tipo === 'ppt') return { lbl:'Presentación', color:'#C4577A', ic:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>' };
+          if (tipo === 'excel') return { lbl:'Excel', color:'#E5C171', ic:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>' };
+          if (tipo === 'doc') return { lbl:'Documento', color:'#60A5FA', ic:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>' };
           return { lbl:'PDF', color:'#F87171', ic:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>' };
         };
 
         // Renderiza una tarjeta de material
         const matCard = (m, materialIndex) => {
-          const t = tipoMat(m.url);
+          const t = tipoMat(m);
           const muestraGratis = esMaterialGratis(id, materialIndex);
           const accesoMaterial = tieneAccesoVipCompleto() || muestraGratis;
           const estadoMaterial = tieneAccesoVipCompleto()
@@ -9648,7 +9664,10 @@ const Sections = (function(){
           cursoArea: c.area || 'General',
           cursoDisponibleSiempre: c.disponibleSiempre === true,
           titulo: m.titulo || 'Sin título',
-          url: m.url || '',
+          tipo: m.tipo || null,
+          // MODIFICADO (revisión de seguridad): ya no se guarda/usa m.url — la URL
+          // real del material vive aparte y se pide al webhook solo al abrirlo
+          // (ver abrirMaterial), para no mandarla al navegador de quien no pagó.
           imagen: m.imagen || m.portada || m.cover || '',
           disponibleSiempre: m.disponibleSiempre === true,
           desbloquearEnDias: typeof m.desbloquearEnDias === 'number' ? m.desbloquearEnDias : null,
@@ -9690,8 +9709,14 @@ const Sections = (function(){
   }
 
   // Inferir tamaño desde la URL (heurística simple · solo si no hay metadata)
-  function _inferirTipoMaterial(url) {
-    const u = (url || '').toLowerCase();
+  // MODIFICADO (revisión de seguridad): ya no se recibe la URL real del
+  // material aquí (ver nota en renderPDFs/abrirMaterial) — el tipo ahora
+  // lo guarda el admin al crear el material (campo `tipo`). Se deja el
+  // cálculo por extensión de URL solo como respaldo para material que no
+  // se haya vuelto a guardar desde el cambio.
+  function _inferirTipoMaterial(m) {
+    if (m && typeof m === 'object' && m.tipo) return m.tipo;
+    const u = String((m && typeof m === 'object') ? (m.url || '') : (m || '')).toLowerCase();
     if (u.endsWith('.xlsx') || u.endsWith('.xls') || u.includes('sheets.google')) return 'excel';
     if (u.endsWith('.pdf')) return 'pdf';
     if (u.endsWith('.pptx') || u.endsWith('.ppt') || u.includes('presentation')) return 'ppt';
@@ -9771,7 +9796,7 @@ const Sections = (function(){
   }
 
   function _matInfo(m){
-    const tipo = _inferirTipoMaterial(m.url);
+    const tipo = _inferirTipoMaterial(m);
     const gratis = esMaterialGratis(m.cursoId, m.materialIndex);
     const disponible = _materialDisponible(m);
     const requiere = !tieneAccesoVipCompleto() && !gratis;
@@ -9829,7 +9854,7 @@ const Sections = (function(){
     const disponiblesAhora = materialesTodos.filter(m => _materialDisponible(m)).length;
     const proximos = total - disponiblesAhora;
     const areasUnicas = Array.from(new Set(materialesTodos.map(m => m.cursoArea).filter(Boolean))).sort();
-    const tiposPresentes = ['pdf','ppt','excel','doc'].filter(t => materialesTodos.some(m => _inferirTipoMaterial(m.url) === t));
+    const tiposPresentes = ['pdf','ppt','excel','doc'].filter(t => materialesTodos.some(m => _inferirTipoMaterial(m) === t));
     const textoAccesoMateriales = tieneAccesoVipCompleto()
       ? 'Se desbloquean según tus días de membresía, igual que las clases.'
       : 'El primer material del primer curso es gratis. Activa tu membresía para abrir los demás.';
@@ -9883,15 +9908,36 @@ const Sections = (function(){
 
     const filtrar = () => materialesTodos.filter(m => {
       if (fTipo === 'guardados' && !guardados.has(m.id)) return false;
-      if (fTipo !== 'todos' && fTipo !== 'guardados' && _inferirTipoMaterial(m.url) !== fTipo) return false;
+      if (fTipo !== 'todos' && fTipo !== 'guardados' && _inferirTipoMaterial(m) !== fTipo) return false;
       if (fArea !== 'todas' && m.cursoArea !== fArea) return false;
       return true;
     });
 
-    const abrirMaterial = (m) => {
+    // MODIFICADO (revisión de seguridad): la URL real ya no viaja en el
+    // documento del curso (antes cualquiera la veía en devtools sin pagar).
+    // Ahora se pide al webhook justo al abrir, y el servidor repite la misma
+    // regla de acceso — si no corresponde, regresa 403 en vez de la URL.
+    const abrirMaterial = async (m) => {
       const info = _matInfo(m);
       if (info.disponible) {
-        if (m.url && typeof window.abrirVisor === 'function') window.abrirVisor(m.url, m.titulo);
+        if (typeof window.abrirVisor !== 'function') return;
+        try {
+          const headers = { 'Content-Type': 'application/json' };
+          if (window.__currentUser) headers.Authorization = 'Bearer ' + await window.__currentUser.getIdToken();
+          const res = await fetch(`${window.WEBHOOK_URL}/api/materiales/url`, {
+            method: 'POST', headers,
+            body: JSON.stringify({ cursoId: m.cursoId, materialIndex: m.materialIndex })
+          });
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok || !data.url) {
+            if (res.status === 403) { mostrarPaywallCurso(cursos.find(c => c.id === m.cursoId)); return; }
+            throw new Error(data.error || `Error HTTP ${res.status}`);
+          }
+          window.abrirVisor(data.url, m.titulo);
+        } catch (e) {
+          console.error('[material]', e);
+          if (Toast) Toast.error('No se pudo abrir', 'Intenta de nuevo en un momento');
+        }
       } else if (info.requiere) {
         mostrarPaywallCurso(cursos.find(c => c.id === m.cursoId));
       } else if (Toast) {

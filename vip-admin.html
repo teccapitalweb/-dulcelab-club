@@ -2159,6 +2159,17 @@ const Pages={
     }
     return IMG[pick()];
   },
+  // Mismo cálculo que inferirTipo() en el webhook — se usa al guardar un
+  // material para no depender de la URL más adelante (ver nota de seguridad
+  // en _submitCurso / _abrirModalMaterial).
+  _inferirTipoMat(url) {
+    const u = (url || '').toLowerCase();
+    if (u.endsWith('.xlsx') || u.endsWith('.xls') || u.includes('sheets.google')) return 'excel';
+    if (u.endsWith('.pdf')) return 'pdf';
+    if (u.endsWith('.pptx') || u.endsWith('.ppt') || u.includes('presentation')) return 'ppt';
+    if (u.endsWith('.docx') || u.endsWith('.doc') || u.includes('document')) return 'doc';
+    return 'pdf';
+  },
   _getPortada(curso) {
     if (curso.portada) return curso.portada;
     return Pages._coverSVG(curso.area, curso.titulo);
@@ -2191,6 +2202,9 @@ const Pages={
             </button>
             <button class="btn btn--ghost" id="sync-dulcelab-bunny-btn">
               🐰 Sincronizar videos Bunny
+            </button>
+            <button class="btn btn--ghost" id="migrar-materiales-btn" title="Mueve las URLs de materiales guardadas antes de la revisión de seguridad a su lugar protegido · solo hace falta correrlo una vez">
+              🔒 Migrar materiales a modo seguro
             </button>
           </div>
         </div>
@@ -2309,6 +2323,33 @@ const Pages={
     p.querySelector('#sync-dulcelab-bunny-btn')?.addEventListener('click', () => {
       Pages._sincronizarDulcelabBunny();
     });
+    p.querySelector('#migrar-materiales-btn')?.addEventListener('click', () => {
+      Pages._migrarMaterialesSeguro();
+    });
+  },
+
+  // Corre la migración de materiales (ver nota de seguridad en _submitCurso).
+  // Idempotente: si ya no queda ninguna url vieja en cursos/{id}.materiales[],
+  // simplemente no mueve nada — se puede correr de más sin riesgo.
+  async _migrarMaterialesSeguro() {
+    const btn = document.getElementById('migrar-materiales-btn');
+    if (btn) { btn.disabled = true; btn.textContent = 'Migrando…'; }
+    try {
+      const token = await Pages._getAuthToken();
+      const res = await fetch(`${Pages._webhookUrl}/api/materiales/migrar`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || res.statusText);
+      Toast.success('Migración lista', data.migrados > 0
+        ? `${data.migrados} material(es) movidos a su lugar protegido.`
+        : 'No había nada pendiente de migrar.');
+    } catch (e) {
+      Toast.error('No se pudo migrar', e.message || '');
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = '🔒 Migrar materiales a modo seguro'; }
+    }
   },
 
   _normalizarTituloBunny(texto) {
@@ -2871,6 +2912,29 @@ const Pages={
     this._renderSesionesModal();
     this._renderMaterialesModal();
 
+    // La URL real de cada material ya no vive en curso.materiales[] (ver nota
+    // de seguridad en _submitCurso) — se pide aparte al webhook para poder
+    // mostrarla en el formulario de edición.
+    if (esEdicion && this._modalCurso.materiales.length) {
+      (async () => {
+        try {
+          const token = await Pages._getAuthToken();
+          await Promise.all(this._modalCurso.materiales.map(async (m, i) => {
+            const r = await fetch(`${Pages._webhookUrl}/api/materiales/url`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+              body: JSON.stringify({ cursoId: c.id, materialIndex: i })
+            });
+            if (r.ok) {
+              const data = await r.json();
+              if (Pages._modalCurso.materiales[i]) Pages._modalCurso.materiales[i].url = data.url || '';
+            }
+          }));
+          Pages._renderMaterialesModal();
+        } catch (e) { console.warn('No se pudieron recuperar las URLs de materiales:', e.message); }
+      })();
+    }
+
     // ─── Bindings ───
     body.querySelector('#cf-add-sesion').addEventListener('click', () => Pages._agregarSesionModal());
     body.querySelector('#cf-add-material').addEventListener('click', () => Pages._agregarMaterialModal());
@@ -3226,8 +3290,14 @@ const Pages={
         sesionesLimpias.push(sesionLimpia);
       }
 
-      // Validar materiales (si tienen título, también necesitan URL · y al revés)
-      const matsLimpios = [];
+      // MODIFICADO (revisión de seguridad): la URL real de cada material ya NO
+      // se guarda en cursos/{id}.materiales[] — ese documento lo lee completo
+      // el panel por Firestore directo, así que cualquier campo ahí se manda al
+      // navegador sin importar membresía. La URL real se guarda aparte, vía el
+      // webhook (POST /api/materiales/guardar), después de guardar el curso.
+      // Aquí solo se valida y se guarda una versión "pública" sin url + su tipo.
+      const matsLimpios = [];   // versión pública (sin url) → va a Firestore cursos/{id}
+      const matsConUrl = [];    // { materialIndex, url } → va al webhook tras guardar el curso
       for (let i = 0; i < this._modalCurso.materiales.length; i++) {
         const m = this._modalCurso.materiales[i];
         const tieneTit = !!m.titulo?.trim();
@@ -3241,13 +3311,16 @@ const Pages={
           Toast.error(`Material ${i + 1}: URL inválida`, 'Verifica el enlace');
           throw new Error('skip');
         }
+        const urlLimpia = m.url.trim();
+        const idxPublico = matsLimpios.length;
         matsLimpios.push({
           titulo: m.titulo.trim(),
-          url: m.url.trim(),
+          tipo: Pages._inferirTipoMat(urlLimpia),
           disponibleSiempre: m.disponibleSiempre === true,
           desbloquearEnDias: typeof m.desbloquearEnDias === 'number' ? m.desbloquearEnDias : null,
           desbloqueaConClase: typeof m.desbloqueaConClase === 'number' ? m.desbloqueaConClase : null
         });
+        matsConUrl.push({ materialIndex: idxPublico, url: urlLimpia });
       }
 
       // Horas: si el usuario no puso nada o puso 0/inválido → usa nº de sesiones (mínimo 1)
@@ -3279,6 +3352,7 @@ const Pages={
         throw new Error('skip');
       }
 
+      let cursoIdFinal = editId;
       if (editId) {
         // ─── EDITAR ───
         await fb.updateDoc(fb.doc(fb.db, 'cursos', editId), data);
@@ -3292,8 +3366,25 @@ const Pages={
         data.orden = maxOrden + 1;
         data.createdAt = fb.serverTimestamp();
         data.creadoPor = window.__currentAdmin?.email || 'admin';
-        await fb.addDoc(fb.collection(fb.db, 'cursos'), data);
+        const nuevoDoc = await fb.addDoc(fb.collection(fb.db, 'cursos'), data);
+        cursoIdFinal = nuevoDoc.id;
         Toast.success('¡Curso creado!', `${titulo} · aparecerá en orden #${data.orden}`);
+      }
+
+      // Guarda la URL real de cada material aparte, vía el webhook (ver nota
+      // arriba) — no falla el guardado del curso si esto truena, solo avisa.
+      if (matsConUrl.length) {
+        const token = await Pages._getAuthToken();
+        const resultados = await Promise.all(matsConUrl.map(mc =>
+          fetch(`${Pages._webhookUrl}/api/materiales/guardar`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+            body: JSON.stringify({ cursoId: cursoIdFinal, materialIndex: mc.materialIndex, url: mc.url })
+          }).then(r => r.ok).catch(() => false)
+        ));
+        if (resultados.some(ok => !ok)) {
+          Toast.error('Aviso', 'El curso se guardó, pero algún material no se pudo guardar en el webhook. Reintenta guardar el curso.');
+        }
       }
 
       Modal.close();
@@ -3838,7 +3929,7 @@ const Pages={
           cursoArea: c.area || '—',
           idx,
           titulo: m.titulo || 'Sin título',
-          url: m.url || '',
+          tipo: m.tipo || null,
           disponibleSiempre: m.disponibleSiempre === true,
           desbloquearEnDias: typeof m.desbloquearEnDias === 'number' ? m.desbloquearEnDias : null
         });
@@ -3985,9 +4076,9 @@ const Pages={
             <div class="curso-row__stat">${dispLabel}</div>
           </div>
           <div class="curso-row__actions">
-            <a href="${(m.url||'').replace(/"/g,'&quot;')}" target="_blank" rel="noopener noreferrer" class="curso-card__action" title="Abrir enlace" onclick="event.stopPropagation()">
+            <button class="curso-card__action" data-mat-abrir-cid="${m.cursoId}" data-mat-abrir-idx="${m.idx}" title="Abrir enlace" onclick="event.stopPropagation()">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            </a>
+            </button>
             <button class="curso-card__action" data-mat-edit-cid="${m.cursoId}" data-mat-edit-idx="${m.idx}" title="Editar material">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
             </button>
@@ -4008,6 +4099,28 @@ const Pages={
       });
     });
 
+    // Bind "Abrir enlace" · la URL real ya no vive en el documento público,
+    // se pide al webhook (mismo endpoint que usa el panel) y se abre aparte.
+    wrap.querySelectorAll('[data-mat-abrir-cid]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const cursoId = btn.dataset.matAbrirCid;
+        const materialIndex = parseInt(btn.dataset.matAbrirIdx, 10);
+        try {
+          const token = await Pages._getAuthToken();
+          const res = await fetch(`${Pages._webhookUrl}/api/materiales/url`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+            body: JSON.stringify({ cursoId, materialIndex })
+          });
+          const data = await res.json();
+          if (!res.ok || !data.url) throw new Error(data.error || res.statusText);
+          window.open(data.url, '_blank', 'noopener,noreferrer');
+        } catch (e) {
+          Toast.error('No se pudo abrir el enlace', e.message || '');
+        }
+      });
+    });
+
     // Bind eliminar
     wrap.querySelectorAll('[data-mat-del-cid]').forEach(btn => {
       btn.addEventListener('click', async () => {
@@ -4025,6 +4138,16 @@ const Pages={
           const nuevos = (curso.materiales || []).slice();
           nuevos.splice(idx, 1);
           await fb.updateDoc(fb.doc(fb.db, 'cursos', cid), { materiales: nuevos });
+          // Recorre la subcolección protegida de URLs para que no quede
+          // desalineada con el material que ahora ocupa cada índice.
+          try {
+            const token = await Pages._getAuthToken();
+            await fetch(`${Pages._webhookUrl}/api/materiales/eliminar`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+              body: JSON.stringify({ cursoId: cid, materialIndex: idx })
+            });
+          } catch (e) { console.warn('No se pudo reacomodar materiales_privados:', e.message); }
           Toast.success('Material eliminado', mat.titulo);
         } catch (err) {
           console.error('[material] error eliminar:', err);
@@ -4134,6 +4257,26 @@ const Pages={
       footer
     });
 
+    // La URL real ya no vive en el material público — se pide al webhook
+    // para poder mostrarla en este formulario de edición.
+    if (esEdicion) {
+      (async () => {
+        try {
+          const token = await Pages._getAuthToken();
+          const r = await fetch(`${Pages._webhookUrl}/api/materiales/url`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+            body: JSON.stringify({ cursoId, materialIndex: idx })
+          });
+          if (r.ok) {
+            const data = await r.json();
+            const input = document.getElementById('mf-url');
+            if (input && data.url) input.value = data.url;
+          }
+        } catch (e) { console.warn('No se pudo recuperar la URL del material:', e.message); }
+      })();
+    }
+
     footer.querySelector('#mf-cancel').addEventListener('click', () => Modal.close());
     footer.querySelector('#mf-save').addEventListener('click', async () => {
       const btn = footer.querySelector('#mf-save');
@@ -4161,29 +4304,48 @@ const Pages={
         const curso = store.cursos.find(c => c.id === cidSel);
         if (!curso) { Toast.error('Curso no encontrado'); throw new Error('skip'); }
 
+        // MODIFICADO (revisión de seguridad): la url real ya no va en el
+        // documento público (cursos/{id}.materiales[]) — se guarda aparte vía
+        // el webhook, después de guardar aquí solo el título/tipo/reglas de
+        // desbloqueo. Ver la misma nota en _submitCurso.
         const nuevos = (curso.materiales || []).slice();
-        const nuevoMat = {
+        const nuevoMatPublico = {
           titulo,
-          url,
+          tipo: Pages._inferirTipoMat(url),
           disponibleSiempre: dispSiempre,
           desbloquearEnDias: dispSiempre ? null : dia
         };
 
+        let materialIndex;
         if (esEdicion) {
+          materialIndex = idx;
           // Conservar día previo si no se sobreescribió
           const prev = nuevos[idx] || {};
           nuevos[idx] = {
             ...prev,
-            ...nuevoMat,
+            ...nuevoMatPublico,
             desbloquearEnDias: dispSiempre
               ? null
               : (dia !== null ? dia : (typeof prev.desbloquearEnDias === 'number' ? prev.desbloquearEnDias : null))
           };
         } else {
-          nuevos.push(nuevoMat);
+          materialIndex = nuevos.length;
+          nuevos.push(nuevoMatPublico);
         }
 
         await fb.updateDoc(fb.doc(fb.db, 'cursos', cidSel), { materiales: nuevos });
+
+        const token = await Pages._getAuthToken();
+        const rGuardar = await fetch(`${Pages._webhookUrl}/api/materiales/guardar`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ cursoId: cidSel, materialIndex, url })
+        });
+        if (!rGuardar.ok) {
+          const d = await rGuardar.json().catch(() => ({}));
+          throw new Error(d.error || 'El curso se guardó pero la URL no se pudo guardar en el webhook');
+        }
+
         Toast.success(esEdicion ? 'Material actualizado' : '¡Material creado!', titulo);
         Modal.close();
       } catch (err) {
