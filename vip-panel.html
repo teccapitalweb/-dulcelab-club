@@ -9647,7 +9647,8 @@ const Sections = (function(){
           url: m.url || '',
           imagen: m.imagen || m.portada || m.cover || '',
           disponibleSiempre: m.disponibleSiempre === true,
-          desbloquearEnDias: typeof m.desbloquearEnDias === 'number' ? m.desbloquearEnDias : null
+          desbloquearEnDias: typeof m.desbloquearEnDias === 'number' ? m.desbloquearEnDias : null,
+          desbloqueaConClase: typeof m.desbloqueaConClase === 'number' ? m.desbloqueaConClase : null
         });
       });
     });
@@ -9660,6 +9661,12 @@ const Sections = (function(){
     if (esAdminReal()) return true;
     if (mat.disponibleSiempre === true) return true;
     if (mat.cursoDisponibleSiempre === true) return true;
+    // Ligado a una clase: disponible en cuanto esa clase se ABRE (no hace falta terminarla).
+    if (typeof mat.desbloqueaConClase === 'number') {
+      const curso = cursos.find(c => c.id === mat.cursoId);
+      const sesiones = curso?.sesiones || [];
+      return claseDesbloqueada(mat.cursoId, mat.desbloqueaConClase - 1, sesiones);
+    }
     const dias = calcularDiasMembresia();
     // Si tiene día manual, usar ese · si no, usar la cola por orden del curso
     const diaDesbloqueo = (mat.desbloquearEnDias !== null && mat.desbloquearEnDias !== undefined)
@@ -9670,6 +9677,7 @@ const Sections = (function(){
 
   function _diasParaMaterial(mat) {
     if (_materialDisponible(mat)) return 0;
+    if (typeof mat.desbloqueaConClase === 'number') return null; // se desbloquea por clase, no por días
     const dias = calcularDiasMembresia();
     const diaDesbloqueo = (mat.desbloquearEnDias !== null && mat.desbloquearEnDias !== undefined)
       ? mat.desbloquearEnDias
@@ -9768,6 +9776,10 @@ const Sections = (function(){
     if (disponible && gratis) { estado = 'Muestra gratuita'; desc = 'Muestra gratuita: puedes abrirlo sin membresía.'; }
     else if (disponible) { estado = 'Disponible ahora'; desc = 'Listo para abrir cuando quieras.'; }
     else if (requiere) { estado = 'Solo con membresía'; desc = 'Activa tu membresía para abrir este material.'; }
+    else if (typeof m.desbloqueaConClase === 'number') {
+      estado = 'Disponible con la Clase ' + m.desbloqueaConClase;
+      desc = `Se desbloquea en cuanto abras la Clase ${m.desbloqueaConClase} de este curso.`;
+    }
     else {
       const cuando = dias === 1 ? 'mañana' : `en ${dias} días`;
       estado = 'Disponible ' + cuando;

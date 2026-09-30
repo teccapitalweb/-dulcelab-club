@@ -2725,7 +2725,8 @@ const Pages={
           titulo: m.titulo || '',
           url: m.url || '',
           disponibleSiempre: m.disponibleSiempre === true,
-          desbloquearEnDias: typeof m.desbloquearEnDias === 'number' ? m.desbloquearEnDias : null
+          desbloquearEnDias: typeof m.desbloquearEnDias === 'number' ? m.desbloquearEnDias : null,
+          desbloqueaConClase: typeof m.desbloqueaConClase === 'number' ? m.desbloqueaConClase : null
         }))
       : [];
 
@@ -3062,6 +3063,10 @@ const Pages={
       cont.innerHTML = `<div style="padding:18px;text-align:center;color:var(--text-3);font-size:12.5px;font-style:italic;">Sin materiales por ahora. Usa "+ Agregar material".</div>`;
       return;
     }
+    const sesiones = this._modalCurso.sesiones || [];
+    const _escTxt = (s) => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    const opcionesClase = sesiones.map((s, i) => `<option value="${i + 1}">Clase ${i + 1}${s.titulo ? ' · ' + _escTxt(s.titulo) : ''}</option>`).join('');
+
     cont.innerHTML = mats.map((m, idx) => `
       <div style="display:flex;gap:8px;align-items:flex-start;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:10px;">
         <span style="background:color-mix(in srgb,#B8862F 14%,transparent);color:#B8862F;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:800;letter-spacing:.6px;padding:5px 8px;border-radius:6px;flex-shrink:0;margin-top:4px;white-space:nowrap;">MAT ${idx + 1}</span>
@@ -3072,12 +3077,26 @@ const Pages={
             <input type="checkbox" data-mat-idx="${idx}" data-mat-siempre="1" ${m.disponibleSiempre ? 'checked' : ''} style="cursor:pointer;">
             Disponible siempre (sin esperar desbloqueo)
           </label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--text-2);">
+            Se desbloquea al abrir:
+            <select class="input" data-mat-idx="${idx}" data-mat-clase="1" style="font-size:11.5px;padding:5px 8px;width:auto;flex:1;">
+              <option value="">— Usar días de membresía —</option>
+              ${opcionesClase}
+            </select>
+          </label>
         </div>
         <div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0;">
           <button type="button" class="curso-card__action curso-card__action--danger" data-mat-del="${idx}" title="Eliminar material" style="width:28px;height:24px;">✕</button>
         </div>
       </div>
     `).join('');
+
+    // Refleja el valor ya guardado en cada <select> (no se puede hacer vía atributo "selected" con backticks anidados)
+    cont.querySelectorAll('[data-mat-clase]').forEach(sel => {
+      const idx = parseInt(sel.dataset.matIdx, 10);
+      const val = Pages._modalCurso.materiales[idx]?.desbloqueaConClase;
+      sel.value = (typeof val === 'number') ? String(val) : '';
+    });
 
     // Bindings
     cont.querySelectorAll('[data-mat-campo]').forEach(input => {
@@ -3093,6 +3112,13 @@ const Pages={
         if (Pages._modalCurso.materiales[idx]) Pages._modalCurso.materiales[idx].disponibleSiempre = e.target.checked;
       });
     });
+    cont.querySelectorAll('[data-mat-clase]').forEach(sel => {
+      sel.addEventListener('change', (e) => {
+        const idx = parseInt(sel.dataset.matIdx, 10);
+        const v = e.target.value;
+        if (Pages._modalCurso.materiales[idx]) Pages._modalCurso.materiales[idx].desbloqueaConClase = v === '' ? null : parseInt(v, 10);
+      });
+    });
     cont.querySelectorAll('[data-mat-del]').forEach(btn => {
       btn.addEventListener('click', () => {
         const idx = parseInt(btn.dataset.matDel, 10);
@@ -3102,7 +3128,7 @@ const Pages={
   },
 
   _agregarMaterialModal() {
-    this._modalCurso.materiales.push({ titulo: '', url: '', disponibleSiempre: false, desbloquearEnDias: null });
+    this._modalCurso.materiales.push({ titulo: '', url: '', disponibleSiempre: false, desbloquearEnDias: null, desbloqueaConClase: null });
     this._renderMaterialesModal();
   },
   _eliminarMaterialModal(idx) {
@@ -3210,7 +3236,8 @@ const Pages={
           titulo: m.titulo.trim(),
           url: m.url.trim(),
           disponibleSiempre: m.disponibleSiempre === true,
-          desbloquearEnDias: typeof m.desbloquearEnDias === 'number' ? m.desbloquearEnDias : null
+          desbloquearEnDias: typeof m.desbloquearEnDias === 'number' ? m.desbloquearEnDias : null,
+          desbloqueaConClase: typeof m.desbloqueaConClase === 'number' ? m.desbloqueaConClase : null
         });
       }
 
