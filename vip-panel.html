@@ -92,9 +92,9 @@ body{
 .brand__logo img{width:32px;height:32px;object-fit:contain;display:block}
 .brand__name{font-size:14px;font-weight:600;letter-spacing:-.2px;line-height:1.1}
 .brand__plan{display:inline-block;font-size:9px;letter-spacing:1.4px;text-transform:uppercase;color:var(--primary);font-weight:700;margin-top:3px;padding:2px 7px;border-radius:100px;background:color-mix(in srgb,var(--primary) 12%,transparent);border:0.5px solid color-mix(in srgb,var(--primary) 30%,transparent)}
-.brand--logo-only{justify-content:center;padding:12px 16px 14px}
-.brand--logo-only .brand__logo{width:56px;height:56px;background:transparent;border:0;box-shadow:none}
-.brand--logo-only .brand__logo img{width:48px;height:48px}
+.brand--logo-only{justify-content:center;padding:14px 16px 17px}
+.brand--logo-only .brand__logo{width:76px;height:76px;background:transparent;border:0;box-shadow:none}
+.brand--logo-only .brand__logo img{width:68px;height:68px}
 
 .nav-section{padding:0 10px;margin-top:10px}
 .nav-label{font-size:9px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:var(--text-3);padding:8px 10px 6px}
@@ -1408,6 +1408,14 @@ body{
    HERRAMIENTAS · header de sección (modo apartado, no popup)
    ========================================================= */
 .tool-section{display:flex;flex-direction:column;gap:18px}
+.tools-page{max-width:1080px;margin:0 auto}
+.tools-hero{position:relative;overflow:hidden;isolation:isolate;border:1px solid color-mix(in srgb,var(--primary) 24%,var(--border));border-radius:22px;padding:28px 30px 26px;margin-bottom:19px;background:linear-gradient(115deg,color-mix(in srgb,var(--primary) 14%,var(--surface)) 0%,var(--surface) 59%,color-mix(in srgb,var(--accent,#D5A13D) 12%,var(--surface)) 100%)}
+.tools-hero::before{content:"";position:absolute;right:-43px;top:-80px;width:214px;height:214px;border-radius:50%;border:1px solid color-mix(in srgb,var(--primary) 23%,transparent);box-shadow:0 0 0 28px color-mix(in srgb,var(--primary) 5%,transparent),0 0 0 55px color-mix(in srgb,var(--primary) 3%,transparent);z-index:-1}.tools-hero::after{content:"";position:absolute;left:30px;bottom:0;width:92px;height:3px;border-radius:99px;background:linear-gradient(90deg,var(--primary),var(--accent,#D5A13D))}
+.tools-hero__eyebrow{display:inline-flex;align-items:center;gap:7px;padding:6px 11px;border:1px solid color-mix(in srgb,var(--primary) 36%,transparent);border-radius:999px;color:var(--primary);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1.35px;text-transform:uppercase}.tools-hero__eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent,#D5A13D)}.tools-hero__title{font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(27px,3.2vw,39px);font-weight:800;letter-spacing:-1.3px;line-height:1.08;color:var(--text);margin:15px 0 8px}.tools-hero__sub{max-width:670px;margin:0;color:var(--text-2);font-size:14px;line-height:1.6}
+.tools-summary{display:flex;align-items:center;gap:12px;padding:13px 15px;margin-bottom:18px;background:var(--surface);border:1px solid var(--border);border-radius:15px}.tools-summary__icon{width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--accent,#D5A13D) 15%,var(--surface-2));color:var(--primary);flex-shrink:0}.tools-summary__icon .ic{width:18px;height:18px}.tools-summary__copy{font-size:12.5px;line-height:1.45;color:var(--text-2)}.tools-summary__copy strong{color:var(--text)}
+.tools-group{margin-top:22px}.tools-group__head{display:flex;align-items:end;justify-content:space-between;gap:14px;margin-bottom:10px;padding:0 3px}.tools-group__eyebrow{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:1.35px;text-transform:uppercase;color:var(--primary);margin-bottom:4px}.tools-group__title{font-family:'Plus Jakarta Sans',sans-serif;font-size:19px;font-weight:800;letter-spacing:-.45px;color:var(--text)}.tools-group__hint{font-size:12px;color:var(--text-3);text-align:right}.tools-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.tool-pick-card{position:relative;overflow:hidden;display:flex;flex-direction:column;min-height:214px;padding:18px;border:1px solid var(--border);border-radius:18px;background:var(--surface);cursor:pointer;transition:transform .2s ease,border-color .2s,box-shadow .25s}.tool-pick-card::before{content:"";position:absolute;right:-31px;top:-31px;width:104px;height:104px;border:1px solid color-mix(in srgb,var(--tool-color,var(--primary)) 23%,transparent);border-radius:50%;box-shadow:0 0 0 16px color-mix(in srgb,var(--tool-color,var(--primary)) 5%,transparent)}.tool-pick-card:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--tool-color,var(--primary)) 48%,var(--border));box-shadow:0 12px 24px color-mix(in srgb,var(--tool-color,var(--primary)) 13%,transparent)}.tool-pick-card__top{position:relative;z-index:1;display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.tool-pick-card__icon{width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--tool-color,var(--primary)) 13%,var(--surface-2));color:var(--tool-color,var(--primary))}.tool-pick-card__icon .ic{width:21px;height:21px}.tool-pick-card__tag{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--tool-color,var(--primary));padding:5px 7px;border-radius:999px;background:color-mix(in srgb,var(--tool-color,var(--primary)) 10%,transparent)}.tool-pick-card__title{position:relative;z-index:1;font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;letter-spacing:-.3px;color:var(--text);margin:17px 0 5px;line-height:1.2}.tool-pick-card__sub{position:relative;z-index:1;font-size:12.2px;line-height:1.5;color:var(--text-2)}.tool-pick-card__foot{position:relative;z-index:1;margin-top:auto;display:flex;align-items:center;justify-content:space-between;padding-top:14px;border-top:1px solid var(--border)}.tool-pick-card__use{font-size:11.5px;font-weight:700;color:var(--text-3)}.tool-pick-card__open{display:flex;align-items:center;gap:4px;font-size:12px;font-weight:800;color:var(--tool-color,var(--primary))}.tool-pick-card__open .ic{width:14px;height:14px}.tool-pick-card--locked{opacity:.78}.tool-pick-card--locked .tool-pick-card__open{color:var(--text-3)}
+@media(max-width:900px){.tools-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:700px){.tools-hero{padding:23px 20px 22px;border-radius:18px;margin-bottom:16px}.tools-hero::after{left:20px}.tools-hero__title{font-size:29px;margin-top:13px}.tools-hero__sub{font-size:13px}.tools-summary{align-items:flex-start}.tools-group{margin-top:19px}.tools-group__head{align-items:flex-start;flex-direction:column;gap:3px}.tools-group__hint{text-align:left}.tools-grid{grid-template-columns:1fr;gap:9px}.tool-pick-card{min-height:184px}.tool-pick-card__title{margin-top:14px}}
 .tool-section__head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-bottom:16px;border-bottom:0.5px solid var(--border-2)}
 .tool-section__title{display:flex;align-items:center;gap:14px}
 .tool-section__icon{width:46px;height:46px;flex-shrink:0;border-radius:14px;display:flex;align-items:center;justify-content:center;background:var(--primary);color:#fff}
@@ -2180,7 +2188,55 @@ body{
 .foro-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
 
 .posts-list{display:flex;flex-direction:column;gap:10px}
+/* Foro editorial: una mesa de conversación cálida, sin alterar sus acciones ni datos. */
+.foro-page{max-width:1080px;margin:0 auto}
+.foro-hero{position:relative;overflow:hidden;isolation:isolate;border:1px solid color-mix(in srgb,var(--primary) 24%,var(--border));border-radius:22px;padding:28px 30px 26px;margin-bottom:20px;background:linear-gradient(120deg,color-mix(in srgb,var(--primary) 13%,var(--surface)) 0%,var(--surface) 58%,color-mix(in srgb,var(--accent,#D5A13D) 13%,var(--surface)) 100%)}
+.foro-hero::before{content:"";position:absolute;inset:auto -54px -78px auto;width:210px;height:210px;border:1px solid color-mix(in srgb,var(--primary) 24%,transparent);border-radius:50%;box-shadow:0 0 0 30px color-mix(in srgb,var(--primary) 5%,transparent),0 0 0 60px color-mix(in srgb,var(--primary) 3%,transparent);z-index:-1}
+.foro-hero::after{content:"";position:absolute;left:30px;bottom:0;width:82px;height:3px;background:var(--primary);border-radius:999px}
+.foro-hero__eyebrow{display:inline-flex;align-items:center;gap:7px;border:1px solid color-mix(in srgb,var(--primary) 36%,transparent);border-radius:999px;padding:6px 11px;color:var(--primary);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase}
+.foro-hero__eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--primary)}
+.foro-hero__title{font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(27px,3.2vw,39px);font-weight:800;letter-spacing:-1.3px;line-height:1.08;color:var(--text);margin:15px 0 8px}
+.foro-hero__sub{max-width:680px;margin:0;color:var(--text-2);font-size:14px;line-height:1.6}
+.foro-composer{position:relative;border-radius:18px;padding:17px 18px 15px;border-color:color-mix(in srgb,var(--primary) 18%,var(--border-2));box-shadow:0 10px 24px color-mix(in srgb,var(--primary) 6%,transparent)}
+.foro-composer::before{content:"";position:absolute;left:18px;right:18px;top:0;height:3px;border-radius:0 0 999px 999px;background:linear-gradient(90deg,var(--primary),var(--accent,#D5A13D),transparent)}
+.foro-composer__avatar{width:42px;height:42px;box-shadow:0 0 0 4px color-mix(in srgb,var(--primary) 9%,transparent)}
+.foro-composer__input{min-height:54px;font-size:14px;padding:8px 0 6px}
+.foro-composer__actions{margin-top:5px;padding-top:10px}
+.foro-composer__tool{border-radius:999px;padding:7px 12px}
+.foro-composer .btn--accent{border-radius:999px;padding-inline:17px}
+.foro-tabs{position:relative;gap:18px;margin:20px 0 15px;padding:0 3px;border-bottom:1px solid var(--border)}
+.foro-tabs .tab{position:relative;background:transparent!important;border:0!important;border-radius:0!important;padding:0 0 11px!important;color:var(--text-3)!important;box-shadow:none!important}
+.foro-tabs .tab::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;border-radius:99px;background:transparent}
+.foro-tabs .tab:hover{color:var(--text)!important}
+.foro-tabs .tab.is-active{color:var(--primary)!important}
+.foro-tabs .tab.is-active::after{background:var(--primary)}
 /* ===== DIRECTORIO VIP ===== */
+.dir-page{max-width:1080px;margin:0 auto}
+.dir-hero{position:relative;overflow:hidden;isolation:isolate;border:1px solid color-mix(in srgb,var(--primary) 24%,var(--border));border-radius:22px;padding:28px 30px 26px;margin-bottom:19px;background:linear-gradient(115deg,color-mix(in srgb,var(--primary) 13%,var(--surface)) 0%,var(--surface) 60%,color-mix(in srgb,var(--accent,#D5A13D) 11%,var(--surface)) 100%)}
+.dir-hero::before{content:"";position:absolute;right:-38px;top:-82px;width:220px;height:220px;border-radius:50%;border:1px solid color-mix(in srgb,var(--primary) 23%,transparent);box-shadow:0 0 0 26px color-mix(in srgb,var(--primary) 5%,transparent),0 0 0 52px color-mix(in srgb,var(--primary) 3%,transparent);z-index:-1}
+.dir-hero::after{content:"";position:absolute;left:30px;bottom:0;width:92px;height:3px;border-radius:99px;background:linear-gradient(90deg,var(--primary),var(--accent,#D5A13D))}
+.dir-hero__eyebrow{display:inline-flex;align-items:center;gap:7px;padding:6px 11px;border:1px solid color-mix(in srgb,var(--primary) 36%,transparent);border-radius:999px;color:var(--primary);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1.35px;text-transform:uppercase}
+.dir-hero__eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent,#D5A13D)}
+.dir-hero__title{font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(27px,3.2vw,39px);font-weight:800;letter-spacing:-1.3px;line-height:1.08;color:var(--text);margin:15px 0 8px}
+.dir-hero__sub{max-width:680px;margin:0;color:var(--text-2);font-size:14px;line-height:1.6}
+.dir-workbench{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:stretch;margin-bottom:13px}
+.dir-search{min-height:52px;border-radius:15px;padding-inline:16px;box-shadow:0 7px 18px color-mix(in srgb,var(--primary) 4%,transparent)}
+.dir-search:focus-within{border-color:color-mix(in srgb,var(--primary) 55%,transparent);box-shadow:0 0 0 3px color-mix(in srgb,var(--primary) 9%,transparent)}
+.dir-profile-cta{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:145px;border-radius:15px;padding:10px 16px;background:var(--primary);border:1px solid var(--primary);box-shadow:0 8px 18px color-mix(in srgb,var(--primary) 20%,transparent)}
+.dir-profile-cta::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--accent,#D5A13D);box-shadow:0 0 0 3px rgba(255,255,255,.14)}
+.dir-profile-cta .ic{width:16px;height:16px}
+.dir-chips{margin:0 0 21px;padding:1px 0 8px;gap:7px}
+.dir-chip{padding:8px 14px;background:color-mix(in srgb,var(--surface) 86%,transparent);box-shadow:0 3px 8px color-mix(in srgb,var(--primary) 3%,transparent)}
+.dir-chip.is-active{box-shadow:0 5px 12px color-mix(in srgb,var(--primary) 18%,transparent)}
+.dir-empty{grid-column:1/-1;min-height:280px;display:flex;align-items:center;justify-content:center;padding:30px;border:1px dashed color-mix(in srgb,var(--primary) 29%,transparent);border-radius:20px;background:radial-gradient(circle at 50% 0,color-mix(in srgb,var(--accent,#D5A13D) 10%,transparent),transparent 44%)}
+.dir-empty__inner{display:flex;flex-direction:column;align-items:center;text-align:center;max-width:400px}
+.dir-empty__sample{position:relative;width:164px;height:96px;margin-bottom:20px;border:1px solid color-mix(in srgb,var(--primary) 27%,transparent);border-radius:16px;background:var(--surface);box-shadow:9px 9px 0 color-mix(in srgb,var(--primary) 7%,transparent)}
+.dir-empty__avatar{position:absolute;left:16px;top:18px;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent,#D5A13D));box-shadow:0 0 0 4px color-mix(in srgb,var(--primary) 8%,transparent)}
+.dir-empty__line{position:absolute;left:78px;right:18px;height:7px;border-radius:99px;background:color-mix(in srgb,var(--primary) 26%,var(--surface-2))}
+.dir-empty__line--one{top:25px}.dir-empty__line--two{top:41px;right:42px;background:color-mix(in srgb,var(--accent,#D5A13D) 34%,var(--surface-2))}.dir-empty__tag{position:absolute;left:78px;bottom:20px;width:48px;height:14px;border-radius:99px;background:color-mix(in srgb,var(--primary) 13%,var(--surface-2))}
+.dir-empty__title{font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;letter-spacing:-.35px;color:var(--text);margin-bottom:6px}
+.dir-empty__copy{font-size:13.5px;line-height:1.55;color:var(--text-2)}
+.dir-empty__action{margin-top:17px;border-radius:999px}
 .dir-bar{display:flex;gap:12px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
 .dir-search{flex:1;min-width:200px;display:flex;align-items:center;gap:9px;background:var(--surface);border:1px solid var(--border-2);border-radius:12px;padding:0 14px}
 .dir-search .ic{width:16px;height:16px;color:var(--text-3);flex-shrink:0}
@@ -2271,8 +2327,18 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 .dir-det__row-lbl{font-size:11px;color:var(--text-3);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
 .dir-det__row-val{font-size:13.5px;color:var(--text);font-weight:600;word-break:break-word}
 .dir-det__sincontacto{font-size:12.5px;color:var(--text-3);font-style:italic;margin-top:16px}
+@media(max-width:700px){
+  .dir-hero{padding:23px 20px 22px;border-radius:18px;margin-bottom:16px}
+  .dir-hero::after{left:20px}
+  .dir-hero__title{font-size:29px;margin-top:13px}
+  .dir-hero__sub{font-size:13px}
+  .dir-workbench{grid-template-columns:1fr;gap:9px}
+  .dir-profile-cta{min-height:46px;width:100%}
+  .dir-chips{margin-bottom:16px}
+  .dir-empty{min-height:245px;padding:24px 16px}
+}
 /* ===== FORO funcional ===== */
-.foro-aviso{display:flex;align-items:center;gap:10px;background:color-mix(in srgb,var(--primary) 8%,transparent);border:1px solid color-mix(in srgb,var(--primary) 22%,transparent);border-radius:12px;padding:11px 15px;margin-bottom:16px;font-size:13px;color:var(--text-2)}
+.foro-aviso{display:flex;align-items:center;gap:10px;background:color-mix(in srgb,var(--accent,#D5A13D) 8%,transparent);border:1px dashed color-mix(in srgb,var(--primary) 30%,transparent);border-radius:12px;padding:10px 14px;margin:12px 0 0;font-size:12.5px;color:var(--text-2)}
 .foro-aviso .ic{width:16px;height:16px;color:var(--primary);flex-shrink:0}
 .foro-aviso strong{color:var(--primary)}
 .foro-img-preview{position:relative;margin:10px 0;max-width:240px}
@@ -2285,6 +2351,12 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 .foro-paywall__t{font-weight:700;font-size:15px;margin-bottom:3px}
 .foro-paywall__d{font-size:12.5px;color:var(--text-2);line-height:1.5}
 .foro-empty{text-align:center;padding:40px 20px;color:var(--text-2);font-size:14px}
+.foro-empty--editorial{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:245px;padding:42px 20px;border:1px dashed color-mix(in srgb,var(--primary) 28%,transparent);border-radius:20px;background:radial-gradient(circle at 50% 0,color-mix(in srgb,var(--accent,#D5A13D) 11%,transparent),transparent 42%)}
+.foro-empty__mark{position:relative;width:74px;height:64px;margin-bottom:17px;border:1px solid color-mix(in srgb,var(--primary) 30%,transparent);border-radius:18px 18px 18px 5px;background:var(--surface);box-shadow:8px 8px 0 color-mix(in srgb,var(--primary) 8%,transparent)}
+.foro-empty__mark::before{content:"";position:absolute;left:17px;right:17px;top:19px;height:2px;background:var(--primary);box-shadow:0 9px 0 color-mix(in srgb,var(--primary) 55%,transparent),0 18px 0 color-mix(in srgb,var(--primary) 28%,transparent)}
+.foro-empty__mark::after{content:"";position:absolute;left:8px;bottom:-7px;width:14px;height:14px;background:var(--surface);border-left:1px solid color-mix(in srgb,var(--primary) 30%,transparent);border-bottom:1px solid color-mix(in srgb,var(--primary) 30%,transparent);transform:skewY(-38deg)}
+.foro-empty__title{font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:800;letter-spacing:-.35px;color:var(--text);margin-bottom:6px}
+.foro-empty__copy{max-width:390px;line-height:1.55;color:var(--text-2)}
 .foro-empty--sm{padding:14px;font-size:12.5px}
 .post__role--vip{background:color-mix(in srgb,var(--primary) 16%,transparent)!important;color:var(--primary)!important}
 .post__del{margin-left:auto;width:24px;height:24px;border-radius:7px;border:0;background:transparent;color:var(--text-3);font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s}
@@ -2296,6 +2368,19 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 @keyframes heartPop{0%{transform:scale(1)}40%{transform:scale(1.35)}100%{transform:scale(1)}}
 .post__expira{margin-left:auto;font-size:10.5px;color:var(--text-3);font-family:'JetBrains Mono',monospace}
 .post__comments{margin-top:12px;padding-top:12px;border-top:0.5px solid var(--border)}
+@media(max-width:700px){
+  .foro-hero{padding:23px 20px 22px;border-radius:18px;margin-bottom:16px}
+  .foro-hero::after{left:20px}
+  .foro-hero__title{font-size:29px;margin-top:13px}
+  .foro-hero__sub{font-size:13px}
+  .foro-composer{padding:15px 14px 13px;border-radius:16px;gap:10px}
+  .foro-composer::before{left:14px;right:14px}
+  .foro-composer__avatar{width:38px;height:38px}
+  .foro-composer__actions{align-items:flex-end;gap:8px}
+  .foro-tabs{gap:14px;margin-top:18px}
+  .foro-tabs .tab{font-size:12px!important}
+  .foro-empty--editorial{min-height:215px;padding:30px 16px}
+}
 .com-list{display:flex;flex-direction:column;gap:10px;margin-bottom:10px}
 .com{display:flex;gap:9px}
 .com__avatar{width:30px;height:30px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700}
@@ -2435,13 +2520,20 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 }
 .wa-stat__num{font-size:22px;font-weight:600;letter-spacing:-.5px;color:var(--whatsapp);font-feature-settings:"tnum" 1}
 .wa-stat__lbl{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:1.3px;text-transform:uppercase;color:var(--text-3);margin-top:4px}
-.wa-rules{
-  background:var(--surface);
-  border:0.5px solid var(--border);
-  border-radius:14px;
-  padding:18px 22px;
-  margin-top:14px;
-}
+.canal-page{max-width:1080px;margin:0 auto}
+.canal-hero{position:relative;overflow:hidden;isolation:isolate;border:1px solid color-mix(in srgb,var(--primary) 24%,var(--border));border-radius:22px;padding:28px 30px 26px;margin-bottom:19px;background:linear-gradient(115deg,color-mix(in srgb,var(--primary) 13%,var(--surface)) 0%,var(--surface) 60%,color-mix(in srgb,var(--accent,#D5A13D) 11%,var(--surface)) 100%)}
+.canal-hero::before{content:"";position:absolute;right:-42px;top:-80px;width:214px;height:214px;border-radius:50%;border:1px solid color-mix(in srgb,var(--primary) 23%,transparent);box-shadow:0 0 0 27px color-mix(in srgb,var(--primary) 5%,transparent),0 0 0 54px color-mix(in srgb,var(--primary) 3%,transparent);z-index:-1}
+.canal-hero::after{content:"";position:absolute;left:30px;bottom:0;width:92px;height:3px;border-radius:99px;background:linear-gradient(90deg,var(--primary),var(--accent,#D5A13D))}
+.canal-hero__eyebrow{display:inline-flex;align-items:center;gap:7px;padding:6px 11px;border:1px solid color-mix(in srgb,var(--primary) 36%,transparent);border-radius:999px;color:var(--primary);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1.35px;text-transform:uppercase}
+.canal-hero__eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--whatsapp)}
+.canal-hero__title{font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(27px,3.2vw,39px);font-weight:800;letter-spacing:-1.3px;line-height:1.08;color:var(--text);margin:15px 0 8px}
+.canal-hero__sub{max-width:680px;margin:0;color:var(--text-2);font-size:14px;line-height:1.6}
+.canal-invite{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:22px;align-items:center;position:relative;overflow:hidden;border:1px solid color-mix(in srgb,var(--whatsapp) 33%,var(--border));border-radius:20px;padding:22px 24px;margin-bottom:16px;background:linear-gradient(110deg,color-mix(in srgb,var(--whatsapp) 11%,var(--surface)) 0%,var(--surface) 58%,color-mix(in srgb,var(--accent,#D5A13D) 7%,var(--surface)) 100%)}
+.canal-invite::after{content:"";position:absolute;right:-30px;bottom:-74px;width:168px;height:168px;border-radius:50%;border:1px solid color-mix(in srgb,var(--whatsapp) 20%,transparent);box-shadow:0 0 0 24px color-mix(in srgb,var(--whatsapp) 5%,transparent);pointer-events:none}
+.canal-invite__icon{width:60px;height:60px;border-radius:18px;background:var(--whatsapp);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 22px color-mix(in srgb,var(--whatsapp) 27%,transparent);position:relative;z-index:1}
+.canal-invite__icon svg{width:30px;height:30px}.canal-invite__main{position:relative;z-index:1}.canal-invite__eyebrow{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:var(--whatsapp);margin-bottom:5px}.canal-invite__title{font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:800;letter-spacing:-.45px;color:var(--text);margin-bottom:4px}.canal-invite__sub{font-size:13px;color:var(--text-2);line-height:1.5;max-width:490px}.canal-invite__actions{position:relative;z-index:1;display:flex;gap:8px;align-items:center;flex-wrap:wrap}.canal-invite__actions .btn{border-radius:999px;white-space:nowrap}
+.canal-benefits{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:16px}.canal-benefit{display:flex;align-items:center;gap:10px;padding:12px 13px;border:1px solid var(--border);border-radius:14px;background:var(--surface)}.canal-benefit__icon{width:32px;height:32px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border-radius:10px;background:color-mix(in srgb,var(--primary) 9%,var(--surface-2));color:var(--primary)}.canal-benefit__icon .ic{width:16px;height:16px}.canal-benefit__title{font-size:12.5px;font-weight:800;color:var(--text);line-height:1.2}.canal-benefit__copy{font-size:11.5px;color:var(--text-3);margin-top:2px;line-height:1.3}
+.wa-rules{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:18px;margin-top:0}.wa-rules__title{margin:0 0 13px;padding-left:3px}.wa-rules__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.wa-rule{padding:13px;border:1px solid var(--border);border-radius:13px;background:color-mix(in srgb,var(--surface-2) 60%,var(--surface));gap:10px}.wa-rule:not(:last-child){border-bottom:1px solid var(--border)}.wa-rule__check{width:25px;height:25px}.wa-rule__text{font-size:12px;line-height:1.45}
 .wa-rules__title{
   font-family:'JetBrains Mono',monospace;
   font-size:10.5px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;
@@ -2461,6 +2553,7 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 .wa-rule__check .ic{width:13px;height:13px;stroke-width:2.5}
 .wa-rule__text{font-size:12.5px;color:var(--text-2);line-height:1.5}
 .wa-rule__text strong{color:var(--text)}
+@media(max-width:700px){.canal-hero{padding:23px 20px 22px;border-radius:18px;margin-bottom:16px}.canal-hero::after{left:20px}.canal-hero__title{font-size:29px;margin-top:13px}.canal-hero__sub{font-size:13px}.canal-invite{grid-template-columns:auto 1fr;padding:18px;gap:14px;border-radius:17px}.canal-invite__actions{grid-column:1/-1}.canal-invite__actions .btn{flex:1;justify-content:center}.canal-benefits{grid-template-columns:1fr;gap:7px}.wa-rules{padding:14px}.wa-rules__grid{grid-template-columns:1fr;gap:7px}}
 
 /* =========================================================
    MI PERFIL · cards
@@ -2533,6 +2626,35 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 }
 .perfil-field__edit:hover{color:var(--primary)}
 .perfil-field__edit .ic{width:13px;height:13px}
+
+/* Perfil: ficha personal sobria, con las mismas acciones y datos existentes. */
+.perfil-page .sec-hero{min-height:0;padding:24px 28px 22px;margin-bottom:14px}
+.perfil-page .sec-hero::before{height:3px}
+.perfil-page .sec-hero__title{font-size:32px;margin-top:11px}
+.perfil-page .sec-hero__sub{max-width:660px}
+.perfil-hero{padding:21px 24px;border-radius:16px;gap:17px;box-shadow:0 8px 20px color-mix(in srgb,var(--primary) 5%,transparent)}
+.perfil-hero::after{content:"";position:absolute;width:210px;height:210px;border:1px solid color-mix(in srgb,var(--primary) 13%,transparent);border-radius:50%;right:-94px;top:-123px;pointer-events:none}
+.perfil-hero__avatar{width:72px;height:72px;border-radius:20px;font-size:26px;box-shadow:0 0 0 5px color-mix(in srgb,var(--primary) 8%,transparent)}
+.perfil-hero__name{font-size:22px;line-height:1.1}
+.perfil-hero__email{margin-top:6px}
+.perfil-hero__badges{margin-top:11px;gap:7px}
+.perfil-hero__actions{display:flex;align-items:center;gap:8px;position:relative;z-index:1;flex-wrap:wrap;justify-content:flex-end}
+.perfil-hero__actions .btn{min-height:38px;padding:8px 11px;font-size:11px;border-radius:11px;background:color-mix(in srgb,var(--surface) 86%,transparent)}
+.perfil-hero__actions .btn:first-child{color:var(--surface);background:var(--primary);border-color:var(--primary)}
+.perfil-hero__actions .btn:first-child:hover{filter:brightness(.94)}
+.perfil-grid{grid-template-columns:minmax(0,1.17fr) minmax(280px,.83fr);gap:14px;align-items:start}
+.perfil-card{border-radius:16px;padding:20px 21px;box-shadow:0 7px 16px color-mix(in srgb,var(--primary) 3%,transparent)}
+.perfil-card--personal{grid-row:auto}
+.perfil-card__title{margin-bottom:16px;color:var(--text-2)}
+.perfil-field{min-height:45px;padding:10px 0}
+.perfil-field__lbl{font-size:10px}
+.perfil-field__val{font-size:12.5px}
+.perfil-field__edit{width:27px;height:27px;border-radius:8px;border:1px solid transparent;justify-content:center}
+.perfil-field__edit:hover{border-color:var(--border);background:var(--surface-2)}
+.perfil-card--activity .perfil-field__val{font-weight:650}
+.perfil-card--security{background:color-mix(in srgb,var(--surface) 94%,var(--primary) 6%)}
+@media(max-width:900px){.perfil-grid{grid-template-columns:1fr 1fr}.perfil-card--personal{grid-row:auto;grid-column:1/-1}}
+@media(max-width:700px){.perfil-page .sec-hero{padding:21px 20px 20px}.perfil-page .sec-hero__title{font-size:29px}.perfil-hero{padding:20px;gap:13px}.perfil-hero__actions{justify-content:center;width:100%}.perfil-hero__actions .btn{flex:1 1 auto;justify-content:center}.perfil-grid{grid-template-columns:1fr;gap:11px}.perfil-card--personal{grid-column:auto}.perfil-card{padding:18px}.perfil-field{min-height:43px}}
 
 /* Modo noche: carbón y arena, sin las capas vino que endurecían las secciones. */
 :root[data-theme="night"] .sec-hero{
@@ -8160,37 +8282,30 @@ const Sections = (function(){
   function renderHerramientas(container){
     const accesoCompleto = tieneAccesoVipCompleto();
     const tools = [
-      {key:'costeo', icon:'i-bn-leaf', title:'Costeo de receta', sub:'Suma el costo de tus ingredientes, define tu margen y obtén el precio de venta sugerido.'},
-      {key:'conversor', icon:'i-bn-droplet', title:'Conversor de cocina', sub:'Convierte entre tazas, gramos y mililitros según la densidad del ingrediente.'},
-      {key:'merma', icon:'i-bn-leaf', title:'Rendimiento y merma', sub:'Calcula el % de merma y el costo real del producto aprovechable.'},
-      {key:'catering', icon:'i-users', title:'Porciones para catering', sub:'De número de comensales a cantidades totales por tiempo de comida.'},
-      {key:'horno', icon:'i-gauge', title:'Temperaturas de horno', sub:'Convierte entre Celsius, Fahrenheit y número de gas (gas mark).'},
-      {key:'porcion', icon:'i-credit-card', title:'Costo por porción', sub:'Costo total ÷ porciones, con margen real si agregas el precio de venta.'}
+      {key:'costeo', group:'costos', icon:'i-bn-leaf', title:'Costeo de receta', sub:'Suma ingredientes, margen y precio sugerido.', tag:'Para cotizar', use:'Margen y venta', color:'#6B1526'},
+      {key:'porcion', group:'costos', icon:'i-credit-card', title:'Costo por porción', sub:'Divide el costo total y revisa tu margen real.', tag:'Para cobrar', use:'Precio unitario', color:'#9E2A47'},
+      {key:'merma', group:'costos', icon:'i-bn-leaf', title:'Rendimiento y merma', sub:'Calcula el aprovechamiento y costo real del producto.', tag:'Para controlar', use:'Merma real', color:'#B8862F'},
+      {key:'conversor', group:'operacion', icon:'i-bn-droplet', title:'Conversor de cocina', sub:'Convierte tazas, gramos y mililitros por ingrediente.', tag:'Para ajustar', use:'Medidas exactas', color:'#7A1B30'},
+      {key:'catering', group:'operacion', icon:'i-users', title:'Porciones para catering', sub:'Convierte comensales en cantidades de producción.', tag:'Para eventos', use:'Planeación', color:'#8C3A4B'},
+      {key:'horno', group:'operacion', icon:'i-gauge', title:'Temperaturas de horno', sub:'Equivalencias entre Celsius, Fahrenheit y gas mark.', tag:'Para hornear', use:'Temperatura', color:'#A87A1E'}
     ];
     container.innerHTML = `
-      <div class="fade-up">
-        <div class="sec-hero">
-          <span class="sec-hero__eyebrow">Herramientas Pro</span>
-          <h1 class="sec-hero__title">Herramientas</h1>
-          <p class="sec-hero__sub">Calculadoras para tu día a día en cocina y negocio: costeo, mermas, conversiones y catering.</p>
+      <div class="fade-up tools-page">
+        <div class="tools-hero">
+          <span class="tools-hero__eyebrow">Herramientas Pro</span>
+          <h1 class="tools-hero__title">Tu centro de operación</h1>
+          <p class="tools-hero__sub">Calculadoras prácticas para tomar mejores decisiones en cocina, producción y rentabilidad.</p>
         </div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:18px;">
-          ${tools.map(t => `
-            <div class="tool-pick-card" data-tool-pick="${t.key}" style="cursor:pointer;background:var(--surface);border:1px solid var(--border-2);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:10px;transition:border-color .15s;">
-              <div style="width:40px;height:40px;border-radius:11px;background:color-mix(in srgb,var(--primary) 12%,transparent);color:var(--primary);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                <svg class="ic ic--lg"><use href="#${t.icon}"/></svg>
-              </div>
-              <div>
-                <div style="font-weight:700;font-size:14px;color:var(--text);">${t.title}</div>
-                <div style="font-size:12px;color:var(--text-2);line-height:1.5;margin-top:4px;">${t.sub}</div>
-              </div>
-              ${accesoCompleto
-                ? `<span style="margin-top:auto;font-size:12px;font-weight:600;color:var(--primary);display:flex;align-items:center;gap:4px;">Abrir<svg class="ic" style="width:13px;height:13px;"><use href="#i-arrow-right"/></svg></span>`
-                : `<span style="margin-top:auto;font-size:11.5px;font-weight:600;color:var(--text-3);display:flex;align-items:center;gap:4px;">🔒 Solo VIP</span>`
-              }
-            </div>
-          `).join('')}
-        </div>
+        <div class="tools-summary"><span class="tools-summary__icon"><svg class="ic"><use href="#i-tools"/></svg></span><div class="tools-summary__copy"><strong>6 herramientas para tu operación diaria.</strong> Úsalas para cotizar, planear producción y cuidar la rentabilidad de tu negocio.</div></div>
+        ${[
+          {key:'costos', eyebrow:'Decide con números', title:'Costos y rentabilidad', hint:'Cotiza y protege tu margen'},
+          {key:'operacion', eyebrow:'Organiza tu producción', title:'Producción y operación', hint:'Ajusta recetas y planea mejor'}
+        ].map(group=>`<section class="tools-group"><div class="tools-group__head"><div><div class="tools-group__eyebrow">${group.eyebrow}</div><h2 class="tools-group__title">${group.title}</h2></div><div class="tools-group__hint">${group.hint}</div></div><div class="tools-grid">${tools.filter(t=>t.group===group.key).map(t=>`
+          <article class="tool-pick-card${accesoCompleto?'':' tool-pick-card--locked'}" data-tool-pick="${t.key}" style="--tool-color:${t.color}">
+            <div class="tool-pick-card__top"><span class="tool-pick-card__icon"><svg class="ic"><use href="#${t.icon}"/></svg></span><span class="tool-pick-card__tag">${t.tag}</span></div>
+            <h3 class="tool-pick-card__title">${t.title}</h3><p class="tool-pick-card__sub">${t.sub}</p>
+            <div class="tool-pick-card__foot"><span class="tool-pick-card__use">${t.use}</span>${accesoCompleto?`<span class="tool-pick-card__open">Abrir <svg class="ic"><use href="#i-arrow-right"/></svg></span>`:`<span class="tool-pick-card__open">🔒 Solo VIP</span>`}</div>
+          </article>`).join('')}</div></section>`).join('')}
       </div>
     `;
     const toolSections = { costeo:'tool-costeo', conversor:'tool-conversor', merma:'tool-merma', catering:'tool-catering', horno:'tool-horno', porcion:'tool-porcion' };
@@ -10255,19 +10370,19 @@ const Sections = (function(){
   function renderDirectorio(container){
     const esVip = window.UserState?.modo==='vip' || esAdminReal();
     container.innerHTML = `
-      <div class="fade-up">
-        <div class="sec-hero">
-          <span class="sec-hero__eyebrow">Networking profesional</span>
-          <h1 class="sec-hero__title">Directorio VIP</h1>
-          <p class="sec-hero__sub">Conecta con la comunidad DulceLab Food. Crea tu tarjeta profesional y descubre a otros profesionales de gastronomía, repostería e inocuidad alimentaria.</p>
+      <div class="fade-up dir-page">
+        <div class="dir-hero">
+          <span class="dir-hero__eyebrow">Networking profesional</span>
+          <h1 class="dir-hero__title">Directorio VIP</h1>
+          <p class="dir-hero__sub">Conecta con la comunidad DulceLab Food. Crea tu tarjeta profesional y descubre a otros profesionales de gastronomía, repostería e inocuidad alimentaria.</p>
         </div>
 
-        <div class="dir-bar">
+        <div class="dir-workbench">
           <div class="dir-search">
             <svg class="ic"><use href="#i-search"/></svg>
             <input type="text" id="dir-buscar" placeholder="Buscar por nombre, empresa o puesto…">
           </div>
-          ${esVip?`<button class="btn btn--accent" id="dir-mi-tarjeta"><svg class="ic"><use href="#i-edit"/></svg>Mi tarjeta</button>`:''}
+          ${esVip?`<button class="btn dir-profile-cta" id="dir-mi-tarjeta"><svg class="ic"><use href="#i-edit"/></svg>Mi tarjeta</button>`:''}
         </div>
 
         <div class="dir-chips" id="dir-chips">
@@ -10320,7 +10435,17 @@ const Sections = (function(){
       return blob.includes(_dirBusqueda);
     });
     if (!cards.length){
-      grid.innerHTML = `<div class="foro-empty">${_dirBusqueda||_dirFiltroSector!=='todos'?'No hay miembros que coincidan con tu búsqueda.':'Aún no hay tarjetas en el directorio. ¡Sé el primero en crear la tuya!'}</div>`;
+      const filtrado = _dirBusqueda || _dirFiltroSector!=='todos';
+      const esVip = window.UserState?.modo==='vip' || esAdminReal();
+      grid.innerHTML = filtrado
+        ? `<div class="foro-empty">No hay miembros que coincidan con tu búsqueda.</div>`
+        : `<div class="dir-empty"><div class="dir-empty__inner">
+             <div class="dir-empty__sample" aria-hidden="true"><span class="dir-empty__avatar"></span><span class="dir-empty__line dir-empty__line--one"></span><span class="dir-empty__line dir-empty__line--two"></span><span class="dir-empty__tag"></span></div>
+             <div class="dir-empty__title">Tu red profesional empieza aquí</div>
+             <div class="dir-empty__copy">Aún no hay tarjetas en el directorio. Comparte tu especialidad y ayuda a construir la comunidad de DulceLab Food.</div>
+             ${esVip?`<button class="btn btn--accent dir-empty__action" data-dir-create><svg class="ic"><use href="#i-edit"/></svg>Crear mi tarjeta</button>`:''}
+           </div></div>`;
+      grid.querySelector('[data-dir-create]')?.addEventListener('click', dirEditarMiTarjeta);
       return;
     }
     const uid = window.UserState?.uid;
@@ -10580,16 +10705,11 @@ const Sections = (function(){
     const miColor = foroColorFor(window.UserState?.uid);
 
     container.innerHTML = `
-      <div class="fade-up">
-        <div class="sec-hero">
-          <span class="sec-hero__eyebrow">Comunidad activa</span>
-          <h1 class="sec-hero__title">Foro VIP</h1>
-          <p class="sec-hero__sub">Comparte recetas, técnicas y dudas de tu negocio, haz preguntas y conecta con la comunidad DulceLab Food. Publica texto e imágenes, comenta y reacciona.</p>
-        </div>
-
-        <div class="foro-aviso">
-          <svg class="ic"><use href="#i-clock"/></svg>
-          <span>Las publicaciones se eliminan automáticamente <strong>15 días</strong> después de publicarse.</span>
+      <div class="fade-up foro-page">
+        <div class="foro-hero">
+          <span class="foro-hero__eyebrow">Comunidad activa</span>
+          <h1 class="foro-hero__title">Foro VIP</h1>
+          <p class="foro-hero__sub">Comparte recetas, técnicas y dudas de tu negocio, haz preguntas y conecta con la comunidad DulceLab Food. Publica texto e imágenes, comenta y reacciona.</p>
         </div>
 
         ${esVip ? `
@@ -10621,6 +10741,11 @@ const Sections = (function(){
           <button class="btn btn--accent btn--sm" onclick="window.navigateToSection && window.navigateToSection('suscripcion')">Activar VIP</button>
         </div>
         `}
+
+        <div class="foro-aviso">
+          <svg class="ic"><use href="#i-clock"/></svg>
+          <span>Las publicaciones se eliminan automáticamente <strong>15 días</strong> después de publicarse.</span>
+        </div>
 
         <div class="foro-tabs">
           <button class="tab is-active" data-foro-tab="recientes">Recientes</button>
@@ -10704,7 +10829,12 @@ const Sections = (function(){
     else if (_foroFiltro==='mios') posts = posts.filter(p=>p.uid===uid);
 
     if (!posts.length){
-      list.innerHTML = `<div class="foro-empty">${_foroFiltro==='mios'?'Aún no has publicado nada. ¡Comparte algo con la comunidad!':'Todavía no hay publicaciones. Sé el primero en compartir.'}</div>`;
+      const esMio = _foroFiltro==='mios';
+      list.innerHTML = `<div class="foro-empty foro-empty--editorial">
+        <div class="foro-empty__mark" aria-hidden="true"></div>
+        <div class="foro-empty__title">${esMio?'Tu espacio aún está por estrenarse':'La conversación empieza aquí'}</div>
+        <div class="foro-empty__copy">${esMio?'Aún no has publicado nada. Comparte una receta, una duda o un aprendizaje con la comunidad.':'Todavía no hay publicaciones. Sé el primero en compartir una receta, duda o consejo profesional.'}</div>
+      </div>`;
       return;
     }
     const esAdmin = esAdminReal();
@@ -10911,35 +11041,37 @@ const Sections = (function(){
   /* ============================ CANAL WHATSAPP ============================ */
   function renderCanal(container){
     container.innerHTML = `
-      <div class="fade-up">
-        <div class="sec-hero">
-          <span class="sec-hero__eyebrow">Comunidad WhatsApp</span>
-          <h1 class="sec-hero__title">Canal WhatsApp DulceLab Food</h1>
-          <p class="sec-hero__sub">Únete a nuestra comunidad de profesionales de la gastronomía. Recibe alertas de nuevos cursos, novedades del sector, recetas y networking.</p>
+      <div class="fade-up canal-page">
+        <div class="canal-hero">
+          <span class="canal-hero__eyebrow">Canal oficial</span>
+          <h1 class="canal-hero__title">Comunidad por WhatsApp</h1>
+          <p class="canal-hero__sub">Únete a la comunidad de profesionales de la gastronomía. Recibe alertas de nuevos cursos, novedades del sector, recetas y networking.</p>
         </div>
 
-        <section class="wa-hero">
-          <div class="wa-hero__icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.05 4.91A9.816 9.816 0 0 0 12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01zm-7.01 15.24c-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.264 8.264 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24 2.2 0 4.27.86 5.82 2.42a8.183 8.183 0 0 1 2.41 5.83c.02 4.54-3.68 8.23-8.22 8.23zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.78.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43s.17-.25.25-.41c.08-.17.04-.31-.02-.43s-.56-1.34-.76-1.84c-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.14-1.18s-.22-.16-.47-.28z"/></svg></div>
-          <h2 class="wa-hero__title">Únete al canal oficial</h2>
-          <p class="wa-hero__sub">Profesionales de la gastronomía y la repostería compartiendo recetas, dudas y tips del oficio.</p>
-
-          <!-- MODIFICADO: se quitaron 3 estadísticas inventadas (486 miembros, 24 msj/día, 98% activos) que venían de BioNova; no hay forma de saber esos números reales del canal, así que no se muestra ninguno inventado. -->
-
-          <div style="position:relative;z-index:1;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+        <section class="canal-invite">
+          <div class="canal-invite__icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.05 4.91A9.816 9.816 0 0 0 12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01zm-7.01 15.24c-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.264 8.264 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24 2.2 0 4.27.86 5.82 2.42a8.183 8.183 0 0 1 2.41 5.83c.02 4.54-3.68 8.23-8.22 8.23zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.78.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43s.17-.25.25-.41c.08-.17.04-.31-.02-.43s-.56-1.34-.76-1.84c-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.14-1.18s-.22-.16-.47-.28z"/></svg></div>
+          <div class="canal-invite__main"><div class="canal-invite__eyebrow">DulceLab Food</div><h2 class="canal-invite__title">Únete al canal oficial</h2><p class="canal-invite__sub">Profesionales de la gastronomía y la repostería compartiendo recetas, dudas y tips del oficio.</p></div>
+          <div class="canal-invite__actions">
             <button class="btn btn--wa" id="btn-wa-canal-open"><svg class="ic"><use href="#i-whatsapp"/></svg>Abrir grupo</button>
             <button class="btn btn--ghost" id="btn-wa-canal-share"><svg class="ic"><use href="#i-arrow-right"/></svg>Compartir invitación</button>
           </div>
         </section>
 
+        <div class="canal-benefits">
+          <div class="canal-benefit"><span class="canal-benefit__icon"><svg class="ic"><use href="#i-broadcast"/></svg></span><div><div class="canal-benefit__title">Novedades del Club</div><div class="canal-benefit__copy">Cursos, clases y avisos importantes.</div></div></div>
+          <div class="canal-benefit"><span class="canal-benefit__icon"><svg class="ic"><use href="#i-book"/></svg></span><div><div class="canal-benefit__title">Tips del oficio</div><div class="canal-benefit__copy">Recetas, técnicas y buenas prácticas.</div></div></div>
+          <div class="canal-benefit"><span class="canal-benefit__icon"><svg class="ic"><use href="#i-users"/></svg></span><div><div class="canal-benefit__title">Comunidad profesional</div><div class="canal-benefit__copy">Conecta y aprende con otros miembros.</div></div></div>
+        </div>
+
         <div class="wa-rules">
           <div class="wa-rules__title">Reglas de la comunidad</div>
-          <div class="wa-rule">
+          <div class="wa-rules__grid"><div class="wa-rule">
             <div class="wa-rule__check"><svg class="ic"><use href="#i-check"/></svg></div>
             <div class="wa-rule__text"><strong>Respeto siempre.</strong> Tratamos a todos los miembros con profesionalismo. Sin política, sin religión, sin ataques personales.</div>
           </div>
           <div class="wa-rule">
             <div class="wa-rule__check"><svg class="ic"><use href="#i-check"/></svg></div>
-            <div class="wa-rule__text"><strong>Comparte casos reales.</strong> Si compartes un caso clínico o pregunta técnica, da contexto: sector, tamaño, qué pasó.</div>
+            <div class="wa-rule__text"><strong>Comparte experiencias reales.</strong> Si compartes una receta, caso de cocina o duda de negocio, da contexto: sector, tamaño y qué pasó.</div>
           </div>
           <div class="wa-rule">
             <div class="wa-rule__check"><svg class="ic"><use href="#i-check"/></svg></div>
@@ -10948,7 +11080,7 @@ const Sections = (function(){
           <div class="wa-rule">
             <div class="wa-rule__check"><svg class="ic"><use href="#i-check"/></svg></div>
             <div class="wa-rule__text"><strong>Confidencialidad.</strong> Lo que se comparte aquí queda aquí. No screenshots fuera del canal sin permiso.</div>
-          </div>
+          </div></div>
         </div>
       </div>
     `;
@@ -10978,7 +11110,7 @@ const Sections = (function(){
       if (_d) _desdeTxt = 'Miembro desde '+_d.toLocaleDateString('es-MX',{month:'short',year:'numeric'});
     }
     container.innerHTML = `
-      <div class="fade-up">
+      <div class="fade-up perfil-page">
         <div class="sec-hero">
           <span class="sec-hero__eyebrow">Tu cuenta</span>
           <h1 class="sec-hero__title">Mi perfil</h1>
@@ -10996,13 +11128,15 @@ const Sections = (function(){
               ${_desdeTxt?`<span class="tag tag--down">${_desdeTxt}</span>`:''}
             </div>
           </div>
-          <button class="btn btn--ghost" id="btn-edit-profile" style="align-self:flex-start;"><svg class="ic"><use href="#i-tools"/></svg>Editar perfil</button>
-          <button class="btn btn--ghost" id="btn-mi-tarjeta-dir" style="align-self:flex-start;"><svg class="ic"><use href="#i-users"/></svg>Mi tarjeta del directorio</button>
-          <button class="btn btn--ghost" data-tour-restart type="button" style="align-self:flex-start;"><span class="tour-help-icon" aria-hidden="true">?</span>Ver recorrido guiado</button>
+          <div class="perfil-hero__actions">
+            <button class="btn btn--ghost" id="btn-edit-profile"><svg class="ic"><use href="#i-tools"/></svg>Editar perfil</button>
+            <button class="btn btn--ghost" id="btn-mi-tarjeta-dir"><svg class="ic"><use href="#i-users"/></svg>Mi tarjeta</button>
+            <button class="btn btn--ghost" data-tour-restart type="button" aria-label="Ver recorrido guiado" title="Ver recorrido guiado"><span class="tour-help-icon" aria-hidden="true">?</span></button>
+          </div>
         </section>
 
         <div class="perfil-grid">
-          <div class="perfil-card">
+          <div class="perfil-card perfil-card--personal">
             <div class="perfil-card__title">Datos personales</div>
             <div class="perfil-field" data-field="nombre"><span class="perfil-field__lbl">Nombre</span><span class="perfil-field__val">${_nom}</span><button class="perfil-field__edit"><svg class="ic"><use href="#i-tools"/></svg></button></div>
             <div class="perfil-field" data-field="email" data-readonly="1"><span class="perfil-field__lbl">Email</span><span class="perfil-field__val">${_em}</span><button class="perfil-field__edit"><svg class="ic"><use href="#i-tools"/></svg></button></div>
@@ -11011,7 +11145,7 @@ const Sections = (function(){
             <div class="perfil-field" data-field="especialidad"><span class="perfil-field__lbl">Especialidad</span><span class="perfil-field__val" id="pf-especialidad">—</span><button class="perfil-field__edit"><svg class="ic"><use href="#i-tools"/></svg></button></div>
           </div>
 
-          <div class="perfil-card">
+          <div class="perfil-card perfil-card--activity">
             <div class="perfil-card__title">Tu actividad</div>
             <div class="perfil-field"><span class="perfil-field__lbl">Cursos</span><span class="perfil-field__val" id="pf-cursos" style="color:var(--primary);font-family:'JetBrains Mono',monospace;">0 en progreso · 0 completados</span></div>
             <div class="perfil-field"><span class="perfil-field__lbl">Certificados</span><span class="perfil-field__val" id="pf-certs" style="color:var(--success);font-family:'JetBrains Mono',monospace;">0 emitidos</span></div>
@@ -11020,7 +11154,7 @@ const Sections = (function(){
             <div class="perfil-field"><span class="perfil-field__lbl">Último acceso</span><span class="perfil-field__val" id="pf-acceso">—</span></div>
           </div>
 
-          <div class="perfil-card">
+          <div class="perfil-card perfil-card--notifications">
             <div class="perfil-card__title">Notificaciones</div>
             <div class="perfil-field"><span class="perfil-field__lbl">Nuevos cursos</span><span class="perfil-field__val" style="color:var(--success);">✓ Activado</span></div>
             <div class="perfil-field"><span class="perfil-field__lbl">Clases en vivo</span><span class="perfil-field__val" style="color:var(--success);">✓ Activado</span></div>
@@ -11028,7 +11162,7 @@ const Sections = (function(){
             <div class="perfil-field"><span class="perfil-field__lbl">Newsletter quincenal</span><span class="perfil-field__val" style="color:var(--text-3);">— Desactivado</span></div>
           </div>
 
-          <div class="perfil-card">
+          <div class="perfil-card perfil-card--security">
             <div class="perfil-card__title">Seguridad</div>
             <div class="perfil-field"><span class="perfil-field__lbl">Contraseña</span><span class="perfil-field__val">••••••••</span><button class="perfil-field__edit" id="btn-change-pass" title="Restablecer contraseña"><svg class="ic"><use href="#i-tools"/></svg></button></div>
             <div class="perfil-field"><span class="perfil-field__lbl">2FA</span><span class="perfil-field__val" style="color:var(--text-3);">Desactivado</span></div>
