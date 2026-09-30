@@ -6880,13 +6880,23 @@ const Sections = (function(){
 
   function coverSVG(area, titulo){
     var a=(area||'').toLowerCase(), t=(titulo||'').toLowerCase();
-    // Mismas fotos reales de cocina (verificadas, licencia libre Unsplash) que usa
-    // el panel admin en Pages._coverSVG, para que ambos lados se vean igual.
+    // Fotos reales por categoría (verificadas, licencia libre Unsplash) — mismo
+    // set que usa el panel admin en Pages._coverSVG, para que ambos lados se vean igual.
     var IMG={
+      higiene:'https://images.unsplash.com/photo-1551763336-d71ed8103d8d?w=900&q=80&auto=format&fit=crop',
+      mexicana:'https://images.unsplash.com/photo-1648437595587-e6a8b0cdf1f9?w=900&q=80&auto=format&fit=crop',
+      mermeladas:'https://images.unsplash.com/photo-1525604885849-bb72cf86832c?w=900&q=80&auto=format&fit=crop',
+      costos:'https://images.unsplash.com/photo-1725258080098-727051947997?w=900&q=80&auto=format&fit=crop',
+      catering:'https://images.unsplash.com/photo-1686853021522-1b0e9a81706e?w=900&q=80&auto=format&fit=crop',
       horno:'https://images.unsplash.com/photo-1732565649629-eb4932a1ec09?w=900&q=80&auto=format&fit=crop',
       cocina:'https://images.unsplash.com/photo-1762329924239-e204f101fca4?w=900&q=80&auto=format&fit=crop'
     };
     function pick(){
+      if(a.indexOf('higien')>=0||a.indexOf('inocu')>=0||/higien|inocu|sanitari|nom-251/.test(t))return'higiene';
+      if(a.indexOf('mexican')>=0||/taco|mexican/.test(t))return'mexicana';
+      if(a.indexOf('mermelada')>=0||a.indexOf('conserva')>=0||/mermelada|conserva|jalea/.test(t))return'mermeladas';
+      if(a.indexOf('costo')>=0||a.indexOf('negocio')>=0||a.indexOf('merma')>=0||/costo|merma|inventari|rentabilidad|negocio/.test(t))return'costos';
+      if(a.indexOf('catering')>=0||a.indexOf('volumen')>=0||a.indexOf('brigada')>=0||/catering|volumen|brigada|producci/.test(t))return'catering';
       if(a.indexOf('reposter')>=0||a.indexOf('panader')>=0||/pan|pastel|masa|horne|galleta/.test(t))return'horno';
       return'cocina';
     }
