@@ -3220,7 +3220,10 @@ const Pages={
         activo: true,
         disponible: true
       };
-      if (portada) data.portada = portada;
+      // Siempre se incluye (aunque venga vacío) para que si el admin borra la URL
+      // en el formulario, sí se borre el valor guardado en Firestore al editar
+      // (antes: si venía vacío, el campo viejo se quedaba intacto para siempre).
+      data.portada = portada;
 
       // Firebase
       const fb = window._fb;
