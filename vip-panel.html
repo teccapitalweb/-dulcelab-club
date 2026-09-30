@@ -10474,6 +10474,18 @@ const Sections = (function(){
       return;
     }
     const uid = window.UserState?.uid;
+    // Seguridad: el link de LinkedIn/sitio web lo escribe el propio miembro en su
+    // perfil — hay que validar que sea http(s) real y escapar antes de meterlo en
+    // un atributo href, si no, se puede romper el atributo o abrir un esquema raro.
+    const _dirSafeHref = (v) => {
+      if (!v) return '';
+      const withScheme = v.startsWith('http://') || v.startsWith('https://') ? v : 'https://' + v;
+      try {
+        const u = new URL(withScheme);
+        if (u.protocol !== 'http:' && u.protocol !== 'https:') return '';
+        return escapeHtml(u.href);
+      } catch (e) { return ''; }
+    };
     grid.innerHTML = cards.map(c=>{
       const inicial = (c.nombre||'?').trim().slice(0,2).toUpperCase();
       const foto = c.foto
@@ -10482,8 +10494,8 @@ const Sections = (function(){
       const contactos = [];
       if (c.whatsapp) contactos.push(`<a class="dir-cta dir-cta--wa" href="https://wa.me/${(c.whatsapp||'').replace(/[^0-9]/g,'')}" target="_blank" rel="noopener" title="WhatsApp"><svg class="ic"><use href="#i-whatsapp"/></svg></a>`);
       if (c.email) contactos.push(`<button class="dir-cta dir-cta--mail" data-email="${escapeHtml(c.email)}" title="Copiar correo: ${escapeHtml(c.email)}"><svg class="ic"><use href="#i-mail"/></svg></button>`);
-      if (c.linkedin) contactos.push(`<a class="dir-cta dir-cta--li" href="${c.linkedin.startsWith('http')?c.linkedin:'https://'+c.linkedin}" target="_blank" rel="noopener" title="LinkedIn"><svg class="ic"><use href="#i-linkedin"/></svg></a>`);
-      if (c.web) contactos.push(`<a class="dir-cta" href="${c.web.startsWith('http')?c.web:'https://'+c.web}" target="_blank" rel="noopener" title="Sitio web"><svg class="ic"><use href="#i-link"/></svg></a>`);
+      if (c.linkedin && _dirSafeHref(c.linkedin)) contactos.push(`<a class="dir-cta dir-cta--li" href="${_dirSafeHref(c.linkedin)}" target="_blank" rel="noopener" title="LinkedIn"><svg class="ic"><use href="#i-linkedin"/></svg></a>`);
+      if (c.web && _dirSafeHref(c.web)) contactos.push(`<a class="dir-cta" href="${_dirSafeHref(c.web)}" target="_blank" rel="noopener" title="Sitio web"><svg class="ic"><use href="#i-link"/></svg></a>`);
       const esMia = c.id===uid;
       return `
       <article class="dir-card${esMia?' dir-card--mia':''}" data-dircard="${c.id}">
@@ -10526,6 +10538,17 @@ const Sections = (function(){
     const foto = c.foto
       ? `<img src="${c.foto}" alt="" class="dir-det__foto">`
       : `<div class="dir-det__foto dir-det__foto--ini" style="background:linear-gradient(135deg,${c.color||'#C4577A'},${(c.color||'#C4577A')}aa);">${escapeHtml(inicial)}</div>`;
+    // Mismo saneo de URL que en la tarjeta del grid (ver renderDirectorio): valida
+    // http(s) real y escapa antes de insertarlo en un atributo href.
+    const _dirSafeHref = (v) => {
+      if (!v) return '';
+      const withScheme = v.startsWith('http://') || v.startsWith('https://') ? v : 'https://' + v;
+      try {
+        const u = new URL(withScheme);
+        if (u.protocol !== 'http:' && u.protocol !== 'https:') return '';
+        return escapeHtml(u.href);
+      } catch (e) { return ''; }
+    };
     const row = (icon,label,val,href,extraClass='') => val
       ? `<a class="dir-det__row ${extraClass}" ${href?`href="${href}" target="_blank" rel="noopener"`:''}>
            <span class="dir-det__row-ic"><svg class="ic"><use href="#${icon}"/></svg></span>
@@ -10548,8 +10571,8 @@ const Sections = (function(){
              <span class="dir-det__row-ic"><svg class="ic"><use href="#i-mail"/></svg></span>
              <span class="dir-det__row-tx"><span class="dir-det__row-lbl">Correo · toca para copiar</span><span class="dir-det__row-val">${escapeHtml(c.email)}</span></span>
            </button>`:''}
-          ${row('i-linkedin','LinkedIn',c.linkedin, c.linkedin?(c.linkedin.startsWith('http')?c.linkedin:'https://'+c.linkedin):'', 'dir-det__row--li')}
-          ${row('i-link','Sitio web',c.web, c.web?(c.web.startsWith('http')?c.web:'https://'+c.web):'')}
+          ${row('i-linkedin','LinkedIn',c.linkedin, _dirSafeHref(c.linkedin), 'dir-det__row--li')}
+          ${row('i-link','Sitio web',c.web, _dirSafeHref(c.web))}
         </div>
         ${(!c.whatsapp&&!c.email&&!c.linkedin&&!c.web)?'<div class="dir-det__sincontacto">Este miembro no agregó datos de contacto.</div>':''}
       </div>

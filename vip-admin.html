@@ -1245,6 +1245,15 @@ window.__signOut = async () => {
    Para conectar a Firebase en sprint 5
    ========================================================= */
 
+// Seguridad: escapa HTML antes de insertar cualquier texto de miembros/Firestore
+// en el DOM vía innerHTML (nombre, bio, posts del foro, etc. son datos que
+// cualquier usuario puede escribir desde el registro o su perfil).
+function escapeHtml(s){
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
 const Theme={
   init(){const s=localStorage.getItem('dulcelab-admin:theme')||'night';document.documentElement.dataset.theme=s;this.updateIcon();},
   toggle(){const c=document.documentElement.dataset.theme;const n=c==='night'?'day':'night';document.documentElement.dataset.theme=n;localStorage.setItem('dulcelab-admin:theme',n);this.updateIcon();},
@@ -1629,8 +1638,8 @@ const Pages={
                     <div class="mini-row" style="--c1:${c1};">
                       <div class="mini-row__dot"><svg class="ic"><use href="#i-user"/></svg></div>
                       <div class="mini-row__body">
-                        <div class="mini-row__title">${m.nombre || m.displayName || m.email?.split('@')[0] || 'Miembro'}</div>
-                        <div class="mini-row__meta">${m.email || '—'} · Plan ${planLabel}</div>
+                        <div class="mini-row__title">${escapeHtml(m.nombre || m.displayName || m.email?.split('@')[0] || 'Miembro')}</div>
+                        <div class="mini-row__meta">${escapeHtml(m.email || '—')} · Plan ${planLabel}</div>
                       </div>
                       <span class="tag ${activo?'tag--success':'tag--danger'}">${activo?'Activo':'Inactivo'}</span>
                     </div>
@@ -4224,9 +4233,9 @@ const Pages={
         <div class="adm-row" style="--c1:#6B1526;">
           <div class="adm-row__thumb"><svg class="ic"><use href="#i-certificate"/></svg></div>
           <div class="adm-row__body">
-            <div class="adm-row__title">${c.nombre||'—'} · ${c.curso||'—'}</div>
+            <div class="adm-row__title">${escapeHtml(c.nombre||'—')} · ${escapeHtml(c.curso||'—')}</div>
             <div class="adm-row__meta">
-              <span><svg class="ic"><use href="#i-tools"/></svg>${c.area||'—'}</span>
+              <span><svg class="ic"><use href="#i-tools"/></svg>${escapeHtml(c.area||'—')}</span>
               <span><svg class="ic"><use href="#i-calendar"/></svg>${fechaTxt}</span>
               <span><svg class="ic"><use href="#i-clock"/></svg>${c.horas||0}h · ${c.sesiones||0} sesiones</span>
               <span style="color:var(--primary);font-weight:700;">${c.folio||'—'}</span>
@@ -5900,11 +5909,11 @@ function foroAdminCargar(){
         <div class="foro-admin-card__av" style="background:${x.color||'#6B1526'};">${(x.iniciales||'?')}</div>
         <div class="foro-admin-card__main">
           <div class="foro-admin-card__head">
-            <span class="foro-admin-card__name">${(x.nombre||'Miembro')}</span>
+            <span class="foro-admin-card__name">${escapeHtml(x.nombre||'Miembro')}</span>
             ${x.esAdmin?'<span class="tag-mini tag-mini--admin">DulceLab Food</span>':'<span class="tag-mini">VIP</span>'}
             <span class="foro-admin-card__time">${foroAdminTiempo(x.createdAt)}</span>
           </div>
-          ${x.texto?`<div class="foro-admin-card__text">${(x.texto||'').replace(/</g,'&lt;').replace(/\n/g,'<br>')}</div>`:''}
+          ${x.texto?`<div class="foro-admin-card__text">${escapeHtml(x.texto||'').replace(/\n/g,'<br>')}</div>`:''}
           ${x.imagen?`<img class="foro-admin-card__img" src="${x.imagen}" alt="adjunto">`:''}
           <div class="foro-admin-card__meta">❤ ${x.likes||0} · 💬 ${x.comentariosCount||0} respuestas</div>
           <button class="foro-admin-card__vercom" data-vercom="${x.id}">${(x.comentariosCount||0)>0?'Ver respuestas y responder':'Responder como DulceLab Food'}</button>
@@ -5955,8 +5964,8 @@ function foroAdminVerComentarios(postId){
       <div class="adm-com">
         <div class="adm-com__av" style="background:${c.color||'#888'};">${(c.iniciales||'?')}</div>
         <div class="adm-com__body">
-          <div class="adm-com__head"><span class="adm-com__name">${(c.nombre||'Miembro')}</span>${c.esAdmin?'<span class="tag-mini tag-mini--admin" style="font-size:8px;padding:1px 6px;">DulceLab Food</span>':''}<span class="adm-com__time">${foroAdminTiempo(c.createdAt)}</span></div>
-          <div class="adm-com__text">${(c.texto||'').replace(/</g,'&lt;').replace(/\n/g,'<br>')}</div>
+          <div class="adm-com__head"><span class="adm-com__name">${escapeHtml(c.nombre||'Miembro')}</span>${c.esAdmin?'<span class="tag-mini tag-mini--admin" style="font-size:8px;padding:1px 6px;">DulceLab Food</span>':''}<span class="adm-com__time">${foroAdminTiempo(c.createdAt)}</span></div>
+          <div class="adm-com__text">${escapeHtml(c.texto||'').replace(/\n/g,'<br>')}</div>
         </div>
         <button class="adm-com__del" data-comdel="${postId}|${c.id}" title="Eliminar respuesta"><svg class="ic"><use href="#i-trash"/></svg></button>
       </div>
@@ -6007,15 +6016,15 @@ function dirAdminCargar(){
         ${foto}
         <div class="dir-adm-card__main">
           <div class="dir-adm-card__head">
-            <span class="dir-adm-card__name">${(x.nombre||'Miembro')}</span>
+            <span class="dir-adm-card__name">${escapeHtml(x.nombre||'Miembro')}</span>
             ${x.visible===false?'<span class="tag-mini" style="background:rgba(150,150,150,.18);color:#999;">Oculta</span>':'<span class="tag-mini tag-mini--admin">Visible</span>'}
           </div>
-          ${x.puesto?`<div class="dir-adm-card__sub">${(x.puesto||'')}${x.empresa?' · '+x.empresa:''}</div>`:''}
-          ${x.sector?`<div class="dir-adm-card__sector">${x.sector}</div>`:''}
-          ${x.bio?`<div class="dir-adm-card__bio">${(x.bio||'').replace(/</g,'&lt;')}</div>`:''}
+          ${x.puesto?`<div class="dir-adm-card__sub">${escapeHtml(x.puesto||'')}${x.empresa?' · '+escapeHtml(x.empresa):''}</div>`:''}
+          ${x.sector?`<div class="dir-adm-card__sector">${escapeHtml(x.sector)}</div>`:''}
+          ${x.bio?`<div class="dir-adm-card__bio">${escapeHtml(x.bio||'')}</div>`:''}
           <div class="dir-adm-card__meta">${contactos.length?'Contacto: '+contactos.join(' · '):'Sin contacto'}</div>
         </div>
-        <button class="foro-admin-card__del" data-dirdel="${x.id}" data-dirname="${(x.nombre||'Miembro').replace(/"/g,'&quot;')}" title="Eliminar tarjeta"><svg class="ic"><use href="#i-trash"/></svg></button>
+        <button class="foro-admin-card__del" data-dirdel="${x.id}" data-dirname="${escapeHtml(x.nombre||'Miembro')}" title="Eliminar tarjeta"><svg class="ic"><use href="#i-trash"/></svg></button>
       </div>`;
     }).join('');
     cont.querySelectorAll('[data-dirdel]').forEach(b=>b.addEventListener('click', async ()=>{
