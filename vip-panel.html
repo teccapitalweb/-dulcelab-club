@@ -3765,7 +3765,11 @@ if (window.__isDemoMode) {
       window.UserState.membership = { activo:true, plan:'admin' };
     } else {
       try {
-        const res = await fetch(`${WEBHOOK_URL}/membership/${user.uid}`, { method:'GET' });
+        const idToken = await user.getIdToken();
+        const res = await fetch(`${WEBHOOK_URL}/membership/${user.uid}`, {
+          method: 'GET',
+          headers: { 'Authorization': 'Bearer ' + idToken }
+        });
         const data = await res.json();
         window.UserState.membership = data;
         if (data.activo) {
