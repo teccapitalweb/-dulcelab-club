@@ -2995,29 +2995,27 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 .mat-chip.is-active{background:color-mix(in srgb,var(--primary) 12%,transparent);color:var(--primary);border-color:color-mix(in srgb,var(--primary) 28%,transparent)}
 .mat-areas{margin-bottom:22px}
 
-/* Libro 3D */
-.book{position:relative;width:100%;aspect-ratio:3/4;container-type:inline-size;transform-origin:left center;transform:perspective(900px) rotateY(-6deg);transition:transform .4s cubic-bezier(.2,.8,.25,1)}
-.book__pages{position:absolute;top:5px;bottom:5px;right:-6px;width:12px;border-radius:0 4px 4px 0;background:repeating-linear-gradient(180deg,#F4ECE6 0 2px,#D9CDC4 2px 3px);box-shadow:inset -2px 0 3px rgba(0,0,0,.18);z-index:0}
-.book__cover{position:absolute;inset:0;z-index:1;border-radius:3px 9px 9px 3px;overflow:hidden;background-color:#2B2522;background-image:linear-gradient(180deg,rgba(0,0,0,.28) 0%,rgba(0,0,0,.30) 40%,rgba(0,0,0,.78) 100%),var(--foto,linear-gradient(150deg,#4A403B,#1E1916));background-size:cover;background-position:center;color:#fff;display:flex;flex-direction:column;justify-content:space-between;padding:11cqw 9cqw 9cqw 14cqw;box-shadow:0 2px 3px rgba(0,0,0,.25),8px 12px 18px -6px rgba(0,0,0,.35),20px 28px 34px -14px rgba(0,0,0,.45)}
-.book__cover::before{content:"";position:absolute;left:0;top:0;bottom:0;width:8%;background:linear-gradient(90deg,rgba(0,0,0,.4),rgba(255,255,255,.16) 40%,rgba(0,0,0,.15) 75%,transparent)}
-.book__cover::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.16) 0%,rgba(255,255,255,0) 38%,rgba(0,0,0,.18) 100%);pointer-events:none}
-.book__top{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;gap:2cqw}
+/* Portada de módulo (tarjeta plana, sin efecto 3D) */
+.book{position:relative;width:100%;aspect-ratio:16/11;container-type:inline-size;transition:transform .25s cubic-bezier(.2,.8,.25,1)}
+.book__cover{position:absolute;inset:0;z-index:1;border-radius:14px;overflow:hidden;background-color:#2B2522;background-image:linear-gradient(180deg,rgba(0,0,0,.24) 0%,rgba(0,0,0,.32) 45%,rgba(0,0,0,.82) 100%),var(--foto,linear-gradient(150deg,#4A403B,#1E1916));background-size:cover;background-position:center;color:#fff;display:flex;flex-direction:column;justify-content:space-between;padding:4.5cqw;box-shadow:0 1px 2px rgba(0,0,0,.2),0 6px 16px -6px rgba(0,0,0,.3)}
+.book__cover::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.12) 0%,rgba(255,255,255,0) 38%,rgba(0,0,0,.14) 100%);pointer-events:none}
+.book__num{position:absolute;top:8px;left:8px;z-index:2;width:22px;height:22px;border-radius:50%;background:var(--primary);color:#fff;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.35)}
+.book__top{position:relative;z-index:1;display:flex;justify-content:flex-end;align-items:center;gap:2cqw}
 .book__brand{font-family:'JetBrains Mono',monospace;font-size:4.6cqw;font-weight:700;letter-spacing:.14em;text-transform:uppercase;opacity:.85}
-.book__tipo{font-family:'JetBrains Mono',monospace;font-size:4.6cqw;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#F0C868;border:1px solid rgba(240,200,104,.55);border-radius:100px;padding:.35em .8em}
+.book__tipo{font-family:'JetBrains Mono',monospace;font-size:4.2cqw;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#F0C868;border:1px solid rgba(240,200,104,.55);border-radius:100px;padding:.35em .8em}
 .book__mid{position:relative;z-index:1;display:flex;flex-direction:column;gap:3cqw}
-.book__kicker{font-family:'JetBrains Mono',monospace;font-size:5cqw;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#F0C868}
-.book__title{font-size:10cqw;font-weight:800;line-height:1.1;letter-spacing:-.02em;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden;text-shadow:0 1px 4px rgba(0,0,0,.6)}
-.book__area{position:relative;z-index:1;font-family:'JetBrains Mono',monospace;font-size:4.4cqw;font-weight:600;letter-spacing:.1em;text-transform:uppercase;opacity:.75;padding-top:4cqw;border-top:1px solid rgba(255,255,255,.25);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.book__kicker{font-family:'JetBrains Mono',monospace;font-size:4.6cqw;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#F0C868}
+.book__title{font-size:6.6cqw;font-weight:800;line-height:1.15;letter-spacing:-.02em;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;text-shadow:0 1px 4px rgba(0,0,0,.6)}
+.book__area{position:relative;z-index:1;font-family:'JetBrains Mono',monospace;font-size:4cqw;font-weight:600;letter-spacing:.1em;text-transform:uppercase;opacity:.75;padding-top:3cqw;border-top:1px solid rgba(255,255,255,.25);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .book--locked .book__cover{filter:saturate(.55) brightness(.85)}
 .book__lock{position:absolute;inset:0;z-index:2;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.28)}
-.book__lock span{width:22cqw;height:22cqw;border-radius:50%;background:rgba(255,255,255,.92);color:var(--primary);display:flex;align-items:center;justify-content:center}
-.book__lock svg{width:10cqw;height:10cqw}
+.book__lock span{width:15cqw;height:15cqw;border-radius:50%;background:rgba(255,255,255,.92);color:var(--primary);display:flex;align-items:center;justify-content:center}
+.book__lock svg{width:7cqw;height:7cqw}
 
 /* Material destacado */
-.mat-feat{display:grid;grid-template-columns:230px 1fr;gap:48px;align-items:center;margin:4px 0 36px;padding-bottom:32px;border-bottom:1px solid var(--border)}
-.mat-feat__cover{width:230px;padding:6px 12px 22px 0;perspective:1000px}
-.mat-feat .book{transform:perspective(1000px) rotateY(-9deg)}
-.mat-feat .book:hover{transform:perspective(1000px) rotateY(-16deg) translateY(-4px)}
+.mat-feat{display:grid;grid-template-columns:340px 1fr;gap:48px;align-items:center;margin:4px 0 36px;padding-bottom:32px;border-bottom:1px solid var(--border)}
+.mat-feat__cover{width:340px}
+.mat-feat .book:hover{transform:translateY(-3px)}
 .mat-feat__eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;color:var(--text-3)}
 .mat-feat__title{font-size:clamp(24px,2.8vw,36px);font-weight:800;letter-spacing:-1px;line-height:1.1;margin-top:10px;color:var(--text)}
 .mat-feat__desc{font-size:14.5px;color:var(--text-2);margin-top:12px;line-height:1.55;max-width:560px}
@@ -3036,12 +3034,14 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 .mat-feat__meta b{display:block;font-size:12px;font-weight:700;color:var(--text)}
 .mat-feat__meta span{display:block;font-size:13px;color:var(--text-2);margin-top:5px;line-height:1.4}
 
-/* Estantería */
-.mat-shelf{display:grid;grid-template-columns:repeat(auto-fill,150px);gap:32px 28px;justify-content:start}
-.mat-item{cursor:pointer;display:flex;flex-direction:column;gap:12px;outline:none}
-.mat-item .book{width:calc(100% - 10px)}
-.mat-item:hover .book{transform:perspective(900px) rotateY(-16deg) translateY(-5px)}
-.mat-item__title{font-size:12.5px;font-weight:600;line-height:1.35;color:var(--text);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+/* Carrusel de módulos ("Todos los módulos de esta serie") */
+.mat-shelf__head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}
+.mat-shelf__title{font-size:19px;font-weight:800;letter-spacing:-.4px;color:var(--text)}
+.mat-shelf__sub{font-size:12.5px;color:var(--text-3)}
+.mat-shelf{display:flex;gap:20px;overflow-x:auto;padding-bottom:6px;scroll-snap-type:x proximity;scrollbar-width:thin}
+.mat-item{cursor:pointer;display:flex;flex-direction:column;gap:10px;outline:none;flex:0 0 200px;scroll-snap-align:start}
+.mat-item:hover .book{transform:translateY(-3px)}
+.mat-item__title{font-size:12.5px;font-weight:700;line-height:1.35;color:var(--text);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .mat-item__meta{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);letter-spacing:.3px}
 .mat-item.is-selected .mat-item__title{color:var(--primary)}
 .mat-item.is-selected .book__cover{outline:2px solid #E5C171;outline-offset:3px}
@@ -3050,9 +3050,9 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 @media (max-width:880px){
   .mat-feat{grid-template-columns:1fr;gap:26px;justify-items:center}
   .mat-feat__info{width:100%}
-  .mat-feat__cover{width:190px}
+  .mat-feat__cover{width:100%;max-width:300px}
   .mat-feat__meta{gap:14px 20px}
-  .mat-shelf{grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:26px 16px}
+  .mat-item{flex:0 0 160px}
 }
 
 
@@ -9788,13 +9788,13 @@ const Sections = (function(){
     return { tipo, T: _MAT_TIPOS[tipo] || _MAT_TIPOS.pdf, gratis, disponible, requiere, dias, estado, desc };
   }
 
-  function _matBookHTML(m, info){
+  function _matBookHTML(m, info, numero){
     const p = _matPartirTitulo(m.titulo);
     return `
       <div class="book ${info.disponible ? '' : 'book--locked'}" style="--b1:${info.T.c[0]};--b2:${info.T.c[1]};--foto:url('${_matFoto(m).replace(/'/g, '%27')}');">
-        <span class="book__pages"></span>
+        ${numero ? `<span class="book__num">${numero}</span>` : ''}
         <div class="book__cover">
-          <div class="book__top"><span class="book__brand">DulceLab Food</span><span class="book__tipo">${info.T.corto}</span></div>
+          <div class="book__top"><span class="book__tipo">${info.T.corto}</span></div>
           <div class="book__mid">
             ${p.kicker ? `<span class="book__kicker">${escapeHtml(p.kicker)}</span>` : ''}
             <span class="book__title">${escapeHtml(p.titulo)}</span>
@@ -9863,6 +9863,12 @@ const Sections = (function(){
         </div>
         <div class="cursos-chips mat-areas" id="mat-areas"></div>
         <section class="mat-feat" id="mat-feat"></section>
+        <div class="mat-shelf__head">
+          <div>
+            <div class="mat-shelf__title">Todos los módulos de esta serie</div>
+            <div class="mat-shelf__sub" id="mat-shelf-sub"></div>
+          </div>
+        </div>
         <div class="mat-shelf" id="mat-shelf"></div>
       </div>
     `;
@@ -9904,12 +9910,15 @@ const Sections = (function(){
       } else { $areas.style.display = 'none'; $areas.innerHTML = ''; }
 
       const lista = filtrar();
+      const $shelfSub = container.querySelector('#mat-shelf-sub');
       if (!lista.length) {
         $feat.style.display = 'none';
-        $shelf.innerHTML = `<div class="mat-empty" style="grid-column:1/-1;">${fTipo === 'guardados' ? 'Aún no guardas materiales. Toca el marcador de un material para tenerlo aquí.' : 'No hay materiales con estos filtros.'}</div>`;
+        if ($shelfSub) $shelfSub.textContent = '';
+        $shelf.innerHTML = `<div class="mat-empty" style="flex:1;">${fTipo === 'guardados' ? 'Aún no guardas materiales. Toca el marcador de un material para tenerlo aquí.' : 'No hay materiales con estos filtros.'}</div>`;
         return;
       }
       $feat.style.display = '';
+      if ($shelfSub) $shelfSub.textContent = `${lista.length} recurso${lista.length !== 1 ? 's' : ''} · Avanza a tu ritmo`;
 
       // Destacado: el elegido si sigue en la lista; si no, el primero disponible (o el primero)
       let sel = lista.find(m => m.id === selId);
@@ -9947,14 +9956,14 @@ const Sections = (function(){
         pintar();
       });
 
-      // Estantería
-      $shelf.innerHTML = lista.map(m => {
+      // Carrusel de módulos
+      $shelf.innerHTML = lista.map((m, i) => {
         const inf = _matInfo(m);
         return `
           <div class="mat-item ${m.id === selId ? 'is-selected' : ''}" role="button" tabindex="0" data-mid="${escapeHtml(m.id)}" title="${escapeHtml(m.titulo)}">
-            ${_matBookHTML(m, inf)}
+            ${_matBookHTML(m, inf, i + 1)}
             <span class="mat-item__title">${escapeHtml(_matTituloBonito(m.titulo))}</span>
-            <span class="mat-item__meta">${inf.T.corto} · ${escapeHtml(m.cursoArea)}</span>
+            <span class="mat-item__meta">${inf.T.corto} · ${escapeHtml(inf.estado)}</span>
           </div>`;
       }).join('');
       $shelf.querySelectorAll('.mat-item').forEach(el => {
