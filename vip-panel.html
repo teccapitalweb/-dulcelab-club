@@ -5554,6 +5554,25 @@ const Sections = (function(){
     return p[cursoId] || { clasesVistas: [], completado: false, fechaCompletado: null };
   }
 
+  // Confetti ligero para "clase completada" — reusa el mismo estilo de
+  // partícula que el splash de curso completado (.splash-cmp__confetti-bit),
+  // pero suelto y sin modal, para no competir con el splash grande cuando
+  // la clase que se acaba de ver también termina el curso.
+  function _celebrarClaseVista(){
+    try {
+      const host = document.createElement('div');
+      host.className = 'splash-cmp__confetti';
+      host.style.zIndex = '10050';
+      const colores = ['#C4577A','#D5A13D','#E5C171','#60A5FA','#F87171','#FBBF24','#A78BFA'];
+      host.innerHTML = Array.from({length:22}).map((_,i)=>
+        `<span class="splash-cmp__confetti-bit" style="--d:${(Math.random()*0.3).toFixed(2)}s;--x:${(Math.random()*100-50)|0}vw;--r:${(Math.random()*720-360)|0}deg;--s:${(0.6+Math.random()*0.6).toFixed(2)};--c:${colores[i%colores.length]}"></span>`
+      ).join('');
+      document.body.appendChild(host);
+      setTimeout(() => host.remove(), 2800);
+      if (window.Toast) Toast.success('¡Clase completada!', 'Sigue así, vas avanzando bien.');
+    } catch(e) {}
+  }
+
   window.marcarClaseVista = function(cursoId, numeroClase) {
     const p = getProgreso();
     let hayCambio = false;
@@ -5567,16 +5586,21 @@ const Sections = (function(){
     setProgreso(p);
 
     // Detectar si se completó el curso
+    let cursoRecienCompletado = false;
     const curso = cursos.find(c => c.id === cursoId);
     if (curso && curso.sesiones && p[cursoId].clasesVistas.length >= curso.sesiones.length && !p[cursoId].completado) {
       p[cursoId].completado = true;
       p[cursoId].fechaCompletado = new Date().toISOString();
       setProgreso(p);
+      cursoRecienCompletado = true;
       // Emitir el certificado a Firestore (para que se acumule y sea verificable)
       emitirCertificadoFirestore(curso);
       // Mostrar splash de felicitación
       setTimeout(() => mostrarSplashCompletado(curso), 400);
     }
+    // Celebración chica por cada clase — pero no si ya viene el splash grande
+    // de curso completado, para no encimar dos festejos.
+    if (hayCambio && !cursoRecienCompletado) _celebrarClaseVista();
     if (hayCambio) _encolarSubidaProgreso(cursoId, p);   // también a Firestore (multi-dispositivo)
     if (typeof populateHeroCourse === 'function') populateHeroCourse();
     return p[cursoId];
@@ -7036,7 +7060,7 @@ const Sections = (function(){
         else { c._unlockDay = _rank * 8; _rank++; }
       });
       try {
-        var _ce=function(id,v){var el=document.getElementById(id);if(el)el.textContent=v;};
+        var _ce=function(id,v){var el=document.getElementById(id);if(el) (typeof _animarNumero==='function' ? _animarNumero(el,v) : (el.textContent=v));};
         _ce('bn-stat-cursos', cursos.length);
         _ce('bn-stat-clases', (typeof webinars!=='undefined' && webinars) ? webinars.length : 0);
         var _pdfs=0; cursos.forEach(function(c){ if(c && Array.isArray(c.materiales)) _pdfs+=c.materiales.length; });
@@ -7053,6 +7077,27 @@ const Sections = (function(){
     }
   }
   window.__cargarCursosFirestore = cargarCursosFirestore;
+
+  // Anima un número/porcentaje al cambiar en vez de saltar de golpe —
+  // usado en los stats del Inicio para que se sientan menos estáticos.
+  function _animarNumero(el, destino, duracion){
+    if (!el) return;
+    const texto = String(destino);
+    const esPct = /%$/.test(texto);
+    const fin = parseFloat(texto) || 0;
+    const inicio = parseFloat(el.textContent) || 0;
+    if (inicio === fin) { el.textContent = texto; return; }
+    const d = duracion || 550;
+    const t0 = performance.now();
+    function paso(t){
+      const p = Math.min(1, (t - t0) / d);
+      const ease = 1 - Math.pow(1 - p, 3);
+      const val = Math.round(inicio + (fin - inicio) * ease);
+      el.textContent = val + (esPct ? '%' : '');
+      if (p < 1) requestAnimationFrame(paso);
+    }
+    requestAnimationFrame(paso);
+  }
 
   // ═══════════════════════════════════════════════════════════════
   // Hero "Continúa tu curso" (rediseño v3) · pinta con datos reales:
@@ -7119,7 +7164,7 @@ const Sections = (function(){
       const pct = progresoCursoPct(curso.id, total);
       elName.textContent = curso.titulo;
       elProgTxt.textContent = `${vistas} de ${total} clases vistas`;
-      elProgPct.textContent = pct + '%';
+      _animarNumero(elProgPct, pct + '%');
       if (elProgFill) elProgFill.style.width = pct + '%';
 
       if (vistas >= total) {
