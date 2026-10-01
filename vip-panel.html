@@ -2893,6 +2893,31 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 }
 .discover-modal__tip strong{color:var(--text)}
 
+/* ═══ Inicio · Accesos rápidos + Tu semana (datos reales, sin inventar) ═══ */
+.quick-access{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.quick-access__item{display:flex;flex-direction:column;align-items:center;gap:7px;padding:16px 8px;border:1px solid var(--border);border-radius:14px;background:var(--surface);cursor:pointer;transition:transform .15s,border-color .15s,box-shadow .2s}
+.quick-access__item:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--primary) 30%,var(--border));box-shadow:0 10px 20px -12px rgba(0,0,0,.25)}
+.quick-access__ic{width:38px;height:38px;border-radius:50%;background:color-mix(in srgb,var(--primary) 12%,transparent);color:var(--primary);display:flex;align-items:center;justify-content:center}
+.quick-access__ic .ic{width:18px;height:18px}
+.quick-access__lbl{font-size:11.5px;font-weight:700;color:var(--text-2);text-align:center;line-height:1.25}
+.quick-access__item--live .quick-access__ic{background:color-mix(in srgb,#EF4444 14%,transparent);color:#EF4444}
+
+.tu-semana{padding:18px 20px;border:0.5px solid var(--border);border-radius:18px;background:var(--surface)}
+.tu-semana__head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:12px}
+.tu-semana__sub{font-size:11.5px;color:var(--text-3);font-family:'JetBrains Mono',monospace;white-space:nowrap}
+.tu-semana__list{display:flex;flex-direction:column;gap:9px}
+.tu-semana__row{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:12px;background:var(--surface-2);cursor:pointer;transition:background .15s}
+.tu-semana__row:hover{background:var(--surface-3)}
+.tu-semana__check{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--border-2);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:transparent;transition:all .15s}
+.tu-semana__check .ic{width:12px;height:12px}
+.tu-semana__row.is-done .tu-semana__check{background:var(--success);border-color:var(--success);color:#fff}
+.tu-semana__row.is-done .tu-semana__title{color:var(--text-2);text-decoration:line-through;text-decoration-color:var(--border-2)}
+.tu-semana__body{flex:1;min-width:0}
+.tu-semana__title{font-size:13px;font-weight:700;color:var(--text)}
+.tu-semana__desc{font-size:11.5px;color:var(--text-3);margin-top:1px}
+@media(max-width:700px){.quick-access{grid-template-columns:repeat(4,1fr)}.quick-access__lbl{font-size:10px}.quick-access__ic{width:34px;height:34px}}
+@media(max-width:420px){.quick-access__lbl{display:none}}
+
 /* ═══ Inicio · Descubre algo nuevo hoy: composición editorial ═══
    Solo altera la presentación de las tarjetas ya renderizadas. */
 .discover-today{position:relative;padding:20px;border:0.5px solid var(--border);border-radius:20px;background:linear-gradient(135deg,color-mix(in srgb,var(--surface) 96%,var(--primary) 4%),var(--surface));overflow:hidden}
@@ -3746,6 +3771,7 @@ if (window.__isDemoMode) {
     window.__applyUserState && window.__applyUserState();
     // MODIFICADO: restaurar la sección donde estaba el usuario antes del F5
     window.__restaurarSeccionPanel && window.__restaurarSeccionPanel();
+    window.__actualizarTuSemana && window.__actualizarTuSemana();
   }, 80);
 } else {
   // ─── Auth normal · puede ser sin-membresia o vip ───
@@ -3826,7 +3852,7 @@ if (window.__isDemoMode) {
     setTimeout(()=>{ if(typeof window.__cargarDescubreHoy==='function') window.__cargarDescubreHoy(); }, 300);
     setTimeout(()=>{ if(typeof window.__cargarProgreso==='function') window.__cargarProgreso(); }, 300);
     // Llenar widgets de actividad con datos reales
-    setTimeout(()=>{ if(typeof window.__actualizarWidgetsActividad==='function') window.__actualizarWidgetsActividad(); }, 400);
+    setTimeout(()=>{ if(typeof window.__actualizarWidgetsActividad==='function') window.__actualizarWidgetsActividad(); if(typeof window.__actualizarTuSemana==='function') window.__actualizarTuSemana(); }, 400);
 
     if (isCheckoutSuccess && window.UserState.modo === 'vip') {
       setTimeout(() => { window.__showWelcomeSplash && window.__showWelcomeSplash(); }, 600);
@@ -4265,6 +4291,41 @@ window.__setDisplayName = async (nombre) => {
             <div class="banner__stat" style="cursor:default"><div class="banner__stat-lbl">Pro</div><div class="banner__stat-val" id="bn-stat-pro">8</div></div>
           </div>
         </aside>
+      </section>
+
+      <div style="height:22px"></div>
+
+      <!-- Accesos rápidos: las secciones que antes solo vivían en el menú "Más" -->
+      <div class="quick-access" id="quick-access">
+        <button type="button" class="quick-access__item quick-access__item--live" data-section="webinars">
+          <span class="quick-access__ic"><svg class="ic"><use href="#i-broadcast"/></svg></span>
+          <span class="quick-access__lbl">Clase en vivo</span>
+        </button>
+        <button type="button" class="quick-access__item" data-section="pdfs">
+          <span class="quick-access__ic"><svg class="ic"><use href="#i-news"/></svg></span>
+          <span class="quick-access__lbl">PDFs</span>
+        </button>
+        <button type="button" class="quick-access__item" data-section="retos">
+          <span class="quick-access__ic"><svg class="ic"><use href="#i-bolt"/></svg></span>
+          <span class="quick-access__lbl">Retos</span>
+        </button>
+        <button type="button" class="quick-access__item" data-section="certificados">
+          <span class="quick-access__ic"><svg class="ic"><use href="#i-certificate"/></svg></span>
+          <span class="quick-access__lbl">Certificado</span>
+        </button>
+      </div>
+
+      <div style="height:16px"></div>
+
+      <!-- Tu semana: misión semanal real (mismos datos que en Retos) -->
+      <section class="tu-semana" id="tu-semana">
+        <div class="tu-semana__head">
+          <h2 class="section-header__title">Tu semana</h2>
+          <span class="tu-semana__sub" id="tu-semana-sub"></span>
+        </div>
+        <div class="tu-semana__list" id="tu-semana-list">
+          <div class="foro-empty">Cargando…</div>
+        </div>
       </section>
 
       <div style="height:22px"></div>
@@ -5219,7 +5280,7 @@ function navigateToSection(section, opts){
     try { window.__dulcelabCheckout.destroy(); } catch(e) {}
     window.__dulcelabCheckout = null;
   }
-  if(section==='inicio'){inicio.style.display='';dyn.style.display='none';if(typeof window.__cargarDescubreHoy==='function')window.__cargarDescubreHoy();if(typeof window.__actualizarWidgetsActividad==='function')window.__actualizarWidgetsActividad();if(typeof window.__populateHeroCourse==='function')window.__populateHeroCourse();return;}
+  if(section==='inicio'){inicio.style.display='';dyn.style.display='none';if(typeof window.__cargarDescubreHoy==='function')window.__cargarDescubreHoy();if(typeof window.__actualizarWidgetsActividad==='function')window.__actualizarWidgetsActividad();if(typeof window.__populateHeroCourse==='function')window.__populateHeroCourse();if(typeof window.__actualizarTuSemana==='function')window.__actualizarTuSemana();return;}
   inicio.style.display='none';dyn.style.display='';
   const renderer=Sections.renderers[section];
   if(renderer){dyn.innerHTML='';renderer(dyn);}
@@ -5661,6 +5722,7 @@ const Sections = (function(){
         window.scrollTo({ top: y, behavior: 'instant' });
       }
       if (typeof window.__actualizarWidgetsActividad === 'function') window.__actualizarWidgetsActividad();
+      if (typeof window.__actualizarTuSemana === 'function') window.__actualizarTuSemana();
     } catch (e) {}
   }
   // Se llama al iniciar sesión y cada vez que el alumno regresa a la pestaña / app
@@ -7838,6 +7900,44 @@ const Sections = (function(){
   }
   window.__actualizarWidgetsActividad = actualizarWidgetsActividad;
 
+  // "Tu semana" en Inicio: misma misión semanal que ya existe en Retos
+  // (_misionSemanalTareas), nada inventado. Sin membresía no hay datos
+  // reales de retos/racha que mostrar, así que se invita a activarla.
+  async function actualizarTuSemana(){
+    const list = document.getElementById('tu-semana-list');
+    const sub = document.getElementById('tu-semana-sub');
+    if (!list) return;
+
+    if (!tieneAccesoVipCompleto()) {
+      if (sub) sub.textContent = '';
+      list.innerHTML = `
+        <div class="tu-semana__row" id="tu-semana-cta">
+          <span class="tu-semana__check"></span>
+          <div class="tu-semana__body">
+            <div class="tu-semana__title">Activa tu membresía</div>
+            <div class="tu-semana__desc">Desbloquea retos, racha semanal y tu avance por clase</div>
+          </div>
+        </div>`;
+      document.getElementById('tu-semana-cta')?.addEventListener('click', () => navigateToSection('suscripcion'));
+      return;
+    }
+
+    if (!_progresoListo) { try { await _cargarProgreso(); } catch(e) {} }
+    const tareas = _misionSemanalTareas();
+    const hechas = tareas.filter(t => t.ok).length;
+    if (sub) sub.textContent = `${hechas}/${tareas.length} completadas`;
+    const check = '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+    list.innerHTML = tareas.map(t => `
+      <div class="tu-semana__row ${t.ok ? 'is-done' : ''}">
+        <span class="tu-semana__check">${t.ok ? check : ''}</span>
+        <div class="tu-semana__body">
+          <div class="tu-semana__title">${escapeHtml(t.t)}</div>
+          <div class="tu-semana__desc">${escapeHtml(t.s)}</div>
+        </div>
+      </div>`).join('');
+  }
+  window.__actualizarTuSemana = actualizarTuSemana;
+
   async function renderCertificados(container){
     container.innerHTML = '<div class="fade-up" style="padding:64px 24px;text-align:center;color:var(--text-2);font-size:14px;">Cargando tus certificados…</div>';
     const certs = await getCertificadosReales();
@@ -8538,6 +8638,20 @@ const Sections = (function(){
     return _retoImg(lista[(n < 0 ? 0 : n) % lista.length], w);
   }
 
+  // Misión semanal con datos reales (retos de hoy + días de estudio esta
+  // semana). Se usa en Retos y en la tarjeta "Tu semana" de Inicio — misma
+  // función, mismos datos, para que no digan cosas distintas.
+  function _misionSemanalTareas(){
+    const hoyUTC = new Date().toISOString().slice(0, 10);   // igual que _otorgarXP guarda ultimaActividad
+    const lunISO = _fechaLocalISO(_lunesDe(new Date()));
+    const diasSem = new Set(_getActividad().filter(d => d >= lunISO));
+    return [
+      { ok: _progreso.ultimaActividad === hoyUTC, t:'Reto de hoy',   s:'Resuelve un reto y suma XP' },
+      { ok: diasSem.size >= 1,                     t:'Constancia',    s:'Mira una clase esta semana' },
+      { ok: diasSem.size >= 3,                     t:'Semana activa', s:`Estudia 3 días esta semana · ${Math.min(diasSem.size, 3)}/3` }
+    ];
+  }
+
   function renderRetos(container){
     if(typeof toolEsVIP==='function' && !toolEsVIP()){
       container.innerHTML = `
@@ -8593,14 +8707,7 @@ const Sections = (function(){
       : '¡Tienes todas las medallas de retos!';
 
     // Misión semanal (con datos reales: retos de hoy + clases vistas esta semana)
-    const hoyUTC = new Date().toISOString().slice(0, 10);   // igual que _otorgarXP guarda ultimaActividad
-    const lunISO = _fechaLocalISO(_lunesDe(new Date()));
-    const diasSem = new Set(_getActividad().filter(d => d >= lunISO));
-    const tareas = [
-      { ok: _progreso.ultimaActividad === hoyUTC, t:'Reto de hoy',   s:'Resuelve un reto y suma XP' },
-      { ok: diasSem.size >= 1,                     t:'Constancia',    s:'Mira una clase esta semana' },
-      { ok: diasSem.size >= 3,                     t:'Semana activa', s:`Estudia 3 días esta semana · ${Math.min(diasSem.size, 3)}/3` }
-    ];
+    const tareas = _misionSemanalTareas();
     const tHechas = tareas.filter(t => t.ok).length;
     const pctMision = Math.round(tHechas / tareas.length * 100);
 
@@ -12618,7 +12725,7 @@ function injectSupportFAB(){
 }
 
 function initNav(){
-  document.querySelectorAll('.nav-item, .mobile-nav__item, .mobile-drawer__item').forEach(it=>{
+  document.querySelectorAll('.nav-item, .mobile-nav__item, .mobile-drawer__item, .quick-access__item').forEach(it=>{
     it.addEventListener('click',e=>{
       e.preventDefault();
       // Si es item del drawer móvil, cerrar el drawer al elegir
