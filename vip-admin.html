@@ -1096,6 +1096,7 @@ window.__signOut = async () => {
 </script>
 
 <script src="assets/dulcelab-bunny-catalog.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
 
 <!-- ICONOS SVG -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -1178,6 +1179,7 @@ window.__signOut = async () => {
     <div class="nav-section">
       <div class="nav-label">Comunidad</div>
       <a class="nav-item" data-section="miembros"><svg class="ic"><use href="#i-users"/></svg>Miembros VIP<span class="nav-item__badge" id="badge-miembros">0</span></a>
+      <a class="nav-item" data-section="encuesta"><svg class="ic"><use href="#i-chart-bar"/></svg>Encuesta de clientes</a>
       <a class="nav-item" data-section="noticias"><svg class="ic"><use href="#i-news"/></svg>Descubre algo nuevo</a>
       <a class="nav-item" data-section="foro"><svg class="ic"><use href="#i-users"/></svg>Foro<span class="nav-item__badge" id="badge-foro">0</span></a>
       <a class="nav-item" data-section="directorio"><svg class="ic"><use href="#i-user"/></svg>Directorio<span class="nav-item__badge" id="badge-dir">0</span></a>
@@ -5474,6 +5476,235 @@ const Pages={
     }
   },
 
+  // ═══════════════════════════════════════════════════════════════
+  // ENCUESTA DE SEGMENTACIÓN DE CLIENTES
+  // Modal del landing (dulcelabfood.com): pregunta el tipo de visitante
+  // y ramifica a 2-3 preguntas más. Aquí se agregan las respuestas
+  // (guardadas en Firestore vía el webhook) en gráficas, para saber qué
+  // ofrecerle a cada segmento.
+  // ═══════════════════════════════════════════════════════════════
+  _encuestaLabels: {
+    tipo: { estudiante: 'Estudiante', profesional: 'Profesional', emprendedor: 'Emprendedor', aficionado: 'Aprende por gusto' },
+    objetivo_estudiante: { mejorar: 'Mejorar sus habilidades', trabajar: 'Prepararse para trabajar', emprender: 'Emprender', complementar: 'Complementar estudios' },
+    intereses_estudiante: { cocina: 'Cocina', reposteria: 'Repostería', panaderia: 'Panadería', inocuidad: 'Inocuidad', costos: 'Costos', produccion: 'Producción', emprendimiento: 'Emprendimiento' },
+    formato_estudiante: { vivo: 'Clases en vivo', grabados: 'Cursos grabados', pdfs: 'PDFs', plantillas: 'Plantillas', herramientas: 'Herramientas', retos: 'Retos' },
+    area_profesional: { cocina: 'Cocina', reposteria: 'Repostería', panaderia: 'Panadería', produccion: 'Producción de alimentos', calidad: 'Calidad e inocuidad', administracion: 'Administración', otra: 'Otra área' },
+    reto_profesional: { actualizar: 'Actualizar conocimientos', procesos: 'Mejorar procesos', costos: 'Reducir costos', inventarios: 'Controlar inventarios y mermas', normativas: 'Aprender normativas', especializarme: 'Especializarse', crecer: 'Crecer profesionalmente' },
+    temas_profesional: { cocina: 'Cocina', reposteria: 'Repostería', panaderia: 'Panadería', inocuidad: 'Inocuidad', costos: 'Costos', produccion: 'Producción', emprendimiento: 'Emprendimiento' },
+    etapa_emprendedor: { idea: 'Solo la idea', comenzando: 'Comenzando', activo: 'Ya tiene negocio', creciendo: 'Negocio creciendo' },
+    tipo_negocio_emprendedor: { reposteria: 'Repostería', panaderia: 'Panadería', restaurante: 'Restaurante', cafeteria: 'Cafetería', catering: 'Catering', procesados: 'Alimentos procesados', casa: 'Venta desde casa', otro: 'Otro' },
+    problema_emprendedor: { precios: 'No sabe cuánto cobrar', costos: 'No controla sus costos', inventarios: 'Problemas con inventarios', merma: 'Mucha merma', ventas: 'Necesita vender más', productos: 'Mejores productos', produccion: 'Ordenar producción', inocuidad: 'Mejorar inocuidad/calidad' },
+    objetivo_aficionado: { hobby: 'Pasatiempo', familia: 'Sorprender a familia/amigos', explorar: 'Explorar si se dedica a esto', ocasional: 'Vender/regalar ocasionalmente' },
+    intereses_aficionado: { cocina: 'Cocina', reposteria: 'Repostería', panaderia: 'Panadería', inocuidad: 'Inocuidad', costos: 'Costos', produccion: 'Producción', emprendimiento: 'Emprendimiento' },
+    formato_aficionado: { vivo: 'Clases en vivo', grabados: 'Cursos grabados', pdfs: 'PDFs', plantillas: 'Plantillas', herramientas: 'Herramientas', retos: 'Retos' },
+    membresia: { cursos: 'Cursos completos', vivo: 'Clases en vivo', rapidos: 'Videos rápidos', plantillas: 'Plantillas de trabajo', calculadoras: 'Calculadoras y herramientas', recetas: 'Recetas', retos: 'Retos prácticos', certificados: 'Certificados', comunidad: 'Comunidad', asesoria: 'Asesoría' },
+    tiempo_disponible: { menos1: 'Menos de 1 h/sem', uno_dos: '1 a 2 h/sem', tres_cinco: '3 a 5 h/sem', mas5: 'Más de 5 h/sem' }
+  },
+  _encuestaPreguntasPorTipo: {
+    estudiante: [
+      { id: 'objetivo_estudiante', titulo: '¿Qué buscan conseguir?' },
+      { id: 'intereses_estudiante', titulo: '¿Qué les interesa aprender?' },
+      { id: 'formato_estudiante', titulo: '¿Qué recursos prefieren?' }
+    ],
+    profesional: [
+      { id: 'area_profesional', titulo: '¿En qué área trabajan?' },
+      { id: 'reto_profesional', titulo: '¿Cuál es su mayor reto?' },
+      { id: 'temas_profesional', titulo: '¿Qué temas quieren profundizar?' }
+    ],
+    emprendedor: [
+      { id: 'etapa_emprendedor', titulo: '¿En qué etapa están?' },
+      { id: 'tipo_negocio_emprendedor', titulo: '¿Qué tipo de negocio?' },
+      { id: 'problema_emprendedor', titulo: '¿Cuál es su principal problema?' }
+    ],
+    aficionado: [
+      { id: 'objetivo_aficionado', titulo: '¿Qué les gustaría lograr?' },
+      { id: 'intereses_aficionado', titulo: '¿Qué les gustaría aprender?' },
+      { id: 'formato_aficionado', titulo: '¿Qué recursos prefieren?' }
+    ]
+  },
+  _encuestaPreguntasComunes: [
+    { id: 'membresia', titulo: '¿Qué buscan en una membresía gastronómica?' },
+    { id: 'tiempo_disponible', titulo: '¿Cuánto tiempo pueden dedicar a la semana?' }
+  ],
+  _encuestaCharts: [],
+  _encuestaColores(){
+    const cs = getComputedStyle(document.documentElement);
+    return [
+      cs.getPropertyValue('--primary').trim() || '#6B1526',
+      cs.getPropertyValue('--warning').trim() || '#C99A3D',
+      cs.getPropertyValue('--info').trim() || '#7A93A8',
+      cs.getPropertyValue('--success').trim() || '#7A9A6E',
+      cs.getPropertyValue('--accent').trim() || '#9E2A47',
+      cs.getPropertyValue('--danger').trim() || '#C1594A'
+    ];
+  },
+  // Cuenta ocurrencias de una pregunta entre las respuestas filtradas por tipo.
+  // El valor guardado puede ser un string (opción única) o un arreglo (opción
+  // múltiple) — en ese segundo caso cada elemento elegido suma un voto.
+  _encuestaContar(respuestas, filtroTipo, preguntaId){
+    const conteo = {};
+    respuestas.forEach(r => {
+      if (filtroTipo && r.tipo !== filtroTipo) return;
+      const v = r.respuestas && r.respuestas[preguntaId];
+      if (!v) return;
+      const valores = Array.isArray(v) ? v : [v];
+      valores.forEach(val => { conteo[val] = (conteo[val] || 0) + 1; });
+    });
+    return conteo;
+  },
+  async encuesta(p){
+    p.innerHTML = `
+      <div class="fade-up">
+        <div class="sec-hero">
+          <span class="sec-hero__eyebrow">Qué tipo de clientes tenemos</span>
+          <h1 class="sec-hero__title">Encuesta de clientes</h1>
+          <p class="sec-hero__sub">Respuestas del cuestionario que aparece en dulcelabfood.com. Sirve para saber qué ofrecerle a cada segmento.</p>
+        </div>
+        <div class="empty-state" id="enc-loading">Cargando resultados…</div>
+      </div>`;
+
+    let token;
+    try { token = await this._getAuthToken(); }
+    catch (e) { p.querySelector('#enc-loading').textContent = 'No se pudo verificar tu sesión de admin.'; return; }
+
+    let respuestas = [];
+    try {
+      const res = await fetch(`${this._webhookUrl}/api/encuesta/resultados`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || res.statusText);
+      respuestas = data.respuestas || [];
+    } catch (e) {
+      p.querySelector('#enc-loading').innerHTML = `<div class="empty"><h3>No se pudieron cargar los resultados</h3><p>${e.message}</p></div>`;
+      return;
+    }
+
+    if (respuestas.length === 0) {
+      p.querySelector('#enc-loading').innerHTML = `<div class="empty"><div class="empty__icon"><svg class="ic"><use href="#i-chart-bar"/></svg></div><h3>Aún no hay respuestas</h3><p>En cuanto alguien conteste la encuesta en dulcelabfood.com, aparecerá aquí.</p></div>`;
+      return;
+    }
+
+    this._encuestaRespuestas = respuestas;
+    this._encuestaRenderFiltrado(p, 'todos');
+  },
+  // Vuelve a dibujar todo (KPIs + gráficas) para un tipo de cliente, o 'todos'.
+  // Es el "filtro básico" de la Fase 1: un corte a la vez, no cruces múltiples.
+  _encuestaRenderFiltrado(p, filtro){
+    this._encuestaCharts.forEach(c => { try { c.destroy(); } catch(e){} });
+    this._encuestaCharts = [];
+
+    const respuestas = this._encuestaRespuestas || [];
+    const colores = this._encuestaColores();
+    const tipos = ['estudiante', 'profesional', 'emprendedor', 'aficionado'];
+    const labelsTipo = this._encuestaLabels.tipo;
+    const porTipo = this._encuestaContar(respuestas, null, 'tipo');
+    const vistas = filtro === 'todos' ? respuestas : respuestas.filter(r => r.tipo === filtro);
+
+    let html = `
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px;">
+        <div class="kpi-grid" style="flex:1;min-width:0;">
+          <div class="kpi-card" style="--c1:#6B1526;"><div class="kpi-card__label">Respuestas totales</div><div class="kpi-card__value">${respuestas.length}</div></div>
+          ${tipos.map((t,i) => `<div class="kpi-card" style="--c1:${colores[i]};"><div class="kpi-card__label">${labelsTipo[t]}</div><div class="kpi-card__value">${porTipo[t]||0}</div></div>`).join('')}
+        </div>
+      </div>
+
+      <div class="section-header"><h2 class="section-header__title">Distribución por tipo de cliente</h2></div>
+      <div class="dash-card" style="max-width:420px;margin-bottom:28px;padding:20px;">
+        <canvas id="enc-chart-tipo" height="220"></canvas>
+      </div>
+
+      <div class="section-header">
+        <h2 class="section-header__title">Filtrar por segmento${filtro!=='todos' ? `<span class="section-header__badge">${vistas.length}</span>` : ''}</h2>
+      </div>
+      <select class="input" id="enc-filtro-tipo" style="max-width:280px;margin-bottom:28px;">
+        <option value="todos">Todos los segmentos</option>
+        ${tipos.map(t => `<option value="${t}" ${filtro===t?'selected':''}>${labelsTipo[t]} (${porTipo[t]||0})</option>`).join('')}
+      </select>
+    `;
+
+    const ramasAMostrar = filtro === 'todos' ? tipos : [filtro];
+    ramasAMostrar.forEach(t => {
+      if (!porTipo[t]) return;
+      const preguntas = this._encuestaPreguntasPorTipo[t];
+      html += `
+        <div class="section-header"><h2 class="section-header__title">${labelsTipo[t]}<span class="section-header__badge">${porTipo[t]}</span></h2></div>
+        <div class="dash-grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-bottom:28px;">
+          ${preguntas.map(preg => `
+            <div class="dash-card" style="padding:18px;">
+              <div style="font-size:12.5px;font-weight:600;color:var(--text-2);margin-bottom:10px;">${preg.titulo}</div>
+              <canvas id="enc-chart-${t}-${preg.id}" height="180"></canvas>
+            </div>`).join('')}
+        </div>`;
+    });
+
+    html += `<div class="section-header"><h2 class="section-header__title">En común${filtro!=='todos' ? ' · ' + labelsTipo[filtro] : ''}</h2></div>
+      <div class="dash-grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-bottom:28px;">
+        ${this._encuestaPreguntasComunes.map(preg => `
+          <div class="dash-card" style="padding:18px;">
+            <div style="font-size:12.5px;font-weight:600;color:var(--text-2);margin-bottom:10px;">${preg.titulo}</div>
+            <canvas id="enc-chart-comun-${preg.id}" height="180"></canvas>
+          </div>`).join('')}
+      </div>`;
+
+    p.innerHTML = `<div class="fade-up">
+      <div class="sec-hero">
+        <span class="sec-hero__eyebrow">Qué tipo de clientes tenemos</span>
+        <h1 class="sec-hero__title">Encuesta de clientes</h1>
+        <p class="sec-hero__sub">Respuestas del cuestionario que aparece en dulcelabfood.com. Sirve para saber qué ofrecerle a cada segmento.</p>
+      </div>
+      ${html}
+    </div>`;
+
+    const selectFiltro = document.getElementById('enc-filtro-tipo');
+    if (selectFiltro) selectFiltro.addEventListener('change', e => this._encuestaRenderFiltrado(p, e.target.value));
+
+    if (typeof Chart === 'undefined') return; // CDN bloqueado/sin internet: se queda en las tarjetas de arriba
+    const textoColor = getComputedStyle(document.documentElement).getPropertyValue('--text-2');
+    const textoSuave = getComputedStyle(document.documentElement).getPropertyValue('--text-3');
+    const bordeColor = getComputedStyle(document.documentElement).getPropertyValue('--border');
+
+    const barChart = (ctx, labelsMap, conteo) => {
+      if (!ctx) return;
+      const claves = Object.keys(conteo);
+      this._encuestaCharts.push(new Chart(ctx, {
+        type: 'bar',
+        data: { labels: claves.map(k => labelsMap[k] || k), datasets: [{ data: claves.map(k => conteo[k]), backgroundColor: colores }] },
+        options: {
+          indexAxis: 'y',
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { precision: 0, color: textoSuave }, grid: { color: bordeColor } },
+            y: { ticks: { color: textoColor }, grid: { display: false } }
+          }
+        }
+      }));
+    };
+
+    const ctxTipo = document.getElementById('enc-chart-tipo');
+    if (ctxTipo) {
+      this._encuestaCharts.push(new Chart(ctxTipo, {
+        type: 'pie',
+        data: {
+          labels: tipos.filter(t => porTipo[t]).map(t => labelsTipo[t]),
+          datasets: [{ data: tipos.filter(t => porTipo[t]).map(t => porTipo[t]), backgroundColor: colores }]
+        },
+        options: { plugins: { legend: { position: 'bottom', labels: { color: textoColor } } } }
+      }));
+    }
+
+    ramasAMostrar.forEach(t => {
+      if (!porTipo[t]) return;
+      this._encuestaPreguntasPorTipo[t].forEach(preg => {
+        barChart(document.getElementById(`enc-chart-${t}-${preg.id}`), this._encuestaLabels[preg.id] || {}, this._encuestaContar(respuestas, t, preg.id));
+      });
+    });
+
+    this._encuestaPreguntasComunes.forEach(preg => {
+      barChart(document.getElementById(`enc-chart-comun-${preg.id}`), this._encuestaLabels[preg.id] || {}, this._encuestaContar(vistas, null, preg.id));
+    });
+  },
+
   noticias(p){
     const noticiasReales = window.AdminStore?.noticias || [];
     const curiosos = window.AdminStore?.datosCuriosos || [];
@@ -6208,7 +6439,7 @@ function dirAdminCargar(){
    refresh te deja donde estabas, los botones atrás/adelante del
    navegador funcionan y puedes compartir un link directo a la sección.
    ═══════════════════════════════════════════════════════════════════ */
-const SECCIONES_VALIDAS = ['dashboard','notificaciones','cursos','webinars','pdfs','certificados','miembros','noticias','config','foro','directorio'];
+const SECCIONES_VALIDAS = ['dashboard','notificaciones','cursos','webinars','pdfs','certificados','miembros','encuesta','noticias','config','foro','directorio'];
 
 function seccionDesdeHash(){
   const h = (window.location.hash || '').replace(/^#\/?/, '').trim();
