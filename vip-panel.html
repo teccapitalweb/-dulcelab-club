@@ -5560,16 +5560,34 @@ const Sections = (function(){
   // la clase que se acaba de ver también termina el curso.
   function _celebrarClaseVista(){
     try {
+      // z-index por encima de TODO, incluido el reproductor de video
+      // (.visor-overlay es 9999) — la clase casi siempre se marca con el
+      // visor todavía abierto, así que la celebración tiene que ganarle.
       const host = document.createElement('div');
       host.className = 'splash-cmp__confetti';
-      host.style.zIndex = '10050';
+      host.style.zIndex = '10070';
       const colores = ['#C4577A','#D5A13D','#E5C171','#60A5FA','#F87171','#FBBF24','#A78BFA'];
-      host.innerHTML = Array.from({length:22}).map((_,i)=>
-        `<span class="splash-cmp__confetti-bit" style="--d:${(Math.random()*0.3).toFixed(2)}s;--x:${(Math.random()*100-50)|0}vw;--r:${(Math.random()*720-360)|0}deg;--s:${(0.6+Math.random()*0.6).toFixed(2)};--c:${colores[i%colores.length]}"></span>`
+      host.innerHTML = Array.from({length:26}).map((_,i)=>
+        `<span class="splash-cmp__confetti-bit" style="--d:${(Math.random()*0.3).toFixed(2)}s;--x:${(Math.random()*100-50)|0}vw;--r:${(Math.random()*720-360)|0}deg;--s:${(0.7+Math.random()*0.6).toFixed(2)};--c:${colores[i%colores.length]}"></span>`
       ).join('');
       document.body.appendChild(host);
       setTimeout(() => host.remove(), 2800);
-      if (window.Toast) Toast.success('¡Clase completada!', 'Sigue así, vas avanzando bien.');
+
+      // Mensaje grande y centrado — se ve igual si el reproductor de video
+      // sigue abierto detrás, que es el caso normal al marcar una clase.
+      const card = document.createElement('div');
+      card.className = 'clase-celebra';
+      card.innerHTML = `
+        <div class="clase-celebra__ic"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="clase-celebra__title">¡Clase completada!</div>
+        <div class="clase-celebra__sub">Sigue así, vas avanzando bien.</div>
+      `;
+      document.body.appendChild(card);
+      requestAnimationFrame(() => requestAnimationFrame(() => card.classList.add('is-visible')));
+      setTimeout(() => {
+        card.classList.remove('is-visible');
+        setTimeout(() => card.remove(), 400);
+      }, 2000);
     } catch(e) {}
   }
 
@@ -13349,6 +13367,14 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 @keyframes confettiFall{0%{opacity:0;transform:translate(0,-20px) rotate(0deg) scale(var(--s))}8%{opacity:1}100%{opacity:0;transform:translate(var(--x),105vh) rotate(var(--r)) scale(var(--s))}}
 @keyframes confettiBurst{0%{opacity:0;transform:translate(0,0) rotate(0deg) scale(0)}10%{opacity:1;transform:translate(0,0) rotate(45deg) scale(1)}100%{opacity:0;transform:translate(var(--x),300px) rotate(720deg) scale(.5)}}
 .splash-cmp__icon{font-size:64px;line-height:1;margin-bottom:8px;animation:bounce 2s ease infinite}
+
+/* Tarjeta "¡Clase completada!" — ligera, se auto-cierra, por encima de todo */
+.clase-celebra{position:fixed;top:50%;left:50%;z-index:10071;width:min(90vw,320px);text-align:center;padding:30px 28px;border-radius:20px;background:linear-gradient(160deg,var(--surface),var(--surface-2));border:1px solid color-mix(in srgb,var(--success) 35%,var(--border-2));box-shadow:0 30px 70px -20px rgba(0,0,0,.55);opacity:0;pointer-events:none;transform:translate(-50%,-50%) scale(.82);transition:opacity .3s ease,transform .35s cubic-bezier(.2,.8,.25,1)}
+.clase-celebra.is-visible{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.clase-celebra__ic{width:56px;height:56px;border-radius:50%;background:color-mix(in srgb,var(--success) 18%,transparent);color:var(--success);display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+.clase-celebra__ic .ic{width:28px;height:28px}
+.clase-celebra__title{font-family:'Plus Jakarta Sans',sans-serif;font-size:21px;font-weight:800;letter-spacing:-.4px;color:var(--text);margin-bottom:6px}
+.clase-celebra__sub{font-size:13px;color:var(--text-2)}
 @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 .splash-cmp__kicker{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;font-weight:700;color:#FF9D4D;margin-bottom:10px}
 .splash-cmp__title{font-family:'Plus Jakarta Sans',sans-serif;font-size:28px;font-weight:800;letter-spacing:-.8px;line-height:1.15;margin-bottom:10px;color:#FBF6EE}
