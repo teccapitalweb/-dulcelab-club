@@ -7188,8 +7188,6 @@ const Sections = (function(){
   }
   window.__buscarGlobal = buscarGlobal;
 
-  const certificados = []; // se llenarán con los certificados reales emitidos
-
   const niveles = [
     {id:1,nombre:'Aprendiz',desde:0,hasta:100},
     {id:2,nombre:'Técnico',desde:100,hasta:300},
@@ -8018,7 +8016,7 @@ const Sections = (function(){
         `).join('')}</div>
       </div>
     `;
-    // Guardar la lista para que openCertDetalle pueda encontrar el cert
+    // Guardar la lista para que openCertDetalleReal pueda encontrar el cert
     window.__certsReales = certs;
     container.querySelectorAll('.certb').forEach(c=>{
       c.addEventListener('click',()=>openCertDetalleReal(c.dataset.certid));
@@ -8282,124 +8280,6 @@ const Sections = (function(){
       const orig = btnPdf.innerHTML; btnPdf.disabled = true; btnPdf.textContent = 'Generando…';
       try { await descargarPDFCertReal(getNode(), c); } finally { btnPdf.disabled = false; btnPdf.innerHTML = orig; }
     });
-  }
-
-  function renderCertificadosOLD(container){
-    const totalHoras=certificados.reduce((s,c)=>s+c.horas,0);
-    const areas=[...new Set(certificados.map(c=>c.area))].length;
-    const promedio=certificados.length?Math.round(certificados.reduce((s,c)=>s+c.calificacion,0)/certificados.length):0;
-    container.innerHTML=`
-      <div class="fade-up">
-        <div class="sec-hero">
-          <span class="sec-hero__eyebrow">Tu trayectoria</span>
-          <h1 class="sec-hero__title">Mis certificados</h1>
-          <p class="sec-hero__sub">Cada certificado tiene un folio único <strong style="color:var(--primary);font-family:'JetBrains Mono',monospace;">DulceLab Food-2026-XXXXX</strong> y código QR verificable. Compártelos en LinkedIn o descárgalos en PDF.</p>
-        </div>
-        <div class="kpi-grid">
-          <div class="kpi-card"><div class="kpi-card__label">Certificados</div><div class="kpi-card__value">${certificados.length}</div></div>
-          <div class="kpi-card"><div class="kpi-card__label">Horas certificadas</div><div class="kpi-card__value">${totalHoras}</div></div>
-          <div class="kpi-card"><div class="kpi-card__label">Áreas dominadas</div><div class="kpi-card__value">${areas}</div></div>
-          <div class="kpi-card"><div class="kpi-card__label">Promedio</div><div class="kpi-card__value">${promedio}</div></div>
-          <div class="kpi-card"><div class="kpi-card__label">Verificables</div><div class="kpi-card__value">100<span class="kpi-card__value-sub">%</span></div></div>
-        </div>
-        ${certificados.length===0?`<div class="empty-state"><div class="empty-state__icon"><svg class="ic ic--xl"><use href="#i-certificate"/></svg></div><h3>Aún no tienes certificados</h3><p>Completa tu primer curso para emitir tu primer certificado DulceLab Food con folio y QR.</p></div>`:`
-        <div class="section-header"><h2 class="section-header__title">Mis ${certificados.length} certificados<span class="section-header__badge">${certificados.length} activos</span></h2></div>
-        <div class="certs-grid">${certificados.map(c=>`
-          <article class="cert-card" data-certid="${c.id}" tabindex="0">
-            <div class="cert-card__top">
-              <div class="cert-preview-mini">
-                <div class="cert-preview-mini__head">
-                  <div class="cert-preview-mini__logo"><img src="assets/logo-dulcelab.png" alt="DulceLab Food"></div>
-                  <div>
-                    <div class="cert-preview-mini__brand">DulceLab Food</div>
-                    <div class="cert-preview-mini__brand-sub">Gastronomía · Repostería · Inocuidad</div>
-                  </div>
-                  <div class="cert-preview-mini__qr">${qrSvg(c.folio,32)}</div>
-                </div>
-                <div class="cert-preview-mini__body">
-                  <div class="cert-preview-mini__eyebrow">Certificado de aprovechamiento</div>
-                  <div class="cert-preview-mini__name">${usuario.nombre}</div>
-                  <div class="cert-preview-mini__por">por completar el curso · ${c.horas}h</div>
-                </div>
-                <div class="cert-preview-mini__sign">
-                  <span>${c.instructor}</span>
-                  <span class="cert-preview-mini__folio">${c.folio}</span>
-                </div>
-              </div>
-            </div>
-            <div class="cert-card__body">
-              <div class="cert-card__eyebrow">Certificado de aprovechamiento</div>
-              <h3 class="cert-card__title">${c.titulo}</h3>
-              <div class="cert-card__meta"><span><svg class="ic"><use href="#i-clock"/></svg>${c.horas}h</span><span><svg class="ic"><use href="#i-bolt"/></svg>${c.calificacion}</span><span><svg class="ic"><use href="#i-calendar"/></svg>${formatDate(c.emitido)}</span></div>
-              <div class="cert-card__foot"><span class="cert-card__folio">${c.folio}</span><span class="cert-card__verify">Verificable</span></div>
-            </div>
-          </article>
-        `).join('')}</div>
-        `}
-      </div>
-    `;
-    container.querySelectorAll('.cert-card').forEach(c=>{
-      c.addEventListener('click',()=>openCertDetalle(c.dataset.certid));
-      c.addEventListener('keydown',e=>{if(e.key==='Enter')openCertDetalle(c.dataset.certid);});
-    });
-  }
-  function openCertDetalle(id){
-    const c=certificados.find(x=>x.id===id);if(!c)return;
-    const body=`
-      <div class="cert-preview">
-        <div class="cert-preview__paper">
-          <div class="cert-preview__border"></div>
-          <div class="cert-preview__brand">
-            <div style="width:38px;height:38px;border-radius:10px;background:#2A0D16;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><img src="assets/logo-dulcelab.png" alt="DulceLab Food" style="width:30px;height:30px;object-fit:contain;display:block;"></div>
-            <div><div class="cert-preview__brand-name">DulceLab Food</div><div class="cert-preview__brand-sub">Gastronomía · Repostería · Inocuidad alimentaria</div></div>
-          </div>
-          <div class="cert-preview__eyebrow">Certificado de aprovechamiento</div>
-          <div class="cert-preview__otorga">Se otorga el presente certificado a</div>
-          <div class="cert-preview__name">${usuario.nombre}</div>
-          <div class="cert-preview__por">por haber completado satisfactoriamente el curso</div>
-          <div class="cert-preview__curso">${c.titulo}</div>
-          <div class="cert-preview__stats">
-            <div class="cert-preview__stat"><div class="l1">Horas</div><div class="l2">${c.horas}</div></div>
-            <div class="cert-preview__stat"><div class="l1">Calificación</div><div class="l2">${c.calificacion}</div></div>
-            <div class="cert-preview__stat"><div class="l1">Área</div><div class="l2">${c.area}</div></div>
-            <div class="cert-preview__stat"><div class="l1">Emitido</div><div class="l2">${formatDate(c.emitido)}</div></div>
-          </div>
-          <div class="cert-preview__bottom">
-            <div><div class="cert-preview__sign-line"></div><div class="cert-preview__sign-lbl">${c.instructor}</div><div class="cert-preview__sign-sub">Instructor</div></div>
-            <div class="cert-preview__qr-wrap"><div class="cert-preview__qr">${qrSvg(c.folio,80)}</div><div class="cert-preview__folio">${c.folio}</div></div>
-          </div>
-        </div>
-      </div>
-    `;
-    const footer=document.createElement('div');
-    footer.innerHTML=`<button class="btn btn--ghost" id="ct-close">Cerrar</button><button class="btn btn--ghost" id="ct-share">Compartir LinkedIn<svg class="ic"><use href="#i-arrow-right"/></svg></button><button class="btn btn--accent" id="ct-pdf">Descargar PDF<svg class="ic"><use href="#i-download"/></svg></button>`;
-    const m=Modal.open({id:'cert-'+id,title:'Certificado DulceLab Food',subtitle:c.folio,icon:'i-certificate',size:'lg',body,footer});
-    footer.querySelector('#ct-close').addEventListener('click',()=>m.close());
-    footer.querySelector('#ct-share').addEventListener('click',()=>{window.open('https://www.linkedin.com/sharing/share-offsite/?url='+encodeURIComponent('https://www.dulcelabfood.com/verificar/'+c.folio),'_blank');Toast.success('Compartiendo','Abriendo LinkedIn…');});
-    footer.querySelector('#ct-pdf').addEventListener('click',()=>generarPDFCert(c));
-  }
-  function generarPDFCert(c){
-    if(!window.jspdf){Toast.error('Generador no disponible','Verifica conexión');return;}
-    try{
-      const {jsPDF}=window.jspdf;
-      const pdf=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
-      pdf.setFillColor(255,122,45);pdf.rect(0,0,297,8,'F');
-      pdf.setFillColor(26,20,16);pdf.rect(0,8,297,4,'F');
-      pdf.setFontSize(11);pdf.setTextColor(120,108,90);pdf.text('DulceLab Food · Gastronomía · Repostería · Inocuidad alimentaria',148,28,{align:'center'});
-      pdf.setFontSize(9);pdf.text('CERTIFICADO DE APROVECHAMIENTO',148,37,{align:'center'});
-      pdf.setFontSize(13);pdf.setTextColor(60,52,42);pdf.text('Se otorga el presente certificado a',148,60,{align:'center'});
-      pdf.setFontSize(32);pdf.setTextColor(26,20,16);pdf.setFont(undefined,'bold');pdf.text(usuario.nombre,148,76,{align:'center'});pdf.setFont(undefined,'normal');
-      pdf.setFontSize(13);pdf.setTextColor(60,52,42);pdf.text('por haber completado satisfactoriamente el curso',148,92,{align:'center'});
-      pdf.setFontSize(18);pdf.setTextColor(26,20,16);pdf.text(c.titulo,148,106,{align:'center',maxWidth:240});
-      pdf.setDrawColor(200,180,160);pdf.line(40,128,257,128);
-      pdf.setFontSize(10);pdf.setTextColor(120,108,90);pdf.text('HORAS',60,138);pdf.text('CALIFICACIÓN',105,138);pdf.text('ÁREA',160,138);pdf.text('EMITIDO',220,138);
-      pdf.setFontSize(14);pdf.setTextColor(26,20,16);pdf.text(String(c.horas),60,148);pdf.text(String(c.calificacion),105,148);pdf.text(c.area,160,148);pdf.text(formatDate(c.emitido),220,148);
-      pdf.line(40,154,257,154);
-      pdf.setFontSize(10);pdf.setTextColor(120,108,90);pdf.text(c.instructor,55,175);pdf.text('Instructor',55,181);
-      pdf.text('Folio: '+c.folio,242,175,{align:'right'});pdf.text('Verifica en dulcelabfood.com/verificar',242,181,{align:'right'});
-      pdf.save('certificado-'+c.folio+'.pdf');
-      Toast.success('PDF descargado',c.folio);
-    }catch(e){console.error(e);Toast.error('Error generando PDF',e.message||'Intenta de nuevo');}
   }
 
   /* ============================ LOGROS ============================ */
