@@ -3394,6 +3394,25 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 .fade-up{animation:fadeUp .5s ease forwards}
 
+/* Entrada en cascada de tarjetas (Cursos, Certificados, Herramientas, Descubre,
+   Materiales, Directorio, Clases en vivo) — mismo fadeUp de siempre, pero con
+   un pequeño retraso por posición para que no aparezcan todas de golpe.
+   Solo CSS (nth-child), no toca ninguna función de render. */
+.cursos-grid>*,.certs-grid>*,.tools-grid>*,.discover-grid>*,.mat-shelf>*,.dir-grid>*,.webinars-grid>*{opacity:0;animation:fadeUp .45s ease forwards}
+.cursos-grid>*:nth-child(2),.certs-grid>*:nth-child(2),.tools-grid>*:nth-child(2),.discover-grid>*:nth-child(2),.mat-shelf>*:nth-child(2),.dir-grid>*:nth-child(2),.webinars-grid>*:nth-child(2){animation-delay:40ms}
+.cursos-grid>*:nth-child(3),.certs-grid>*:nth-child(3),.tools-grid>*:nth-child(3),.discover-grid>*:nth-child(3),.mat-shelf>*:nth-child(3),.dir-grid>*:nth-child(3),.webinars-grid>*:nth-child(3){animation-delay:80ms}
+.cursos-grid>*:nth-child(4),.certs-grid>*:nth-child(4),.tools-grid>*:nth-child(4),.discover-grid>*:nth-child(4),.mat-shelf>*:nth-child(4),.dir-grid>*:nth-child(4),.webinars-grid>*:nth-child(4){animation-delay:120ms}
+.cursos-grid>*:nth-child(5),.certs-grid>*:nth-child(5),.tools-grid>*:nth-child(5),.discover-grid>*:nth-child(5),.mat-shelf>*:nth-child(5),.dir-grid>*:nth-child(5),.webinars-grid>*:nth-child(5){animation-delay:160ms}
+.cursos-grid>*:nth-child(6),.certs-grid>*:nth-child(6),.tools-grid>*:nth-child(6),.discover-grid>*:nth-child(6),.mat-shelf>*:nth-child(6),.dir-grid>*:nth-child(6),.webinars-grid>*:nth-child(6){animation-delay:200ms}
+.cursos-grid>*:nth-child(7),.certs-grid>*:nth-child(7),.tools-grid>*:nth-child(7),.discover-grid>*:nth-child(7),.mat-shelf>*:nth-child(7),.dir-grid>*:nth-child(7),.webinars-grid>*:nth-child(7){animation-delay:240ms}
+.cursos-grid>*:nth-child(8),.certs-grid>*:nth-child(8),.tools-grid>*:nth-child(8),.discover-grid>*:nth-child(8),.mat-shelf>*:nth-child(8),.dir-grid>*:nth-child(8),.webinars-grid>*:nth-child(8){animation-delay:280ms}
+.cursos-grid>*:nth-child(9),.certs-grid>*:nth-child(9),.tools-grid>*:nth-child(9),.discover-grid>*:nth-child(9),.mat-shelf>*:nth-child(9),.dir-grid>*:nth-child(9),.webinars-grid>*:nth-child(9){animation-delay:320ms}
+.cursos-grid>*:nth-child(10),.certs-grid>*:nth-child(10),.tools-grid>*:nth-child(10),.discover-grid>*:nth-child(10),.mat-shelf>*:nth-child(10),.dir-grid>*:nth-child(10),.webinars-grid>*:nth-child(10){animation-delay:360ms}
+.cursos-grid>*:nth-child(11),.certs-grid>*:nth-child(11),.tools-grid>*:nth-child(11),.discover-grid>*:nth-child(11),.mat-shelf>*:nth-child(11),.dir-grid>*:nth-child(11),.webinars-grid>*:nth-child(11){animation-delay:400ms}
+.cursos-grid>*:nth-child(12),.certs-grid>*:nth-child(12),.tools-grid>*:nth-child(12),.discover-grid>*:nth-child(12),.mat-shelf>*:nth-child(12),.dir-grid>*:nth-child(12),.webinars-grid>*:nth-child(12){animation-delay:440ms}
+.cursos-grid>*:nth-child(n+13),.certs-grid>*:nth-child(n+13),.tools-grid>*:nth-child(n+13),.discover-grid>*:nth-child(n+13),.mat-shelf>*:nth-child(n+13),.dir-grid>*:nth-child(n+13),.webinars-grid>*:nth-child(n+13){animation-delay:480ms}
+@media(prefers-reduced-motion:reduce){.cursos-grid>*,.certs-grid>*,.tools-grid>*,.discover-grid>*,.mat-shelf>*,.dir-grid>*,.webinars-grid>*{opacity:1;animation:none}}
+
 /* ═══════════════════════════════════════════════════════════════════
    Sprint 7 · Estados de usuario · banner FOMO · candados · paywall
    ═══════════════════════════════════════════════════════════════════ */
