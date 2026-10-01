@@ -5563,6 +5563,19 @@ const Pages={
         <div class="empty-state" id="enc-loading">Cargando resultados…</div>
       </div>`;
 
+    // Si se entra directo a #encuesta (link, refresh), DOMContentLoaded puede
+    // disparar esta sección ANTES de que onAuthStateChanged confirme la
+    // sesión — aquí no hay un AdminStore ya cargado al que engancharse como
+    // en el resto de secciones. Esperamos al evento "adminready" (con tope
+    // de 4s) antes de pedir el token, en vez de fallar de una vez.
+    if (!window._fb?.auth?.currentUser) {
+      await new Promise(resolve => {
+        const onReady = () => { window.removeEventListener('adminready', onReady); resolve(); };
+        window.addEventListener('adminready', onReady);
+        setTimeout(resolve, 4000);
+      });
+    }
+
     let token;
     try { token = await this._getAuthToken(); }
     catch (e) { p.querySelector('#enc-loading').textContent = 'No se pudo verificar tu sesión de admin.'; return; }
