@@ -912,7 +912,7 @@ body{
 .enc-opportunity strong{display:block;color:var(--text);font-size:11px;margin-bottom:2px}
 .enc-opportunity:first-of-type{border-top:0;padding-top:0}.enc-opportunity:first-of-type::before{top:6px}
 .enc-segment-label{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1.25px;text-transform:uppercase;color:var(--text-3);margin:0 0 9px}
-.enc-segments{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:18px}
+.enc-segments{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:18px}
 .enc-segment{position:relative;overflow:hidden;text-align:left;padding:13px 14px;border-radius:14px;border:1px solid var(--border);background:var(--surface);color:var(--text);transition:transform .18s,border-color .18s,box-shadow .18s}
 .enc-segment:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--enc-tone) 45%,var(--border));box-shadow:0 8px 15px color-mix(in srgb,var(--enc-tone) 10%,transparent)}
 .enc-segment.is-active{border-color:var(--enc-tone);background:color-mix(in srgb,var(--enc-tone) 8%,var(--surface))}
@@ -924,7 +924,7 @@ body{
 .enc-data-section{margin-top:22px}.enc-data-section__head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.enc-data-section__head h3{font-size:16px;letter-spacing:-.3px;margin:0}.enc-data-section__head span{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:var(--text-3);padding:4px 8px;background:var(--surface-2);border-radius:100px}
 .enc-question-card{background:var(--surface);border:1px solid var(--border);border-radius:15px;padding:16px 17px}.enc-question-card__title{font-size:12.5px;font-weight:700;line-height:1.35;color:var(--text);margin-bottom:13px}.enc-question-card__title::before{content:"";display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--primary);margin:0 7px 2px 0}
 .enc-empty-inline{padding:15px;border:1px dashed var(--border-2);border-radius:12px;color:var(--text-3);font-size:12px;text-align:center}
-@media(max-width:900px){.enc-overview{grid-template-columns:1fr}.enc-segments{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:900px){.enc-overview{grid-template-columns:1fr}.enc-segments{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:620px){.enc-overview__lead,.enc-opportunities{padding:18px}.enc-overview__number{font-size:40px}.enc-workbench{align-items:flex-start;flex-direction:column}.enc-filter-pills{justify-content:flex-start}.enc-segments{gap:7px}.enc-segment{padding:11px}.enc-segment__value{font-size:23px}}
 .dash-card__title{font-family:'Plus Jakarta Sans','Inter',sans-serif;font-size:15px;font-weight:700;letter-spacing:-.2px;display:flex;align-items:center;gap:8px}
 .dash-card__title .ic{width:18px;height:18px;color:var(--primary)}
@@ -5551,29 +5551,73 @@ const Pages={
   // ofrecerle a cada segmento.
   // ═══════════════════════════════════════════════════════════════
   _encuestaLabels: {
-    tipo: { estudiante: 'Aprendiz', profesional: 'Profesional', emprendedor: 'Emprendedor' },
-    objetivo_estudiante: { desde_cero: 'Aprender desde cero', tecnica: 'Mejorar su técnica', empleo: 'Prepararse para trabajar o emprender' },
-    reto_profesional: { actualizar: 'Actualizarse o especializarse', costos: 'Reducir costos y mermas', procesos: 'Ordenar procesos y calidad' },
-    problema_emprendedor: { precios: 'No sabe cuánto cobrar', costos: 'No controla costos, inventario y merma', produccion: 'Ordenar producción y calidad' },
-    area_interes: { dulce: 'Repostería y panadería', cocina: 'Cocina', negocio: 'Negocio y calidad' },
-    formato: { grabados: 'Cursos grabados', vivo: 'Clases en vivo', herramientas: 'Plantillas y calculadoras' },
-    tiempo_disponible: { menos1: 'Menos de 1 h/sem', uno_tres: '1 a 3 h/sem', mas3: 'Más de 3 h/sem' }
+    tipo: { estudiante: 'Estudiante', aficionado: 'Aprende por gusto', profesional: 'Profesional', emprendedor: 'Emprendedor' },
+    contexto_estudiante: { cocina: 'Cocina y gastronomía', dulce: 'Repostería y panadería', otra: 'Otra carrera o curso técnico' },
+    objetivo_estudiante: { desde_cero: 'Aprender desde cero', tecnica: 'Mejorar mi técnica', empleo: 'Prepararme para trabajar' },
+    det_desde_cero: { cocina_base: 'Técnicas básicas de cocina', reposteria: 'Repostería y postres', panaderia: 'Panadería y masas', higiene: 'Higiene y seguridad en la cocina' },
+    det_tecnica: { cortes: 'Cortes y cocciones', masas: 'Masas, hornos y panes', decoracion: 'Decoración y emplatado', salsas: 'Salsas y fondos' },
+    det_empleo: { restaurante: 'Cocina de restaurante u hotel', pasteleria: 'Pastelería y panadería', produccion: 'Producción de alimentos', emprender: 'Tener mi propio negocio' },
+    contexto_aficionado: { nada: 'Casi ninguna, apenas empiezo', basico: 'Lo básico', confianza: 'Ya cocino con confianza' },
+    objetivo_aficionado: { cocinar_mejor: 'Cocinar mejor en casa', postres: 'Hacer postres y pasteles', explorar: 'Ver si me quiero dedicar a esto' },
+    det_cocinar_mejor: { diario: 'Platillos del día a día', especiales: 'Comidas para ocasiones especiales', basicas: 'Técnicas básicas para cocinar mejor' },
+    det_postres: { pasteles: 'Pasteles y cupcakes', individuales: 'Postres individuales y de vaso', galletas: 'Galletas y panes dulces' },
+    det_explorar: { dulces: 'Pasteles y postres', panes: 'Pan y panadería', comida: 'Platillos y botanas', no_se: 'Todavía no lo sé' },
+    contexto_profesional: { dulce: 'Repostería y panadería', cocina: 'Cocina y restaurante', produccion: 'Producción de alimentos', calidad: 'Calidad e inocuidad', otra: 'Otra área' },
+    reto_profesional: { actualizar: 'Actualizarme o especializarme', costos: 'Reducir costos y mermas', procesos: 'Ordenar procesos y calidad' },
+    det_actualizar: { tecnicas: 'Técnicas de mi área', normativas: 'Normativas e inocuidad', tendencias: 'Tendencias y productos nuevos', liderazgo: 'Liderazgo de equipos' },
+    det_prof_costos: { costeo: 'Costear recetas', inventario: 'Inventarios y compras', merma: 'Mermas y desperdicio' },
+    det_prof_procesos: { estandarizar: 'Estandarizar recetas y procesos', planear: 'Planear la producción', calidad: 'Calidad e inocuidad' },
+    contexto_emprendedor: { reposteria: 'Repostería', panaderia: 'Panadería', restaurante: 'Restaurante', cafeteria: 'Cafetería', catering: 'Catering y eventos', casa: 'Venta desde casa', otro: 'Otro negocio' },
+    problema_emprendedor: { precios: 'No sé cuánto cobrar', costos: 'No controlo mis costos, inventario y merma', produccion: 'Necesito ordenar mi producción y calidad', ventas: 'Necesito vender más' },
+    det_emp_precios: { costo_real: 'Saber cuánto me cuesta cada producto', precio_venta: 'Fijar mi precio de venta', ganancia: 'Saber cuánto gano realmente' },
+    det_emp_costos: { costeo: 'Costear mis recetas', inventario: 'Inventarios y compras', merma: 'Mermas y desperdicio' },
+    det_emp_produccion: { estandarizar: 'Estandarizar recetas y procesos', planear: 'Planear la producción', calidad: 'Calidad e inocuidad' },
+    det_emp_ventas: { redes: 'Más clientes por redes sociales', mayoreo: 'Vender a restaurantes y cafeterías', pedidos: 'Eventos y pedidos especiales' },
+    formato: { grabados: 'Cursos grabados', vivo: 'Clases en vivo', herramientas: 'Plantillas y calculadoras', asesoria: 'Asesoría personalizada' },
+    freno: { precio: 'El precio', tiempo: 'El tiempo', tema: 'No encuentro el tema que busco', dudas: 'No estoy seguro de que sea para mí', listo: 'Nada, estoy listo para empezar' }
   },
-  // Cada tipo de persona contesta UNA pregunta propia (su mayor reto).
+  // Cada tipo de persona contesta su contexto, su reto y UNA pregunta de
+  // detalle según el reto que eligió (las de detalle sin respuestas no se dibujan).
   _encuestaPreguntasPorTipo: {
-    estudiante: [{ id: 'objetivo_estudiante', titulo: '¿Qué quieren lograr?' }],
-    profesional: [{ id: 'reto_profesional', titulo: '¿Qué es lo que más les complica en su trabajo?' }],
-    emprendedor: [{ id: 'problema_emprendedor', titulo: '¿Qué es lo que más les complica en su negocio?' }]
+    estudiante: [
+      { id: 'contexto_estudiante', titulo: '¿Qué estás estudiando?' },
+      { id: 'objetivo_estudiante', titulo: '¿Qué quieres lograr?' },
+      { id: 'det_desde_cero', titulo: '¿Qué te gustaría aprender primero?' },
+      { id: 'det_tecnica', titulo: '¿Qué técnica quieres perfeccionar?' },
+      { id: 'det_empleo', titulo: '¿A qué te quieres dedicar?' }
+    ],
+    aficionado: [
+      { id: 'contexto_aficionado', titulo: '¿Cuánta experiencia tienes?' },
+      { id: 'objetivo_aficionado', titulo: '¿Qué te gustaría lograr?' },
+      { id: 'det_cocinar_mejor', titulo: '¿Qué te gustaría dominar?' },
+      { id: 'det_postres', titulo: '¿Qué te gustaría preparar?' },
+      { id: 'det_explorar', titulo: '¿Qué te gustaría vender?' }
+    ],
+    profesional: [
+      { id: 'contexto_profesional', titulo: '¿En qué área trabajas?' },
+      { id: 'reto_profesional', titulo: '¿Qué es lo que más te complica en tu trabajo?' },
+      { id: 'det_actualizar', titulo: '¿Qué quieres actualizar?' },
+      { id: 'det_prof_costos', titulo: '¿Qué te cuesta más trabajo controlar?' },
+      { id: 'det_prof_procesos', titulo: '¿Qué necesitas ordenar primero?' }
+    ],
+    emprendedor: [
+      { id: 'contexto_emprendedor', titulo: '¿Qué tipo de negocio tienes o quieres crear?' },
+      { id: 'problema_emprendedor', titulo: '¿Qué es lo que más te complica en tu negocio?' },
+      { id: 'det_emp_precios', titulo: '¿Qué te hace falta para poner tu precio?' },
+      { id: 'det_emp_costos', titulo: '¿Qué parte de tus costos te preocupa más?' },
+      { id: 'det_emp_produccion', titulo: '¿Qué necesitas ordenar primero?' },
+      { id: 'det_emp_ventas', titulo: '¿Cómo quieres vender más?' }
+    ]
   },
-  // Las otras 3 las contestan todos.
+  // Las últimas 2 las contestan todos.
   _encuestaPreguntasComunes: [
-    { id: 'area_interes', titulo: '¿Por dónde quieren empezar?' },
-    { id: 'formato', titulo: '¿Qué les ayudaría más para aprender? (qué producir primero)' },
-    { id: 'tiempo_disponible', titulo: '¿Cuánto tiempo tienen a la semana?' }
+    { id: 'formato', titulo: '¿Cómo te gustaría aprenderlo? (qué producir primero)' },
+    { id: 'freno', titulo: '¿Qué te detiene hoy?' }
   ],
   // Pregunta más diagnóstica de cada rama, para el panel de hallazgos.
   _encuestaPreguntaClave: {
     estudiante: 'objetivo_estudiante',
+    aficionado: 'objetivo_aficionado',
     profesional: 'reto_profesional',
     emprendedor: 'problema_emprendedor'
   },
@@ -5635,7 +5679,7 @@ const Pages={
   // de la pregunta clave de cada segmento, con un nivel de prioridad según
   // qué tan dominante fue esa respuesta dentro del segmento.
   _encuestaHallazgos(respuestas){
-    const tipos = ['estudiante', 'profesional', 'emprendedor'];
+    const tipos = ['estudiante', 'aficionado', 'profesional', 'emprendedor'];
     const labelsTipo = Pages._encuestaLabels.tipo;
     const hallazgos = [];
     tipos.forEach(t => {
@@ -5652,6 +5696,21 @@ const Pages={
         texto: `${conteo[top]} de ${deEsteTipo.length} ${labelsTipo[t].toLowerCase()} respondió "${(Pages._encuestaLabels[clave]||{})[top]||top}"`,
         prioridad, pct
       });
+      // Lo más específico que piden dentro de su reto (preguntas de detalle).
+      const det = {};
+      (Pages._encuestaPreguntasPorTipo[t] || []).filter(x => x.id.startsWith('det_')).forEach(x => {
+        const c = Pages._encuestaContar(deEsteTipo, t, x.id);
+        Object.keys(c).forEach(v => { det[x.id + '|' + v] = c[v]; });
+      });
+      const topDet = Object.keys(det).sort((a,b) => det[b]-det[a])[0];
+      if (topDet) {
+        const [did, val] = topDet.split('|');
+        const pctD = Math.round((det[topDet] / deEsteTipo.length) * 100);
+        hallazgos.push({
+          texto: `${det[topDet]} de ${deEsteTipo.length} ${labelsTipo[t].toLowerCase()} pidió "${(Pages._encuestaLabels[did]||{})[val]||val}"`,
+          prioridad: pctD >= 60 ? 'ALTA' : pctD >= 35 ? 'MEDIA' : 'BAJA', pct: pctD
+        });
+      }
     });
     return hallazgos.sort((a,b) => b.pct - a.pct);
   },
@@ -5726,21 +5785,21 @@ const Pages={
   _encuestaRenderFiltrado(p, filtro){
     const respuestas = Pages._encuestaRespuestas || [];
     const colores = Pages._encuestaColores();
-    const tipos = ['estudiante', 'profesional', 'emprendedor'];
+    const tipos = ['estudiante', 'aficionado', 'profesional', 'emprendedor'];
     const labelsTipo = Pages._encuestaLabels.tipo;
     const porTipo = Pages._encuestaContar(respuestas, null, 'tipo');
     const vistas = filtro === 'todos' ? respuestas : respuestas.filter(r => r.tipo === filtro);
     const hallazgos = Pages._encuestaHallazgos(vistas).slice(0, 5);
 
     const total = respuestas.length || 1;
-    const iconos = { estudiante:'🎓', profesional:'👩‍🍳', emprendedor:'🚀' };
+    const iconos = { estudiante:'🎓', aficionado:'🍰', profesional:'👩‍🍳', emprendedor:'🚀' };
     const nombreVista = filtro === 'todos' ? 'toda tu audiencia' : labelsTipo[filtro].toLowerCase();
     let html = `
       <section class="enc-overview">
         <div class="enc-overview__lead">
           <div class="enc-kicker">Lectura de audiencia</div>
           <div class="enc-overview__number">${vistas.length}</div>
-          <p class="enc-overview__copy">${filtro === 'todos' ? 'personas ya te dijeron su mayor reto, el área y el formato que prefieren.' : `respuesta${vistas.length === 1 ? '' : 's'} de ${nombreVista}.`}</p>
+          <p class="enc-overview__copy">${filtro === 'todos' ? 'personas ya te dijeron su mayor reto, qué necesitan aprender exactamente y cómo lo quieren.' : `respuesta${vistas.length === 1 ? '' : 's'} de ${nombreVista}.`}</p>
           <div class="enc-segment-label" style="margin-top:18px;">Elige un perfil para analizarlo</div>
           <div class="enc-segments">
             ${tipos.map((t,i) => {
@@ -5785,7 +5844,7 @@ const Pages={
         <section class="enc-data-section">
           <div class="enc-data-section__head"><h3>${iconos[t]} ${labelsTipo[t]}</h3><span>${porTipo[t]} respuestas</span></div>
           <div class="dash-grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-bottom:0;">
-          ${preguntas.map(preg => `
+          ${preguntas.filter(preg => !preg.id.startsWith('det_') || Pages._encuestaPersonas(respuestas, t, preg.id) > 0).map(preg => `
             <div class="enc-question-card">
               <div class="enc-question-card__title">${preg.titulo}</div>
               ${Pages._encuestaPastel(Pages._encuestaLabels[preg.id] || {}, Pages._encuestaContar(respuestas, t, preg.id), Pages._encuestaPersonas(respuestas, t, preg.id), Pages._encuestaMulti.includes(preg.id))}
