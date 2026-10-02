@@ -883,6 +883,36 @@ body{
 .enc-hallazgo--media .enc-hallazgo__punto{background:var(--warning)}
 .enc-hallazgo--media .enc-hallazgo__tag{background:color-mix(in srgb,var(--warning) 16%,transparent);color:var(--warning)}
 .enc-hallazgo--baja .enc-hallazgo__tag{background:var(--surface-3);color:var(--text-3)}
+
+/* Encuesta: lectura editorial de la audiencia, antes del detalle numérico. */
+.enc-page{max-width:1280px}
+.enc-page .sec-hero{margin-bottom:18px}
+.enc-overview{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(290px,.9fr);gap:14px;margin-bottom:18px}
+.enc-overview__lead,.enc-opportunities{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:20px 22px}
+.enc-kicker{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:var(--text-3);display:flex;align-items:center;gap:7px}
+.enc-kicker::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--primary)}
+.enc-overview__number{font-family:'Plus Jakarta Sans','Inter',sans-serif;font-size:48px;font-weight:800;letter-spacing:-2px;line-height:1;color:var(--text);margin:12px 0 7px}
+.enc-overview__copy{font-size:13px;line-height:1.5;color:var(--text-2);max-width:450px}
+.enc-opportunities__title{font-size:15px;font-weight:750;letter-spacing:-.2px;margin:7px 0 13px}
+.enc-opportunity{position:relative;padding:10px 0 10px 14px;border-top:1px solid var(--border);font-size:12.5px;line-height:1.45;color:var(--text-2)}
+.enc-opportunity::before{content:"";position:absolute;left:0;top:16px;width:6px;height:6px;border-radius:50%;background:var(--enc-tone,var(--primary))}
+.enc-opportunity strong{display:block;color:var(--text);font-size:11px;margin-bottom:2px}
+.enc-opportunity:first-of-type{border-top:0;padding-top:0}.enc-opportunity:first-of-type::before{top:6px}
+.enc-segment-label{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1.25px;text-transform:uppercase;color:var(--text-3);margin:0 0 9px}
+.enc-segments{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:18px}
+.enc-segment{position:relative;overflow:hidden;text-align:left;padding:13px 14px;border-radius:14px;border:1px solid var(--border);background:var(--surface);color:var(--text);transition:transform .18s,border-color .18s,box-shadow .18s}
+.enc-segment:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--enc-tone) 45%,var(--border));box-shadow:0 8px 15px color-mix(in srgb,var(--enc-tone) 10%,transparent)}
+.enc-segment.is-active{border-color:var(--enc-tone);background:color-mix(in srgb,var(--enc-tone) 8%,var(--surface))}
+.enc-segment__top{display:flex;align-items:center;gap:7px;color:var(--text-2);font-size:11px;font-weight:650}.enc-segment__dot{width:8px;height:8px;border-radius:50%;background:var(--enc-tone);flex-shrink:0}
+.enc-segment__value{font-family:'Plus Jakarta Sans','Inter',sans-serif;font-size:27px;font-weight:800;letter-spacing:-1px;line-height:1;margin:13px 0 4px}.enc-segment__share{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)}
+.enc-workbench{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 0 17px;margin-bottom:2px;border-bottom:1px solid var(--border)}
+.enc-workbench__copy h2{font-size:18px;letter-spacing:-.45px;margin:0}.enc-workbench__copy p{font-size:12px;color:var(--text-3);margin:4px 0 0}
+.enc-filter-pills{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}.enc-filter-pill{padding:7px 11px;border-radius:100px;background:var(--surface-2);border:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:var(--text-2)}.enc-filter-pill.is-active{background:var(--primary);border-color:var(--primary);color:#fff}
+.enc-data-section{margin-top:22px}.enc-data-section__head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.enc-data-section__head h3{font-size:16px;letter-spacing:-.3px;margin:0}.enc-data-section__head span{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:var(--text-3);padding:4px 8px;background:var(--surface-2);border-radius:100px}
+.enc-question-card{background:var(--surface);border:1px solid var(--border);border-radius:15px;padding:16px 17px}.enc-question-card__title{font-size:12.5px;font-weight:700;line-height:1.35;color:var(--text);margin-bottom:13px}.enc-question-card__title::before{content:"";display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--primary);margin:0 7px 2px 0}
+.enc-empty-inline{padding:15px;border:1px dashed var(--border-2);border-radius:12px;color:var(--text-3);font-size:12px;text-align:center}
+@media(max-width:900px){.enc-overview{grid-template-columns:1fr}.enc-segments{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:620px){.enc-overview__lead,.enc-opportunities{padding:18px}.enc-overview__number{font-size:40px}.enc-workbench{align-items:flex-start;flex-direction:column}.enc-filter-pills{justify-content:flex-start}.enc-segments{gap:7px}.enc-segment{padding:11px}.enc-segment__value{font-size:23px}}
 .dash-card__title{font-family:'Plus Jakarta Sans','Inter',sans-serif;font-size:15px;font-weight:700;letter-spacing:-.2px;display:flex;align-items:center;gap:8px}
 .dash-card__title .ic{width:18px;height:18px;color:var(--primary)}
 .dash-card__link{
@@ -5547,7 +5577,7 @@ const Pages={
     ]
   },
   _encuestaPreguntasComunes: [
-    { id: 'membresia', titulo: '¿Qué buscan en una membresía gastronómica?' },
+    { id: 'membresia', titulo: '¿Qué recursos les interesan más?' },
     { id: 'tiempo_disponible', titulo: '¿Cuánto tiempo pueden dedicar a la semana?' }
   ],
   // Pregunta más diagnóstica de cada rama, para el panel de hallazgos.
@@ -5684,41 +5714,41 @@ const Pages={
     const vistas = filtro === 'todos' ? respuestas : respuestas.filter(r => r.tipo === filtro);
     const hallazgos = Pages._encuestaHallazgos(vistas).slice(0, 5);
 
+    const total = respuestas.length || 1;
+    const iconos = { estudiante:'🎓', profesional:'👩‍🍳', emprendedor:'🚀', aficionado:'🍰' };
+    const nombreVista = filtro === 'todos' ? 'toda tu audiencia' : labelsTipo[filtro].toLowerCase();
     let html = `
-      <div class="kpi-grid" style="margin-bottom:24px;">
-        <div class="kpi-card" style="--c1:#6B1526;"><div class="kpi-card__label">Respuestas totales</div><div class="kpi-card__value">${respuestas.length}</div></div>
-        ${tipos.map((t,i) => `<div class="kpi-card" style="--c1:${colores[i]};"><div class="kpi-card__label">${labelsTipo[t]}</div><div class="kpi-card__value">${porTipo[t]||0}</div></div>`).join('')}
-      </div>
-    `;
-
-    if (hallazgos.length) {
-      html += `
-        <div class="section-header"><h2 class="section-header__title">Necesita tu atención<span class="section-header__badge">${hallazgos.length}</span></h2></div>
-        <div class="enc-hallazgos">
-          ${hallazgos.map(h => `
-            <div class="enc-hallazgo enc-hallazgo--${h.prioridad.toLowerCase()}">
-              <span class="enc-hallazgo__punto"></span>
-              <span>${h.texto}</span>
-              <span class="enc-hallazgo__tag">${h.prioridad}</span>
-            </div>`).join('')}
+      <section class="enc-overview">
+        <div class="enc-overview__lead">
+          <div class="enc-kicker">Lectura de audiencia</div>
+          <div class="enc-overview__number">${vistas.length}</div>
+          <p class="enc-overview__copy">${filtro === 'todos' ? 'personas ya te dijeron qué quieren aprender y qué obstáculos tienen.' : `respuesta${vistas.length === 1 ? '' : 's'} de ${nombreVista}.`}</p>
+          <div class="enc-segment-label" style="margin-top:18px;">Elige un perfil para analizarlo</div>
+          <div class="enc-segments">
+            ${tipos.map((t,i) => {
+              const n = porTipo[t] || 0;
+              const pct = Math.round(n / total * 100);
+              return `<button type="button" class="enc-segment ${filtro===t?'is-active':''}" data-enc-filter="${t}" style="--enc-tone:${colores[i]};">
+                <span class="enc-segment__top"><span class="enc-segment__dot"></span>${iconos[t]} ${labelsTipo[t]}</span>
+                <span class="enc-segment__value">${n}</span>
+                <span class="enc-segment__share">${pct}% de respuestas</span>
+              </button>`;
+            }).join('')}
+          </div>
         </div>
-        <p style="font-size:11px;color:var(--text-3);margin:-18px 0 28px;">Calculado con reglas sobre sus respuestas (todavía sin IA).</p>
-      `;
-    }
-
-    html += `
-      <div class="section-header"><h2 class="section-header__title">Distribución por tipo de cliente</h2></div>
-      <div class="dash-card" style="max-width:480px;margin-bottom:28px;padding:18px 20px;">
-        ${Pages._encuestaBarras(labelsTipo, porTipo, colores)}
-      </div>
-
-      <div class="section-header">
-        <h2 class="section-header__title">Filtrar por segmento${filtro!=='todos' ? `<span class="section-header__badge">${vistas.length}</span>` : ''}</h2>
-      </div>
-      <select class="input" id="enc-filtro-tipo" style="max-width:280px;margin-bottom:28px;">
-        <option value="todos">Todos los segmentos</option>
-        ${tipos.map(t => `<option value="${t}" ${filtro===t?'selected':''}>${labelsTipo[t]} (${porTipo[t]||0})</option>`).join('')}
-      </select>
+        <aside class="enc-opportunities">
+          <div class="enc-kicker">Qué puedes atender</div>
+          <h2 class="enc-opportunities__title">Señales de ${nombreVista}</h2>
+          ${hallazgos.length ? hallazgos.slice(0,3).map((h,i) => `<div class="enc-opportunity" style="--enc-tone:${colores[i%colores.length]};"><strong>${h.prioridad === 'ALTA' ? 'Oportunidad prioritaria' : 'Interés para vigilar'}</strong>${h.texto}</div>`).join('') : '<p class="enc-empty-inline">Aún no hay suficientes datos para detectar una señal.</p>'}
+        </aside>
+      </section>
+      <section class="enc-workbench">
+        <div class="enc-workbench__copy"><h2>Explora las respuestas</h2><p>Selecciona un segmento para comparar necesidades y preferencias.</p></div>
+        <div class="enc-filter-pills">
+          <button type="button" class="enc-filter-pill ${filtro==='todos'?'is-active':''}" data-enc-filter="todos">Toda la audiencia · ${respuestas.length}</button>
+          ${tipos.map(t => `<button type="button" class="enc-filter-pill ${filtro===t?'is-active':''}" data-enc-filter="${t}">${labelsTipo[t]} · ${porTipo[t]||0}</button>`).join('')}
+        </div>
+      </section>
     `;
 
     const ramasAMostrar = filtro === 'todos' ? tipos : [filtro];
@@ -5726,36 +5756,37 @@ const Pages={
       if (!porTipo[t]) return;
       const preguntas = Pages._encuestaPreguntasPorTipo[t];
       html += `
-        <div class="section-header"><h2 class="section-header__title">${labelsTipo[t]}<span class="section-header__badge">${porTipo[t]}</span></h2></div>
-        <div class="dash-grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-bottom:28px;">
+        <section class="enc-data-section">
+          <div class="enc-data-section__head"><h3>${iconos[t]} ${labelsTipo[t]}</h3><span>${porTipo[t]} respuestas</span></div>
+          <div class="dash-grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-bottom:0;">
           ${preguntas.map(preg => `
-            <div class="dash-card" style="padding:18px;">
-              <div style="font-size:12.5px;font-weight:600;color:var(--text-2);margin-bottom:12px;">${preg.titulo}</div>
+            <div class="enc-question-card">
+              <div class="enc-question-card__title">${preg.titulo}</div>
               ${Pages._encuestaBarras(Pages._encuestaLabels[preg.id] || {}, Pages._encuestaContar(respuestas, t, preg.id), colores)}
             </div>`).join('')}
-        </div>`;
+          </div>
+        </section>`;
     });
 
-    html += `<div class="section-header"><h2 class="section-header__title">En común${filtro!=='todos' ? ' · ' + labelsTipo[filtro] : ''}</h2></div>
+    html += `<section class="enc-data-section"><div class="enc-data-section__head"><h3>🧭 Preferencias en común${filtro!=='todos' ? ' · ' + labelsTipo[filtro] : ''}</h3><span>${vistas.length} respuestas</span></div>
       <div class="dash-grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-bottom:28px;">
         ${Pages._encuestaPreguntasComunes.map(preg => `
-          <div class="dash-card" style="padding:18px;">
-            <div style="font-size:12.5px;font-weight:600;color:var(--text-2);margin-bottom:12px;">${preg.titulo}</div>
+          <div class="enc-question-card">
+            <div class="enc-question-card__title">${preg.titulo}</div>
             ${Pages._encuestaBarras(Pages._encuestaLabels[preg.id] || {}, Pages._encuestaContar(vistas, null, preg.id), colores)}
           </div>`).join('')}
-      </div>`;
+      </div></section>`;
 
-    p.innerHTML = `<div class="fade-up">
+    p.innerHTML = `<div class="fade-up enc-page">
       <div class="sec-hero">
-        <span class="sec-hero__eyebrow">Qué tipo de clientes tenemos</span>
+        <span class="sec-hero__eyebrow">Escucha a tu audiencia</span>
         <h1 class="sec-hero__title">Encuesta de clientes</h1>
-        <p class="sec-hero__sub">Respuestas del cuestionario que aparece en dulcelabfood.com. Sirve para saber qué ofrecerle a cada segmento.</p>
+        <p class="sec-hero__sub">Convierte respuestas en decisiones de contenido, cursos y acompañamiento para DulceLab Food.</p>
       </div>
       ${html}
     </div>`;
 
-    const selectFiltro = document.getElementById('enc-filtro-tipo');
-    if (selectFiltro) selectFiltro.addEventListener('change', e => Pages._encuestaRenderFiltrado(p, e.target.value));
+    p.querySelectorAll('[data-enc-filter]').forEach(btn => btn.addEventListener('click', () => Pages._encuestaRenderFiltrado(p, btn.dataset.encFilter)));
   },
 
   noticias(p){
