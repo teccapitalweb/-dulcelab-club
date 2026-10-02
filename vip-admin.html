@@ -858,6 +858,31 @@ body{
   padding:22px 24px;
 }
 .dash-card__header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+
+/* Encuesta de clientes: barras con CSS puro + lista de hallazgos */
+.enc-barras{display:flex;flex-direction:column;gap:12px}
+.enc-barra__cab{display:flex;align-items:baseline;justify-content:space-between;font-size:12.5px;margin-bottom:5px}
+.enc-barra__cab span{color:var(--text-2)}
+.enc-barra__cab strong{font-family:'JetBrains Mono',monospace;color:var(--text)}
+.enc-barra__pista{height:8px;border-radius:100px;background:var(--surface-2);overflow:hidden}
+.enc-barra__rel{height:100%;border-radius:100px;transition:width .4s ease}
+.enc-hallazgos{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.enc-hallazgo{
+  display:flex;align-items:center;gap:10px;
+  background:var(--surface-2);border:1px solid var(--border);border-radius:10px;
+  padding:11px 13px;font-size:12.5px;color:var(--text-2);
+}
+.enc-hallazgo__punto{width:7px;height:7px;border-radius:50%;flex-shrink:0;background:var(--text-3)}
+.enc-hallazgo__tag{
+  margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:.8px;
+  padding:4px 10px;border-radius:100px;flex-shrink:0;
+}
+.enc-hallazgo--alta{background:color-mix(in srgb,var(--danger) 10%,var(--surface-2));border-color:color-mix(in srgb,var(--danger) 30%,transparent)}
+.enc-hallazgo--alta .enc-hallazgo__punto{background:var(--danger)}
+.enc-hallazgo--alta .enc-hallazgo__tag{background:color-mix(in srgb,var(--danger) 16%,transparent);color:var(--danger)}
+.enc-hallazgo--media .enc-hallazgo__punto{background:var(--warning)}
+.enc-hallazgo--media .enc-hallazgo__tag{background:color-mix(in srgb,var(--warning) 16%,transparent);color:var(--warning)}
+.enc-hallazgo--baja .enc-hallazgo__tag{background:var(--surface-3);color:var(--text-3)}
 .dash-card__title{font-family:'Plus Jakarta Sans','Inter',sans-serif;font-size:15px;font-weight:700;letter-spacing:-.2px;display:flex;align-items:center;gap:8px}
 .dash-card__title .ic{width:18px;height:18px;color:var(--primary)}
 .dash-card__link{
@@ -1096,7 +1121,6 @@ window.__signOut = async () => {
 </script>
 
 <script src="assets/dulcelab-bunny-catalog.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
 
 <!-- ICONOS SVG -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -5526,7 +5550,13 @@ const Pages={
     { id: 'membresia', titulo: '¿Qué buscan en una membresía gastronómica?' },
     { id: 'tiempo_disponible', titulo: '¿Cuánto tiempo pueden dedicar a la semana?' }
   ],
-  _encuestaCharts: [],
+  // Pregunta más diagnóstica de cada rama, para el panel de hallazgos.
+  _encuestaPreguntaClave: {
+    estudiante: 'objetivo_estudiante',
+    profesional: 'reto_profesional',
+    emprendedor: 'problema_emprendedor',
+    aficionado: 'objetivo_aficionado'
+  },
   _encuestaColores(){
     const cs = getComputedStyle(document.documentElement);
     return [
@@ -5537,6 +5567,45 @@ const Pages={
       cs.getPropertyValue('--accent').trim() || '#9E2A47',
       cs.getPropertyValue('--danger').trim() || '#C1594A'
     ];
+  },
+  // Lista de barras con CSS puro (nada de librería externa: si el CDN de
+  // turno está bloqueado por la red o un antivirus, antes esto se quedaba
+  // en blanco sin avisar — así siempre se ve algo).
+  _encuestaBarras(labelsMap, conteo, colores){
+    const claves = Object.keys(conteo);
+    if (!claves.length) return `<p style="font-size:12.5px;color:var(--text-3);">Sin datos todavía.</p>`;
+    const max = Math.max(...claves.map(k => conteo[k]));
+    return `<div class="enc-barras">` + claves
+      .sort((a,b) => conteo[b]-conteo[a])
+      .map((k,i) => `
+        <div class="enc-barra">
+          <div class="enc-barra__cab"><span>${labelsMap[k]||k}</span><strong>${conteo[k]}</strong></div>
+          <div class="enc-barra__pista"><div class="enc-barra__rel" style="width:${Math.round(conteo[k]/max*100)}%;background:${colores[i%colores.length]};"></div></div>
+        </div>`).join('') + `</div>`;
+  },
+  // Hallazgos simples (reglas, no IA todavía): la respuesta más mencionada
+  // de la pregunta clave de cada segmento, con un nivel de prioridad según
+  // qué tan dominante fue esa respuesta dentro del segmento.
+  _encuestaHallazgos(respuestas){
+    const tipos = ['estudiante', 'profesional', 'emprendedor', 'aficionado'];
+    const labelsTipo = Pages._encuestaLabels.tipo;
+    const hallazgos = [];
+    tipos.forEach(t => {
+      const deEsteTipo = respuestas.filter(r => r.tipo === t);
+      if (!deEsteTipo.length) return;
+      const clave = Pages._encuestaPreguntaClave[t];
+      const conteo = Pages._encuestaContar(deEsteTipo, t, clave);
+      const claves = Object.keys(conteo);
+      if (!claves.length) return;
+      const top = claves.sort((a,b) => conteo[b]-conteo[a])[0];
+      const pct = Math.round((conteo[top] / deEsteTipo.length) * 100);
+      const prioridad = pct >= 60 ? 'ALTA' : pct >= 35 ? 'MEDIA' : 'BAJA';
+      hallazgos.push({
+        texto: `${conteo[top]} de ${deEsteTipo.length} ${labelsTipo[t].toLowerCase()} respondió "${(Pages._encuestaLabels[clave]||{})[top]||top}"`,
+        prioridad, pct
+      });
+    });
+    return hallazgos.sort((a,b) => b.pct - a.pct);
   },
   // Cuenta ocurrencias de una pregunta entre las respuestas filtradas por tipo.
   // El valor guardado puede ser un string (opción única) o un arreglo (opción
@@ -5601,30 +5670,46 @@ const Pages={
     Pages._encuestaRespuestas = respuestas;
     Pages._encuestaRenderFiltrado(p, 'todos');
   },
-  // Vuelve a dibujar todo (KPIs + gráficas) para un tipo de cliente, o 'todos'.
-  // Es el "filtro básico" de la Fase 1: un corte a la vez, no cruces múltiples.
+  // Vuelve a dibujar todo (hallazgos + KPIs + barras) para un tipo de
+  // cliente, o 'todos'. Es el "filtro básico" de la Fase 1: un corte a la
+  // vez, no cruces múltiples. Las barras son CSS puro (ver _encuestaBarras):
+  // antes usaban Chart.js por CDN y si la red/antivirus de quien entra lo
+  // bloquea, se quedaban en blanco sin avisar nada.
   _encuestaRenderFiltrado(p, filtro){
-    Pages._encuestaCharts.forEach(c => { try { c.destroy(); } catch(e){} });
-    Pages._encuestaCharts = [];
-
     const respuestas = Pages._encuestaRespuestas || [];
     const colores = Pages._encuestaColores();
     const tipos = ['estudiante', 'profesional', 'emprendedor', 'aficionado'];
     const labelsTipo = Pages._encuestaLabels.tipo;
     const porTipo = Pages._encuestaContar(respuestas, null, 'tipo');
     const vistas = filtro === 'todos' ? respuestas : respuestas.filter(r => r.tipo === filtro);
+    const hallazgos = Pages._encuestaHallazgos(vistas).slice(0, 5);
 
     let html = `
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px;">
-        <div class="kpi-grid" style="flex:1;min-width:0;">
-          <div class="kpi-card" style="--c1:#6B1526;"><div class="kpi-card__label">Respuestas totales</div><div class="kpi-card__value">${respuestas.length}</div></div>
-          ${tipos.map((t,i) => `<div class="kpi-card" style="--c1:${colores[i]};"><div class="kpi-card__label">${labelsTipo[t]}</div><div class="kpi-card__value">${porTipo[t]||0}</div></div>`).join('')}
-        </div>
+      <div class="kpi-grid" style="margin-bottom:24px;">
+        <div class="kpi-card" style="--c1:#6B1526;"><div class="kpi-card__label">Respuestas totales</div><div class="kpi-card__value">${respuestas.length}</div></div>
+        ${tipos.map((t,i) => `<div class="kpi-card" style="--c1:${colores[i]};"><div class="kpi-card__label">${labelsTipo[t]}</div><div class="kpi-card__value">${porTipo[t]||0}</div></div>`).join('')}
       </div>
+    `;
 
+    if (hallazgos.length) {
+      html += `
+        <div class="section-header"><h2 class="section-header__title">Necesita tu atención<span class="section-header__badge">${hallazgos.length}</span></h2></div>
+        <div class="enc-hallazgos">
+          ${hallazgos.map(h => `
+            <div class="enc-hallazgo enc-hallazgo--${h.prioridad.toLowerCase()}">
+              <span class="enc-hallazgo__punto"></span>
+              <span>${h.texto}</span>
+              <span class="enc-hallazgo__tag">${h.prioridad}</span>
+            </div>`).join('')}
+        </div>
+        <p style="font-size:11px;color:var(--text-3);margin:-18px 0 28px;">Calculado con reglas sobre sus respuestas (todavía sin IA).</p>
+      `;
+    }
+
+    html += `
       <div class="section-header"><h2 class="section-header__title">Distribución por tipo de cliente</h2></div>
-      <div class="dash-card" style="max-width:420px;margin-bottom:28px;padding:20px;">
-        <canvas id="enc-chart-tipo" height="220"></canvas>
+      <div class="dash-card" style="max-width:480px;margin-bottom:28px;padding:18px 20px;">
+        ${Pages._encuestaBarras(labelsTipo, porTipo, colores)}
       </div>
 
       <div class="section-header">
@@ -5645,8 +5730,8 @@ const Pages={
         <div class="dash-grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-bottom:28px;">
           ${preguntas.map(preg => `
             <div class="dash-card" style="padding:18px;">
-              <div style="font-size:12.5px;font-weight:600;color:var(--text-2);margin-bottom:10px;">${preg.titulo}</div>
-              <canvas id="enc-chart-${t}-${preg.id}" height="180"></canvas>
+              <div style="font-size:12.5px;font-weight:600;color:var(--text-2);margin-bottom:12px;">${preg.titulo}</div>
+              ${Pages._encuestaBarras(Pages._encuestaLabels[preg.id] || {}, Pages._encuestaContar(respuestas, t, preg.id), colores)}
             </div>`).join('')}
         </div>`;
     });
@@ -5655,8 +5740,8 @@ const Pages={
       <div class="dash-grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-bottom:28px;">
         ${Pages._encuestaPreguntasComunes.map(preg => `
           <div class="dash-card" style="padding:18px;">
-            <div style="font-size:12.5px;font-weight:600;color:var(--text-2);margin-bottom:10px;">${preg.titulo}</div>
-            <canvas id="enc-chart-comun-${preg.id}" height="180"></canvas>
+            <div style="font-size:12.5px;font-weight:600;color:var(--text-2);margin-bottom:12px;">${preg.titulo}</div>
+            ${Pages._encuestaBarras(Pages._encuestaLabels[preg.id] || {}, Pages._encuestaContar(vistas, null, preg.id), colores)}
           </div>`).join('')}
       </div>`;
 
@@ -5671,51 +5756,6 @@ const Pages={
 
     const selectFiltro = document.getElementById('enc-filtro-tipo');
     if (selectFiltro) selectFiltro.addEventListener('change', e => Pages._encuestaRenderFiltrado(p, e.target.value));
-
-    if (typeof Chart === 'undefined') return; // CDN bloqueado/sin internet: se queda en las tarjetas de arriba
-    const textoColor = getComputedStyle(document.documentElement).getPropertyValue('--text-2');
-    const textoSuave = getComputedStyle(document.documentElement).getPropertyValue('--text-3');
-    const bordeColor = getComputedStyle(document.documentElement).getPropertyValue('--border');
-
-    const barChart = (ctx, labelsMap, conteo) => {
-      if (!ctx) return;
-      const claves = Object.keys(conteo);
-      Pages._encuestaCharts.push(new Chart(ctx, {
-        type: 'bar',
-        data: { labels: claves.map(k => labelsMap[k] || k), datasets: [{ data: claves.map(k => conteo[k]), backgroundColor: colores }] },
-        options: {
-          indexAxis: 'y',
-          plugins: { legend: { display: false } },
-          scales: {
-            x: { ticks: { precision: 0, color: textoSuave }, grid: { color: bordeColor } },
-            y: { ticks: { color: textoColor }, grid: { display: false } }
-          }
-        }
-      }));
-    };
-
-    const ctxTipo = document.getElementById('enc-chart-tipo');
-    if (ctxTipo) {
-      Pages._encuestaCharts.push(new Chart(ctxTipo, {
-        type: 'pie',
-        data: {
-          labels: tipos.filter(t => porTipo[t]).map(t => labelsTipo[t]),
-          datasets: [{ data: tipos.filter(t => porTipo[t]).map(t => porTipo[t]), backgroundColor: colores }]
-        },
-        options: { plugins: { legend: { position: 'bottom', labels: { color: textoColor } } } }
-      }));
-    }
-
-    ramasAMostrar.forEach(t => {
-      if (!porTipo[t]) return;
-      Pages._encuestaPreguntasPorTipo[t].forEach(preg => {
-        barChart(document.getElementById(`enc-chart-${t}-${preg.id}`), Pages._encuestaLabels[preg.id] || {}, Pages._encuestaContar(respuestas, t, preg.id));
-      });
-    });
-
-    Pages._encuestaPreguntasComunes.forEach(preg => {
-      barChart(document.getElementById(`enc-chart-comun-${preg.id}`), Pages._encuestaLabels[preg.id] || {}, Pages._encuestaContar(vistas, null, preg.id));
-    });
   },
 
   noticias(p){
