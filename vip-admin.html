@@ -860,6 +860,19 @@ body{
 .dash-card__header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
 
 /* Encuesta de clientes: barras con CSS puro + lista de hallazgos */
+.enc-pastel__frase{font-size:12.5px;line-height:1.5;color:var(--text-2);margin-bottom:14px}
+.enc-pastel__frase strong{color:var(--text)}
+.enc-pastel__cuerpo{display:flex;flex-wrap:wrap;align-items:center;gap:16px}
+.enc-pastel__dona{width:132px;height:132px;border-radius:50%;flex-shrink:0;display:grid;place-items:center}
+.enc-pastel__hueco{width:78px;height:78px;border-radius:50%;background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1}
+.enc-pastel__hueco strong{font-family:'Plus Jakarta Sans','Inter',sans-serif;font-size:22px;font-weight:800;color:var(--text)}
+.enc-pastel__hueco span{font-size:9.5px;color:var(--text-3)}
+.enc-pastel__leyenda{list-style:none;margin:0;padding:0;flex:1;min-width:150px;display:flex;flex-direction:column;gap:7px}
+.enc-pastel__leyenda li{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-2)}
+.enc-pastel__leyenda i{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.enc-pastel__leyenda span{flex:1;min-width:0}
+.enc-pastel__leyenda b{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text);white-space:nowrap}
+.enc-pastel__nota{font-size:11px;line-height:1.45;color:var(--text-3);margin-top:12px;padding-top:10px;border-top:1px solid var(--border)}
 .enc-barras{display:flex;flex-direction:column;gap:12px}
 .enc-barra__cab{display:flex;align-items:baseline;justify-content:space-between;font-size:12.5px;margin-bottom:5px}
 .enc-barra__cab span{color:var(--text-2)}
@@ -5598,20 +5611,48 @@ const Pages={
       cs.getPropertyValue('--danger').trim() || '#C1594A'
     ];
   },
-  // Lista de barras con CSS puro (nada de librería externa: si el CDN de
-  // turno está bloqueado por la red o un antivirus, antes esto se quedaba
-  // en blanco sin avisar — así siempre se ve algo).
-  _encuestaBarras(labelsMap, conteo, colores){
-    const claves = Object.keys(conteo);
-    if (!claves.length) return `<p style="font-size:12.5px;color:var(--text-3);">Sin datos todavía.</p>`;
-    const max = Math.max(...claves.map(k => conteo[k]));
-    return `<div class="enc-barras">` + claves
-      .sort((a,b) => conteo[b]-conteo[a])
-      .map((k,i) => `
-        <div class="enc-barra">
-          <div class="enc-barra__cab"><span>${labelsMap[k]||(k+' (ya no se pregunta)')}</span><strong>${conteo[k]}</strong></div>
-          <div class="enc-barra__pista"><div class="enc-barra__rel" style="width:${Math.round(conteo[k]/max*100)}%;background:${colores[i%colores.length]};"></div></div>
-        </div>`).join('') + `</div>`;
+  // Preguntas donde cada persona pudo marcar varias opciones.
+  _encuestaMulti: ['intereses_estudiante','formato_estudiante','temas_profesional','intereses_aficionado','formato_aficionado','membresia'],
+  _encuestaPaleta: ['#6B1526','#C99A3D','#4A6B85','#4E7A44','#C1594A','#7A93A8','#8A6D3B','#A8527A','#5B8C85','#9A9A9A'],
+  // Cuántas personas contestaron esa pregunta (en el grupo que se está viendo).
+  _encuestaPersonas(respuestas, filtroTipo, preguntaId){
+    return respuestas.filter(r => (!filtroTipo || r.tipo === filtroTipo) && r.respuestas && r.respuestas[preguntaId]).length;
+  },
+  // Pastel (dona) con CSS puro + leyenda explicada. Sin librerías externas:
+  // si un CDN estuviera bloqueado antes las gráficas salían en blanco.
+  // "personas" = quienes contestaron; en preguntas de varias opciones los
+  // porcentajes suman más de 100% y se avisa para que no confunda.
+  _encuestaPastel(labelsMap, conteo, personas, multi){
+    const claves = Object.keys(conteo).sort((a,b) => conteo[b]-conteo[a]);
+    if (!claves.length || !personas) return `<p class="enc-empty-inline">Todavía nadie contestó esta pregunta.</p>`;
+    const pal = Pages._encuestaPaleta;
+    const suma = claves.reduce((t,k) => t + conteo[k], 0);
+    const nombre = k => labelsMap[k] || (k + ' (ya no se pregunta)');
+    let acum = 0;
+    const tramos = claves.map((k,i) => {
+      const ini = acum / suma * 100; acum += conteo[k]; const fin = acum / suma * 100;
+      return `${pal[i % pal.length]} ${ini.toFixed(2)}% ${fin.toFixed(2)}%`;
+    }).join(',');
+    const top = claves[0];
+    const pctTop = Math.round(conteo[top] / personas * 100);
+    const frase = multi
+      ? `La opción más elegida fue <strong>${nombre(top)}</strong>: la marcaron ${conteo[top]} de ${personas} ${personas===1?'persona':'personas'} (${pctTop}%).`
+      : `La respuesta más común fue <strong>${nombre(top)}</strong>: ${conteo[top]} de ${personas} ${personas===1?'persona':'personas'} (${pctTop}%).`;
+    const nota = multi
+      ? 'Cada persona pudo elegir varias opciones, por eso los porcentajes suman más de 100%. El pastel muestra cómo se reparten todas las elecciones.'
+      : 'Cada persona eligió una sola opción: el pastel completo es el 100% de quienes contestaron.';
+    return `<div class="enc-pastel">
+      <p class="enc-pastel__frase">${frase}</p>
+      <div class="enc-pastel__cuerpo">
+        <div class="enc-pastel__dona" style="background:conic-gradient(${tramos});" role="img" aria-label="Gráfica de pastel">
+          <div class="enc-pastel__hueco"><strong>${personas}</strong><span>${personas===1?'persona':'personas'}</span></div>
+        </div>
+        <ul class="enc-pastel__leyenda">
+          ${claves.map((k,i) => `<li><i style="background:${pal[i % pal.length]};"></i><span>${nombre(k)}</span><b>${conteo[k]} · ${Math.round(conteo[k]/personas*100)}%</b></li>`).join('')}
+        </ul>
+      </div>
+      <p class="enc-pastel__nota">${nota}</p>
+    </div>`;
   },
   // Hallazgos simples (reglas, no IA todavía): la respuesta más mencionada
   // de la pregunta clave de cada segmento, con un nivel de prioridad según
@@ -5702,7 +5743,7 @@ const Pages={
   },
   // Vuelve a dibujar todo (hallazgos + KPIs + barras) para un tipo de
   // cliente, o 'todos'. Es el "filtro básico" de la Fase 1: un corte a la
-  // vez, no cruces múltiples. Las barras son CSS puro (ver _encuestaBarras):
+  // vez, no cruces múltiples. Los pasteles son CSS puro (ver _encuestaPastel):
   // antes usaban Chart.js por CDN y si la red/antivirus de quien entra lo
   // bloquea, se quedaban en blanco sin avisar nada.
   _encuestaRenderFiltrado(p, filtro){
@@ -5751,6 +5792,14 @@ const Pages={
       </section>
     `;
 
+    if (filtro === 'todos') {
+      html += `<section class="enc-data-section"><div class="enc-data-section__head"><h3>👥 ¿Quién contestó la encuesta?</h3><span>${respuestas.length} respuestas</span></div>
+        <div class="enc-question-card" style="max-width:560px;">
+          <div class="enc-question-card__title">Tipo de persona que contestó</div>
+          ${Pages._encuestaPastel(labelsTipo, porTipo, respuestas.length, false)}
+        </div></section>`;
+    }
+
     const ramasAMostrar = filtro === 'todos' ? tipos : [filtro];
     ramasAMostrar.forEach(t => {
       if (!porTipo[t]) return;
@@ -5762,7 +5811,7 @@ const Pages={
           ${preguntas.map(preg => `
             <div class="enc-question-card">
               <div class="enc-question-card__title">${preg.titulo}</div>
-              ${Pages._encuestaBarras(Pages._encuestaLabels[preg.id] || {}, Pages._encuestaContar(respuestas, t, preg.id), colores)}
+              ${Pages._encuestaPastel(Pages._encuestaLabels[preg.id] || {}, Pages._encuestaContar(respuestas, t, preg.id), Pages._encuestaPersonas(respuestas, t, preg.id), Pages._encuestaMulti.includes(preg.id))}
             </div>`).join('')}
           </div>
         </section>`;
@@ -5773,9 +5822,10 @@ const Pages={
         ${Pages._encuestaPreguntasComunes.map(preg => `
           <div class="enc-question-card">
             <div class="enc-question-card__title">${preg.titulo}</div>
-            ${Pages._encuestaBarras(Pages._encuestaLabels[preg.id] || {}, Pages._encuestaContar(vistas, null, preg.id), colores)}
+            ${Pages._encuestaPastel(Pages._encuestaLabels[preg.id] || {}, Pages._encuestaContar(vistas, null, preg.id), Pages._encuestaPersonas(vistas, null, preg.id), Pages._encuestaMulti.includes(preg.id))}
           </div>`).join('')}
-      </div></section>`;
+      </div></section>
+      <div style="margin:6px 0 30px;"><button type="button" class="btn btn--danger" id="enc-borrar">Borrar todas las respuestas (limpiar pruebas)</button></div>`;
 
     p.innerHTML = `<div class="fade-up enc-page">
       <div class="sec-hero">
@@ -5786,6 +5836,23 @@ const Pages={
       ${html}
     </div>`;
 
+    const btnBorrar = p.querySelector('#enc-borrar');
+    if (btnBorrar) btnBorrar.addEventListener('click', async () => {
+      const ok = await adminConfirm('¿Borrar TODAS las respuestas de la encuesta?', 'Se borran las ' + respuestas.length + ' respuestas guardadas (útil para limpiar pruebas). No se puede deshacer.');
+      if (!ok) return;
+      btnBorrar.disabled = true; btnBorrar.textContent = 'Borrando…';
+      try {
+        const token = await Pages._getAuthToken();
+        const res = await fetch(`${Pages._webhookUrl}/api/encuesta/borrar-todas`, { method: 'POST', headers: { Authorization: `Bearer ${token}` } });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || res.statusText);
+        Toast.success('Respuestas borradas', `${data.borradas} respuesta(s) eliminada(s)`);
+        Pages.encuesta(p);
+      } catch (e) {
+        console.error(e); Toast.error('No se pudo borrar', e.message || '');
+        btnBorrar.disabled = false; btnBorrar.textContent = 'Borrar todas las respuestas (limpiar pruebas)';
+      }
+    });
     p.querySelectorAll('[data-enc-filter]').forEach(btn => btn.addEventListener('click', () => Pages._encuestaRenderFiltrado(p, btn.dataset.encFilter)));
   },
 
