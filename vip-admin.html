@@ -5577,12 +5577,12 @@ const Pages={
     }
 
     let token;
-    try { token = await this._getAuthToken(); }
+    try { token = await Pages._getAuthToken(); }
     catch (e) { p.querySelector('#enc-loading').textContent = 'No se pudo verificar tu sesión de admin.'; return; }
 
     let respuestas = [];
     try {
-      const res = await fetch(`${this._webhookUrl}/api/encuesta/resultados`, {
+      const res = await fetch(`${Pages._webhookUrl}/api/encuesta/resultados`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -5598,20 +5598,20 @@ const Pages={
       return;
     }
 
-    this._encuestaRespuestas = respuestas;
-    this._encuestaRenderFiltrado(p, 'todos');
+    Pages._encuestaRespuestas = respuestas;
+    Pages._encuestaRenderFiltrado(p, 'todos');
   },
   // Vuelve a dibujar todo (KPIs + gráficas) para un tipo de cliente, o 'todos'.
   // Es el "filtro básico" de la Fase 1: un corte a la vez, no cruces múltiples.
   _encuestaRenderFiltrado(p, filtro){
-    this._encuestaCharts.forEach(c => { try { c.destroy(); } catch(e){} });
-    this._encuestaCharts = [];
+    Pages._encuestaCharts.forEach(c => { try { c.destroy(); } catch(e){} });
+    Pages._encuestaCharts = [];
 
-    const respuestas = this._encuestaRespuestas || [];
-    const colores = this._encuestaColores();
+    const respuestas = Pages._encuestaRespuestas || [];
+    const colores = Pages._encuestaColores();
     const tipos = ['estudiante', 'profesional', 'emprendedor', 'aficionado'];
-    const labelsTipo = this._encuestaLabels.tipo;
-    const porTipo = this._encuestaContar(respuestas, null, 'tipo');
+    const labelsTipo = Pages._encuestaLabels.tipo;
+    const porTipo = Pages._encuestaContar(respuestas, null, 'tipo');
     const vistas = filtro === 'todos' ? respuestas : respuestas.filter(r => r.tipo === filtro);
 
     let html = `
@@ -5639,7 +5639,7 @@ const Pages={
     const ramasAMostrar = filtro === 'todos' ? tipos : [filtro];
     ramasAMostrar.forEach(t => {
       if (!porTipo[t]) return;
-      const preguntas = this._encuestaPreguntasPorTipo[t];
+      const preguntas = Pages._encuestaPreguntasPorTipo[t];
       html += `
         <div class="section-header"><h2 class="section-header__title">${labelsTipo[t]}<span class="section-header__badge">${porTipo[t]}</span></h2></div>
         <div class="dash-grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-bottom:28px;">
@@ -5653,7 +5653,7 @@ const Pages={
 
     html += `<div class="section-header"><h2 class="section-header__title">En común${filtro!=='todos' ? ' · ' + labelsTipo[filtro] : ''}</h2></div>
       <div class="dash-grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-bottom:28px;">
-        ${this._encuestaPreguntasComunes.map(preg => `
+        ${Pages._encuestaPreguntasComunes.map(preg => `
           <div class="dash-card" style="padding:18px;">
             <div style="font-size:12.5px;font-weight:600;color:var(--text-2);margin-bottom:10px;">${preg.titulo}</div>
             <canvas id="enc-chart-comun-${preg.id}" height="180"></canvas>
@@ -5670,7 +5670,7 @@ const Pages={
     </div>`;
 
     const selectFiltro = document.getElementById('enc-filtro-tipo');
-    if (selectFiltro) selectFiltro.addEventListener('change', e => this._encuestaRenderFiltrado(p, e.target.value));
+    if (selectFiltro) selectFiltro.addEventListener('change', e => Pages._encuestaRenderFiltrado(p, e.target.value));
 
     if (typeof Chart === 'undefined') return; // CDN bloqueado/sin internet: se queda en las tarjetas de arriba
     const textoColor = getComputedStyle(document.documentElement).getPropertyValue('--text-2');
@@ -5680,7 +5680,7 @@ const Pages={
     const barChart = (ctx, labelsMap, conteo) => {
       if (!ctx) return;
       const claves = Object.keys(conteo);
-      this._encuestaCharts.push(new Chart(ctx, {
+      Pages._encuestaCharts.push(new Chart(ctx, {
         type: 'bar',
         data: { labels: claves.map(k => labelsMap[k] || k), datasets: [{ data: claves.map(k => conteo[k]), backgroundColor: colores }] },
         options: {
@@ -5696,7 +5696,7 @@ const Pages={
 
     const ctxTipo = document.getElementById('enc-chart-tipo');
     if (ctxTipo) {
-      this._encuestaCharts.push(new Chart(ctxTipo, {
+      Pages._encuestaCharts.push(new Chart(ctxTipo, {
         type: 'pie',
         data: {
           labels: tipos.filter(t => porTipo[t]).map(t => labelsTipo[t]),
@@ -5708,13 +5708,13 @@ const Pages={
 
     ramasAMostrar.forEach(t => {
       if (!porTipo[t]) return;
-      this._encuestaPreguntasPorTipo[t].forEach(preg => {
-        barChart(document.getElementById(`enc-chart-${t}-${preg.id}`), this._encuestaLabels[preg.id] || {}, this._encuestaContar(respuestas, t, preg.id));
+      Pages._encuestaPreguntasPorTipo[t].forEach(preg => {
+        barChart(document.getElementById(`enc-chart-${t}-${preg.id}`), Pages._encuestaLabels[preg.id] || {}, Pages._encuestaContar(respuestas, t, preg.id));
       });
     });
 
-    this._encuestaPreguntasComunes.forEach(preg => {
-      barChart(document.getElementById(`enc-chart-comun-${preg.id}`), this._encuestaLabels[preg.id] || {}, this._encuestaContar(vistas, null, preg.id));
+    Pages._encuestaPreguntasComunes.forEach(preg => {
+      barChart(document.getElementById(`enc-chart-comun-${preg.id}`), Pages._encuestaLabels[preg.id] || {}, Pages._encuestaContar(vistas, null, preg.id));
     });
   },
 
