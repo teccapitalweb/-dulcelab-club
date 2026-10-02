@@ -5551,7 +5551,7 @@ const Pages={
     objetivo_aficionado: { hobby: 'Pasatiempo', familia: 'Sorprender a familia/amigos', explorar: 'Explorar si se dedica a esto', ocasional: 'Vender/regalar ocasionalmente' },
     intereses_aficionado: { cocina: 'Cocina', reposteria: 'Repostería', panaderia: 'Panadería', inocuidad: 'Inocuidad', costos: 'Costos', produccion: 'Producción', emprendimiento: 'Emprendimiento' },
     formato_aficionado: { vivo: 'Clases en vivo', grabados: 'Cursos grabados', pdfs: 'PDFs', plantillas: 'Plantillas', herramientas: 'Herramientas', retos: 'Retos' },
-    membresia: { cursos: 'Cursos completos', vivo: 'Clases en vivo', rapidos: 'Videos rápidos', plantillas: 'Plantillas de trabajo', calculadoras: 'Calculadoras y herramientas', recetas: 'Recetas', retos: 'Retos prácticos', certificados: 'Certificados', comunidad: 'Comunidad', asesoria: 'Asesoría' },
+    membresia: { cursos: 'Cursos completos', vivo: 'Clases en vivo', plantillas: 'Plantillas de trabajo', calculadoras: 'Calculadoras y herramientas', retos: 'Retos prácticos', comunidad: 'Comunidad', certificados: 'Certificados' },
     tiempo_disponible: { menos1: 'Menos de 1 h/sem', uno_dos: '1 a 2 h/sem', tres_cinco: '3 a 5 h/sem', mas5: 'Más de 5 h/sem' }
   },
   _encuestaPreguntasPorTipo: {
@@ -5609,7 +5609,7 @@ const Pages={
       .sort((a,b) => conteo[b]-conteo[a])
       .map((k,i) => `
         <div class="enc-barra">
-          <div class="enc-barra__cab"><span>${labelsMap[k]||k}</span><strong>${conteo[k]}</strong></div>
+          <div class="enc-barra__cab"><span>${labelsMap[k]||(k+' (ya no se pregunta)')}</span><strong>${conteo[k]}</strong></div>
           <div class="enc-barra__pista"><div class="enc-barra__rel" style="width:${Math.round(conteo[k]/max*100)}%;background:${colores[i%colores.length]};"></div></div>
         </div>`).join('') + `</div>`;
   },
