@@ -912,7 +912,7 @@ body{
 .enc-opportunity strong{display:block;color:var(--text);font-size:11px;margin-bottom:2px}
 .enc-opportunity:first-of-type{border-top:0;padding-top:0}.enc-opportunity:first-of-type::before{top:6px}
 .enc-segment-label{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1.25px;text-transform:uppercase;color:var(--text-3);margin:0 0 9px}
-.enc-segments{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:18px}
+.enc-segments{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:18px}
 .enc-segment{position:relative;overflow:hidden;text-align:left;padding:13px 14px;border-radius:14px;border:1px solid var(--border);background:var(--surface);color:var(--text);transition:transform .18s,border-color .18s,box-shadow .18s}
 .enc-segment:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--enc-tone) 45%,var(--border));box-shadow:0 8px 15px color-mix(in srgb,var(--enc-tone) 10%,transparent)}
 .enc-segment.is-active{border-color:var(--enc-tone);background:color-mix(in srgb,var(--enc-tone) 8%,var(--surface))}
@@ -924,7 +924,7 @@ body{
 .enc-data-section{margin-top:22px}.enc-data-section__head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.enc-data-section__head h3{font-size:16px;letter-spacing:-.3px;margin:0}.enc-data-section__head span{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:var(--text-3);padding:4px 8px;background:var(--surface-2);border-radius:100px}
 .enc-question-card{background:var(--surface);border:1px solid var(--border);border-radius:15px;padding:16px 17px}.enc-question-card__title{font-size:12.5px;font-weight:700;line-height:1.35;color:var(--text);margin-bottom:13px}.enc-question-card__title::before{content:"";display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--primary);margin:0 7px 2px 0}
 .enc-empty-inline{padding:15px;border:1px dashed var(--border-2);border-radius:12px;color:var(--text-3);font-size:12px;text-align:center}
-@media(max-width:900px){.enc-overview{grid-template-columns:1fr}.enc-segments{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:900px){.enc-overview{grid-template-columns:1fr}.enc-segments{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:620px){.enc-overview__lead,.enc-opportunities{padding:18px}.enc-overview__number{font-size:40px}.enc-workbench{align-items:flex-start;flex-direction:column}.enc-filter-pills{justify-content:flex-start}.enc-segments{gap:7px}.enc-segment{padding:11px}.enc-segment__value{font-size:23px}}
 .dash-card__title{font-family:'Plus Jakarta Sans','Inter',sans-serif;font-size:15px;font-weight:700;letter-spacing:-.2px;display:flex;align-items:center;gap:8px}
 .dash-card__title .ic{width:18px;height:18px;color:var(--primary)}
@@ -5551,54 +5551,31 @@ const Pages={
   // ofrecerle a cada segmento.
   // ═══════════════════════════════════════════════════════════════
   _encuestaLabels: {
-    tipo: { estudiante: 'Estudiante', profesional: 'Profesional', emprendedor: 'Emprendedor', aficionado: 'Aprende por gusto' },
-    objetivo_estudiante: { mejorar: 'Mejorar sus habilidades', trabajar: 'Prepararse para trabajar', emprender: 'Emprender', complementar: 'Complementar estudios' },
-    intereses_estudiante: { cocina: 'Cocina', reposteria: 'Repostería', panaderia: 'Panadería', inocuidad: 'Inocuidad', costos: 'Costos', produccion: 'Producción', emprendimiento: 'Emprendimiento' },
-    formato_estudiante: { vivo: 'Clases en vivo', grabados: 'Cursos grabados', pdfs: 'PDFs', plantillas: 'Plantillas', herramientas: 'Herramientas', retos: 'Retos' },
-    area_profesional: { cocina: 'Cocina', reposteria: 'Repostería', panaderia: 'Panadería', produccion: 'Producción de alimentos', calidad: 'Calidad e inocuidad', administracion: 'Administración', otra: 'Otra área' },
-    reto_profesional: { actualizar: 'Actualizar conocimientos', procesos: 'Mejorar procesos', costos: 'Reducir costos', inventarios: 'Controlar inventarios y mermas', normativas: 'Aprender normativas', especializarme: 'Especializarse', crecer: 'Crecer profesionalmente' },
-    temas_profesional: { cocina: 'Cocina', reposteria: 'Repostería', panaderia: 'Panadería', inocuidad: 'Inocuidad', costos: 'Costos', produccion: 'Producción', emprendimiento: 'Emprendimiento' },
-    etapa_emprendedor: { idea: 'Solo la idea', comenzando: 'Comenzando', activo: 'Ya tiene negocio', creciendo: 'Negocio creciendo' },
-    tipo_negocio_emprendedor: { reposteria: 'Repostería', panaderia: 'Panadería', restaurante: 'Restaurante', cafeteria: 'Cafetería', catering: 'Catering', procesados: 'Alimentos procesados', casa: 'Venta desde casa', otro: 'Otro' },
-    problema_emprendedor: { precios: 'No sabe cuánto cobrar', costos: 'No controla sus costos', inventarios: 'Problemas con inventarios', merma: 'Mucha merma', ventas: 'Necesita vender más', productos: 'Mejores productos', produccion: 'Ordenar producción', inocuidad: 'Mejorar inocuidad/calidad' },
-    objetivo_aficionado: { hobby: 'Pasatiempo', familia: 'Sorprender a familia/amigos', explorar: 'Explorar si se dedica a esto', ocasional: 'Vender/regalar ocasionalmente' },
-    intereses_aficionado: { cocina: 'Cocina', reposteria: 'Repostería', panaderia: 'Panadería', inocuidad: 'Inocuidad', costos: 'Costos', produccion: 'Producción', emprendimiento: 'Emprendimiento' },
-    formato_aficionado: { vivo: 'Clases en vivo', grabados: 'Cursos grabados', pdfs: 'PDFs', plantillas: 'Plantillas', herramientas: 'Herramientas', retos: 'Retos' },
-    membresia: { cursos: 'Cursos completos', vivo: 'Clases en vivo', rapidos: 'Videos rápidos', plantillas: 'Plantillas de trabajo', calculadoras: 'Calculadoras y herramientas', recetas: 'Recetas', retos: 'Retos prácticos', certificados: 'Certificados', comunidad: 'Comunidad', asesoria: 'Asesoría', ninguno: 'Ninguno me interesó' },
-    tiempo_disponible: { menos1: 'Menos de 1 h/sem', uno_dos: '1 a 2 h/sem', tres_cinco: '3 a 5 h/sem', mas5: 'Más de 5 h/sem' }
+    tipo: { estudiante: 'Aprendiz', profesional: 'Profesional', emprendedor: 'Emprendedor' },
+    objetivo_estudiante: { desde_cero: 'Aprender desde cero', tecnica: 'Mejorar su técnica', empleo: 'Prepararse para trabajar o emprender' },
+    reto_profesional: { actualizar: 'Actualizarse o especializarse', costos: 'Reducir costos y mermas', procesos: 'Ordenar procesos y calidad' },
+    problema_emprendedor: { precios: 'No sabe cuánto cobrar', costos: 'No controla costos, inventario y merma', produccion: 'Ordenar producción y calidad' },
+    area_interes: { reposteria: 'Repostería', panaderia: 'Panadería', cocina: 'Cocina' },
+    formato: { grabados: 'Cursos grabados', vivo: 'Clases en vivo', herramientas: 'Plantillas y calculadoras' },
+    tiempo_disponible: { menos1: 'Menos de 1 h/sem', uno_tres: '1 a 3 h/sem', mas3: 'Más de 3 h/sem' }
   },
+  // Cada tipo de persona contesta UNA pregunta propia (su mayor reto).
   _encuestaPreguntasPorTipo: {
-    estudiante: [
-      { id: 'objetivo_estudiante', titulo: '¿Qué buscan conseguir?' },
-      { id: 'intereses_estudiante', titulo: '¿Qué les interesa aprender?' },
-      { id: 'formato_estudiante', titulo: '¿Qué recursos prefieren?' }
-    ],
-    profesional: [
-      { id: 'area_profesional', titulo: '¿En qué área trabajan?' },
-      { id: 'reto_profesional', titulo: '¿Cuál es su mayor reto?' },
-      { id: 'temas_profesional', titulo: '¿Qué temas quieren profundizar?' }
-    ],
-    emprendedor: [
-      { id: 'etapa_emprendedor', titulo: '¿En qué etapa están?' },
-      { id: 'tipo_negocio_emprendedor', titulo: '¿Qué tipo de negocio?' },
-      { id: 'problema_emprendedor', titulo: '¿Cuál es su principal problema?' }
-    ],
-    aficionado: [
-      { id: 'objetivo_aficionado', titulo: '¿Qué les gustaría lograr?' },
-      { id: 'intereses_aficionado', titulo: '¿Qué les gustaría aprender?' },
-      { id: 'formato_aficionado', titulo: '¿Qué recursos prefieren?' }
-    ]
+    estudiante: [{ id: 'objetivo_estudiante', titulo: '¿Qué quieren lograr?' }],
+    profesional: [{ id: 'reto_profesional', titulo: '¿Qué es lo que más les complica en su trabajo?' }],
+    emprendedor: [{ id: 'problema_emprendedor', titulo: '¿Qué es lo que más les complica en su negocio?' }]
   },
+  // Las otras 3 las contestan todos.
   _encuestaPreguntasComunes: [
-    { id: 'membresia', titulo: '¿Qué contenidos sí usarían?' },
-    { id: 'tiempo_disponible', titulo: '¿Cuánto tiempo pueden dedicar a la semana?' }
+    { id: 'area_interes', titulo: '¿Con qué área quieren empezar?' },
+    { id: 'formato', titulo: '¿Qué les ayudaría más para aprender? (qué producir primero)' },
+    { id: 'tiempo_disponible', titulo: '¿Cuánto tiempo tienen a la semana?' }
   ],
   // Pregunta más diagnóstica de cada rama, para el panel de hallazgos.
   _encuestaPreguntaClave: {
     estudiante: 'objetivo_estudiante',
     profesional: 'reto_profesional',
-    emprendedor: 'problema_emprendedor',
-    aficionado: 'objetivo_aficionado'
+    emprendedor: 'problema_emprendedor'
   },
   _encuestaColores(){
     const cs = getComputedStyle(document.documentElement);
@@ -5612,7 +5589,7 @@ const Pages={
     ];
   },
   // Preguntas donde cada persona pudo marcar varias opciones.
-  _encuestaMulti: ['intereses_estudiante','formato_estudiante','temas_profesional','intereses_aficionado','formato_aficionado','membresia'],
+  _encuestaMulti: [], // ya no hay preguntas de varias opciones: todas son de una sola
   _encuestaPaleta: ['#6B1526','#C99A3D','#4A6B85','#4E7A44','#C1594A','#7A93A8','#8A6D3B','#A8527A','#5B8C85','#9A9A9A'],
   // Cuántas personas contestaron esa pregunta (en el grupo que se está viendo).
   _encuestaPersonas(respuestas, filtroTipo, preguntaId){
@@ -5658,7 +5635,7 @@ const Pages={
   // de la pregunta clave de cada segmento, con un nivel de prioridad según
   // qué tan dominante fue esa respuesta dentro del segmento.
   _encuestaHallazgos(respuestas){
-    const tipos = ['estudiante', 'profesional', 'emprendedor', 'aficionado'];
+    const tipos = ['estudiante', 'profesional', 'emprendedor'];
     const labelsTipo = Pages._encuestaLabels.tipo;
     const hallazgos = [];
     tipos.forEach(t => {
@@ -5749,21 +5726,21 @@ const Pages={
   _encuestaRenderFiltrado(p, filtro){
     const respuestas = Pages._encuestaRespuestas || [];
     const colores = Pages._encuestaColores();
-    const tipos = ['estudiante', 'profesional', 'emprendedor', 'aficionado'];
+    const tipos = ['estudiante', 'profesional', 'emprendedor'];
     const labelsTipo = Pages._encuestaLabels.tipo;
     const porTipo = Pages._encuestaContar(respuestas, null, 'tipo');
     const vistas = filtro === 'todos' ? respuestas : respuestas.filter(r => r.tipo === filtro);
     const hallazgos = Pages._encuestaHallazgos(vistas).slice(0, 5);
 
     const total = respuestas.length || 1;
-    const iconos = { estudiante:'🎓', profesional:'👩‍🍳', emprendedor:'🚀', aficionado:'🍰' };
+    const iconos = { estudiante:'🎓', profesional:'👩‍🍳', emprendedor:'🚀' };
     const nombreVista = filtro === 'todos' ? 'toda tu audiencia' : labelsTipo[filtro].toLowerCase();
     let html = `
       <section class="enc-overview">
         <div class="enc-overview__lead">
           <div class="enc-kicker">Lectura de audiencia</div>
           <div class="enc-overview__number">${vistas.length}</div>
-          <p class="enc-overview__copy">${filtro === 'todos' ? 'personas ya te dijeron qué quieren aprender y qué obstáculos tienen.' : `respuesta${vistas.length === 1 ? '' : 's'} de ${nombreVista}.`}</p>
+          <p class="enc-overview__copy">${filtro === 'todos' ? 'personas ya te dijeron su mayor reto, el área y el formato que prefieren.' : `respuesta${vistas.length === 1 ? '' : 's'} de ${nombreVista}.`}</p>
           <div class="enc-segment-label" style="margin-top:18px;">Elige un perfil para analizarlo</div>
           <div class="enc-segments">
             ${tipos.map((t,i) => {
