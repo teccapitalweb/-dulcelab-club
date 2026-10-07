@@ -2829,6 +2829,7 @@ const Pages={
   _modalCurso: {
     sesiones: [],
     materiales: [],
+    pruebaGratis: true,
     editandoId: null
   },
 
@@ -2848,6 +2849,7 @@ const Pages={
           desbloqueaConClase: typeof m.desbloqueaConClase === 'number' ? m.desbloqueaConClase : null
         }))
       : [];
+    this._modalCurso.pruebaGratis = !esEdicion || curso.pruebaGratis !== false;
 
     // Áreas dinámicas (de los cursos existentes + las estándar de DulceLab Food)
     const store = window.AdminStore;
@@ -2926,6 +2928,15 @@ const Pages={
           </div>
         </div>
       </div>
+
+      <!-- Sesiones (clases) -->
+      <label style="display:flex;align-items:flex-start;gap:11px;padding:14px 15px;margin-top:16px;border:1px solid color-mix(in srgb,var(--success) 38%,var(--border));border-radius:12px;cursor:pointer;background:color-mix(in srgb,var(--success) 7%,var(--surface));">
+        <input type="checkbox" id="cf-prueba-gratis" ${this._modalCurso.pruebaGratis ? 'checked' : ''} style="width:18px;height:18px;margin-top:1px;accent-color:var(--success);flex-shrink:0;">
+        <div>
+          <div style="font-size:13.5px;font-weight:800;color:var(--success);">Este curso puede elegirse como prueba gratuita</div>
+          <div style="font-size:11.5px;color:var(--text-3);margin-top:3px;line-height:1.45;">Quien lo elija podrá avanzar por las primeras 4 clases, en orden. Las demás clases y el certificado siguen siendo exclusivos de la membresía VIP.</div>
+        </div>
+      </label>
 
       <!-- Sesiones (clases) -->
       <div style="background:var(--surface-2);border:1px solid var(--border-2);border-radius:12px;padding:14px;margin-top:16px;">
@@ -3026,10 +3037,6 @@ const Pages={
         <div style="flex:1;display:flex;flex-direction:column;gap:6px;min-width:0;">
           <input type="text" class="input" placeholder="Título de la clase" value="${(s.titulo || '').replace(/"/g,'&quot;')}" data-sesion-idx="${idx}" data-sesion-campo="titulo" style="font-size:13px;padding:8px 11px;">
           <input type="url" class="input" placeholder="URL del video (Google Drive, YouTube, etc.)" value="${(s.url || '').replace(/"/g,'&quot;')}" data-sesion-idx="${idx}" data-sesion-campo="url" style="font-size:13px;padding:8px 11px;">
-          <label style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text-2);cursor:pointer;margin-top:2px;">
-            <input type="checkbox" data-sesion-gratis="${idx}" ${s.gratis === true ? 'checked' : ''} style="width:15px;height:15px;accent-color:var(--primary);cursor:pointer;">
-            🎁 <strong style="color:var(--text);">Clase gratis</strong> <span style="color:var(--text-3);">· visible sin membresía</span>
-          </label>
           <label style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text-2);cursor:pointer;">
             <input type="checkbox" data-sesion-act-on="${idx}" ${s.actividad ? 'checked' : ''} style="width:15px;height:15px;accent-color:var(--primary);cursor:pointer;">
             🎮 <strong style="color:var(--text);">Agregar actividad al terminar esta clase</strong>
@@ -3062,12 +3069,6 @@ const Pages={
         const idx = parseInt(input.dataset.sesionIdx, 10);
         const campo = input.dataset.sesionCampo;
         if (Pages._modalCurso.sesiones[idx]) Pages._modalCurso.sesiones[idx][campo] = e.target.value;
-      });
-    });
-    cont.querySelectorAll('[data-sesion-gratis]').forEach(chk => {
-      chk.addEventListener('change', (e) => {
-        const idx = parseInt(chk.dataset.sesionGratis, 10);
-        if (Pages._modalCurso.sesiones[idx]) Pages._modalCurso.sesiones[idx].gratis = e.target.checked;
       });
     });
     // MODIFICADO: bindings de la actividad dinámica por clase (ahorcado / verdadero-falso / opción múltiple)
@@ -3187,7 +3188,7 @@ const Pages={
   },
 
   _agregarSesionModal() {
-    this._modalCurso.sesiones.push({ numero: this._modalCurso.sesiones.length + 1, titulo: '', url: '', gratis: false });
+    this._modalCurso.sesiones.push({ numero: this._modalCurso.sesiones.length + 1, titulo: '', url: '' });
     this._renderSesionesModal();
   },
   _moverSesionModal(idx, delta) {
@@ -3303,6 +3304,7 @@ const Pages={
       const horasRaw = parseInt(document.getElementById('cf-horas').value, 10);
       const dispRadio = document.querySelector('input[name="cf-disp"]:checked');
       const disponibleSiempre = dispRadio?.value === 'siempre';
+      const pruebaGratis = document.getElementById('cf-prueba-gratis')?.checked === true;
 
       // Validaciones
       if (!titulo) { Toast.error('Falta el título', 'El curso necesita un nombre'); document.getElementById('cf-titulo')?.focus(); throw new Error('skip'); }
@@ -3414,6 +3416,7 @@ const Pages={
         sesiones: sesionesLimpias,
         materiales: matsLimpios,
         disponibleSiempre,
+        pruebaGratis,
         activo: true,
         disponible: true
       };
