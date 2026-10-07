@@ -3075,6 +3075,12 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 .mat-item.is-selected .book__cover{outline:2px solid #E5C171;outline-offset:3px}
 .mat-item:focus-visible .book__cover{outline:2px solid var(--primary);outline-offset:3px}
 .mat-empty{text-align:center;padding:56px 24px;background:var(--surface-2);border:1px dashed var(--border-2);border-radius:14px;color:var(--text-3);font-size:13px}
+/* Biblioteca de lecturas: se desbloquea con los XP conseguidos en Retos. */
+.xp-library{margin:0 0 30px;padding:22px;border:1px solid var(--border);border-radius:20px;background:linear-gradient(135deg,color-mix(in srgb,var(--primary) 7%,var(--surface)),var(--surface) 62%)}
+.xp-library__head{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:17px}.xp-library__eyebrow{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:1.35px;text-transform:uppercase;color:var(--primary)}.xp-library__title{font-size:20px;font-weight:800;letter-spacing:-.45px;color:var(--text);margin:5px 0 0}.xp-library__sub{max-width:620px;font-size:12.5px;color:var(--text-2);line-height:1.5;margin:7px 0 0}.xp-library__score{flex:none;min-width:104px;padding:10px 12px;border-radius:12px;text-align:center;background:var(--surface-2);border:1px solid var(--border)}.xp-library__score b{display:block;font-size:18px;color:var(--primary);line-height:1}.xp-library__score span{display:block;margin-top:3px;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;color:var(--text-3)}
+.xp-library__progress{height:7px;margin-bottom:18px;overflow:hidden;border-radius:99px;background:var(--surface-3)}.xp-library__progress i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--primary),var(--accent,#D5A13D));transition:width .5s ease}
+.xp-books{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}.xp-book{position:relative;isolation:isolate;overflow:hidden;min-height:180px;padding:17px;border:1px solid color-mix(in srgb,var(--book-color,var(--primary)) 27%,var(--border));border-radius:15px;text-align:left;background:linear-gradient(145deg,color-mix(in srgb,var(--book-color,var(--primary)) 21%,var(--surface)),var(--surface) 66%);color:var(--text);cursor:pointer;transition:transform .2s,border-color .2s,box-shadow .2s}.xp-book::before{content:"";position:absolute;z-index:-1;right:-30px;bottom:-38px;width:145px;height:145px;border:1px solid color-mix(in srgb,var(--book-color,var(--primary)) 28%,transparent);border-radius:50%;box-shadow:0 0 0 20px color-mix(in srgb,var(--book-color,var(--primary)) 6%,transparent)}.xp-book:hover{transform:translateY(-3px);border-color:var(--book-color,var(--primary));box-shadow:0 12px 24px color-mix(in srgb,var(--book-color,var(--primary)) 14%,transparent)}.xp-book__top{display:flex;align-items:center;justify-content:space-between;gap:8px}.xp-book__icon{width:36px;height:36px;display:grid;place-items:center;border-radius:11px;background:color-mix(in srgb,var(--book-color,var(--primary)) 18%,var(--surface-2));color:var(--book-color,var(--primary))}.xp-book__icon .ic{width:18px;height:18px}.xp-book__xp{padding:4px 7px;border-radius:999px;background:color-mix(in srgb,var(--book-color,var(--primary)) 13%,transparent);font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:800;letter-spacing:.5px;color:var(--book-color,var(--primary))}.xp-book h3{margin:20px 0 5px;font-size:15px;font-weight:800;letter-spacing:-.25px;line-height:1.2}.xp-book p{font-size:11.5px;color:var(--text-2);line-height:1.45}.xp-book__state{display:flex;align-items:center;gap:5px;margin-top:14px;font-size:11px;font-weight:700;color:var(--book-color,var(--primary))}.xp-book.is-locked{filter:saturate(.58)}.xp-book.is-locked::after{content:"🔒";position:absolute;right:13px;bottom:12px;display:grid;place-items:center;width:29px;height:29px;border-radius:50%;background:var(--surface);border:1px solid var(--border);font-size:12px}.xp-book.is-locked .xp-book__state{color:var(--text-3)}
+@media(max-width:900px){.xp-books{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:600px){.xp-library{padding:18px 15px}.xp-library__head{align-items:flex-start;flex-direction:column}.xp-library__score{align-self:flex-start}.xp-books{grid-template-columns:1fr}.xp-book{min-height:150px}.xp-book h3{margin-top:14px}}
 @media (max-width:880px){
   .mat-feat{grid-template-columns:1fr;gap:26px;justify-items:center}
   .mat-feat__info{width:100%}
@@ -9928,6 +9934,17 @@ const Sections = (function(){
   }
 
   async function renderPDFs(container){
+    // Las lecturas de gastronomía se desbloquean por XP real de los retos.
+    if (!_progresoListo) await _cargarProgreso();
+    const xpActual = Number(_progreso.xp) || 0;
+    const librosXP = [
+      { id:'mise', xp:0, icon:'i-book', color:'#6B1526', titulo:'Mise en place sin estrés', desc:'Organiza tu estación y produce mejor.', lectura:'Una buena producción comienza antes de encender la estufa: ordena ingredientes, utensilios y tiempos. Usa listas cortas, pesa con anticipación y mantén cada preparación identificada.' },
+      { id:'reposteria', xp:100, icon:'i-bn-whisk', color:'#9E2A47', titulo:'Bases de repostería', desc:'Texturas, batidos y horneado esencial.', lectura:'Conoce las bases que dan consistencia a tus postres: pesaje exacto, control de temperatura, aireado de batidos y reposo. La técnica convierte una receta en un resultado repetible.' },
+      { id:'panaderia', xp:250, icon:'i-bn-rollingpin', color:'#B8862F', titulo:'Panadería y fermentación', desc:'Masas, levados y puntos de cocción.', lectura:'La fermentación depende del tiempo, la temperatura y la hidratación. Observa la masa, no solo el reloj: volumen, elasticidad y aroma te dicen cuándo está lista.' },
+      { id:'costos', xp:500, icon:'i-credit-card', color:'#7A1B30', titulo:'Costos que sí dejan ganancia', desc:'Fichas técnicas y precio de venta.', lectura:'Cada receta necesita una ficha técnica. Considera ingredientes, merma, empaque, gas, mano de obra y margen. Un precio correcto protege tu trabajo y hace crecer tu negocio.' },
+      { id:'inocuidad', xp:800, icon:'i-shield-check', color:'#4C7B63', titulo:'Cocina segura e inocuidad', desc:'Hábitos que cuidan a tus clientes.', lectura:'Lava manos y superficies, separa crudo de cocido y vigila las temperaturas. La inocuidad no es un paso extra: es parte de cada decisión en la cocina.' },
+      { id:'catering', xp:1200, icon:'i-users', color:'#8C3A4B', titulo:'Catering y producción', desc:'Planea porciones para eventos.', lectura:'Para producir a gran escala necesitas estandarizar: define porción, rendimiento, merma y tiempos de montaje. Primero planea, después ejecuta y por último evalúa.' }
+    ];
     // Asegurar cursos cargados antes de renderizar
     if (!_cursosLoaded && !_cursosLoading) {
       container.innerHTML = `
@@ -9983,6 +10000,7 @@ const Sections = (function(){
           </div>
           <div class="mat-chips" id="mat-chips"></div>
         </div>
+        <section class="xp-library" id="xp-library"></section>
         <div class="cursos-chips mat-areas" id="mat-areas"></div>
         <section class="mat-feat" id="mat-feat"></section>
         <div class="mat-shelf__head">
@@ -9995,9 +10013,32 @@ const Sections = (function(){
       </div>
     `;
     const $chips = container.querySelector('#mat-chips');
+    const $xpLibrary = container.querySelector('#xp-library');
     const $areas = container.querySelector('#mat-areas');
     const $feat = container.querySelector('#mat-feat');
     const $shelf = container.querySelector('#mat-shelf');
+
+    const abrirLibroXP = (libro) => {
+      const faltan = Math.max(0, libro.xp - xpActual);
+      if (faltan > 0) {
+        Modal.open({
+          id:'libro-xp-bloqueado', title:'Sigue sumando XP', subtitle:libro.titulo, icon:'i-shield-check',
+          body:`<div style="padding:10px 2px 4px;line-height:1.6;color:var(--text-2);font-size:13px">Esta lectura se desbloquea con <strong style="color:var(--primary)">${libro.xp.toLocaleString('es-MX')} XP</strong>. Te faltan <strong style="color:var(--text)">${faltan.toLocaleString('es-MX')} XP</strong>. Completa retos gastronómicos para avanzar.</div>`,
+          footer:`<button class="btn btn--ghost" onclick="Modal.close('libro-xp-bloqueado')">Después</button><button class="btn btn--primary" onclick="Modal.close('libro-xp-bloqueado');navigateToSection('retos')">Ver retos</button>`
+        });
+        return;
+      }
+      Modal.open({
+        id:'libro-xp-lectura', title:libro.titulo, subtitle:'Lectura desbloqueada · Biblioteca DulceLab Food', icon:libro.icon,
+        body:`<article style="padding:8px 2px 5px"><p style="font-size:15px;line-height:1.75;color:var(--text-2);margin:0">${libro.lectura}</p><div style="margin-top:18px;padding:12px 14px;border-radius:12px;background:color-mix(in srgb,var(--primary) 9%,var(--surface));font-size:12px;line-height:1.5;color:var(--text-2)"><strong style="color:var(--text)">Tip DulceLab Food:</strong> guarda esta idea y aplícala en tu próxima práctica.</div></article>`,
+        footer:`<button class="btn btn--primary" onclick="Modal.close('libro-xp-lectura')">Listo</button>`
+      });
+    };
+    $xpLibrary.innerHTML = `
+      <div class="xp-library__head"><div><div class="xp-library__eyebrow">Lecturas que ganas en retos</div><h2 class="xp-library__title">Biblioteca de crecimiento gastronómico</h2><p class="xp-library__sub">Completa retos, suma XP y desbloquea nuevas guías para llevar tu técnica y tu negocio más lejos.</p></div><div class="xp-library__score"><b>${xpActual.toLocaleString('es-MX')} XP</b><span>Tu progreso</span></div></div>
+      <div class="xp-library__progress" aria-label="Progreso hacia la última lectura"><i style="width:${Math.min(100,(xpActual / 1200) * 100)}%"></i></div>
+      <div class="xp-books">${librosXP.map(libro => { const abierto = xpActual >= libro.xp; const faltan = Math.max(0, libro.xp - xpActual); return `<button type="button" class="xp-book ${abierto ? 'is-unlocked' : 'is-locked'}" data-xp-book="${libro.id}" style="--book-color:${libro.color}"><span class="xp-book__top"><span class="xp-book__icon"><svg class="ic"><use href="#${libro.icon}"/></svg></span><span class="xp-book__xp">${libro.xp} XP</span></span><h3>${libro.titulo}</h3><p>${libro.desc}</p><span class="xp-book__state">${abierto ? '✓ Lectura disponible' : `Faltan ${faltan} XP`}</span></button>`; }).join('')}</div>`;
+    $xpLibrary.querySelectorAll('[data-xp-book]').forEach(btn => btn.addEventListener('click', () => abrirLibroXP(librosXP.find(l => l.id === btn.dataset.xpBook))));
 
     const filtrar = () => materialesTodos.filter(m => {
       if (fTipo === 'guardados' && !guardados.has(m.id)) return false;
