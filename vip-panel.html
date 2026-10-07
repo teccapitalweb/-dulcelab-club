@@ -153,6 +153,9 @@ body{
   -webkit-mask:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>') no-repeat center/contain;
   mask:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>') no-repeat center/contain;
 }
+/* Las herramientas se pueden explorar sin membresía: el bloqueo ocurre al intentar usarlas. */
+.herramientas-bloqueadas .nav-item[data-tool]::after,
+.herramientas-bloqueadas .mobile-drawer__item[data-tool]::after{display:none}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.85)}}
 
 /* MAIN */
@@ -4681,7 +4684,7 @@ function toolRequiereVIP(nombreHerramienta){
   if (typeof window.__showPaywallModal === 'function'){
     window.__showPaywallModal({
       title: 'Función exclusiva para miembros VIP',
-      sub: 'Las Herramientas Pro son exclusivas para miembros VIP. Hazte miembro para ver los resultados de ' + (nombreHerramienta||'las calculadoras') + ' y descargar tus reportes en PDF.'
+      sub: 'Activa tu membresía para usar ' + (nombreHerramienta||'esta calculadora') + ', ver sus resultados y descargar tus reportes en PDF.'
     });
   } else if (typeof Toast !== 'undefined') {
     Toast.info('Solo VIP','Activa tu membresía para usar esta función.');
@@ -4825,7 +4828,7 @@ const Tools = {
 /* Shell común de cada herramienta-sección */
 function bnToolShell(container, cfg){
   const lock = (typeof toolEsVIP==='function' && !toolEsVIP())
-    ? '<div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;background:color-mix(in srgb,var(--primary) 10%,var(--surface));border:1px solid color-mix(in srgb,var(--primary) 35%,var(--border-2));border-radius:14px;padding:14px 16px;margin-bottom:16px"><div style="flex:1;min-width:200px"><div style="font-weight:700;color:var(--text);font-size:13.5px">Herramienta Pro · exclusiva para miembros VIP</div><div style="color:var(--text-2);font-size:12px;margin-top:3px">Puedes explorarla y capturar datos, pero el resultado y el reporte PDF requieren una membresía activa.</div></div><button class="btn btn--primary btn--sm bn-viplock-btn">Hazte VIP</button></div>'
+    ? '<div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;background:color-mix(in srgb,var(--primary) 10%,var(--surface));border:1px solid color-mix(in srgb,var(--primary) 35%,var(--border-2));border-radius:14px;padding:14px 16px;margin-bottom:16px"><div style="flex:1;min-width:200px"><div style="font-weight:700;color:var(--text);font-size:13.5px">Vista previa de Herramientas Pro</div><div style="color:var(--text-2);font-size:12px;margin-top:3px">Puedes conocer cada calculadora. Para capturar datos, calcular resultados o descargar reportes, activa tu membresía.</div></div><button class="btn btn--primary btn--sm bn-viplock-btn">Activar membresía</button></div>'
     : '';
   container.innerHTML = `
     <div class="bn-tool fade-up">
@@ -4842,7 +4845,27 @@ function bnToolShell(container, cfg){
       ${lock}
       ${cfg.body}
     </div>`;
-  return container.querySelector('.bn-tool');
+  const tool = container.querySelector('.bn-tool');
+  /* Sin membresía se muestra toda la herramienta, pero no se permite operar. */
+  if(typeof toolEsVIP==='function' && !toolEsVIP()){
+    tool.classList.add('bn-tool--preview');
+    let ultimoIntento = 0;
+    const abrirSuscripcion = (e) => {
+      const control = e.target.closest('input, select, textarea, button, [contenteditable="true"]');
+      if(!control || control.closest('.bn-viplock-btn')) return;
+      e.preventDefault(); e.stopImmediatePropagation();
+      if(Date.now() - ultimoIntento < 600) return;
+      ultimoIntento = Date.now();
+      toolRequiereVIP(cfg.title);
+    };
+    tool.addEventListener('pointerdown', abrirSuscripcion, true);
+    tool.addEventListener('click', abrirSuscripcion, true);
+    tool.addEventListener('keydown', (e) => {
+      if(['Tab','Escape'].includes(e.key)) return;
+      abrirSuscripcion(e);
+    }, true);
+  }
+  return tool;
 }
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -8366,7 +8389,6 @@ const Sections = (function(){
 
   /* ============================ LOGROS ============================ */
   function renderHerramientas(container){
-    const accesoCompleto = tieneAccesoVipCompleto();
     const tools = [
       {key:'costeo', group:'costos', icon:'i-bn-leaf', title:'Costeo de receta', sub:'Suma ingredientes, margen y precio sugerido.', tag:'Para cotizar', use:'Margen y venta', color:'#6B1526'},
       {key:'porcion', group:'costos', icon:'i-credit-card', title:'Costo por porción', sub:'Divide el costo total y revisa tu margen real.', tag:'Para cobrar', use:'Precio unitario', color:'#9E2A47'},
@@ -8387,17 +8409,16 @@ const Sections = (function(){
           {key:'costos', eyebrow:'Decide con números', title:'Costos y rentabilidad', hint:'Cotiza y protege tu margen'},
           {key:'operacion', eyebrow:'Organiza tu producción', title:'Producción y operación', hint:'Ajusta recetas y planea mejor'}
         ].map(group=>`<section class="tools-group"><div class="tools-group__head"><div><div class="tools-group__eyebrow">${group.eyebrow}</div><h2 class="tools-group__title">${group.title}</h2></div><div class="tools-group__hint">${group.hint}</div></div><div class="tools-grid">${tools.filter(t=>t.group===group.key).map(t=>`
-          <article class="tool-pick-card${accesoCompleto?'':' tool-pick-card--locked'}" data-tool-pick="${t.key}" style="--tool-color:${t.color}">
+          <article class="tool-pick-card" data-tool-pick="${t.key}" style="--tool-color:${t.color}">
             <div class="tool-pick-card__top"><span class="tool-pick-card__icon"><svg class="ic"><use href="#${t.icon}"/></svg></span><span class="tool-pick-card__tag">${t.tag}</span></div>
             <h3 class="tool-pick-card__title">${t.title}</h3><p class="tool-pick-card__sub">${t.sub}</p>
-            <div class="tool-pick-card__foot"><span class="tool-pick-card__use">${t.use}</span>${accesoCompleto?`<span class="tool-pick-card__open">Abrir <svg class="ic"><use href="#i-arrow-right"/></svg></span>`:`<span class="tool-pick-card__open">🔒 Solo VIP</span>`}</div>
+            <div class="tool-pick-card__foot"><span class="tool-pick-card__use">${t.use}</span><span class="tool-pick-card__open">Ver herramienta <svg class="ic"><use href="#i-arrow-right"/></svg></span></div>
           </article>`).join('')}</div></section>`).join('')}
       </div>
     `;
     const toolSections = { costeo:'tool-costeo', conversor:'tool-conversor', merma:'tool-merma', catering:'tool-catering', horno:'tool-horno', porcion:'tool-porcion' };
     container.querySelectorAll('[data-tool-pick]').forEach(card=>{
       card.addEventListener('click', ()=>{
-        if(!accesoCompleto){ navigateToSection('suscripcion'); return; }
         navigateToSection(toolSections[card.dataset.toolPick]);
       });
     });
@@ -12694,11 +12715,11 @@ function initNav(){
       if (it.classList.contains('mobile-drawer__item')) {
         cerrarDrawerMovil();
       }
-      // Herramientas Pro y Comunidad: bloqueadas sin membresía activa
+      // Comunidad: exclusiva para miembros. Las herramientas sí se pueden explorar;
+      // la membresía solo se solicita al intentar usar una calculadora.
       const seccionesComunidadVIP = ['foro','directorio','canal','retos'];
-      const esHerramientaPro = !!it.dataset.tool;
       const esComunidadVIP = it.dataset.section && seccionesComunidadVIP.includes(it.dataset.section);
-      if((esHerramientaPro || esComunidadVIP) && typeof toolEsVIP==='function' && !toolEsVIP()){
+      if(esComunidadVIP && typeof toolEsVIP==='function' && !toolEsVIP()){
         if (it.classList.contains('mobile-drawer__item')) cerrarDrawerMovil();
         navigateToSection('suscripcion');
         return;
