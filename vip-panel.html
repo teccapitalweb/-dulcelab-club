@@ -4094,7 +4094,12 @@ window.__showWelcomeSplash = function(opts) {
     if (timer) clearInterval(timer);
     marcarMostrada();
     splash.style.animation = 'bnvFadeOut .3s ease forwards';
-    setTimeout(() => splash.remove(), 300);
+    setTimeout(() => {
+      splash.remove();
+      // La invitación de prueba aparece DESPUÉS de la bienvenida y solo para
+      // cuentas que aún no tienen acceso VIP ni han elegido su curso gratuito.
+      window.__mostrarInvitacionPruebaGratis?.();
+    }, 300);
   }
 
   // listeners
@@ -5428,33 +5433,32 @@ const Sections = (function(){
     return window.UserState?.isAdmin && !PREVIEW_AS_USER;
   }
 
-  // ═══ Acceso público controlado: muestra gratis del primer curso ═══
-  // La muestra incluye las primeras clases y materiales del primer curso
-  // publicable por orden. El resto del catálogo requiere membresía activa.
+  // ═══ Acceso público controlado: prueba gratuita elegida por el alumno ═══
+  // La prueba permite avanzar por las primeras cuatro clases del curso que la
+  // persona eligió. El curso completo y su certificado requieren membresía.
   function tieneAccesoVipCompleto() {
     if (PREVIEW_AS_USER) return false;
     return window.UserState?.modo === 'vip' || esAdminReal();
   }
 
+  const CLASES_PRUEBA_GRATIS = 4;
+  function _pruebaCursoKey() {
+    return `dulcelab_curso_prueba_${window.UserState?.uid || 'anon'}`;
+  }
   function cursoConPrimeraClaseGratis() {
-    return cursos.find(c =>
-      c &&
-      c.marcarProximamente !== true &&
-      Array.isArray(c.sesiones) &&
-      c.sesiones.length > 0
-    ) || null;
+    const elegido = localStorage.getItem(_pruebaCursoKey());
+    return cursos.find(c => c && c.id === elegido && c.marcarProximamente !== true &&
+      Array.isArray(c.sesiones) && c.sesiones.length > 0) || null;
+  }
+  function cursosElegiblesParaPrueba() {
+    return (cursos || []).filter(c => c && c.marcarProximamente !== true && Array.isArray(c.sesiones) && c.sesiones.length > 0);
   }
 
-  // MODIFICADO: antes tomaba automáticamente "las primeras N clases del primer curso"
-  // (número fijo CLASES_GRATIS). Ahora cada clase decide si es gratis con su propio
-  // checkbox en el admin (campo `gratis` en Firestore) — funciona en cualquier curso,
-  // sin depender de cuántas clases tenga ni de cuál sea "el primero".
   const MATERIALES_GRATIS = 1;
   function esPrimeraClaseGratis(cursoId, indexClase) {
     if (tieneAccesoVipCompleto()) return false;
-    const curso = cursos.find(c => c.id === cursoId);
-    const sesion = curso?.sesiones?.[Number(indexClase)];
-    return Boolean(sesion && sesion.gratis === true);
+    const curso = cursoConPrimeraClaseGratis();
+    return Boolean(curso && curso.id === cursoId && Number(indexClase) >= 0 && Number(indexClase) < Math.min(CLASES_PRUEBA_GRATIS, curso.sesiones.length));
   }
 
   function esMaterialGratis(cursoId, indexMaterial) {
@@ -5466,8 +5470,45 @@ const Sections = (function(){
   }
 
   function textoPaywallCurso(curso) {
-    return `Disfruta gratis las clases de muestra marcadas en este curso. Activa tu membresía para abrir el resto del contenido.`;
+    return `Tu prueba incluye las primeras ${CLASES_PRUEBA_GRATIS} clases del curso que elijas. Activa tu membresía para abrir el resto del contenido y obtener tu certificado.`;
   }
+
+  function abrirSelectorCursoPrueba() {
+    const opciones = cursosElegiblesParaPrueba();
+    if (!opciones.length) { Toast.info('Estamos preparando las clases gratuitas', 'Vuelve a intentarlo en un momento.'); return; }
+    const id = 'elegir-curso-prueba';
+    Modal.open({ id, size:'md', closeOnBackdrop:false, body: `
+      <div style="padding:6px 2px 2px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;"><div style="width:42px;height:42px;border-radius:12px;background:color-mix(in srgb,var(--success) 15%,var(--surface));display:grid;place-items:center;font-size:20px;">▶</div><div><div style="font-size:18px;font-weight:800;color:var(--text);">Elige tu curso gratuito</div><div style="font-size:12px;color:var(--text-3);margin-top:2px;">Podrás explorar sus primeras ${CLASES_PRUEBA_GRATIS} clases.</div></div></div>
+        <p style="font-size:13px;line-height:1.55;color:var(--text-2);margin:16px 0 12px;">Esta elección activa tu prueba. El resto de las clases y el certificado se desbloquean con la membresía VIP.</p>
+        <div style="display:flex;flex-direction:column;gap:9px;max-height:300px;overflow:auto;padding-right:2px;">${opciones.map((c,i)=>`<button type="button" data-prueba-curso="${i}" class="btn btn--ghost" style="justify-content:space-between;text-align:left;padding:13px 14px;border-color:var(--border);"><span><strong style="display:block;color:var(--text);font-size:14px;">${escapeHtml(c.titulo || 'Curso DulceLab Food')}</strong><small style="display:block;margin-top:3px;color:var(--text-3);">${Math.min(CLASES_PRUEBA_GRATIS, c.sesiones.length)} clases de prueba</small></span><span style="color:var(--primary);font-size:19px;">→</span></button>`).join('')}</div>
+      </div>` });
+    const root = document.querySelector(`[data-modal-id="${id}"]`);
+    root?.querySelectorAll('[data-prueba-curso]').forEach(btn => btn.addEventListener('click', () => {
+      const curso = opciones[Number(btn.dataset.pruebaCurso)];
+      if (!curso) return;
+      localStorage.setItem(_pruebaCursoKey(), curso.id);
+      Modal.close(id);
+      Toast.success('¡Tu prueba está lista!', `Comienza con las primeras ${Math.min(CLASES_PRUEBA_GRATIS, curso.sesiones.length)} clases de ${curso.titulo}.`);
+      setTimeout(() => { window.navigateToSection?.('cursos'); }, 280);
+    }));
+  }
+
+  window.__mostrarInvitacionPruebaGratis = function() {
+    if (tieneAccesoVipCompleto() || cursoConPrimeraClaseGratis() || window.__pruebaGratisMostrada) return;
+    if (!cursosElegiblesParaPrueba().length) { setTimeout(() => window.__mostrarInvitacionPruebaGratis(), 700); return; }
+    window.__pruebaGratisMostrada = true;
+    const id = 'invitacion-prueba-gratis';
+    Modal.open({ id, size:'sm', closeOnBackdrop:true, body: `
+      <div style="padding:7px 2px 4px;">
+        <div style="display:flex;gap:12px;align-items:center;padding-bottom:15px;border-bottom:1px solid var(--border);"><div style="width:42px;height:42px;border-radius:12px;background:color-mix(in srgb,var(--success) 14%,var(--surface));display:grid;place-items:center;font-size:19px;">▷</div><div><h3 style="font-size:18px;line-height:1.1;margin:0;color:var(--text);">Tu prueba gratuita</h3><p style="font-size:12px;color:var(--text-3);margin:4px 0 0;">Una función para usuarios nuevos</p></div></div>
+        <p style="font-size:14px;line-height:1.5;color:var(--text-2);margin:21px 0 0;">Al ser un usuario nuevo, <strong style="color:var(--text);">te damos a elegir un curso de tu interés como prueba gratuita.</strong></p>
+        <p style="font-size:13px;line-height:1.5;color:var(--text-2);margin:11px 0 20px;">Podrás ver sus primeras ${CLASES_PRUEBA_GRATIS} clases en <strong style="color:var(--text);">Mis cursos</strong>. El certificado se habilita al activar tu membresía.</p>
+        <div style="display:flex;justify-content:flex-end;"><button type="button" class="btn btn--primary" id="abrir-selector-prueba">Elegir mi curso</button></div>
+      </div>` });
+    const root = document.querySelector(`[data-modal-id="${id}"]`);
+    root?.querySelector('#abrir-selector-prueba')?.addEventListener('click', () => { Modal.close(id); setTimeout(abrirSelectorCursoPrueba, 180); });
+  };
 
   function mostrarPaywallCurso(curso) {
     // Antes abría el modal chico de paywall; ahora cierra el detalle del curso
@@ -5657,7 +5698,7 @@ const Sections = (function(){
     // Detectar si se completó el curso
     let cursoRecienCompletado = false;
     const curso = cursos.find(c => c.id === cursoId);
-    if (curso && curso.sesiones && p[cursoId].clasesVistas.length >= curso.sesiones.length && !p[cursoId].completado) {
+    if (tieneAccesoVipCompleto() && curso && curso.sesiones && p[cursoId].clasesVistas.length >= curso.sesiones.length && !p[cursoId].completado) {
       p[cursoId].completado = true;
       p[cursoId].fechaCompletado = new Date().toISOString();
       setProgreso(p);
@@ -5745,7 +5786,7 @@ const Sections = (function(){
         const recienCompletos = [];
         (cursos || []).forEach(c => {
           const u = unido[c.id];
-          if (u && c.sesiones?.length && u.clasesVistas.length >= c.sesiones.length && !u.completado) {
+          if (tieneAccesoVipCompleto() && u && c.sesiones?.length && u.clasesVistas.length >= c.sesiones.length && !u.completado) {
             u.completado = true; u.fechaCompletado = u.fechaCompletado || new Date().toISOString();
             recienCompletos.push(c);
           }
@@ -5926,6 +5967,9 @@ const Sections = (function(){
 
   async function emitirCertificadoFirestore(curso) {
     try {
+      // Un curso de prueba puede completarse parcialmente, pero nunca emite
+      // certificado. Esta validación también protege cualquier llamada directa.
+      if (!tieneAccesoVipCompleto()) return;
       const fs = window.__fs;
       const uid = window.UserState?.uid;
       if (!fs || !fs.setDoc || !uid) return;
@@ -6737,6 +6781,55 @@ const Sections = (function(){
     elContinuar.addEventListener('click', onDone);
   }
 
+  /* ─── ROMPECABEZAS ─── */
+  function _renderRompecabezas(act){
+    const imagen = escapeHtml(act.imagen || 'assets/discover/1.jpg');
+    return `
+      <div style="padding:4px 2px;text-align:center;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:var(--primary);margin-bottom:8px;">🧩 Actividad · Rompecabezas</div>
+        <div style="font-size:13px;color:var(--text-2);line-height:1.45;margin-bottom:13px;">${escapeHtml(act.instruccion || 'Ordena la imagen para completar el reto.')}</div>
+        <div id="puz-grid" data-puz-image="${imagen}" style="display:grid;grid-template-columns:repeat(3,88px);grid-template-rows:repeat(3,88px);gap:3px;justify-content:center;margin:0 auto 14px;"></div>
+        <div id="puz-resultado" style="min-height:22px;font-weight:700;font-size:14px;margin-bottom:8px;"></div>
+        <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;"><button id="puz-ayuda" class="btn btn--ghost" type="button"><svg class="ic"><use href="#i-info"/></svg>Ver solución</button><button id="puz-reintentar" class="btn btn--ghost" type="button" style="display:none;">🔄 Mezclar de nuevo</button><button id="puz-continuar" class="btn btn--primary" type="button" style="display:none;">Continuar →</button></div>
+      </div>`;
+  }
+  function _initRompecabezas(root, act, onDone){
+    const grid = root.querySelector('#puz-grid');
+    const resultado = root.querySelector('#puz-resultado');
+    const ayuda = root.querySelector('#puz-ayuda');
+    const reintentar = root.querySelector('#puz-reintentar');
+    const continuar = root.querySelector('#puz-continuar');
+    const imagen = grid.dataset.puzImage || 'assets/discover/1.jpg';
+    let piezas = [], seleccion = null, resuelto = false;
+    const esCorrecto = () => piezas.every((n,i) => n === i);
+    function dibujar(){
+      grid.innerHTML = piezas.map((n, i) => `<button type="button" data-puz-i="${i}" style="width:88px;height:88px;padding:0;border:0;border-radius:5px;background-image:url('${imagen}');background-size:300% 300%;background-position:${(n%3)*50}% ${Math.floor(n/3)*50}%;cursor:pointer;outline:${seleccion===i?'3px solid var(--accent)':'1px solid rgba(69,28,33,.2)'};outline-offset:1px;"></button>`).join('');
+      grid.querySelectorAll('[data-puz-i]').forEach(btn => btn.addEventListener('click', () => tocar(Number(btn.dataset.puzI))));
+    }
+    function terminar(mensaje){
+      resuelto = true; seleccion = null; dibujar();
+      resultado.style.color = 'var(--success)'; resultado.textContent = mensaje || '¡Rompecabezas completado! 🎉';
+      ayuda.style.display = 'none'; reintentar.style.display = 'inline-flex'; continuar.style.display = 'inline-flex';
+    }
+    function tocar(i){
+      if(resuelto) return;
+      if(seleccion === null){ seleccion = i; dibujar(); return; }
+      if(seleccion === i){ seleccion = null; dibujar(); return; }
+      [piezas[seleccion], piezas[i]] = [piezas[i], piezas[seleccion]];
+      seleccion = null; dibujar();
+      if(esCorrecto()) terminar();
+    }
+    function iniciar(){
+      piezas = [0,1,2,3,4,5,6,7,8];
+      do { for(let i=piezas.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [piezas[i],piezas[j]]=[piezas[j],piezas[i]]; } } while(esCorrecto());
+      seleccion = null; resuelto = false; resultado.textContent = ''; ayuda.style.display='inline-flex'; reintentar.style.display='none'; continuar.style.display='none'; dibujar();
+    }
+    ayuda.addEventListener('click', () => { piezas=[0,1,2,3,4,5,6,7,8]; terminar('Esta es la imagen completa. ¡Intenta recordarla para el próximo!'); });
+    reintentar.addEventListener('click', iniciar);
+    continuar.addEventListener('click', onDone);
+    iniciar();
+  }
+
 
   /* ─── CRUCIGRAMA ─── */
   function _parsePistas(texto){
@@ -6983,6 +7076,7 @@ const Sections = (function(){
     else if (act.tipo === 'opcion') bodyHtml = _renderOpcion(act);
     else if (act.tipo === 'sopa') bodyHtml = _renderSopa(act);
     else if (act.tipo === 'memorama') bodyHtml = _renderMemorama(act);
+    else if (act.tipo === 'rompecabezas') bodyHtml = _renderRompecabezas(act);
     else if (act.tipo === 'crucigrama') bodyHtml = _renderCrucigrama(act);
     else { onDone(); return; }
     Modal.open({ id: modalId, closeOnBackdrop: false, size: act.tipo === 'crucigrama' ? 'lg' : 'md', body: bodyHtml });
@@ -7000,6 +7094,7 @@ const Sections = (function(){
     else if (act.tipo === 'opcion') _initOpcion(root, act, cerrar);
     else if (act.tipo === 'sopa') _initSopa(root, act, cerrar);
     else if (act.tipo === 'memorama') _initMemorama(root, act, cerrar);
+    else if (act.tipo === 'rompecabezas') _initRompecabezas(root, act, cerrar);
     else if (act.tipo === 'crucigrama') _initCrucigrama(root, act, cerrar);
   }
 
@@ -7143,6 +7238,11 @@ const Sections = (function(){
     } finally {
       _cursosLoading = false;
       if (typeof populateHeroCourse === 'function') populateHeroCourse();
+      // Si la persona llega al panel sin haber visto la animación de bienvenida
+      // (por ejemplo, tras volver a iniciar sesión), no pierde la invitación.
+      setTimeout(() => {
+        if (!document.getElementById('splash-bienvenida')) window.__mostrarInvitacionPruebaGratis?.();
+      }, 450);
     }
   }
   window.__cargarCursosFirestore = cargarCursosFirestore;
@@ -7537,10 +7637,10 @@ const Sections = (function(){
       const cursoIdx = cursos.findIndex(x => x.id === c.id);
       const desbloqueado = cursoDesbloqueado(cursoIdx, c);
       const accesoCompleto = tieneAccesoVipCompleto();
-      // MODIFICADO: el badge ahora refleja las clases que el admin marcó como gratis
-      // en ESTE curso específico, ya no depende de "el primer curso" ni de un número fijo.
-      const numClasesGratis = Array.isArray(c.sesiones) ? c.sesiones.filter(s => s && s.gratis === true).length : 0;
-      const esCursoMuestra = numClasesGratis > 0 && !accesoCompleto;
+      // La prueba se asigna a un solo curso elegido por la persona. Sus primeras
+      // cuatro clases se ven, mientras que las demás permanecen como contenido VIP.
+      const esCursoMuestra = cursoConPrimeraClaseGratis()?.id === c.id && !accesoCompleto;
+      const numClasesGratis = esCursoMuestra ? Math.min(CLASES_PRUEBA_GRATIS, c.sesiones?.length || 0) : 0;
       const diasFalta = diasParaDesbloquear(cursoIdx, c);
       const portada = c.portada || coverSVG(c.area, c.titulo);
       const areaColor = COLOR_AREA[c.area]||'#C4577A';
@@ -7897,7 +7997,7 @@ const Sections = (function(){
     const progreso = getProgreso ? getProgreso() : {};
     if (cursos && cursos.length) for (const c of cursos) {
       const prog = progreso[c.id];
-      if (prog && prog.completado) {
+      if (tieneAccesoVipCompleto() && prog && prog.completado) {
         const fecha = prog.fechaCompletado || new Date().toISOString();
         const folio = folioCert(c.id, fecha);
         if (!yaEnFs.has(folio)) {

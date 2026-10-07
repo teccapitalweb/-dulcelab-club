@@ -3043,6 +3043,7 @@ const Pages={
               <option value="sopa" ${s.actividad.tipo==='sopa'?'selected':''}>🔎 Sopa de letras</option>
               <option value="memorama" ${s.actividad.tipo==='memorama'?'selected':''}>🎴 Memorama</option>
               <option value="crucigrama" ${s.actividad.tipo==='crucigrama'?'selected':''}>🧩 Crucigrama</option>
+              <option value="rompecabezas" ${s.actividad.tipo==='rompecabezas'?'selected':''}>🧩 Rompecabezas</option>
             </select>
             ${Pages._camposActividadHTML(s.actividad, idx)}
           </div>` : ''}
@@ -3090,6 +3091,7 @@ const Pages={
         else if (tipo === 'sopa') s.actividad = { tipo, palabras: '' };
         else if (tipo === 'memorama') s.actividad = { tipo, parejas: '' };
         else if (tipo === 'crucigrama') s.actividad = { tipo, pistas: '' };
+        else if (tipo === 'rompecabezas') s.actividad = { tipo, imagen: 'assets/discover/1.jpg', instruccion: '' };
         else s.actividad = { tipo: 'ahorcado', palabra: '', pista: '' };
         Pages._renderSesionesModal();
       });
@@ -3171,6 +3173,12 @@ const Pages={
       return `
         <textarea class="input" placeholder="Una palabra y su pista por línea, formato: PALABRA = Pista${'\\n'}Ej: CHEF = Encargado de la cocina${'\\n'}HORNO = Donde se hornea" data-sesion-act-campo="${idx}:pistas" rows="4" style="font-size:12.5px;padding:7px 10px;">${(act.pistas||'').replace(/</g,'&lt;')}</textarea>
         <div style="font-size:10.5px;color:var(--text-3);">Mínimo 4 palabras. Las que compartan letras se cruzan solas; las demás se acomodan aparte.</div>`;
+    }
+    if (act.tipo === 'rompecabezas') {
+      return `
+        <input type="text" class="input" placeholder="Ruta o URL de la imagen del rompecabezas" value="${(act.imagen||'').replace(/\"/g,'&quot;')}" data-sesion-act-campo="${idx}:imagen" style="font-size:12.5px;padding:7px 10px;">
+        <input type="text" class="input" placeholder="Instrucción opcional (ej. Ordena la técnica antes de continuar)" value="${(act.instruccion||'').replace(/\"/g,'&quot;')}" data-sesion-act-campo="${idx}:instruccion" style="font-size:12.5px;padding:7px 10px;">
+        <div style="font-size:10.5px;color:var(--text-3);">El alumno ordena una imagen de 9 piezas para completar la clase.</div>`;
     }
     // ahorcado (tipo por defecto)
     return `
