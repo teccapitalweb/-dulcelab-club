@@ -3075,15 +3075,68 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 .mat-item.is-selected .book__cover{outline:2px solid #E5C171;outline-offset:3px}
 .mat-item:focus-visible .book__cover{outline:2px solid var(--primary);outline-offset:3px}
 .mat-empty{text-align:center;padding:56px 24px;background:var(--surface-2);border:1px dashed var(--border-2);border-radius:14px;color:var(--text-3);font-size:13px}
-/* Biblioteca abierta: libros reales curados y asociados al avance en Retos. */
+/* Biblioteca de libros: solo para miembros VIP y se desbloquea con los XP de Retos. */
 .xp-library{margin:0 0 30px;padding:26px 22px 22px;border:1px solid var(--border);border-radius:22px;background:var(--surface);box-shadow:0 12px 30px rgba(55,24,28,.05)}
-.xp-library__head{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:18px}.xp-library__eyebrow{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:1.35px;text-transform:uppercase;color:var(--primary)}.xp-library__title{font-size:20px;font-weight:800;letter-spacing:-.45px;color:var(--text);margin:5px 0 0}.xp-library__sub{max-width:650px;font-size:12.5px;color:var(--text-2);line-height:1.5;margin:7px 0 0}.xp-library__score{flex:none;min-width:108px;padding:10px 12px;border-radius:12px;text-align:center;background:var(--surface-2);border:1px solid var(--border)}.xp-library__score b{display:block;font-size:18px;color:var(--primary);line-height:1}.xp-library__score span{display:block;margin-top:3px;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;color:var(--text-3)}
-.xp-feature{display:grid;grid-template-columns:238px minmax(0,1fr);gap:28px;align-items:center;padding:20px 24px 21px;border-radius:18px;background:linear-gradient(115deg,color-mix(in srgb,var(--primary) 4%,var(--surface)),var(--surface) 58%);border:1px solid var(--border)}.xp-feature__cover{position:relative;overflow:hidden;min-height:294px;padding:18px;border-radius:9px 14px 14px 9px;background:linear-gradient(180deg,rgba(20,6,8,.02),rgba(21,7,9,.9)),var(--book-photo) center/cover;color:#fff;box-shadow:2px 2px 0 var(--book-color),11px 15px 25px rgba(39,20,20,.23)}.xp-feature__cover::before{content:"";position:absolute;top:0;left:0;bottom:0;width:12px;background:linear-gradient(90deg,rgba(0,0,0,.36),transparent);border-right:1px solid rgba(255,255,255,.2)}.xp-feature__cover::after{content:"";position:absolute;right:0;top:5px;bottom:5px;width:6px;background:repeating-linear-gradient(0deg,#f6eddf 0 2px,#d5c8b8 2px 3px);opacity:.8}.xp-feature__cover>*{position:relative;z-index:1}.xp-feature__label{display:inline-block;padding:6px 9px;border-radius:5px;background:rgba(255,255,255,.93);font-family:'JetBrains Mono',monospace;font-size:7.5px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text)}.xp-feature__cover h3{margin:177px 0 0;font-size:23px;font-weight:850;line-height:1.04;letter-spacing:-.7px;text-shadow:0 2px 6px rgba(0,0,0,.8)}.xp-feature__kind{display:block;margin-top:10px;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:#F7D36C}.xp-feature__eyebrow{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:800;letter-spacing:1.35px;text-transform:uppercase;color:var(--accent,#B8862F)}.xp-feature__info h2{max-width:760px;margin:10px 0 5px;font-size:32px;font-weight:850;letter-spacing:-1.35px;line-height:1.03;color:var(--text)}.xp-feature__author{margin:0;color:var(--primary);font-size:13px;font-weight:750}.xp-feature__desc{max-width:730px;margin:18px 0;color:var(--text-2);font-size:13px;line-height:1.65}.xp-feature__actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.xp-feature__meta{padding:7px 10px;border-radius:999px;background:var(--surface-2);font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.3px;color:var(--text-2)}.xp-feature__progress{margin-top:18px}.xp-feature__progress span{display:block;margin-bottom:6px;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.6px;color:var(--text-3)}.xp-feature__bar{height:6px;overflow:hidden;border-radius:99px;background:var(--surface-3)}.xp-feature__bar i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--primary),var(--accent,#D5A13D));transition:width .5s ease}
-.xp-shelf-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:25px 0 14px;padding:11px 14px;border-left:4px solid var(--accent,#D5A13D);background:var(--surface-2)}.xp-shelf-head b{font-size:13px;color:var(--text)}.xp-shelf-head span{font-family:'JetBrains Mono',monospace;font-size:8.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-3)}.xp-books{display:flex;gap:18px;overflow-x:auto;padding:4px 5px 16px 2px;scroll-snap-type:x proximity;scrollbar-width:thin}.xp-book{flex:0 0 150px;padding:0;border:0;text-align:left;background:none;color:var(--text);cursor:pointer;scroll-snap-align:start}.xp-book__cover{position:relative;overflow:hidden;display:block;min-height:213px;padding:13px 12px;border-radius:5px 10px 10px 5px;background:linear-gradient(180deg,rgba(18,5,7,.08),rgba(17,4,6,.88)),var(--book-photo) center/cover;color:#fff;box-shadow:2px 2px 0 var(--book-color),7px 11px 18px rgba(37,18,18,.2);transition:transform .2s,box-shadow .2s}.xp-book__cover::before{content:"";position:absolute;z-index:0;left:0;top:0;bottom:0;width:8px;background:linear-gradient(90deg,rgba(0,0,0,.4),transparent);border-right:1px solid rgba(255,255,255,.15)}.xp-book__cover::after{content:"";position:absolute;right:0;top:4px;bottom:4px;width:4px;background:repeating-linear-gradient(0deg,#f8eee0 0 2px,#d5c8b7 2px 3px);opacity:.8}.xp-book:hover .xp-book__cover{transform:translateY(-5px) rotate(-1deg);box-shadow:2px 2px 0 var(--book-color),10px 17px 23px rgba(37,18,18,.27)}.xp-book:focus-visible{outline:3px solid #E5C171;outline-offset:4px}.xp-book__cover>*{position:relative;z-index:1}.xp-book__tag{display:inline-block;padding:4px 6px;border-radius:4px;background:rgba(255,255,255,.91);font-family:'JetBrains Mono',monospace;font-size:6.8px;font-weight:800;letter-spacing:.75px;text-transform:uppercase;color:var(--text)}.xp-book__cover h3{margin:119px 0 0;font-size:14px;font-weight:850;line-height:1.05;letter-spacing:-.35px;text-shadow:0 2px 5px rgba(0,0,0,.85)}.xp-book__cover small{display:block;margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:7px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:#f5d26f}.xp-book__lock{position:absolute!important;right:10px;bottom:10px;display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:rgba(38,8,13,.82);border:1px solid rgba(255,255,255,.6)}.xp-book__lock .ic{width:13px;height:13px}.xp-book.is-locked .xp-book__cover{filter:grayscale(.77) saturate(.4)}.xp-book__title{display:block;margin-top:12px;font-size:11px;font-weight:800;line-height:1.26;color:var(--text)}.xp-book__author{display:block;margin-top:4px;font-size:10px;line-height:1.3;color:var(--text-3)}.xp-book__progress{display:block;height:4px;overflow:hidden;margin-top:9px;border-radius:99px;background:var(--surface-3)}.xp-book__progress i{display:block;height:100%;border-radius:inherit;background:var(--book-color)}.xp-book__state{display:block;margin-top:5px;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;letter-spacing:.25px;color:var(--text-3)}
-.xp-reading{display:grid;grid-template-columns:126px 1fr;gap:22px;align-items:start;padding:5px 2px 2px}.xp-reading__cover{min-height:182px;padding:13px;border-radius:4px 9px 9px 4px;background:linear-gradient(180deg,rgba(22,5,7,.08),rgba(18,4,5,.89)),var(--book-photo) center/cover;color:#fff;box-shadow:2px 3px 0 var(--book-color),7px 10px 20px rgba(42,20,19,.2)}.xp-reading__cover small{font-family:'JetBrains Mono',monospace;font-size:7px;font-weight:800;letter-spacing:.85px;text-transform:uppercase}.xp-reading__cover h3{margin:66px 0 0;font-size:18px;line-height:1.05;letter-spacing:-.45px}.xp-reading__content p{margin:0;font-size:14px;line-height:1.7;color:var(--text-2)}.xp-reading__content strong{display:block;margin:15px 0 6px;font-size:10px;font-family:'JetBrains Mono',monospace;letter-spacing:.8px;text-transform:uppercase;color:var(--primary)}.xp-reading__content ul{margin:0;padding-left:18px;color:var(--text-2);font-size:12px;line-height:1.65}
-.xp-reader{position:fixed;z-index:10050;inset:0;display:flex;flex-direction:column;background:#b6c8d7;color:#17314a;animation:fade-in .18s ease}.xp-reader__bar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;min-height:62px;padding:0 26px;background:#58738e;color:#fff;box-shadow:0 2px 8px rgba(17,42,63,.22)}.xp-reader__bar div{text-align:center}.xp-reader__bar b{display:block;font-size:13px}.xp-reader__bar span{display:block;margin-top:3px;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#d8e6ef}.xp-reader__source{justify-self:start;color:#fff;background:transparent;border:1px solid rgba(255,255,255,.46);border-radius:8px;padding:8px 10px;font-size:11px;font-weight:700;cursor:pointer}.xp-reader__close{justify-self:end;width:34px;height:34px;border:1px solid rgba(255,255,255,.46);border-radius:50%;background:transparent;color:#fff;font-size:20px;cursor:pointer}.xp-reader__stage{position:relative;display:flex;flex:1;align-items:center;justify-content:center;padding:50px 90px}.xp-reader__book{display:grid;grid-template-columns:1fr 1fr;width:min(940px,100%);min-height:min(600px,calc(100vh - 170px));background:#fffefb;border-radius:7px;overflow:hidden;box-shadow:0 22px 36px rgba(30,52,70,.28)}.xp-reader__page{position:relative;padding:36px 38px;background:repeating-linear-gradient(0deg,rgba(67,87,105,.045) 0 1px,transparent 1px 29px);font-family:Georgia,serif}.xp-reader__page:first-child{border-right:1px solid #dad6ca;box-shadow:inset -12px 0 18px -18px rgba(15,32,45,.8)}.xp-reader__page:first-child::after{content:"";position:absolute;top:0;right:-9px;bottom:0;width:18px;background:linear-gradient(90deg,rgba(31,44,52,.12),transparent 60%);pointer-events:none}.xp-reader__running{display:flex;justify-content:space-between;padding-bottom:11px;border-bottom:1px solid #d9d6cf;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#597087}.xp-reader__page h2{margin:20px 0 15px;font-family:inherit;font-size:25px;letter-spacing:-.6px;color:#17314a}.xp-reader__page p{font-size:15px;line-height:1.65;color:#1f2d39}.xp-reader__toc{padding:0;margin:0;list-style:none}.xp-reader__toc li{padding:9px 0;border-bottom:1px solid #e6e4dd;font-family:Arial,sans-serif;font-size:13px;font-weight:650;color:#1d3449}.xp-reader__toc li::before{content:counter(item) ". ";counter-increment:item;color:#8d2438}.xp-reader__toc{counter-reset:item}.xp-reader__note{margin-top:19px;padding:13px;border-left:3px solid #bc8a28;background:#f5efe2;font-family:Arial,sans-serif;font-size:12px;line-height:1.55;color:#465461}.xp-reader__page-num{position:absolute;right:38px;bottom:24px;font-family:'JetBrains Mono',monospace;font-size:9px;color:#788792}.xp-reader__nav{position:absolute;top:50%;display:grid;place-items:center;width:48px;height:48px;border:0;border-radius:50%;background:#58738e;color:#fff;font-size:25px;cursor:pointer;box-shadow:0 4px 10px rgba(23,49,74,.2)}.xp-reader__nav:hover{background:#294e6d}.xp-reader__nav--prev{left:28px}.xp-reader__nav--next{right:28px}.xp-reader__footer{padding:10px 26px;background:#58738e}.xp-reader__footer i{display:block;height:5px;border-radius:99px;background:#496783}.xp-reader__footer i::after{content:"";display:block;width:var(--reader-progress,33%);height:100%;border-radius:inherit;background:#d7ac49;transition:width .2s ease}
-.xp-reader__stage{padding:22px 34px}.xp-reader__pdf{display:block;width:min(1280px,100%);height:calc(100vh - 106px);border:0;border-radius:8px;background:#fff;box-shadow:0 18px 34px rgba(30,52,70,.25)}
-@media(max-width:800px){.xp-feature{grid-template-columns:190px 1fr;gap:20px}.xp-feature__cover{min-height:250px}.xp-feature__cover h3{margin-top:141px}.xp-feature__info h2{font-size:26px}}@media(max-width:600px){.xp-library{padding:18px 14px}.xp-library__head{align-items:flex-start;flex-direction:column}.xp-library__score{align-self:flex-start}.xp-feature{grid-template-columns:1fr;padding:15px}.xp-feature__cover{min-height:212px}.xp-feature__cover h3{margin-top:105px}.xp-feature__info h2{font-size:25px}.xp-shelf-head{align-items:flex-start;flex-direction:column}.xp-books{gap:15px}.xp-book{flex-basis:137px}.xp-book__cover{min-height:196px}.xp-book__cover h3{margin-top:105px}.xp-reading{grid-template-columns:1fr}.xp-reading__cover{min-height:145px}.xp-reading__cover h3{margin-top:36px}.xp-reader__bar{grid-template-columns:1fr auto;padding:0 14px}.xp-reader__bar div{display:none}.xp-reader__stage{padding:14px}.xp-reader__pdf{height:calc(100vh - 90px)}}
+.xp-library__head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:18px}
+.xp-library__eyebrow{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:1.35px;text-transform:uppercase;color:var(--primary)}
+.xp-library__title{font-size:22px;font-weight:800;letter-spacing:-.5px;color:var(--text);margin:5px 0 0}
+.xp-library__sub{max-width:660px;font-size:12.5px;color:var(--text-2);line-height:1.55;margin:7px 0 0}
+.xp-library__score{flex:none;min-width:116px;padding:10px 14px;border-radius:12px;text-align:center;background:var(--surface-2);border:1px solid var(--border)}
+.xp-library__score b{display:block;font-size:18px;color:var(--primary);line-height:1}
+.xp-library__score b small{font-size:11px;font-weight:700;color:var(--text-3)}
+.xp-library__score span{display:block;margin-top:4px;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;color:var(--text-3)}
+.lib-next{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:20px;align-items:center;padding:16px 20px;margin-bottom:22px;border-radius:16px;border:1px solid color-mix(in srgb,var(--primary) 22%,var(--border));background:linear-gradient(110deg,color-mix(in srgb,var(--primary) 7%,var(--surface)),var(--surface) 70%)}
+.lib-next__cover{width:74px;aspect-ratio:3/4.1;border-radius:4px 8px 8px 4px;background:var(--portada) center/cover;box-shadow:2px 2px 0 var(--tono),6px 9px 16px rgba(37,18,18,.22);filter:grayscale(.5)}
+.lib-next__eyebrow{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:800;letter-spacing:1.3px;text-transform:uppercase;color:var(--accent,#B8862F)}
+.lib-next h3{margin:5px 0 3px;font-size:17px;font-weight:800;letter-spacing:-.3px;color:var(--text);line-height:1.2}
+.lib-next p{margin:0;font-size:12.5px;line-height:1.5;color:var(--text-2)}
+.lib-bar{height:7px;margin-top:10px;overflow:hidden;border-radius:99px;background:var(--surface-3)}
+.lib-bar i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--primary),var(--accent,#D5A13D));transition:width .5s ease}
+.lib-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(176px,1fr));gap:26px 22px}
+.lib-book{display:flex;flex-direction:column;padding:0;border:0;background:none;text-align:left;color:var(--text);cursor:pointer;font:inherit}
+.lib-book:focus-visible{outline:3px solid #E5C171;outline-offset:5px;border-radius:8px}
+.lib-book__cover{position:relative;overflow:hidden;display:block;aspect-ratio:3/4.1;padding:14px 13px;border-radius:5px 11px 11px 5px;background:linear-gradient(180deg,rgba(0,0,0,.04) 0%,color-mix(in srgb,var(--tono) 52%,transparent) 55%,color-mix(in srgb,var(--tono) 94%,#000) 100%),var(--portada) center/cover;box-shadow:2px 2px 0 var(--tono),8px 12px 20px rgba(37,18,18,.22);color:#fff;transition:transform .2s,box-shadow .2s}
+.lib-book__cover::before{content:"";position:absolute;left:0;top:0;bottom:0;width:9px;background:linear-gradient(90deg,rgba(0,0,0,.42),transparent);border-right:1px solid rgba(255,255,255,.16)}
+.lib-book__cover::after{content:"";position:absolute;right:0;top:5px;bottom:5px;width:4px;background:repeating-linear-gradient(0deg,#f8eee0 0 2px,#d5c8b7 2px 3px);opacity:.8}
+.lib-book:hover .lib-book__cover{transform:translateY(-5px) rotate(-1deg);box-shadow:2px 2px 0 var(--tono),11px 18px 24px rgba(37,18,18,.28)}
+.lib-book__tag{position:relative;z-index:1;display:inline-block;max-width:calc(100% - 52px);padding:4px 7px;border-radius:4px;background:rgba(255,255,255,.92);font-family:'JetBrains Mono',monospace;font-size:7px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:#2b1a1d}
+.lib-book__name{position:absolute;z-index:1;left:15px;right:12px;bottom:15px;font-size:15px;font-weight:850;line-height:1.1;letter-spacing:-.3px;text-shadow:0 2px 6px rgba(0,0,0,.85)}
+.lib-book__name small{display:block;margin-top:7px;font-family:'JetBrains Mono',monospace;font-size:7.5px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:#f5d26f;text-shadow:none}
+.lib-book__chip{position:absolute;z-index:2;top:11px;right:10px;display:inline-flex;align-items:center;gap:4px;padding:4px 7px;border-radius:99px;background:rgba(32,7,11,.84);border:1px solid rgba(255,255,255,.4);font-family:'JetBrains Mono',monospace;font-size:8.5px;font-weight:800;letter-spacing:.3px;color:#fff}
+.lib-book__chip svg{width:10px;height:10px}
+.lib-book.is-open .lib-book__chip{background:#2f7a52;border-color:rgba(255,255,255,.55)}
+.lib-book:not(.is-open) .lib-book__cover{filter:grayscale(.55) brightness(.94)}
+.lib-book:not(.is-open) .lib-book__cover .lib-book__name{filter:none}
+.lib-book__title{display:block;margin-top:13px;font-size:12px;font-weight:800;line-height:1.3;color:var(--text)}
+.lib-book__meta{display:block;margin-top:4px;font-size:10.5px;line-height:1.35;color:var(--text-3)}
+.lib-book__state{display:flex;align-items:center;gap:6px;margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:8.5px;font-weight:700;letter-spacing:.2px;color:var(--text-2)}
+.lib-book__state svg{width:11px;height:11px;flex:none}
+.lib-book.is-open .lib-book__state{color:#2f7a52}
+.lib-book .lib-bar{height:4px;margin-top:8px}
+.lib-book--pronto{cursor:default}
+.lib-book--pronto .lib-book__cover{background:repeating-linear-gradient(135deg,var(--surface-2) 0 10px,var(--surface-3) 10px 20px);box-shadow:none;color:var(--text-3);display:grid;place-items:center;text-align:center;filter:none!important}
+.lib-book--pronto .lib-book__cover::before,.lib-book--pronto .lib-book__cover::after{display:none}
+.lib-book--pronto .lib-book__cover span{font-size:12px;font-weight:700;line-height:1.35}
+.lib-nota{margin:22px 0 0;padding-top:14px;border-top:1px solid var(--border);font-size:11px;line-height:1.55;color:var(--text-3)}
+.lib-reader{position:fixed;z-index:10050;inset:0;display:flex;flex-direction:column;background:#cfc7bc;color:#2a1418;animation:fade-in .18s ease}
+.lib-reader__bar{display:grid;grid-template-columns:44px minmax(0,1fr) auto;align-items:center;gap:14px;min-height:60px;padding:0 18px;background:#2a1418;color:#fff;box-shadow:0 2px 10px rgba(0,0,0,.28)}
+.lib-reader__close,.lib-reader__zoom button{display:grid;place-items:center;width:36px;height:36px;border:1px solid rgba(255,255,255,.4);border-radius:50%;background:transparent;color:#fff;font-size:19px;line-height:1;cursor:pointer}
+.lib-reader__close:hover,.lib-reader__zoom button:hover{background:rgba(255,255,255,.14)}
+.lib-reader__tit{min-width:0;text-align:center}
+.lib-reader__tit b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px}
+.lib-reader__tit span{display:block;margin-top:3px;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;color:#e7c98a}
+.lib-reader__zoom{display:flex;gap:8px}
+.lib-reader__scroll{position:relative;flex:1;overflow:auto;padding:22px 14px 40px;-webkit-overflow-scrolling:touch}
+.lib-reader__pages{display:flex;flex-direction:column;align-items:center;gap:16px;margin:0 auto}
+.lib-page{position:relative;width:var(--lr-w,820px);max-width:none;background:#fbf7ee;box-shadow:0 10px 26px rgba(30,18,12,.28);border-radius:3px;overflow:hidden}
+.lib-page canvas{display:block;width:100%;height:100%}
+.lib-page__n{position:absolute;inset:0;display:grid;place-items:center;font-family:'JetBrains Mono',monospace;font-size:12px;color:#9a8f82}
+.lib-reader__msg{margin:60px auto;max-width:420px;text-align:center;font-size:14px;line-height:1.6;color:#4a3a36}
+.lib-reader__msg a{color:#8c1d33;font-weight:700}
+.lib-reader__foot{display:flex;align-items:center;gap:14px;padding:9px 18px;background:#2a1418;color:#d8c9a6;font-size:10px}
+.lib-reader__foot i{flex:1;display:block;height:5px;border-radius:99px;background:rgba(255,255,255,.18)}
+.lib-reader__foot i::after{content:"";display:block;width:var(--lr-prog,0%);height:100%;border-radius:inherit;background:#d7ac49;transition:width .2s ease}
+@media(max-width:700px){.lib-next{grid-template-columns:auto minmax(0,1fr);gap:14px;padding:14px}.lib-next .btn{grid-column:1 / -1;justify-content:center}.xp-library{padding:18px 14px}.xp-library__head{align-items:flex-start;flex-direction:column}.lib-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 14px}.lib-reader__bar{padding:0 10px;gap:8px}.lib-reader__scroll{padding:12px 6px 30px}.lib-reader__foot span{display:none}}
 @media (max-width:880px){
   .mat-feat{grid-template-columns:1fr;gap:26px;justify-items:center}
   .mat-feat__info{width:100%}
@@ -10069,14 +10122,214 @@ const Sections = (function(){
     const xpActual = Number(_progreso.xp) || 0;
     const retosCompletados = Array.isArray(_progreso.retosCompletados) ? _progreso.retosCompletados.length : 0;
     const totalRetos = (typeof RETOS_LIBRARY !== 'undefined' && RETOS_LIBRARY.length) ? RETOS_LIBRARY.length : 15;
-    const librosXP = [
-      { id:'pasteleria', xp:0, retos:0, color:'#6B1526', foto:'assets/discover/1.jpg', categoria:'Pastelería profesional', titulo:'Técnicas modernas de pastelería y postres emplatados', autor:'BC Cook Articulation Committee', desc:'Técnicas, ciencia y presentación para postres profesionales.', paginas:73, url:'https://opentextbc.ca/modernpastryandplateddesserts/', pdf:'https://opentextbc.ca/modernpastryandplateddesserts/open/download?type=print_pdf' },
-      { id:'inocuidad', xp:100, retos:2, color:'#4C7B63', foto:'assets/discover/5.jpg', categoria:'Inocuidad alimentaria', titulo:'Seguridad alimentaria, sanitización e higiene', autor:'BC Cook Articulation Committee', desc:'Buenas prácticas para una cocina segura.', paginas:68, url:'https://opentextbc.ca/foodsafety/', pdf:'https://opentextbc.ca/foodsafety/open/download?type=print_pdf' },
-      { id:'ingredientes', xp:250, retos:4, color:'#B8862F', foto:'assets/discover/3.jpg', categoria:'Panadería', titulo:'Ingredientes para el panadero profesional', autor:'BC Cook Articulation Committee', desc:'Harinas, granos, ingredientes y sus funciones.', paginas:203, url:'https://opentextbc.ca/ingredients/', pdf:'https://opentextbc.ca/ingredients/open/download?type=print_pdf' },
-      { id:'gestion', xp:500, retos:6, color:'#7A1B30', foto:'assets/discover/4.jpg', categoria:'Gestión de cocina', titulo:'Administración básica de cocina y servicio', autor:'BC Cook Articulation Committee', desc:'Operación, costos y herramientas de gestión.', paginas:153, url:'https://opentextbc.ca/basickitchenandfoodservicemanagement/', pdf:'https://opentextbc.ca/basickitchenandfoodservicemanagement/open/download?type=print_pdf' },
-      { id:'nutricion', xp:800, retos:9, color:'#8C3A4B', foto:'assets/discover/2.jpg', categoria:'Nutrición y etiquetado', titulo:'Nutrición y etiquetado para panadería', autor:'BC Cook Articulation Committee', desc:'Alérgenos, dietas y etiquetado responsable.', paginas:94, url:'https://opentextbc.ca/nutrition/', pdf:'https://opentextbc.ca/nutrition/open/download?type=print_pdf' },
-      { id:'carnes', xp:1200, retos:12, color:'#71513D', foto:'assets/discover/6.jpg', categoria:'Técnica culinaria', titulo:'Corte y procesamiento de carnes', autor:'BC Cook Articulation Committee', desc:'Selección, cortes y manejo profesional.', paginas:109, url:'https://opentextbc.ca/meatcutting/', pdf:'https://opentextbc.ca/meatcutting/open/download?type=print_pdf' }
+    // ── Biblioteca de libros ──
+    // Solo obras de dominio público (autor fallecido hace más de 100 años) en español.
+    // Se leen dentro del panel y únicamente con membresía VIP; cada libro se desbloquea con los XP de Retos.
+    // El máximo de XP que dan los 18 retos es 595, por eso el último umbral queda por debajo.
+    const LIBROS_BIBLIOTECA = [
+      { id:'confitero', xp:50,  tono:'#6B1526', tema:'Pastelería y confitería', titulo:'El confitero y pastelero', autor:'Eduardo Merin', anio:'1893', paginas:137,
+        pdf:'assets/libros/confitero-pastelero.pdf', portada:'assets/libros/portada-confitero-pastelero.webp',
+        fuente:'Repositorio Minerva · Universidade de Santiago de Compostela', fuenteUrl:'https://minerva.usc.gal/entities/publication/50535701-38e2-4a32-b4ba-1b0113a8ff47/full' },
+      { id:'carrillo', xp:150, tono:'#B8862F', tema:'Cocina mexicana', titulo:'Nuevo y sencillo arte de cocina, repostería y refrescos', autor:'Antonia Carrillo', anio:'1836', paginas:460,
+        pdf:'assets/libros/cocina-reposteria-refrescos.pdf', portada:'assets/libros/portada-cocina-reposteria-refrescos.webp',
+        fuente:'Internet Archive', fuenteUrl:'https://archive.org/details/nuevoysencilloar00carr' },
+      { id:'montino', xp:300, tono:'#7A1B30', tema:'Cocina y pastelería clásica', titulo:'Arte de cocina, pastelería, vizcochería y conservería', autor:'Francisco Martínez Montiño', anio:'ed. 1778', paginas:492,
+        pdf:'assets/libros/arte-de-cocina.pdf', portada:'assets/libros/portada-arte-de-cocina.webp',
+        fuente:'Internet Archive', fuenteUrl:'https://archive.org/details/artedecocinapast00mart_1' },
+      { id:'practicon', xp:450, tono:'#71513D', tema:'Cocina general', titulo:'El Practicón: tratado completo de cocina', autor:'Ángel Muro', anio:'1894', paginas:1014,
+        pdf:'assets/libros/practicon.pdf', portada:'assets/libros/portada-practicon.webp',
+        fuente:'Internet Archive', fuenteUrl:'https://archive.org/details/elpracticntrat00muro' }
     ];
+    const xpMaximoRetos = (typeof RETOS_LIBRARY !== 'undefined' && RETOS_LIBRARY.length)
+      ? RETOS_LIBRARY.reduce((t, r) => t + (Number(r.puntos) || 0), 0) : 595;
+    const _fmtXP = (n) => Number(n).toLocaleString('es-MX');
+    const _ICO_LOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+    const _ICO_BOOK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5Z"/><path d="M4 5.5V21.5"/></svg>';
+    const _estadoLibro = (l) => !tieneAccesoVipCompleto() ? 'membresia' : (xpActual < l.xp ? 'xp' : 'abierto');
+
+    // Carga pdf.js (alojado en el mismo sitio) solo la primera vez que alguien abre un libro.
+    const _cargarPdfJs = () => window.pdfjsLib ? Promise.resolve(window.pdfjsLib) : new Promise((ok, fail) => {
+      const sc = document.createElement('script');
+      sc.src = 'assets/pdfjs/pdf.min.js';
+      sc.onload = () => { window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'assets/pdfjs/pdf.worker.min.js'; ok(window.pdfjsLib); };
+      sc.onerror = () => fail(new Error('No se pudo cargar el lector'));
+      document.head.appendChild(sc);
+    });
+
+    // Lector a pantalla completa: dibuja solo las páginas cercanas a la que se está viendo,
+    // así un libro de mil páginas abre igual de rápido que uno de cien.
+    const abrirLector = async (libro) => {
+      if (_estadoLibro(libro) !== 'abierto') return;
+      const uid = (window.UserState && (window.UserState.uid || window.UserState.email)) || 'anon';
+      const KEY = `dulcelab:lector:${uid}:${libro.id}`;
+      const overlay = document.createElement('section');
+      overlay.className = 'lib-reader';
+      overlay.setAttribute('role', 'dialog'); overlay.setAttribute('aria-modal', 'true'); overlay.setAttribute('aria-label', libro.titulo);
+      overlay.innerHTML = `
+        <header class="lib-reader__bar">
+          <button type="button" class="lib-reader__close" data-lr="cerrar" aria-label="Cerrar lector">×</button>
+          <div class="lib-reader__tit"><b>${escapeHtml(libro.titulo)}</b><span data-lr="pag">Cargando libro…</span></div>
+          <div class="lib-reader__zoom"><button type="button" data-lr="menos" aria-label="Alejar">−</button><button type="button" data-lr="mas" aria-label="Acercar">+</button></div>
+        </header>
+        <main class="lib-reader__scroll" data-lr="scroll"><div class="lib-reader__pages" data-lr="paginas"></div></main>
+        <footer class="lib-reader__foot"><i></i><span>Dominio público · ${escapeHtml(libro.autor)}, ${escapeHtml(libro.anio)} · Fuente: ${escapeHtml(libro.fuente)}</span></footer>`;
+      const q = (k) => overlay.querySelector(`[data-lr="${k}"]`);
+      const scroll = q('scroll'), paginas = q('paginas'), etiqueta = q('pag');
+      document.body.appendChild(overlay);
+      const overflowAntes = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      let pdf = null, cerrado = false, actual = 1, ancho = 0, pend = 0;
+      const cerrar = () => {
+        cerrado = true; document.removeEventListener('keydown', tecla); document.body.style.overflow = overflowAntes;
+        overlay.remove(); try { pdf && pdf.destroy(); } catch (e) {}
+      };
+      const tecla = (e) => { if (e.key === 'Escape') cerrar(); };
+      document.addEventListener('keydown', tecla);
+      q('cerrar').addEventListener('click', cerrar);
+      try {
+        const lib = await _cargarPdfJs();
+        pdf = await lib.getDocument({ url: libro.pdf, rangeChunkSize: 262144, disableAutoFetch: true, disableStream: false }).promise;
+        if (cerrado) return;
+        const n = pdf.numPages;
+        const p1 = await pdf.getPage(1);
+        const v1 = p1.getViewport({ scale: 1 });
+        const ratio = v1.width / v1.height;
+        const maxAncho = () => Math.max(240, scroll.clientWidth - (window.innerWidth < 700 ? 12 : 28));
+        ancho = Math.min(860, maxAncho());
+        const fijarAncho = () => overlay.style.setProperty('--lr-w', Math.min(ancho, 1500) + 'px');
+        fijarAncho();
+        const frag = document.createDocumentFragment();
+        for (let i = 1; i <= n; i++) {
+          const d = document.createElement('div');
+          d.className = 'lib-page'; d.style.aspectRatio = ratio; d.dataset.n = i;
+          d.innerHTML = `<span class="lib-page__n">${i}</span>`;
+          frag.appendChild(d);
+        }
+        paginas.appendChild(frag);
+        const els = Array.from(paginas.children);
+        const dpr = Math.min(1.5, window.devicePixelRatio || 1);
+        const dibujar = async (i) => {
+          const el = els[i - 1];
+          if (!el || el.dataset.r) return;
+          el.dataset.r = 'p';
+          try {
+            const pg = await pdf.getPage(i);
+            if (cerrado || el.dataset.r !== 'p') return;
+            const w = el.clientWidth || ancho;
+            const base = pg.getViewport({ scale: 1 });
+            const vp = pg.getViewport({ scale: (w / base.width) * dpr });
+            const cv = document.createElement('canvas');
+            cv.width = Math.floor(vp.width); cv.height = Math.floor(vp.height);
+            await pg.render({ canvasContext: cv.getContext('2d'), viewport: vp }).promise;
+            if (cerrado || el.dataset.r !== 'p') return;
+            el.style.aspectRatio = base.width / base.height;
+            el.replaceChildren(cv); el.dataset.r = '1';
+            pg.cleanup();
+          } catch (e) { if (el.dataset.r === 'p') delete el.dataset.r; }
+        };
+        const soltar = (i) => {
+          const el = els[i - 1];
+          if (!el || !el.dataset.r) return;
+          delete el.dataset.r; el.innerHTML = `<span class="lib-page__n">${i}</span>`;
+        };
+        const paginaActual = () => {
+          const mitad = scroll.scrollTop + scroll.clientHeight * 0.35;
+          let lo = 0, hi = n - 1;
+          while (lo < hi) { const m = (lo + hi + 1) >> 1; if (els[m].offsetTop <= mitad) lo = m; else hi = m - 1; }
+          return lo + 1;
+        };
+        const actualizar = () => {
+          pend = 0;
+          actual = paginaActual();
+          etiqueta.textContent = `Página ${actual} de ${n}`;
+          overlay.style.setProperty('--lr-prog', ((actual / n) * 100).toFixed(1) + '%');
+          // primero la página que se está viendo y luego las vecinas (así un salto largo no espera a las demás)
+          [0, 1, -1, 2, 3, -2, 4, -3].forEach((d) => { const i = actual + d; if (i >= 1 && i <= n) dibujar(i); });
+          for (let i = 1; i <= n; i++) { if (els[i - 1].dataset.r && (i < actual - 7 || i > actual + 9)) soltar(i); }
+          try { localStorage.setItem(KEY, String(actual)); } catch (e) {}
+        };
+        scroll.addEventListener('scroll', () => { if (!pend) pend = requestAnimationFrame(actualizar); }, { passive: true });
+        const zoom = (f) => {
+          ancho = Math.max(240, Math.min(1500, ancho * f)); fijarAncho();
+          els.forEach((e, i) => { if (e.dataset.r) soltar(i + 1); });
+          const antes = actual; els[antes - 1] && scroll.scrollTo({ top: els[antes - 1].offsetTop - 12 });
+          actualizar();
+        };
+        q('mas').addEventListener('click', () => zoom(1.2));
+        q('menos').addEventListener('click', () => zoom(1 / 1.2));
+        let guardada = 1; try { guardada = parseInt(localStorage.getItem(KEY) || '1', 10) || 1; } catch (e) {}
+        guardada = Math.max(1, Math.min(n, guardada));
+        if (guardada > 1) scroll.scrollTo({ top: els[guardada - 1].offsetTop - 12 });
+        actualizar();
+      } catch (err) {
+        console.error('[lector]', err);
+        paginas.innerHTML = `<p class="lib-reader__msg">No se pudo abrir este libro dentro del panel. Revisa tu conexión e inténtalo de nuevo.<br><a href="${libro.pdf}" target="_blank" rel="noopener">Abrir el PDF en otra pestaña</a></p>`;
+        etiqueta.textContent = 'No se pudo cargar';
+      }
+    };
+
+    // Libro bloqueado: explica qué falta (membresía o XP) y lleva a donde se resuelve.
+    const avisoBloqueado = (libro) => {
+      const est = _estadoLibro(libro);
+      const faltan = Math.max(0, libro.xp - xpActual);
+      const id = 'libro-bloqueado';
+      if (est === 'membresia') {
+        Modal.open({
+          id, title: 'Libro exclusivo para miembros', subtitle: libro.titulo, icon: 'i-shield-check',
+          body: `<div style="padding:10px 2px 4px;line-height:1.6;color:var(--text-2);font-size:13px">Los libros de la biblioteca se leen solo con la <strong style="color:var(--primary)">membresía VIP</strong>. Cuando la actives, este se desbloquea al llegar a <strong style="color:var(--text)">${_fmtXP(libro.xp)} XP</strong> completando retos.</div>`,
+          footer: `<button class="btn btn--ghost" onclick="Modal.close('${id}')">Después</button><button class="btn btn--primary" onclick="Modal.close('${id}');navigateToSection('suscripcion')">Ver membresía</button>`
+        });
+        return;
+      }
+      Modal.open({
+        id, title: 'Sigue sumando XP', subtitle: libro.titulo, icon: 'i-shield-check',
+        body: `<div style="padding:10px 2px 4px;line-height:1.6;color:var(--text-2);font-size:13px">Este libro se desbloquea con <strong style="color:var(--primary)">${_fmtXP(libro.xp)} XP</strong>. Llevas <strong style="color:var(--text)">${_fmtXP(xpActual)} XP</strong> y te faltan <strong style="color:var(--text)">${_fmtXP(faltan)} XP</strong>. Cada reto que completes suma de 30 a 50 XP.<div class="lib-bar" style="margin-top:14px"><i style="width:${Math.min(100, (xpActual / libro.xp) * 100)}%"></i></div></div>`,
+        footer: `<button class="btn btn--ghost" onclick="Modal.close('${id}')">Después</button><button class="btn btn--primary" onclick="Modal.close('${id}');navigateToSection('retos')">Ir a los retos</button>`
+      });
+    };
+
+    const pintarBiblioteca = (root) => {
+      if (!root) return;
+      const esVip = tieneAccesoVipCompleto();
+      const siguiente = esVip ? LIBROS_BIBLIOTECA.find(l => xpActual < l.xp) : LIBROS_BIBLIOTECA[0];
+      const portadaStyle = (l) => `--portada:url('${l.portada}');--tono:${l.tono}`;
+      let banner;
+      if (!esVip) {
+        banner = `<div class="lib-next"><div class="lib-next__cover" style="${portadaStyle(siguiente)}"></div><div><div class="lib-next__eyebrow">Solo para miembros VIP</div><h3>Una biblioteca que se gana leyendo y practicando</h3><p>Activa tu membresía para leer estos libros dentro del panel. Se desbloquean uno a uno con los XP que ganas en los retos.</p></div><button type="button" class="btn btn--primary" data-lib-ir="suscripcion">Ver membresía</button></div>`;
+      } else if (siguiente) {
+        const faltan = siguiente.xp - xpActual;
+        banner = `<div class="lib-next"><div class="lib-next__cover" style="${portadaStyle(siguiente)}"></div><div><div class="lib-next__eyebrow">Tu próximo libro</div><h3>${escapeHtml(siguiente.titulo)}</h3><p>Te faltan <strong>${_fmtXP(faltan)} XP</strong> para desbloquearlo (${_fmtXP(xpActual)} de ${_fmtXP(siguiente.xp)}). Cada reto suma de 30 a 50 XP.</p><div class="lib-bar"><i style="width:${Math.min(100, (xpActual / siguiente.xp) * 100)}%"></i></div></div><button type="button" class="btn btn--primary" data-lib-ir="retos">Ganar XP en Retos</button></div>`;
+      } else {
+        banner = `<div class="lib-next"><div class="lib-next__cover" style="${portadaStyle(LIBROS_BIBLIOTECA[LIBROS_BIBLIOTECA.length - 1])};filter:none"></div><div><div class="lib-next__eyebrow">Biblioteca completa</div><h3>Desbloqueaste todos los libros</h3><p>Puedes leerlos cuando quieras. Se guarda la página donde te quedaste.</p></div></div>`;
+      }
+      const tarjetas = LIBROS_BIBLIOTECA.map(l => {
+        const est = _estadoLibro(l);
+        const faltan = Math.max(0, l.xp - xpActual);
+        const chip = est === 'abierto' ? `${_ICO_BOOK}Leer` : `${_ICO_LOCK}${_fmtXP(l.xp)} XP`;
+        const estado = est === 'abierto'
+          ? `${_ICO_BOOK}<span>Disponible · leer ahora</span>`
+          : est === 'xp'
+            ? `${_ICO_LOCK}<span>Te faltan ${_fmtXP(faltan)} XP</span>`
+            : `${_ICO_LOCK}<span>Con membresía · ${_fmtXP(l.xp)} XP</span>`;
+        const barra = est === 'xp' ? `<span class="lib-bar"><i style="width:${Math.min(100, (xpActual / l.xp) * 100)}%"></i></span>` : '';
+        return `<button type="button" class="lib-book ${est === 'abierto' ? 'is-open' : 'is-locked'}" data-lib="${l.id}" style="${portadaStyle(l)}" aria-label="${escapeHtml(l.titulo)}${est === 'abierto' ? '' : ' (bloqueado)'}">
+          <span class="lib-book__cover"><span class="lib-book__tag">${escapeHtml(l.tema)}</span><span class="lib-book__chip">${chip}</span><span class="lib-book__name">${escapeHtml(l.titulo)}<small>${escapeHtml(l.autor)} · ${escapeHtml(l.anio)}</small></span></span>
+          <span class="lib-book__title">${escapeHtml(l.titulo)}</span>
+          <span class="lib-book__meta">${escapeHtml(l.autor)} · ${escapeHtml(l.anio)} · ${l.paginas.toLocaleString('es-MX')} págs.</span>
+          ${barra}<span class="lib-book__state">${estado}</span></button>`;
+      }).join('');
+      const pronto = `<div class="lib-book lib-book--pronto" aria-hidden="true"><span class="lib-book__cover"><span>Más libros<br>muy pronto</span></span><span class="lib-book__title">Nuevos títulos</span><span class="lib-book__meta">Seguiremos ampliando la biblioteca.</span></div>`;
+      root.innerHTML = `
+        <div class="xp-library__head"><div><div class="xp-library__eyebrow">Biblioteca clásica · Dominio público</div><h2 class="xp-library__title">Libros para tu formación gastronómica</h2><p class="xp-library__sub">Joyas de la cocina y la repostería en español, para leer aquí mismo con tu membresía. Se desbloquean con los XP que ganas en Retos: los 18 retos suman hasta ${_fmtXP(xpMaximoRetos)} XP.</p></div><div class="xp-library__score"><b>${_fmtXP(xpActual)} <small>/ ${_fmtXP(xpMaximoRetos)} XP</small></b><span>Tu progreso</span></div></div>
+        ${banner}
+        <div class="lib-grid">${tarjetas}${pronto}</div>
+        <p class="lib-nota">Son obras de dominio público, escritas en español de su época (ortografía y recetas antiguas): sirven para conocer la tradición culinaria y reposteril. Digitalizaciones de la Universidade de Santiago de Compostela y de Internet Archive.</p>`;
+      root.querySelectorAll('[data-lib]').forEach(b => b.addEventListener('click', () => {
+        const l = LIBROS_BIBLIOTECA.find(x => x.id === b.dataset.lib);
+        if (_estadoLibro(l) === 'abierto') abrirLector(l); else avisoBloqueado(l);
+      }));
+      root.querySelectorAll('[data-lib-ir]').forEach(b => b.addEventListener('click', () => navigateToSection(b.dataset.libIr)));
+    };
     // Asegurar cursos cargados antes de renderizar
     if (!_cursosLoaded && !_cursosLoading) {
       container.innerHTML = `
@@ -10108,8 +10361,10 @@ const Sections = (function(){
             <span class="mat-head__eyebrow">Materiales</span>
             <h1 class="mat-head__title">Tu biblioteca <span>gastronómica.</span></h1>
           </div></div>
+          <section class="xp-library" id="xp-library"></section>
           <div class="mat-empty">Los materiales descargables aparecerán aquí cuando se suban desde el panel de administración.</div>
         </div>`;
+      pintarBiblioteca(container.querySelector('#xp-library'));
       return;
     }
 
@@ -10150,36 +10405,7 @@ const Sections = (function(){
     const $feat = container.querySelector('#mat-feat');
     const $shelf = container.querySelector('#mat-shelf');
 
-    const abrirLector = (libro) => {
-      const overlay = document.createElement('section');
-      overlay.className = 'xp-reader';
-      overlay.setAttribute('role','dialog');
-      overlay.setAttribute('aria-modal','true');
-      const cerrar = () => { document.removeEventListener('keydown', tecla); overlay.remove(); };
-      const tecla = (event) => { if(event.key === 'Escape') cerrar(); };
-      overlay.innerHTML = `<header class="xp-reader__bar"><button type="button" class="xp-reader__source" data-reader-source>Ver fuente original ↗</button><div><b>${libro.titulo}</b><span>${libro.categoria} · ${libro.paginas} páginas · CC BY 4.0</span></div><button type="button" class="xp-reader__close" aria-label="Cerrar lector" data-reader-close>×</button></header><main class="xp-reader__stage"><iframe class="xp-reader__pdf" src="${libro.pdf}#view=FitH" title="${libro.titulo}" allow="fullscreen"></iframe></main>`;
-      overlay.querySelector('[data-reader-close]').addEventListener('click', cerrar);
-      overlay.querySelector('[data-reader-source]').addEventListener('click', () => window.open(libro.url, '_blank', 'noopener'));
-      document.body.appendChild(overlay); document.addEventListener('keydown', tecla);
-    };
-    const abrirLibroXP = (libro) => {
-      const faltan = Math.max(0, libro.xp - xpActual);
-      if (faltan > 0) {
-        Modal.open({
-          id:'libro-xp-bloqueado', title:'Sigue sumando XP', subtitle:libro.titulo, icon:'i-shield-check',
-          body:`<div style="padding:10px 2px 4px;line-height:1.6;color:var(--text-2);font-size:13px">Esta lectura se desbloquea con <strong style="color:var(--primary)">${libro.xp.toLocaleString('es-MX')} XP</strong>. Te faltan <strong style="color:var(--text)">${faltan.toLocaleString('es-MX')} XP</strong>. Completa retos gastronómicos para avanzar.</div>`,
-          footer:`<button class="btn btn--ghost" onclick="Modal.close('libro-xp-bloqueado')">Después</button><button class="btn btn--primary" onclick="Modal.close('libro-xp-bloqueado');navigateToSection('retos')">Ver retos</button>`
-        });
-        return;
-      }
-      abrirLector(libro);
-    };
-    $xpLibrary.innerHTML = `
-      <div class="xp-library__head"><div><div class="xp-library__eyebrow">Biblioteca técnica · CC BY 4.0</div><h2 class="xp-library__title">Libros para tu formación gastronómica</h2><p class="xp-library__sub">Títulos de consulta con licencia abierta. Avanza en Retos, gana XP y descubre cada recomendación.</p></div><div class="xp-library__score"><b>${xpActual.toLocaleString('es-MX')} XP</b><span>Tu progreso</span></div></div>
-      ${(() => { const libro = librosXP[0]; return `<article class="xp-feature" style="--book-color:${libro.color};--book-photo:url('${libro.foto}')"><div class="xp-feature__cover"><span class="xp-feature__label">Biblioteca técnica</span><h3>${libro.titulo}</h3><span class="xp-feature__kind">${libro.categoria}</span></div><div class="xp-feature__info"><div class="xp-feature__eyebrow">Libro destacado · ${libro.categoria}</div><h2>${libro.titulo}</h2><p class="xp-feature__author">${libro.autor} · Licencia CC BY 4.0</p><p class="xp-feature__desc">${libro.desc} Es un recurso abierto que puedes consultar desde su editorial de origen.</p><div class="xp-feature__actions"><button type="button" class="btn btn--primary" data-xp-book="${libro.id}">Leer ahora <span>→</span></button><span class="xp-feature__meta">Libro · consulta abierta</span></div><div class="xp-feature__progress"><span>${retosCompletados} de ${totalRetos} retos superados · ${xpActual.toLocaleString('es-MX')} XP acumulados</span><div class="xp-feature__bar"><i style="width:${Math.min(100,(retosCompletados / totalRetos) * 100)}%"></i></div></div></div></article>`; })()}
-      <div class="xp-shelf-head"><b>Explora más libros</b><span>${librosXP.length - 1} títulos de consulta</span></div>
-      <div class="xp-books">${librosXP.slice(1).map(libro => { const abierto = xpActual >= libro.xp; const faltan = Math.max(0, libro.xp - xpActual); const avance = Math.min(100,(xpActual / libro.xp) * 100); return `<button type="button" class="xp-book ${abierto ? 'is-unlocked' : 'is-locked'}" data-xp-book="${libro.id}" style="--book-color:${libro.color};--book-photo:url('${libro.foto}')"><span class="xp-book__cover"><span class="xp-book__tag">Edición de consulta</span><h3>${libro.titulo}</h3><small>${libro.categoria}</small>${abierto ? '' : '<span class="xp-book__lock"><svg class="ic"><use href="#i-shield-check"/></svg></span>'}</span><span class="xp-book__title">${libro.titulo}</span><span class="xp-book__author">${libro.autor}</span><span class="xp-book__progress"><i style="width:${avance}%"></i></span><span class="xp-book__state">${abierto ? 'Disponible ahora' : `${faltan} XP para desbloquear`}</span></button>`; }).join('')}</div>`;
-    $xpLibrary.querySelectorAll('[data-xp-book]').forEach(btn => btn.addEventListener('click', () => abrirLibroXP(librosXP.find(l => l.id === btn.dataset.xpBook))));
+    pintarBiblioteca($xpLibrary);
 
     const filtrar = () => materialesTodos.filter(m => {
       if (fTipo === 'guardados' && !guardados.has(m.id)) return false;

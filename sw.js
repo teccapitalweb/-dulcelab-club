@@ -13,7 +13,7 @@
                                las fuentes de Google siempre van directo a la red.
    ═══════════════════════════════════════════════════════════════════════════ */
 
-const VERSION = 'dulcelab-v3';
+const VERSION = 'dulcelab-v4';
 const CACHE_SHELL = VERSION + '-shell';
 const CACHE_RUNTIME = VERSION + '-runtime';
 
@@ -79,6 +79,9 @@ self.addEventListener('fetch', (e) => {
 
   // Solo gestionamos nuestro propio origen.
   if (url.origin !== self.location.origin) return;
+
+  // Los libros PDF son pesados y se leen por partes (Range): van directo a la red.
+  if (/\.pdf$/i.test(url.pathname)) return;
 
   // ── Navegación: red primero ────────────────────────────────────────────
   // Aplica también a vip-panel / vip-admin: teniendo conexión SIEMPRE se sirve
