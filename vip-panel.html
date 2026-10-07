@@ -11930,7 +11930,7 @@ const Sections = (function(){
         if (!clientSecret) throw new Error('No recibimos clientSecret');
         if (!window.__stripe) {
           if (!window.Stripe) throw new Error('Stripe.js no cargó');
-          window.__stripe = window.Stripe('TODO_PK_LIVE_STRIPE_DULCELAB'); // TODO: llave publica (pk_live_...) de la cuenta de Stripe de DulceLab, NO reusar la de DulceLab
+          window.__stripe = window.Stripe('pk_live_51ThG5SDCxZfVu338m6ncLX0wUzQ4VvaJshknjfwnBTsuTFu65UiNiyx5NC1diPWQXwKqsubMOkXLMb9OGS4vEkZh00eHnjbWV4'); // llave publicable (publica por diseno) de la cuenta de Stripe
         }
         // El elemento del DOM pudo haber cambiado al re-renderizar; re-obtenerlo
         const liveMount = document.getElementById('sub-checkout-mount');
