@@ -195,12 +195,15 @@ body.modo-dia .logo-day{display:block}
 body{background:#f7f6f2;color:#251717}
 .theme-btn{display:none}
 .split{width:min(1100px,calc(100% - 48px));min-height:640px;margin:clamp(30px,9vh,110px) auto;grid-template-columns:1.05fr .95fr;background:#fff;border:1px solid #e8e0dc;border-radius:30px;overflow:hidden;box-shadow:0 22px 44px rgba(53,33,27,.14)}
-.hero{min-height:640px;padding:0;border:0;background:linear-gradient(rgba(57,13,24,.74),rgba(57,13,24,.89)),url('assets/29.jpg') center/cover no-repeat}
+.hero{min-height:820px;padding:0;border:0;background:linear-gradient(rgba(57,13,24,.74),rgba(57,13,24,.89)),url('assets/29.jpg') center/cover no-repeat}
 .hero::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,8,10,.04),rgba(43,9,17,.52));z-index:0}
 .hero .lockup,.hero .metrics,.hero .eyebrow,.hero h1,.hero-mid>p,.hero-marquee,.hero-hook,.hero-benefits,.hero-tools,.hero-tools-note,.hero-price,.hero-refs-title,.hero-refs,.hero-trust{display:none}
 .hero-mid{position:static;max-width:none;margin:0}
-.hero-mid::before{content:"Tu formación en alimentos\A empieza aquí";white-space:pre-line;position:absolute;left:clamp(30px,6vw,52px);right:28px;bottom:116px;color:#fff;font-family:var(--font-display);font-weight:800;font-size:clamp(2rem,3.2vw,3rem);line-height:1.12;letter-spacing:-.045em;z-index:1}
+.hero-mid::before{content:"Tu formación en alimentos\A empieza aquí";white-space:pre-line;position:absolute;left:clamp(30px,6vw,52px);right:28px;bottom:370px;color:#fff;font-family:var(--font-display);font-weight:800;font-size:clamp(2rem,3.2vw,3rem);line-height:1.12;letter-spacing:-.045em;z-index:1}
 .hero-mid::after{content:"Tu primera clase está disponible sin costo";position:absolute;left:clamp(30px,6vw,52px);bottom:46px;padding:12px 17px;border:1px solid rgba(255,211,119,.65);border-radius:999px;color:#ffe0a0;background:rgba(70,27,23,.4);font-size:.88rem;font-weight:700;z-index:1}
+.hero-quick-benefits{position:absolute;z-index:1;left:clamp(30px,6vw,52px);right:clamp(30px,6vw,52px);bottom:118px;display:grid;gap:9px;list-style:none;margin:0;padding:0}
+.hero-quick-benefits li{display:flex;align-items:center;gap:10px;min-height:48px;padding:10px 12px;border:1px solid rgba(255,255,255,.22);border-radius:12px;background:rgba(20,8,10,.22);color:#fff;font-size:.78rem;font-weight:600;line-height:1.3;backdrop-filter:blur(4px)}
+.hero-quick-benefits li::before{content:"✓";display:grid;place-items:center;flex:none;width:19px;height:19px;border-radius:50%;background:#fff;color:#6b1526;font-size:.75rem;font-weight:900}
 .authside{position:static!important;min-height:640px;padding:50px 56px;background:#fff}
 .auth-card{max-width:none;padding:0;background:transparent;border:0;border-radius:0;box-shadow:none;overflow:visible}
 .head{margin-bottom:22px}.auth-brand{display:block;width:118px;height:auto;margin-bottom:30px}
@@ -213,17 +216,13 @@ body{background:#f7f6f2;color:#251717}
 .field input{font-size:.96rem;padding:14px 0;color:#251717}.field input::placeholder{color:#9d928c}
 .btn{min-height:51px;border-radius:999px;font-size:.94rem}.btn.primary{background:#6b1526}.btn.primary:hover:not(:disabled){background:#4a0e1a}.btn.google{background:#fff;border-color:#d9ceca;color:#302323}
 .sep{margin:18px 0;color:#968b85}.forgot{color:#6b1526}.copyr{color:#9b8f89}
-.auth-benefits{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:18px 0 0;padding-top:15px;border-top:1px solid #eee6e2}
-.auth-benefits__item{display:flex;align-items:center;gap:6px;color:#786b65;font-size:.68rem;font-weight:600;line-height:1.25}
-.auth-benefits__item::before{content:"✓";display:grid;place-items:center;flex:none;width:17px;height:17px;border-radius:50%;background:#f8e6df;color:#7b172b;font-size:.68rem;font-weight:800}
 @media(max-width:900px){
   .split{width:min(650px,calc(100% - 32px));display:flex;flex-direction:column;margin:22px auto 40px;border-radius:26px}
-  .hero{width:100%;min-height:390px;order:0;border-radius:0;background-position:center}.hero-mid::before{left:34px;bottom:106px;font-size:2.15rem}.hero-mid::after{left:34px;bottom:40px;font-size:.84rem}
+  .hero{width:100%;min-height:390px;order:0;border-radius:0;background-position:center}.hero-mid::before{left:34px;bottom:106px;font-size:2.15rem}.hero-mid::after{left:34px;bottom:40px;font-size:.84rem}.hero-quick-benefits{display:none}
   .authside{width:100%;min-height:auto;padding:42px 34px 48px;order:1}.auth-card{max-width:500px;margin:auto}.auth-brand{margin-bottom:25px}
 }
 @media(max-width:520px){
   .split{width:calc(100% - 24px);margin:12px auto 30px;border-radius:23px}.hero{min-height:310px}.hero-mid::before{left:26px;bottom:92px;font-size:1.78rem}.hero-mid::after{left:26px;bottom:31px;padding:10px 14px;font-size:.74rem}.authside{padding:34px 24px 38px}.auth-brand{width:106px;margin-bottom:22px}.head h2{font-size:2.05rem}.head p{font-size:.94rem}
-  .auth-benefits{grid-template-columns:1fr 1fr;gap:10px}.auth-benefits__item:last-child{grid-column:1 / -1;justify-content:center}
 }
 </style>
 
@@ -309,6 +308,12 @@ body{background:#f7f6f2;color:#251717}
         </div>
         <p class="hero-trust">Pago seguro con Stripe &middot; Acceso inmediato &middot; Sin permanencia</p>
       </div>
+      <ul class="hero-quick-benefits" aria-label="Beneficios de la membresía">
+        <li>Cursos de repostería, panadería y cocina</li>
+        <li>Clases en vivo con chefs y especialistas</li>
+        <li>Material descargable y herramientas prácticas</li>
+        <li>Certificados digitales con código QR</li>
+      </ul>
       <div class="metrics">
       <div class="m"><b>13+</b><span>Cursos</span></div>
       <div class="m"><b>24/7</b><span>Acceso</span></div>
@@ -402,11 +407,6 @@ body{background:#f7f6f2;color:#251717}
         </button>
       </div>
 
-      <aside class="auth-benefits" aria-label="Beneficios de tu cuenta VIP">
-        <span class="auth-benefits__item">Cursos a tu ritmo</span>
-        <span class="auth-benefits__item">Material descargable</span>
-        <span class="auth-benefits__item">Comunidad VIP</span>
-      </aside>
       <div class="copyr">DulceLab Food &copy; 2026 &middot; Todos los derechos reservados</div>
     </div>
   </section>
