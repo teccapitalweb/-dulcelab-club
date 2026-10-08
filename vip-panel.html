@@ -3968,6 +3968,21 @@ if (window.__isDemoMode) {
     } else {
       try {
         const idToken = await user.getIdToken();
+        // Al volver de Stripe (?checkout=success&session_id=...) se le pide al servidor que revise esa compra
+        // directamente en Stripe y active la membresía, sin esperar al webhook.
+        if (isCheckoutSuccess) {
+          try {
+            const sid = new URLSearchParams(window.location.search).get('session_id');
+            if (sid) {
+              const rc = await fetch(`${WEBHOOK_URL}/stripe/confirmar`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
+                body: JSON.stringify({ session_id: sid })
+              });
+              if (!rc.ok) console.warn('[pago] confirmación:', rc.status, await rc.text().catch(()=>''));
+            }
+          } catch (e) { console.warn('[pago] no se pudo confirmar la compra:', e.message); }
+        }
         const res = await fetch(`${WEBHOOK_URL}/membership/${user.uid}`, {
           method: 'GET',
           headers: { 'Authorization': 'Bearer ' + idToken }
