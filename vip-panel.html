@@ -142,12 +142,10 @@ body{
 .herramientas-bloqueadas .nav-item[data-section="foro"]::after,
 .herramientas-bloqueadas .nav-item[data-section="directorio"]::after,
 .herramientas-bloqueadas .nav-item[data-section="canal"]::after,
-.herramientas-bloqueadas .nav-item[data-section="retos"]::after,
 .herramientas-bloqueadas .mobile-drawer__item[data-tool]::after,
 .herramientas-bloqueadas .mobile-drawer__item[data-section="foro"]::after,
 .herramientas-bloqueadas .mobile-drawer__item[data-section="directorio"]::after,
-.herramientas-bloqueadas .mobile-drawer__item[data-section="canal"]::after,
-.herramientas-bloqueadas .mobile-drawer__item[data-section="retos"]::after{
+.herramientas-bloqueadas .mobile-drawer__item[data-section="canal"]::after{
   content:"";width:11px;height:11px;margin-left:auto;flex:none;opacity:.5;
   background-color:var(--text-3);
   -webkit-mask:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>') no-repeat center/contain;
@@ -3075,6 +3073,11 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 .mat-item.is-selected .book__cover{outline:2px solid #E5C171;outline-offset:3px}
 .mat-item:focus-visible .book__cover{outline:2px solid var(--primary);outline-offset:3px}
 .mat-empty{text-align:center;padding:56px 24px;background:var(--surface-2);border:1px dashed var(--border-2);border-radius:14px;color:var(--text-3);font-size:13px}
+/* Aviso del reto gratis (Retos sin membresía) */
+.retos-gratis{margin:0 0 18px;padding:13px 16px;border-radius:14px;border:1px solid color-mix(in srgb,var(--accent,#D5A13D) 40%,var(--border));background:color-mix(in srgb,var(--accent,#D5A13D) 9%,var(--surface));font-size:13px;line-height:1.55;color:var(--text-2)}
+.retos-gratis b{color:var(--text)}
+.retos-gratis--fin{border-color:color-mix(in srgb,var(--primary) 40%,var(--border));background:color-mix(in srgb,var(--primary) 8%,var(--surface))}
+.retos-gratis__btn{margin-left:8px;padding:6px 14px;border:0;border-radius:99px;background:var(--primary);color:#fff;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
 /* Biblioteca de libros: solo para miembros VIP y se desbloquea con los XP de Retos. */
 .xp-library{margin:0 0 30px;padding:26px 22px 22px;border:1px solid var(--border);border-radius:22px;background:var(--surface);box-shadow:0 12px 30px rgba(55,24,28,.05)}
 .xp-library__head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:18px}
@@ -8722,6 +8725,8 @@ const Sections = (function(){
 
   async function _otorgarXP(retoId, puntos){
     if(_progreso.retosCompletados.includes(retoId)) return { yaCompletado:true, nuevosLogros:[] };
+    // Sin membresía no se suman puntos de un segundo reto.
+    if(typeof toolEsVIP==='function' && !toolEsVIP() && _progreso.retosCompletados.length >= 1) return { yaCompletado:true, nuevosLogros:[], bloqueado:true };
     _progreso.xp += puntos;
     _progreso.retosCompletados.push(retoId);
     const hoy = new Date().toISOString().slice(0,10);
@@ -8878,7 +8883,8 @@ const Sections = (function(){
   }
 
   function renderRetos(container){
-    if(typeof toolEsVIP==='function' && !toolEsVIP()){
+    // Sin sesión (modo demo) no hay dónde guardar puntos: se invita a crear la cuenta.
+    if(!window.UserState || !window.UserState.uid){
       container.innerHTML = `
         <div class="fade-up">
           <div class="sec-hero">
@@ -8888,12 +8894,12 @@ const Sections = (function(){
           </div>
           <div class="tool-paywall" style="background:var(--surface);border:1px solid var(--border-2);border-radius:16px;padding:36px 24px;">
             <div class="tool-paywall__ic"><svg class="ic"><use href="#i-bolt"/></svg></div>
-            <h3>Retos exclusivo para miembros VIP</h3>
-            <p>Activa tu membresía para desbloquear los retos, ganar XP y subir en tu camino de Aprendiz a Maestro.</p>
-            <button class="btn btn--accent" data-section="suscripcion">Hazte VIP</button>
+            <h3>Crea tu cuenta gratis para jugar</h3>
+            <p>Regístrate y juega tu primer reto sin costo. Tus puntos se guardan desde el primer momento.</p>
+            <button class="btn btn--accent" data-reto-registro>Crear mi cuenta gratis</button>
           </div>
         </div>`;
-      container.querySelector('[data-section="suscripcion"]')?.addEventListener('click', ()=>navigateToSection('suscripcion'));
+      container.querySelector('[data-reto-registro]')?.addEventListener('click', ()=>{ window.location.href = 'vip-auth.html'; });
       return;
     }
     if(!_progresoListo){
@@ -8903,8 +8909,11 @@ const Sections = (function(){
     }
 
     // ─── Datos reales ───
+    // Sin membresía: se puede jugar UN reto; sus puntos se guardan, pero no se juega otro hasta ser VIP.
+    const esVipRetos = typeof toolEsVIP==='function' ? toolEsVIP() : true;
+    const bloqueoPlan = !esVipRetos && _progreso.retosCompletados.length >= 1;
     const hecho = r => _progreso.retosCompletados.includes(r.id);
-    const abierto = i => i === 0 || _progreso.retosCompletados.includes(RETOS_LIBRARY[i-1].id);
+    const abierto = i => !bloqueoPlan && (i === 0 || _progreso.retosCompletados.includes(RETOS_LIBRARY[i-1].id));
     const total = RETOS_LIBRARY.length;
     const nHechos = RETOS_LIBRARY.filter(hecho).length;
     const pct = total ? Math.round(nHechos / total * 100) : 0;
@@ -8938,7 +8947,18 @@ const Sections = (function(){
 
     // ─── Tarjeta "siguiente reto" ───
     let nextHtml;
-    if (sig) {
+    if (bloqueoPlan) {
+      nextHtml = `
+        <div class="retos2-next" style="--cat-color:var(--primary);cursor:default">
+          <div class="retos2-next__ic"><svg class="ic"><use href="#i-bolt"/></svg></div>
+          <div>
+            <div class="retos2-next__eyebrow">Tu reto gratis ya está jugado</div>
+            <div class="retos2-next__title">Activa tu membresía para seguir jugando</div>
+            <div class="retos2-next__meta"><span>Tus ${_progreso.xp.toLocaleString('es-MX')} XP están guardados y se activan al hacerte VIP.</span></div>
+            <button type="button" class="mat-open" data-retos-vip>Hazte VIP<span class="mat-open__ic"><svg class="ic"><use href="#i-crown"/></svg></span></button>
+          </div>
+        </div>`;
+    } else if (sig) {
       const meta = RETO_CAT_META[sig.categoria] || { icon:'i-bolt', color:'var(--primary)' };
       const tm = RETO_TIPO_META[sig.tipo] || { ic:'i-bolt', nombre:'Reto' };
       nextHtml = `
@@ -8981,8 +9001,12 @@ const Sections = (function(){
       <div class="retos-route__scroll"><div class="retos-route__track">${rutaItems}</div></div>
     </section>`;
 
+    const avisoGratis = esVipRetos ? '' : (bloqueoPlan
+      ? `<div class="retos-gratis retos-gratis--fin"><b>Ya jugaste tu reto gratis.</b> Tus <b>${_progreso.xp.toLocaleString('es-MX')} XP</b> están guardados, pero no se pueden usar ni sumar más hasta que actives tu membresía VIP. <button type="button" class="retos-gratis__btn" data-retos-vip>Activar membresía</button></div>`
+      : `<div class="retos-gratis"><b>Prueba gratis:</b> puedes jugar <b>1 reto</b> sin membresía. Los puntos que ganes se guardan, y para seguir jugando y usarlos activas tu membresía VIP.</div>`);
     container.innerHTML = `
       <div class="fade-up">
+        ${avisoGratis}
         ${_progresoSinPermiso ? `<div style="background:color-mix(in srgb,var(--danger) 12%,transparent);border:1px solid color-mix(in srgb,var(--danger) 35%,transparent);border-radius:12px;padding:12px 14px;margin-bottom:18px;font-size:12px;color:var(--danger);">Tu avance no se está guardando (falta permiso en Firestore para <code style="font-family:'JetBrains Mono',monospace;">progreso</code>). Los puntos que ganes ahora se van a perder al recargar.</div>` : ''}
         <section class="retos2-hero" style="background-image:linear-gradient(100deg,var(--primary-deep) 0%,rgba(74,14,26,.95) 40%,rgba(107,21,38,.55) 100%),url('${_retoImg(RETO_FOTO_HERO, 1400)}')">
           <div>
@@ -9028,7 +9052,7 @@ const Sections = (function(){
         <section class="retos2-zone">
           <div class="retos2-sec">
             <div><div class="retos2-sec__eyebrow">Entrena tus conocimientos</div><h2 class="retos2-sec__title">Zona de retos</h2></div>
-            <span class="retos2-sec__note">${_progreso.xp.toLocaleString('es-MX')} XP acumulados</span>
+            <span class="retos2-sec__note">${_progreso.xp.toLocaleString('es-MX')} XP ${esVipRetos ? 'acumulados' : 'guardados · se activan con tu membresía'}</span>
           </div>
           ${nextHtml}
         </section>
@@ -9062,6 +9086,7 @@ const Sections = (function(){
     const $grid = container.querySelector('#retos2-grid');
 
     const abrirDesde = (el) => {
+      if (bloqueoPlan) { _avisoRetosMembresia(); return; }
       if (el.dataset.retoLocked === 'true') { Toast.info('Reto bloqueado', 'Completa el reto anterior para desbloquear este.'); return; }
       _abrirReto(el.dataset.retoId);
     };
@@ -9070,6 +9095,7 @@ const Sections = (function(){
       el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); abrirDesde(el); } });
     };
     container.querySelectorAll('.retos2-next[data-reto-id]').forEach(enlazar);
+    container.querySelectorAll('[data-retos-vip]').forEach(b => b.addEventListener('click', () => navigateToSection('suscripcion')));
 
     function pintar(){
       // Modos de juego (uno por tipo de reto)
@@ -9113,7 +9139,7 @@ const Sections = (function(){
                      : !libre ? '<span class="retos2-card__st is-lock">Bloqueado</span>'
                      : esSig ? '<span class="retos2-card__st is-next">Siguiente</span>'
                      : '<span class="retos2-card__st">Disponible</span>';
-        const cta = ok ? 'Repetir' : !libre ? 'Completa el anterior' : 'Jugar';
+        const cta = ok ? (bloqueoPlan ? 'Con membresía' : 'Repetir') : !libre ? (bloqueoPlan ? 'Activa tu membresía' : 'Completa el anterior') : 'Jugar';
         return `
           <div class="retos2-card ${ok ? 'is-done' : ''} ${libre ? '' : 'is-locked'}" role="button" tabindex="0" style="--cat-color:${meta.color}" data-reto-id="${r.id}" data-reto-locked="${!libre}">
             <div class="retos2-card__img" style="background-image:linear-gradient(180deg,rgba(0,0,0,.28) 0%,rgba(0,0,0,.04) 42%,rgba(0,0,0,.5) 100%),url('${_retoFoto(r, 640)}')">
@@ -9182,14 +9208,15 @@ const Sections = (function(){
   }
 
   function _avisarResultadoXP(r, res, mensajeExito){
-    if(res.guardado) Toast.success('🎉 ¡Reto logrado!', '+'+r.puntos+' pts · '+mensajeExito);
+    if(res.guardado && typeof toolEsVIP==='function' && !toolEsVIP()) Toast.success('🎉 ¡Reto logrado!', '+'+r.puntos+' pts guardados · actívalos con tu membresía VIP');
+    else if(res.guardado) Toast.success('🎉 ¡Reto logrado!', '+'+r.puntos+' pts · '+mensajeExito);
     else Toast.error('No se pudo guardar tu avance', 'Ganaste los puntos pero no se guardaron — revisa tu conexión o avísale a soporte');
   }
 
   function _trasCompletarReto(r){
     const idx = RETOS_LIBRARY.findIndex(x=>x.id===r.id);
     const siguiente = RETOS_LIBRARY[idx+1];
-    if(siguiente && !_progreso.retosCompletados.includes(siguiente.id)){
+    if(siguiente && !_progreso.retosCompletados.includes(siguiente.id) && !_retoGratisAgotado()){
       setTimeout(()=>Toast.success('🔓 ¡Reto desbloqueado!', siguiente.titulo), 900);
     }
     const dyn = document.getElementById('dynamic-section');
@@ -9206,9 +9233,22 @@ const Sections = (function(){
     });
   }
 
+  // Sin membresía solo cuenta el primer reto; para el segundo se pide activar la membresía.
+  function _retoGratisAgotado(){
+    return typeof toolEsVIP==='function' && !toolEsVIP() && _progreso.retosCompletados.length >= 1;
+  }
+  function _avisoRetosMembresia(){
+    const id = 'retos-membresia';
+    Modal.open({
+      id, title:'Tu reto gratis ya fue jugado', subtitle:'Sigue jugando con la membresía VIP', icon:'i-bolt',
+      body:`<div style="padding:10px 2px 4px;line-height:1.6;color:var(--text-2);font-size:13px">Sin membresía puedes jugar <strong style="color:var(--text)">un reto</strong>. Tus <strong style="color:var(--primary)">${_progreso.xp.toLocaleString('es-MX')} XP</strong> están guardados y se activan cuando te hagas VIP; entonces podrás seguir jugando y usarlos para desbloquear libros.</div>`,
+      footer:`<button class="btn btn--ghost" onclick="Modal.close('${id}')">Después</button><button class="btn btn--primary" onclick="Modal.close('${id}');navigateToSection('suscripcion')">Ver membresía</button>`
+    });
+  }
   function _abrirReto(retoId){
     const r = RETOS_LIBRARY.find(x=>x.id===retoId);
     if(!r) return;
+    if(_retoGratisAgotado()){ _avisoRetosMembresia(); return; }
     if(r.tipo==='secuencia') return _retoSecuencia(r);
     if(r.tipo==='error') return _retoError(r);
     if(r.tipo==='imagen') return _retoImagen(r);
@@ -13178,7 +13218,7 @@ function initNav(){
       }
       // Comunidad: exclusiva para miembros. Las herramientas sí se pueden explorar;
       // la membresía solo se solicita al intentar usar una calculadora.
-      const seccionesComunidadVIP = ['foro','directorio','canal','retos'];
+      const seccionesComunidadVIP = ['foro','directorio','canal'];
       const esComunidadVIP = it.dataset.section && seccionesComunidadVIP.includes(it.dataset.section);
       if(esComunidadVIP && typeof toolEsVIP==='function' && !toolEsVIP()){
         if (it.classList.contains('mobile-drawer__item')) cerrarDrawerMovil();
@@ -13606,8 +13646,9 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
       const el = document.getElementById(id);
       if (el) el.style.display = esVipReal ? '' : 'none';
     });
+    // Retos se ve para todos: sin membresía se puede jugar un solo reto (ver renderRetos).
     document.querySelectorAll('.nav-item[data-section="retos"], .mobile-drawer__item[data-section="retos"]').forEach(el=>{
-      el.style.display = esVipReal ? '' : 'none';
+      el.style.display = '';
     });
 
     // 7. ⚡ Re-cargar el widget "Próxima clase en vivo" AHORA que Firebase auth está listo
