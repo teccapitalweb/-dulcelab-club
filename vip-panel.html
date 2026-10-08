@@ -14268,6 +14268,45 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   z-index:2;
 }
 .pdf-card--soon .pdf-card__btn-soon:hover{opacity:.55 !important;transform:none !important}
+
+/* ═══ Inicio en celular · versión compacta (ref. Visión Pecuaria) ═══
+   En pantallas chicas el banner ocupaba más de una pantalla completa. Aquí se junta lo importante
+   (curso actual, siguiente clase, avance y cifras) en una sola tarjeta corta y se apretan los bloques de abajo. */
+@media (max-width:700px){
+  .banner{grid-template-columns:1fr;gap:9px;padding:13px;border-radius:18px}
+  .banner::after{display:none}
+  .banner__eyebrow{padding:4px 9px 4px 8px;font-size:9px;letter-spacing:1px;gap:6px}
+  .banner__version{display:none}
+  .banner__title{font-size:21px;line-height:1.15;letter-spacing:-.5px;margin-top:9px}
+  .banner__title br{display:none}
+  .banner__title-accent{margin-left:.28em}
+  .hero-course{margin-top:9px;padding:11px 12px;border-radius:14px;max-width:none}
+  .hero-course__name{font-size:14px;line-height:1.3;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .hero-course__next{margin-top:9px;padding:7px 10px;gap:10px;border-radius:10px}
+  .hero-course__next-num{width:24px;height:24px;font-size:11.5px}
+  .hero-course__next-title{font-size:12px}
+  .hero-progress{margin-top:9px}
+  .hero-progress__top{margin-bottom:4px;font-size:10.5px}
+  .hero-progress__bar{height:5px}
+  .hero-cta{margin-top:10px;gap:10px}
+  .hero-cta__btn{width:36px;height:36px}
+  .hero-goal{padding:11px 12px;border-radius:14px}
+  .hero-goal__eyebrow,.hero-goal__steps{display:none}
+  .hero-goal__title{margin-top:0;font-size:13px}
+  .hero-goal__stats{margin-top:8px;padding-top:8px;gap:5px}
+  .banner__stat{padding:6px 4px;border-radius:9px}
+  .banner__stat-lbl{margin-bottom:2px;font-size:7.5px;letter-spacing:.9px}
+  .banner__stat-val{font-size:14px}
+  .banner + div[style*="height:22px"]{height:12px!important}
+  .quick-access{gap:8px}
+  .quick-access__item{padding:9px 6px;border-radius:14px}
+  .tu-semana{padding:13px 14px;border-radius:16px}
+  .tu-semana__row{padding:8px 10px}
+  .discover-today{padding:13px;border-radius:16px}
+  .discover-today .discover-card:first-child .discover-card__cover{height:128px}
+  .discover-today .discover-card:first-child .discover-card__title{font-size:15px}
+  .discover-intro{margin-bottom:10px}
+}
 </style>
 <!-- ─── Service Worker · permite instalar DulceLab Food como app y abrir más rápido ─── -->
 <script>
