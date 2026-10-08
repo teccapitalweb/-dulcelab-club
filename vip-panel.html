@@ -3701,6 +3701,34 @@ body.has-fomo .main{padding-top:18px}
 </defs></svg>
 
 
+<!-- ═══ Coordinador de ventanas emergentes ═══
+     Evita que salgan varias a la vez (bienvenida, nombre, invitación de prueba, guía, instalar app).
+     Cada una pide su turno con una prioridad (1 sale primero); solo se muestra una a la vez. -->
+<script>
+(function(){
+  var pend = {}, hasta = 0;
+  function hayPopup(){
+    return !!document.querySelector('#splash-bienvenida, #name-modal, .modal-backdrop.is-open, .mvtour-overlay, #dulcelab-install-pop.show, .lib-reader');
+  }
+  function pedir(id, prio, fn, maxMs){
+    if (pend[id]) return;
+    pend[id] = prio;
+    var t0 = Date.now(), limite = maxMs || 180000;
+    (function intentar(){
+      var hayMayor = Object.keys(pend).some(function(k){ return k !== id && pend[k] < prio; });
+      if (!hayPopup() && !hayMayor && Date.now() >= hasta){
+        delete pend[id];
+        hasta = Date.now() + 1500; // margen para que este termine de dibujarse antes de dar turno a otro
+        try { fn(); } catch(e){ console.warn('[popups]', id, e && e.message); }
+        return;
+      }
+      if (Date.now() - t0 > limite){ delete pend[id]; return; }
+      setTimeout(intentar, 500);
+    })();
+  }
+  window.__Popups = { pedir: pedir, hayPopup: hayPopup };
+})();
+</script>
 <!-- Stripe.js para Embedded Checkout (sección Suscripción) -->
 <script src="https://js.stripe.com/v3/"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -3970,7 +3998,9 @@ if (window.__isDemoMode) {
     }, 50);
 
     // ─── Popup: confirmar/editar nombre (1ª vez) · evita certificados con el email ───
-    setTimeout(() => { try { window.__maybeAskName && window.__maybeAskName(); } catch(e){} }, 900);
+    setTimeout(() => { try {
+      if (localStorage.getItem('dulcelab_name_confirmed') !== '1' && window.__maybeAskName) window.__Popups.pedir('nombre', 2, () => window.__maybeAskName());
+    } catch(e){} }, 900);
 
     // Arrancar listener de notificaciones de Firestore (tiempo real)
     setTimeout(() => { if (typeof setupNotificacionesListener === 'function') setupNotificacionesListener(); }, 100);
@@ -4164,6 +4194,14 @@ window.__showWelcomeSplash = function(opts) {
 
   goTo(0);
 };
+// La bienvenida pasa por el coordinador: si otra ventana está abierta, espera su turno.
+(function(){
+  const _splashDirecto = window.__showWelcomeSplash;
+  window.__showWelcomeSplash = function(opts){
+    if (!window.__Popups) return _splashDirecto(opts);
+    window.__Popups.pedir('bienvenida', 1, () => _splashDirecto(opts), 60000);
+  };
+})();
 
 window.__resetPassword = async () => {
   try {
@@ -5568,8 +5606,13 @@ const Sections = (function(){
   }
 
   window.__mostrarInvitacionPruebaGratis = function() {
-    if (tieneAccesoVipCompleto() || cursoConPrimeraClaseGratis() || window.__pruebaGratisMostrada) return;
+    if (tieneAccesoVipCompleto() || cursoConPrimeraClaseGratis() || window.__pruebaGratisMostrada || window.__pruebaGratisPedida) return;
     if (!cursosElegiblesParaPrueba().length) { setTimeout(() => window.__mostrarInvitacionPruebaGratis(), 700); return; }
+    window.__pruebaGratisPedida = true;
+    window.__Popups.pedir('prueba', 3, () => { window.__pruebaGratisPedida = false; mostrarInvitacionPruebaAhora(); });
+  };
+  function mostrarInvitacionPruebaAhora() {
+    if (tieneAccesoVipCompleto() || cursoConPrimeraClaseGratis() || window.__pruebaGratisMostrada) return;
     window.__pruebaGratisMostrada = true;
     const id = 'invitacion-prueba-gratis';
     Modal.open({ id, size:'sm', closeOnBackdrop:true, body: `
@@ -5581,7 +5624,7 @@ const Sections = (function(){
       </div>` });
     const root = document.querySelector(`[data-modal-id="${id}"]`);
     root?.querySelector('#abrir-selector-prueba')?.addEventListener('click', () => { Modal.close(id); setTimeout(abrirSelectorCursoPrueba, 180); });
-  };
+  }
 
   function mostrarPaywallCurso(curso) {
     // Antes abría el modal chico de paywall; ahora cierra el detalle del curso
@@ -14194,9 +14237,22 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   function esIOS(){
     return /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
   }
+  // Cuenta una visita por sesión del navegador: en la primera (cuando salen bienvenida, nombre
+  // y guía) no se ofrece instalar; se ofrece desde la segunda.
+  function esSegundaVisitaOMas(){
+    try {
+      if (!sessionStorage.getItem('dulcelab_visita_contada')) {
+        sessionStorage.setItem('dulcelab_visita_contada', '1');
+        localStorage.setItem('dulcelab_visitas_panel', String((parseInt(localStorage.getItem('dulcelab_visitas_panel') || '0', 10) || 0) + 1));
+      }
+      return (parseInt(localStorage.getItem('dulcelab_visitas_panel') || '0', 10) || 0) >= 2;
+    } catch(e){ return true; }
+  }
   function mostrar(){
-    if (yaInstalada() || fueDescartada()) return;
-    pop.classList.add('show');
+    if (yaInstalada() || fueDescartada() || !esSegundaVisitaOMas()) return;
+    // Espera unos segundos antes de pedir turno, para que las demás ventanas (más importantes) lo pidan primero.
+    if (window.__Popups) setTimeout(function(){ window.__Popups.pedir('instalar', 5, function(){ pop.classList.add('show'); }, 600000); }, 6000);
+    else pop.classList.add('show');
   }
   function ocultar(recordar){
     pop.classList.remove('show');
@@ -14229,7 +14285,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   if (overlay) overlay.addEventListener('click', function(){ ocultar(false); });
 })();
 </script>
-<script src="assets/onboarding-tour.js?v=1"></script>
+<script src="assets/onboarding-tour.js?v=2"></script>
 <script>
 window.DulceLabOnboarding = new window.MembershipTour({
   namespace: 'dulcelab',
