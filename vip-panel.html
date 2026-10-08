@@ -3133,6 +3133,46 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 .lib-book--pronto .lib-book__cover::before,.lib-book--pronto .lib-book__cover::after{display:none}
 .lib-book--pronto .lib-book__cover span{font-size:12px;font-weight:700;line-height:1.35}
 .lib-nota{margin:22px 0 0;padding-top:14px;border-top:1px solid var(--border);font-size:11px;line-height:1.55;color:var(--text-3)}
+.lib-tabs{display:flex;gap:8px;margin:0 0 16px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.lib-tabs::-webkit-scrollbar{display:none}
+.lib-tab{flex:none;display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:99px;border:1px solid var(--border);background:var(--surface-2);color:var(--text-2);font:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:background .15s,color .15s}
+.lib-tab small{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:var(--text-3)}
+.lib-tab:hover{background:var(--surface-3)}
+.lib-tab.is-active{background:var(--primary);border-color:var(--primary);color:#fff}
+.lib-tab.is-active small{color:rgba(255,255,255,.78)}
+.lib-intro{margin:0 0 16px;font-size:12.5px;line-height:1.6;color:var(--text-2);max-width:720px}
+.lib-book__meta{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.rec-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:14px}
+.rec-card{position:relative;overflow:hidden;display:flex;flex-direction:column;gap:7px;padding:14px 15px 13px 18px;border-radius:14px;border:1px solid var(--border);background:var(--surface);text-align:left;color:var(--text);font:inherit;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.rec-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(180deg,var(--c1),var(--c2))}
+.rec-card:hover{transform:translateY(-3px);box-shadow:0 12px 22px -14px rgba(37,18,18,.4)}
+.rec-card:focus-visible{outline:3px solid #E5C171;outline-offset:3px}
+.rec-card__top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.rec-card__cat{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:800;letter-spacing:.9px;text-transform:uppercase;color:var(--c1)}
+.rec-card__xp{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:99px;background:var(--surface-2);border:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:800;color:var(--text-2)}
+.rec-card__xp svg{width:10px;height:10px}
+.rec-card.is-open .rec-card__xp{background:#2f7a52;border-color:#2f7a52;color:#fff}
+.rec-card__title{font-size:14.5px;font-weight:800;line-height:1.25;color:var(--text)}
+.rec-card__meta{font-size:11px;color:var(--text-3)}
+.rec-card.is-locked .rec-card__title{opacity:.85}
+.lib-doc-wrap{max-width:780px;margin:0 auto}
+.lib-doc{background:#fbf7ee;color:#2a1418;border-radius:6px;padding:clamp(20px,4vw,42px);box-shadow:0 10px 26px rgba(30,18,12,.25)}
+.lib-doc__head{padding-bottom:18px;border-bottom:1px solid #e6dccb}
+.lib-doc__tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:#8c1d33}
+.lib-doc h1{margin:8px 0 8px;font-size:clamp(24px,4vw,32px);line-height:1.15;letter-spacing:-.6px;color:#2a1418}
+.lib-doc__lead{margin:0;font-size:15px;line-height:1.6;color:#5a4a46}
+.lib-doc__meta,.lib-doc__chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#7a6a64}
+.lib-doc__chips span{padding:5px 11px;border-radius:99px;background:#f0e6d4;border:1px solid #e6dccb;font-weight:700;color:#5a4a46}
+.lib-doc__sec{margin-top:22px}
+.lib-doc h2{margin:0 0 8px;font-size:19px;letter-spacing:-.3px;color:#6B1526}
+.lib-doc h3{margin:14px 0 6px;font-size:12px;letter-spacing:.8px;text-transform:uppercase;color:#8c6a2f}
+.lib-doc p{margin:0 0 10px;font-size:15px;line-height:1.7}
+.lib-doc ul,.lib-doc ol{margin:6px 0 10px;padding-left:22px;font-size:15px;line-height:1.65}
+.lib-doc li{margin-bottom:5px}
+.lib-doc__nota{margin:14px 0 4px;padding:12px 14px;border-left:3px solid #bc8a28;background:#f5efe2;font-size:13px;line-height:1.55;color:#5a4a46}
+.lib-doc__fuente{margin-top:26px;padding-top:14px;border-top:1px solid #e6dccb;font-size:12px;line-height:1.55;color:#7a6a64}
+.lib-doc__fuente a{color:#8c1d33;font-weight:700}
+@media(max-width:600px){.lib-doc{padding:18px 16px}.lib-doc p,.lib-doc ul,.lib-doc ol{font-size:14.5px}}
 .lib-reader{position:fixed;z-index:10050;inset:0;display:flex;flex-direction:column;background:#cfc7bc;color:#2a1418;animation:fade-in .18s ease}
 .lib-reader__bar{display:grid;grid-template-columns:44px minmax(0,1fr) auto;align-items:center;gap:14px;min-height:60px;padding:0 18px;background:#2a1418;color:#fff;box-shadow:0 2px 10px rgba(0,0,0,.28)}
 .lib-reader__close,.lib-reader__zoom button{display:grid;place-items:center;width:36px;height:36px;border:1px solid rgba(255,255,255,.4);border-radius:50%;background:transparent;color:#fff;font-size:19px;line-height:1;cursor:pointer}
@@ -8837,6 +8877,177 @@ const Sections = (function(){
       opciones:[ {label:'Opción A · cristal limpio, guarnición cuidada', correcta:true, imagen:'assets/ad6-1.jpg'}, {label:'Opción B · descuidada, vaso sucio', correcta:false, imagen:'assets/ad6-2.jpg'} ] }
   ];
 
+  // ═══════════════════════════════════════════════════════════════
+  // RETOS NUEVOS · trivias y cuentas (24 retos más, sin fotos)
+  // Mismas reglas de siempre (se desbloquean en orden, XP en progreso/{uid}),
+  // pero con formatos más ágiles: trivias con explicación y problemas de números del
+  // día a día de una cocina. Cada reto da entre 35 y 50 XP, que es lo que permite
+  // pedir más XP por los premios de la biblioteca.
+  // tipo 'quiz'    · varias preguntas; se aprueba con "aprobar" aciertos
+  // tipo 'calculo' · una respuesta numérica con tolerancia y explicación paso a paso
+  // ═══════════════════════════════════════════════════════════════
+  const RETOS_NUEVOS = [
+    { id:'q-mito-inocuidad', tipo:'quiz', categoria:'Inocuidad', titulo:'¿Verdad o mito? Inocuidad en la cocina', dificultad:'Básico', puntos:40, aprobar:3,
+      preguntas:[
+        { p:'Lavar el pollo crudo en el fregadero lo deja más seguro.', o:['Verdad','Mito'], c:1, e:'Es un mito: el agua salpica bacterias al fregadero, a tus manos y a lo que esté cerca. Lo que vuelve seguro al pollo es cocinarlo hasta 74 °C por dentro.' },
+        { p:'La zona de peligro, donde las bacterias se multiplican más rápido, va aproximadamente de…', o:['0 a 10 °C','4 a 60 °C','60 a 100 °C'], c:1, e:'Entre 4 y 60 °C. Por eso lo frío se guarda a 4 °C o menos y lo caliente se mantiene a 60 °C o más.' },
+        { p:'Para lavarte las manos hay que frotar con agua y jabón al menos…', o:['5 segundos','10 segundos','20 segundos'], c:2, e:'20 segundos: es el tiempo mínimo para que el jabón arrastre la suciedad y los microbios.' },
+        { p:'Si el pollo ya se ve blanco por dentro, ya es seguro comerlo.', o:['Verdad','Mito'], c:1, e:'Mito: el color no es una prueba confiable. Usa un termómetro de sonda y confirma 74 °C en la parte más gruesa.' },
+        { p:'¿Cuál es la forma más segura de descongelar carne?', o:['Sobre la mesa toda la noche','En el refrigerador','En agua tibia del grifo'], c:1, e:'En el refrigerador. También se puede en agua fría corriente o en microondas si se cocina enseguida, pero nunca a temperatura ambiente.' }
+      ] },
+    { id:'c-costo-flan', tipo:'calculo', categoria:'Producción', titulo:'¿Cuánto cuesta cada porción de flan?', dificultad:'Básico', puntos:35, respuesta:15, tolerancia:0.01, unidad:'$ por porción',
+      enunciado:'Preparas un flan con ingredientes que cuestan $180 en total. La receta rinde 12 porciones. ¿Cuánto cuesta cada porción?',
+      pista:'Divide el costo total entre el número de porciones.',
+      explicacion:'$180 ÷ 12 = $15 por porción. Este es el costo de ingredientes; a esto aún le faltan empaque, gas, luz y mano de obra.' },
+    { id:'q-orden-refri', tipo:'quiz', categoria:'Inocuidad', titulo:'Orden en el refrigerador', dificultad:'Intermedio', puntos:45, aprobar:4,
+      preguntas:[
+        { p:'¿Dónde se guarda la carne cruda en el refrigerador?', o:['En el estante de arriba','En el estante más bajo, en recipiente cerrado','Junto a las verduras ya listas'], c:1, e:'Abajo y en recipiente cerrado: así, si gotea, no cae sobre alimentos que se comen sin cocinar.' },
+        { p:'El refrigerador de un negocio de alimentos debe estar a…', o:['4 °C o menos','10 °C','12 °C'], c:0, e:'4 °C o menos. Anota la temperatura a diario: un refrigerador más tibio acelera el crecimiento de bacterias.' },
+        { p:'PEPS significa…', o:['Primeras entradas, primeras salidas','Peso, empaque, precio y surtido','Producto en estado perecedero seguro'], c:0, e:'Primeras entradas, primeras salidas: lo más antiguo se usa primero para que nada se caduque olvidado al fondo.' },
+        { p:'Una charola grande de arroz recién cocido se debe…', o:['Dejar tapada en la mesa hasta que se enfríe sola','Dividir en recipientes poco profundos y refrigerar pronto','Meter caliente en una sola olla grande y apretada'], c:1, e:'Los recipientes poco profundos enfrían rápido. Una olla grande tarda horas en bajar la temperatura y deja al arroz mucho tiempo en la zona de peligro.' },
+        { p:'¿Cuánto tiempo máximo puede estar un alimento perecedero a temperatura ambiente?', o:['2 horas','6 horas','Toda la noche'], c:0, e:'Dos horas como máximo (una hora si hace mucho calor, alrededor de 32 °C o más).' }
+      ] },
+    { id:'c-merma-zanahoria', tipo:'calculo', categoria:'Producción', titulo:'La merma de las zanahorias', dificultad:'Básico', puntos:35, respuesta:23.81, tolerancia:0.02, unidad:'$ por kg utilizable',
+      enunciado:'Compras 5 kg de zanahoria a $20 el kilo ($100 en total). Al pelar y recortar quedan 4.2 kg utilizables. ¿Cuál es el costo real por kilo utilizable? Redondea a 2 decimales.',
+      pista:'Divide lo que pagaste entre los kilos que realmente puedes usar.',
+      explicacion:'$100 ÷ 4.2 kg = $23.81 por kilo utilizable. Con este costo real (y no con $20) debes calcular tus recetas.' },
+    { id:'q-masa', tipo:'quiz', categoria:'Panadería', titulo:'Secretos de la masa', dificultad:'Básico', puntos:40, aprobar:3,
+      preguntas:[
+        { p:'El gluten se forma cuando la harina de trigo se mezcla con…', o:['Aceite','Agua','Azúcar'], c:1, e:'Con agua. Al amasar, las proteínas de la harina se unen y forman una red elástica que atrapa el gas.' },
+        { p:'¿Qué harina tiene más proteína?', o:['Harina de repostería','Harina de fuerza','Fécula de maíz'], c:1, e:'La harina de fuerza (alrededor de 12 a 14 %). Por eso sirve para pan, y la de repostería para pasteles tiernos.' },
+        { p:'Además del sabor, ¿para qué sirve la sal en el pan?', o:['Para que la masa nunca suba','Para controlar la fermentación y fortalecer el gluten','Para que la corteza salga blanca'], c:1, e:'Controla la velocidad de la fermentación y fortalece el gluten. Un pan sin sal fermenta de más y sabe plano.' },
+        { p:'La prueba de la ventana sirve para saber si…', o:['La masa ya fermentó lo suficiente','El gluten ya está bien desarrollado','El horno está caliente'], c:1, e:'Se estira un trozo de masa hasta hacerlo transparente: si no se rompe, el gluten ya está desarrollado.' },
+        { p:'Una masa con 1,000 g de harina y 700 g de agua tiene una hidratación de…', o:['30 %','70 %','100 %'], c:1, e:'700 ÷ 1,000 × 100 = 70 %. La hidratación siempre se calcula sobre el peso de la harina.' }
+      ] },
+    { id:'c-escalar', tipo:'calculo', categoria:'Cocina', titulo:'Escala la receta para el evento', dificultad:'Básico', puntos:35, respuesta:1000, tolerancia:0.5, unidad:'gramos de harina',
+      enunciado:'Una receta rinde 8 porciones y usa 400 g de harina. Necesitas 20 porciones. ¿Cuántos gramos de harina vas a usar?',
+      pista:'Primero calcula cuánta harina lleva cada porción.',
+      explicacion:'400 g ÷ 8 = 50 g por porción. 50 g × 20 porciones = 1,000 g de harina. Lo mismo se hace con todos los demás ingredientes.' },
+    { id:'q-ciencia-pastel', tipo:'quiz', categoria:'Repostería', titulo:'Ciencia del pastel', dificultad:'Básico', puntos:40, aprobar:3,
+      preguntas:[
+        { p:'El polvo para hornear contiene…', o:['Bicarbonato, un ácido y almidón','Solo levadura','Azúcar y sal'], c:0, e:'Bicarbonato, un ácido seco y almidón. Al mojarse y calentarse produce gas que levanta la masa.' },
+        { p:'El bicarbonato solo funciona si en la receta hay…', o:['Un ingrediente ácido','Mucha grasa','Un horno muy caliente'], c:0, e:'Necesita un ácido (yogur, limón, suero, cacao natural, miel) para reaccionar y soltar gas.' },
+        { p:'Mezclar de más una masa de pastel provoca…', o:['Una miga más esponjosa','Exceso de gluten: miga dura y con túneles','Que se hornee más rápido'], c:1, e:'Al mezclar de más se forma gluten. Une los ingredientes solo hasta que no se vea harina seca.' },
+        { p:'¿Por qué no se debe abrir el horno al inicio de la cocción?', o:['El cambio de temperatura puede hacer que el pastel se baje','Se apaga la luz','Se evapora el azúcar'], c:0, e:'El aire frío afecta a la masa antes de que su estructura esté firme; espera a que pase dos tercios del tiempo.' },
+        { p:'Para cremar, la mantequilla debe estar…', o:['Congelada','Blanda pero fresca (18 a 20 °C aprox.)','Completamente derretida'], c:1, e:'Si está derretida no retiene aire; si está muy dura no se integra. Debe hundirse con el dedo sin deshacerse.' }
+      ] },
+    { id:'c-conversion-f', tipo:'calculo', categoria:'Repostería', titulo:'Receta de Estados Unidos: ¿a cuántos °C?', dificultad:'Básico', puntos:35, respuesta:177, tolerancia:1, unidad:'°C (entero)',
+      enunciado:'Una receta de Estados Unidos pide hornear a 350 °F. ¿A cuántos grados Celsius equivale? Redondea al entero.',
+      pista:'Resta 32, multiplica por 5 y divide entre 9.',
+      explicacion:'(350 − 32) × 5 ÷ 9 = 176.7 °C, que se redondea a 177 °C. Muchos hornos aceptan 175 o 180 °C: ajusta según tu horno.' },
+    { id:'q-chocolate', tipo:'quiz', categoria:'Repostería', titulo:'Chocolate sin mitos', dificultad:'Intermedio', puntos:45, aprobar:4,
+      preguntas:[
+        { p:'El temperado del chocolate sirve para…', o:['Que quede brillante y truene al partirlo','Que sepa más dulce','Que no se derrita nunca'], c:0, e:'Al temperar se forman cristales estables de manteca de cacao: brillo, chasquido y mejor conservación.' },
+        { p:'¿Qué puede pasar si cae una gota de agua en chocolate derretido?', o:['Se pone más suave','Se puede poner grumoso y pastoso','No pasa nada'], c:1, e:'Se puede poner grumoso: la humedad hace que el azúcar y el cacao se aglomeren. Mantén el chocolate seco al derretirlo.' },
+        { p:'Las manchas blancas en un chocolate (bloom) se deben a…', o:['Cristales de grasa o azúcar que salieron a la superficie','Que está lleno de moho siempre','Que tiene demasiado cacao'], c:0, e:'Son cristales de grasa o azúcar por cambios de temperatura o humedad. Se ve mal, pero el chocolate sigue siendo comestible.' },
+        { p:'Una ganache de proporción 1:1 (chocolate y crema en peso) sirve para…', o:['Cubrir y rellenar con textura suave','Hacer trufas muy firmes','Hacer merengue'], c:0, e:'1:1 da una ganache suave para cubrir o rellenar; para trufas se usa más chocolate (2:1).' },
+        { p:'El porcentaje de cacao de una barra indica…', o:['La proporción de ingredientes que vienen del cacao (pasta y manteca)','Cuánto azúcar tiene','La temperatura de horneado'], c:0, e:'Un chocolate de 70 % tiene 70 % de ingredientes del cacao y el resto, en su mayoría, azúcar.' }
+      ] },
+    { id:'c-precio', tipo:'calculo', categoria:'Producción', titulo:'Del costo al precio de venta', dificultad:'Intermedio', puntos:40, respuesta:80, tolerancia:0.01, unidad:'$',
+      enunciado:'Un platillo cuesta $24 en ingredientes. Quieres que el costo de ingredientes sea el 30 % del precio de venta. ¿A qué precio lo vendes?',
+      pista:'Divide el costo entre el porcentaje en decimal (30 % = 0.30).',
+      explicacion:'$24 ÷ 0.30 = $80. Comprobación: el 30 % de $80 es $24. Recuerda sumar tus otros gastos al analizar tu utilidad real.' },
+    { id:'q-merengues', tipo:'quiz', categoria:'Repostería', titulo:'Merengues y cremas', dificultad:'Intermedio', puntos:45, aprobar:4,
+      preguntas:[
+        { p:'El merengue más estable es el…', o:['Francés','Italiano (con jarabe caliente)','El que lleva más claras'], c:1, e:'El italiano: el jarabe caliente cocina las claras y las vuelve muy estables. Es el que se usa en cremas y para flamear.' },
+        { p:'La crema pastelera espesa porque…', o:['Se activa el almidón al llevarla a hervor suave','Siempre se le agrega gelatina','Se congela'], c:0, e:'El almidón necesita calor para espesar: hay que cocerla uno o dos minutos batiendo una vez que hierve suavemente.' },
+        { p:'Para batir crema para batir, lo mejor es usar…', o:['Crema y utensilios muy fríos','Crema a temperatura ambiente','Crema caliente'], c:0, e:'La grasa fría atrapa mejor el aire. Enfría también el tazón y el batidor.' },
+        { p:'Una causa común de que un merengue suelte líquido es…', o:['Que el azúcar no se disolvió del todo','Batirlo en tazón de vidrio','Usar claras frías'], c:0, e:'Si quedan cristales de azúcar sin disolver, absorben humedad y sueltan jarabe. Agrega el azúcar poco a poco y bate bien.' },
+        { p:'Para que la crema pastelera no forme costra al enfriar se…', o:['Cubre con plástico pegado a la superficie','Deja destapada','Le agrega más harina'], c:0, e:'El plástico en contacto con la superficie evita que se seque y forme costra.' }
+      ] },
+    { id:'c-hidratacion', tipo:'calculo', categoria:'Panadería', titulo:'La hidratación de tu masa', dificultad:'Intermedio', puntos:40, respuesta:65, tolerancia:0.1, unidad:'% de hidratación',
+      enunciado:'Una masa lleva 1,000 g de harina y 650 g de agua. ¿Cuál es su hidratación en porcentaje?',
+      pista:'La hidratación se calcula sobre el peso de la harina.',
+      explicacion:'650 ÷ 1,000 × 100 = 65 %. Con esta cifra puedes comparar fórmulas distintas sin importar el tamaño de la tanda.' },
+    { id:'q-cortes-mise', tipo:'quiz', categoria:'Cocina', titulo:'Cortes y mise en place', dificultad:'Básico', puntos:40, aprobar:3,
+      preguntas:[
+        { p:'Mise en place significa…', o:['Todo en su lugar antes de cocinar','Cocinar sin receta','Servir los platos fríos'], c:0, e:'Es tener ingredientes pesados, cortados y utensilios listos antes de empezar. Ahorra tiempo y evita errores.' },
+        { p:'Un cuchillo sin filo es…', o:['Más seguro','Más peligroso porque resbala','Igual de seguro que uno afilado'], c:1, e:'Con un cuchillo sin filo haces más fuerza y se resbala. Afílalo con regularidad.' },
+        { p:'El mirepoix clásico se hace con…', o:['Cebolla, zanahoria y apio','Jitomate, chile y ajo','Papa, elote y calabaza'], c:0, e:'Cebolla, zanahoria y apio: la base aromática de caldos, salsas y guisos.' },
+        { p:'Una chiffonade es un corte de…', o:['Hojas enrolladas en tiras finas','Cubos pequeños','Rodajas gruesas'], c:0, e:'Se enrollan hojas (como albahaca o espinaca) y se cortan en tiras muy finas.' },
+        { p:'Después de cocinar un trozo grande de carne conviene…', o:['Cortarlo de inmediato','Dejarlo reposar unos minutos','Meterlo al refrigerador caliente'], c:1, e:'El reposo deja que los jugos se redistribuyan: la carne queda más jugosa al cortarla.' }
+      ] },
+    { id:'c-rendimiento', tipo:'calculo', categoria:'Producción', titulo:'Rendimiento de la carne', dificultad:'Intermedio', puntos:40, respuesta:80, tolerancia:0.1, unidad:'% de rendimiento',
+      enunciado:'Compras 10 kg de carne y, ya limpia y porcionada, tienes 8 kg utilizables. ¿Cuál es el rendimiento en porcentaje?',
+      pista:'Divide lo utilizable entre lo comprado y multiplica por 100.',
+      explicacion:'8 ÷ 10 × 100 = 80 %. El otro 20 % es merma. Por eso el costo real por kilo es mayor al que pagaste.' },
+    { id:'q-salsas-madre', tipo:'quiz', categoria:'Cocina', titulo:'Las salsas madre', dificultad:'Intermedio', puntos:45, aprobar:4,
+      preguntas:[
+        { p:'La béchamel se hace con…', o:['Leche y un roux blanco','Caldo oscuro y roux oscuro','Jitomate y aceite'], c:0, e:'Leche espesada con un roux blanco (mantequilla y harina cocidas sin dorar).' },
+        { p:'La salsa holandesa es una…', o:['Emulsión de yemas con mantequilla','Salsa de jitomate','Salsa de caldo oscuro'], c:0, e:'Es una emulsión de yemas y mantequilla derretida con limón; hay que cuidar la temperatura para que no se corte.' },
+        { p:'El velouté se prepara con…', o:['Caldo claro (pollo, pescado o ternera) y roux','Crema y azúcar','Vino y chocolate'], c:0, e:'Caldo claro espesado con roux. De él salen muchas otras salsas.' },
+        { p:'El roux es una mezcla de…', o:['Grasa y harina cocinadas juntas','Agua y sal','Huevo y leche'], c:0, e:'Grasa y harina en partes iguales en peso, cocidas el tiempo necesario según el color que busques.' },
+        { p:'Una salsa en punto "nappe" es la que…', o:['Cubre el dorso de la cuchara','Es muy líquida','Está hirviendo a borbotones'], c:0, e:'Al pasar el dedo por el dorso de la cuchara baña y deja una línea clara. Es la consistencia ideal para muchas salsas.' }
+      ] },
+    { id:'c-equilibrio', tipo:'calculo', categoria:'Producción', titulo:'Punto de equilibrio de tu pastelería', dificultad:'Intermedio', puntos:50, respuesta:80, tolerancia:0.01, unidad:'pasteles al mes',
+      enunciado:'Tu negocio de pasteles tiene gastos fijos de $12,000 al mes. Vendes cada pastel a $400 y su costo variable (ingredientes y empaque) es $250. ¿Cuántos pasteles debes vender al mes para no perder dinero?',
+      pista:'Primero calcula cuánto te deja cada pastel después de su costo variable.',
+      explicacion:'$400 − $250 = $150 de margen por pastel. $12,000 ÷ $150 = 80 pasteles al mes. A partir del pastel 81 empiezas a ganar.' },
+    { id:'q-mexicana', tipo:'quiz', categoria:'Cocina', titulo:'Cocina mexicana: sabor y origen', dificultad:'Básico', puntos:40, aprobar:3,
+      preguntas:[
+        { p:'La nixtamalización consiste en cocer el maíz con…', o:['Cal','Azúcar','Vinagre'], c:0, e:'Con cal (hidróxido de calcio). Así se suelta la cáscara, mejora el sabor y el valor nutricional y se puede hacer masa.' },
+        { p:'El chile ancho es…', o:['Un chile poblano seco','Un chile habanero verde','Un chile serrano fresco'], c:0, e:'El poblano seco. Es dulce y poco picante; clave en moles y adobos.' },
+        { p:'El pozole tradicional lleva maíz…', o:['Cacahuazintle','Palomero para palomitas','Dulce de lata'], c:0, e:'Cacahuazintle, de grano grande y blanco, que "revienta" como flor al cocerse.' },
+        { p:'Los chiles en nogada son un platillo típico de…', o:['Puebla','Baja California','Yucatán'], c:0, e:'De Puebla. Sus colores (verde, blanco y rojo) recuerdan los de la bandera.' },
+        { p:'El achiote es la base del recado rojo, típico de…', o:['La cocina yucateca','La cocina norteña','La cocina de Sonora'], c:0, e:'De la cocina yucateca: es la base de la cochinita pibil.' }
+      ] },
+    { id:'c-pasteles-evento', tipo:'calculo', categoria:'Catering', titulo:'Pasteles para un evento', dificultad:'Básico', puntos:35, respuesta:8, tolerancia:0, unidad:'pasteles',
+      enunciado:'Cada pastel rinde 16 porciones y tienes 120 invitados. ¿Cuántos pasteles necesitas? Redondea hacia arriba.',
+      pista:'Divide invitados entre porciones por pastel; si sobra decimal, necesitas uno completo más.',
+      explicacion:'120 ÷ 16 = 7.5. No se pueden comprar medio pastel, así que son 8 pasteles.' },
+    { id:'q-coccion', tipo:'quiz', categoria:'Cocina', titulo:'Métodos de cocción', dificultad:'Intermedio', puntos:45, aprobar:4,
+      preguntas:[
+        { p:'La reacción de Maillard es la responsable de…', o:['El dorado y el sabor tostado','Que la carne se encoja siempre','Que el agua hierva'], c:0, e:'Es la reacción entre azúcares y proteínas con calor: da el color dorado y el sabor tostado en carnes, pan y cebolla.' },
+        { p:'Los cortes duros con mucho colágeno quedan mejor con…', o:['Calor húmedo y cocción lenta','Plancha muy rápida','Microondas'], c:0, e:'El calor húmedo y lento convierte el colágeno en gelatina y los vuelve suaves y jugosos.' },
+        { p:'Blanquear verduras y pasarlas a agua con hielo sirve para…', o:['Detener la cocción y conservar el color','Quitarles todo el sabor','Hacer que se pongan duras siempre'], c:0, e:'El choque de agua helada detiene la cocción y mantiene color brillante y textura firme.' },
+        { p:'Escalfar (pochar) se hace con un líquido…', o:['Muy caliente pero sin hervir fuerte (70 a 80 °C aprox.)','Hirviendo a borbotones','Congelado'], c:0, e:'Un hervor muy suave, sin burbujeo fuerte, para cocinar delicado: huevos, pescado, frutas.' },
+        { p:'Sellar la carne sirve sobre todo para…', o:['Dar sabor y color por el dorado','Sellar los jugos para que no salgan','Cocinarla por dentro'], c:0, e:'Da sabor y color. No "sella jugos": la carne pierde humedad según hasta qué temperatura la cocines.' }
+      ] },
+    { id:'c-tazas', tipo:'calculo', categoria:'Repostería', titulo:'De tazas a gramos', dificultad:'Básico', puntos:35, respuesta:420, tolerancia:0.5, unidad:'gramos de harina',
+      enunciado:'Como referencia, una taza de harina pesa 120 g. ¿Cuántos gramos son 3½ tazas de harina?',
+      pista:'Multiplica 3.5 por el peso de una taza.',
+      explicacion:'3.5 × 120 g = 420 g. Ojo: según cómo llenes la taza, el peso real varía entre 100 y 150 g; por eso en pastelería se pesa.' },
+    { id:'q-eventos', tipo:'quiz', categoria:'Catering', titulo:'Eventos y buffets', dificultad:'Intermedio', puntos:45, aprobar:4,
+      preguntas:[
+        { p:'En un buffet, los alimentos fríos deben mantenerse a…', o:['4 °C o menos','15 °C','Temperatura ambiente'], c:0, e:'4 °C o menos, con hielo o equipo de refrigeración.' },
+        { p:'Y los alimentos calientes deben mantenerse a…', o:['60 °C o más','40 °C','30 °C'], c:0, e:'60 °C o más, con equipo que mantenga la temperatura (baños maría, chafers).' },
+        { p:'Antes de un evento grande conviene hacer…', o:['Una prueba del menú','Cambiar todo el menú el mismo día','Comprar sin lista'], c:0, e:'Una prueba del menú con las cantidades y los tiempos reales evita sorpresas el día del evento.' },
+        { p:'Un cliente avisa que un invitado es alérgico al cacahuate. Lo correcto es…', o:['Evitar el cacahuate y también el contacto cruzado con utensilios y superficies','Quitarle solo los cacahuates que se ven','Decirle que no coma nada'], c:0, e:'No basta con retirar el ingrediente: utensilios, tablas y superficies deben estar limpios para evitar contacto cruzado.' },
+        { p:'Para no quedarte sin producto ni desperdiciar, la producción se planea según…', o:['Los invitados o ventas esperados','Lo que haya en el refrigerador','Un número al azar'], c:0, e:'Según una estimación real de invitados o ventas, apoyada en tus recetas estándar y sus rendimientos.' }
+      ] },
+    { id:'q-emprender', tipo:'quiz', categoria:'Producción', titulo:'Emprender con comida', dificultad:'Intermedio', puntos:45, aprobar:4,
+      preguntas:[
+        { p:'El precio de venta debe…', o:['Cubrir todos tus costos y dejar utilidad','Ser igual al costo de ingredientes','Copiar siempre al vecino'], c:0, e:'Debe cubrir ingredientes, empaque, gastos fijos, impuestos y tu trabajo, y aún dejar utilidad.' },
+        { p:'La ficha técnica sirve para…', o:['Que cada platillo salga igual y se pueda costear','Decorar el menú','Guardar los recibos'], c:0, e:'Estandariza la receta (cantidades, pasos, rendimiento) y permite calcular el costo exacto.' },
+        { p:'La merma es…', o:['El producto que se pierde al limpiar, cortar o caducar','Una ganancia extra','El nombre de un impuesto'], c:0, e:'Es la parte que compras pero no puedes vender. Medirla te dice cuánto cuesta realmente cada kilo útil.' },
+        { p:'Si tu negocio de comida vende poco, lo primero que debes revisar es…', o:['Costos, precios y desperdicio','Solo el color del logotipo','Nada, ya mejorará solo'], c:0, e:'Los números te dicen si el problema es de ventas, de precio o de costo. Mide antes de cambiar.' },
+        { p:'Si suben los precios de tus ingredientes principales, lo más sensato es…', o:['Actualizar tus costos y revisar tus precios de venta','Ignorarlo para no asustar a nadie','Reducir la porción sin medir'], c:0, e:'Actualizar costos y revisar precios o recetas con datos, para no vender con pérdida sin darte cuenta.' }
+      ] },
+    { id:'q-alergenos', tipo:'quiz', categoria:'Inocuidad', titulo:'Alérgenos y etiquetas', dificultad:'Intermedio', puntos:45, aprobar:4,
+      preguntas:[
+        { p:'Algunos de los alérgenos más frecuentes son…', o:['Leche, huevo, trigo, cacahuate y mariscos','Solo las frutas','Solo la sal'], c:0, e:'Leche, huevo, trigo, soya, cacahuate, nueces, pescado y mariscos están entre los más comunes.' },
+        { p:'Si cambias de marca un ingrediente, debes…', o:['Revisar de nuevo la etiqueta','Asumir que es igual','No decir nada'], c:0, e:'Las fórmulas cambian entre marcas e incluso entre lotes: revisa la etiqueta cada vez.' },
+        { p:'El contacto cruzado de alérgenos es cuando…', o:['Pasan trazas de un alimento a otro por manos, utensilios o superficies','Cocinas dos platillos a la vez siempre','Cambias de proveedor'], c:0, e:'Pequeñas cantidades de un alérgeno pasan a otro alimento y pueden ser peligrosas para personas alérgicas.' },
+        { p:'Un platillo "sin nuez" preparado en la misma tabla donde se cortaron nueces…', o:['Puede causar una reacción grave','Es seguro si pasas un trapo','Es seguro si lo cocinas más tiempo'], c:0, e:'Un trapo no basta. Hay que lavar y desinfectar tablas y utensilios, o usar unos exclusivos.' },
+        { p:'Si un cliente pregunta qué lleva un platillo, lo mejor es…', o:['Dar información correcta y, si no sabes, consultarlo','Decir que no lleva nada','Cambiar de tema'], c:0, e:'Una respuesta incorrecta puede costar una reacción grave. Si no estás seguro, consulta la receta o a tu jefe de cocina.' }
+      ] },
+    { id:'q-fermento', tipo:'quiz', categoria:'Panadería', titulo:'Masa madre y fermentación', dificultad:'Intermedio', puntos:45, aprobar:4,
+      preguntas:[
+        { p:'La masa madre fermenta gracias a…', o:['Levaduras y bacterias lácticas silvestres','Solo bicarbonato','Hielo y sal'], c:0, e:'Un cultivo vivo de levaduras y bacterias lácticas: las levaduras dan el gas y las bacterias el sabor ácido.' },
+        { p:'La autólisis es…', o:['Un reposo de harina y agua antes de agregar la sal','Quemar el pan al final','Congelar la masa'], c:0, e:'Un reposo de harina y agua (20 a 60 minutos) antes de la sal: el gluten se desarrolla solo y la masa se vuelve más fácil de trabajar.' },
+        { p:'Una masa sobrefermentada normalmente…', o:['Se ve tensa y alta','Se hunde, huele muy ácido y pierde estructura','Queda siempre con corteza muy dura'], c:1, e:'Se hunde, huele muy ácido y su gluten se debilita. Hay que hornearla un poco antes en la próxima ocasión.' },
+        { p:'Fermentar la masa en refrigerador normalmente…', o:['Desarrolla más sabor y da flexibilidad de horario','Mata la levadura','Hace que el pan no suba'], c:0, e:'La fermentación lenta y fría da más sabor y te permite hornear cuando lo necesites.' },
+        { p:'Una causa común de pan denso es…', o:['Haber fermentado muy poco','Haber usado demasiado vapor','Haber enfriado el pan en rejilla'], c:0, e:'Poca fermentación: la masa no produjo suficiente gas. También influyen harina floja o falta de agua.' }
+      ] }
+  ];
+  // Se intercalan con los retos de siempre para que no haya seguidos del mismo tipo.
+  (function mezclarRetosNuevos(){
+    const nuevos = RETOS_NUEVOS.slice();
+    const base = RETOS_LIBRARY.splice(0, RETOS_LIBRARY.length);
+    base.forEach(r => { RETOS_LIBRARY.push(r); const n = nuevos.shift(); if (n) RETOS_LIBRARY.push(n); });
+    nuevos.forEach(n => RETOS_LIBRARY.push(n));
+  })();
+
   const RETO_CAT_META = {
     'Repostería':{icon:'i-bn-whisk', color:'var(--primary)'},
     'Panadería':{icon:'i-bn-rollingpin', color:'var(--warning)'},
@@ -8856,7 +9067,9 @@ const Sections = (function(){
     secuencia:    { ic:'i-menu',            nombre:'Ordena el proceso',     sub:'Pon los pasos en orden',   corto:'Ordenar' },
     imagen:       { ic:'i-image',           nombre:'Elige la foto',         sub:'¿Cuál es la correcta?',    corto:'Elegir foto' },
     antesdespues: { ic:'i-clipboard-check', nombre:'Antes o después',       sub:'¿Cuál se ve mejor?',       corto:'Comparar' },
-    error:        { ic:'i-search',          nombre:'Encuentra los errores', sub:'Detecta las fallas',       corto:'Errores' }
+    error:        { ic:'i-search',          nombre:'Encuentra los errores', sub:'Detecta las fallas',       corto:'Errores' },
+    quiz:         { ic:'i-bolt',            nombre:'Trivia gastronómica',   sub:'Pon a prueba tu criterio', corto:'Trivia' },
+    calculo:      { ic:'i-gauge',           nombre:'Haz la cuenta',         sub:'Números de tu cocina',     corto:'Cálculo' }
   };
   const _RETO_LOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
   let _retosF = { tipo:'todos', cat:'todas' };
@@ -8871,7 +9084,7 @@ const Sections = (function(){
     'Catering':   ['1675647729611-47273e75fff9', '1675647699232-76b8f533b006'],
     'Producción': ['1780590107744-42e6f234fd7d', '1749478072094-d21cb929490c']
   };
-  const RETO_FOTO_MODO = { secuencia:'1517686469429-8bdb88b9f907', imagen:'1702841579337-410618db2715', antesdespues:'1675647729611-47273e75fff9', error:'1784039534969-26e424548f3e' };
+  const RETO_FOTO_MODO = { secuencia:'1517686469429-8bdb88b9f907', imagen:'1702841579337-410618db2715', antesdespues:'1675647729611-47273e75fff9', error:'1784039534969-26e424548f3e', quiz:'1767785990437-dfe1fe516fe8', calculo:'1675647729611-47273e75fff9' };
   const RETO_FOTO_HERO = '1767785990437-dfe1fe516fe8';
   const _retoImg = (id, w) => `https://images.unsplash.com/photo-${id}?w=${w || 640}&q=70&auto=format&fit=crop`;
   function _retoFoto(r, w){
@@ -8980,7 +9193,7 @@ const Sections = (function(){
             <div class="retos2-next__title">${escapeHtml(sig.titulo)}</div>
             <div class="retos2-next__meta">
               <span><svg class="ic"><use href="#i-bolt"/></svg>+${sig.puntos} pts</span>
-              <span><svg class="ic"><use href="#i-clock"/></svg>${RETO_TIEMPO_POR_TIPO[sig.tipo]} s</span>
+              <span><svg class="ic"><use href="#i-clock"/></svg>${_retoDur(sig.tipo)}</span>
               <span><svg class="ic"><use href="#${tm.ic}"/></svg>${escapeHtml(tm.nombre)}</span>
             </div>
             <button type="button" class="mat-open">Jugar ahora<span class="mat-open__ic"><svg class="ic"><use href="#i-play"/></svg></span></button>
@@ -9163,7 +9376,7 @@ const Sections = (function(){
               <h3 class="retos2-card__title">${escapeHtml(r.titulo)}</h3>
               <div class="retos2-card__meta">
                 <span><svg class="ic"><use href="#i-bolt"/></svg>+${r.puntos} pts</span>
-                <span><svg class="ic"><use href="#i-clock"/></svg>${RETO_TIEMPO_POR_TIPO[r.tipo]} s</span>
+                <span><svg class="ic"><use href="#i-clock"/></svg>${_retoDur(r.tipo)}</span>
                 <span>${escapeHtml(tm.corto)} · ${escapeHtml(r.dificultad)}</span>
               </div>
               <div class="retos2-card__cta">${cta}${libre ? '<svg class="ic"><use href="#i-arrow-right"/></svg>' : ''}</div>
@@ -9175,7 +9388,7 @@ const Sections = (function(){
     pintar();
   }
 
-  const RETO_TIEMPO_POR_TIPO = { secuencia:45, error:60, imagen:20, antesdespues:15 };
+  const RETO_TIEMPO_POR_TIPO = { secuencia:45, error:60, imagen:20, antesdespues:15, quiz:120, calculo:120 };
 
   function _crearCronometro(segundos){
     let restante = segundos;
@@ -9225,7 +9438,7 @@ const Sections = (function(){
     else Toast.error('No se pudo guardar tu avance', 'Ganaste los puntos pero no se guardaron — revisa tu conexión o avísale a soporte');
   }
 
-  function _trasCompletarReto(r){
+  function _trasCompletarReto(r, msCierre){
     const idx = RETOS_LIBRARY.findIndex(x=>x.id===r.id);
     const siguiente = RETOS_LIBRARY[idx+1];
     if(siguiente && !_progreso.retosCompletados.includes(siguiente.id) && !_retoGratisAgotado()){
@@ -9233,7 +9446,7 @@ const Sections = (function(){
     }
     const dyn = document.getElementById('dynamic-section');
     if(dyn && dyn.querySelector('[data-reto-id]')) renderRetos(dyn);
-    setTimeout(()=>Modal.close('reto-'+r.id), 1500);
+    setTimeout(()=>Modal.close('reto-'+r.id), msCierre || 1500);
   }
 
   function _celebrarLogros(nuevosLogros){
@@ -9245,6 +9458,136 @@ const Sections = (function(){
     });
   }
 
+  // ─── Duración que se muestra en las tarjetas (las trivias y cuentas no llevan cronómetro) ───
+  function _retoDur(tipo){ return (tipo === 'quiz' || tipo === 'calculo') ? '≈ 2 min' : (RETO_TIEMPO_POR_TIPO[tipo] + ' s'); }
+
+  function _barajar(a){
+    const x = a.slice();
+    for(let i = x.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [x[i], x[j]] = [x[j], x[i]]; }
+    return x;
+  }
+
+  // ─── Tipo: trivia (varias preguntas, con explicación después de cada una) ───
+  function _retoQuiz(r){
+    const id = 'reto-' + r.id;
+    const total = r.preguntas.length;
+    const aprobar = r.aprobar || Math.ceil(total * 0.6);
+    let orden = [], idx = 0, aciertos = 0, respondida = false;
+    const body = document.createElement('div');
+    const footer = document.createElement('div');
+    footer.innerHTML = `<button class="btn btn--ghost" id="reto-cerrar">Cerrar</button>`;
+
+    function empezar(){
+      // preguntas y respuestas en orden aleatorio: así no se memoriza "siempre es la primera"
+      orden = _barajar(r.preguntas).map(q => ({ p: q.p, e: q.e, ops: _barajar(q.o.map((t, i) => ({ t, ok: i === q.c }))) }));
+      idx = 0; aciertos = 0;
+      pintarPregunta();
+    }
+    function pintarPregunta(){
+      const q = orden[idx];
+      respondida = false;
+      body.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.6px;color:var(--text-3);text-transform:uppercase"><span>Pregunta ${idx + 1} de ${total}</span><span>${aciertos} ${aciertos === 1 ? 'acierto' : 'aciertos'}</span></div>
+        <div class="hero-progress__bar" style="margin-bottom:16px"><div class="hero-progress__fill" style="width:${Math.round(idx / total * 100)}%"></div></div>
+        <div style="font-size:15px;font-weight:700;line-height:1.4;color:var(--text);margin-bottom:14px">${escapeHtml(q.p)}</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          ${q.ops.map((o, i) => `<button type="button" class="rq-op" data-i="${i}" style="text-align:left;padding:12px 14px;border-radius:12px;border:1px solid var(--border-2);background:var(--surface-2);color:var(--text);font:inherit;font-size:13.5px;line-height:1.4;cursor:pointer">${escapeHtml(o.t)}</button>`).join('')}
+        </div>
+        <div class="rq-fb" style="margin-top:14px;font-size:12.5px;line-height:1.6"></div>
+        <div class="rq-next" style="margin-top:12px;display:none;justify-content:flex-end"><button type="button" class="btn btn--primary rq-next-btn">${idx + 1 < total ? 'Siguiente' : 'Ver resultado'}</button></div>`;
+      body.querySelectorAll('.rq-op').forEach(b => b.addEventListener('click', () => responder(Number(b.dataset.i))));
+      body.querySelector('.rq-next-btn').addEventListener('click', () => { idx++; if (idx < total) pintarPregunta(); else terminar(); });
+    }
+    function responder(i){
+      if (respondida) return;
+      respondida = true;
+      const q = orden[idx];
+      const ok = q.ops[i].ok;
+      if (ok) aciertos++;
+      body.querySelectorAll('.rq-op').forEach((b, k) => {
+        b.style.pointerEvents = 'none';
+        if (q.ops[k].ok) { b.style.borderColor = 'var(--success)'; b.style.background = 'color-mix(in srgb,var(--success) 14%,var(--surface-2))'; }
+        else if (k === i) { b.style.borderColor = 'var(--danger)'; b.style.background = 'color-mix(in srgb,var(--danger) 12%,var(--surface-2))'; }
+        else b.style.opacity = '.55';
+      });
+      body.querySelector('.rq-fb').innerHTML = `<span style="color:${ok ? 'var(--success)' : 'var(--danger)'};font-weight:700">${ok ? '¡Correcto!' : 'No era esa.'}</span> <span style="color:var(--text-2)">${escapeHtml(q.e)}</span>`;
+      body.querySelector('.rq-next').style.display = 'flex';
+    }
+    async function terminar(){
+      const paso = aciertos >= aprobar;
+      body.innerHTML = `
+        <div style="text-align:center;padding:10px 4px 6px">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:38px;font-weight:800;color:${paso ? 'var(--success)' : 'var(--danger)'}">${aciertos}/${total}</div>
+          <div style="font-size:16px;font-weight:800;color:var(--text);margin-top:6px">${paso ? '¡Reto superado!' : 'Casi lo logras'}</div>
+          <div style="font-size:12.5px;line-height:1.55;color:var(--text-2);margin-top:6px">${paso ? `Necesitabas ${aprobar} aciertos y lo lograste.` : `Necesitas ${aprobar} aciertos para superarlo. Repasa las explicaciones y vuelve a intentarlo: las preguntas cambian de orden.`}</div>
+          ${paso ? '' : '<button type="button" class="btn btn--primary rq-retry" style="margin-top:16px">Intentarlo de nuevo</button>'}
+        </div>`;
+      body.querySelector('.rq-retry')?.addEventListener('click', empezar);
+      if (paso) {
+        const res = await _otorgarXP(r.id, r.puntos);
+        if (!res.yaCompletado) _avisarResultadoXP(r, res, r.titulo);
+        _celebrarLogros(res.nuevosLogros);
+        _trasCompletarReto(r, 4500);
+      }
+    }
+    Modal.open({ id, title: r.titulo, subtitle: r.categoria + ' · +' + r.puntos + ' pts', icon: 'i-bolt', size: 'md', body, footer });
+    footer.querySelector('#reto-cerrar').addEventListener('click', () => Modal.close(id));
+    empezar();
+  }
+
+  // ─── Tipo: cálculo (respuesta numérica con tolerancia y explicación paso a paso) ───
+  function _retoCalculo(r){
+    const id = 'reto-' + r.id;
+    let intentos = 0, resuelto = false;
+    const body = document.createElement('div');
+    body.innerHTML = `
+      <div style="font-size:14px;line-height:1.6;color:var(--text);margin-bottom:14px">${escapeHtml(r.enunciado)}</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input class="rc-in" type="text" inputmode="decimal" autocomplete="off" placeholder="Tu respuesta" style="flex:1;min-width:0;padding:12px 14px;border-radius:12px;border:1.5px solid var(--border-2);background:var(--surface-2);color:var(--text);font:inherit;font-size:16px">
+        <span style="font-size:12px;color:var(--text-3);max-width:34%;line-height:1.3">${escapeHtml(r.unidad || '')}</span>
+      </div>
+      <div class="rc-fb" style="margin-top:12px;font-size:12.5px;line-height:1.6"></div>`;
+    const footer = document.createElement('div');
+    footer.innerHTML = `<button class="btn btn--ghost" id="reto-cerrar">Cerrar</button><button class="btn btn--ghost rc-sol" style="display:none">Ver solución</button><button class="btn btn--primary rc-ok">Comprobar</button>`;
+    Modal.open({ id, title: r.titulo, subtitle: r.categoria + ' · +' + r.puntos + ' pts', icon: 'i-bolt', size: 'md', body, footer });
+    const inp = body.querySelector('.rc-in'), fb = body.querySelector('.rc-fb');
+    const parse = (t) => {
+      let s = String(t).trim().replace(/[$%\s]/g, '');
+      if (s.includes(',') && s.includes('.')) s = s.replace(/,/g, '');
+      else if (/^\d{1,3}(,\d{3})+$/.test(s)) s = s.replace(/,/g, '');
+      else s = s.replace(',', '.');
+      const n = parseFloat(s);
+      return Number.isFinite(n) ? n : NaN;
+    };
+    async function comprobar(){
+      if (resuelto) return;
+      const v = parse(inp.value);
+      if (Number.isNaN(v)) { fb.innerHTML = '<span style="color:var(--danger);font-weight:600">Escribe un número.</span>'; return; }
+      if (Math.abs(v - r.respuesta) <= (r.tolerancia ?? 0.01)) {
+        resuelto = true;
+        inp.disabled = true;
+        fb.innerHTML = `<span style="color:var(--success);font-weight:700">¡Correcto!</span> <span style="color:var(--text-2)">${escapeHtml(r.explicacion)}</span>`;
+        footer.querySelector('.rc-ok').style.display = 'none';
+        footer.querySelector('.rc-sol').style.display = 'none';
+        const res = await _otorgarXP(r.id, r.puntos);
+        if (!res.yaCompletado) _avisarResultadoXP(r, res, r.titulo);
+        _celebrarLogros(res.nuevosLogros);
+        _trasCompletarReto(r, 5000);
+      } else {
+        intentos++;
+        fb.innerHTML = `<span style="color:var(--danger);font-weight:700">No es esa.</span> <span style="color:var(--text-2)">${intentos >= 1 && r.pista ? 'Pista: ' + escapeHtml(r.pista) : 'Revisa tu cuenta e inténtalo otra vez.'}</span>`;
+        if (intentos >= 2) footer.querySelector('.rc-sol').style.display = '';
+      }
+    }
+    footer.querySelector('#reto-cerrar').addEventListener('click', () => Modal.close(id));
+    footer.querySelector('.rc-ok').addEventListener('click', comprobar);
+    footer.querySelector('.rc-sol').addEventListener('click', () => {
+      fb.innerHTML = `<span style="color:var(--text);font-weight:700">Solución:</span> <span style="color:var(--text-2)">${escapeHtml(r.explicacion)}</span> <span style="color:var(--text-3)">Escríbela arriba para ganar los puntos.</span>`;
+    });
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); comprobar(); } });
+    setTimeout(() => inp.focus(), 250);
+  }
+
   // Sin membresía solo cuenta el primer reto; para el segundo se pide activar la membresía.
   function _retoGratisAgotado(){
     return typeof toolEsVIP==='function' && !toolEsVIP() && _progreso.retosCompletados.length >= 1;
@@ -9253,7 +9596,7 @@ const Sections = (function(){
     const id = 'retos-membresia';
     Modal.open({
       id, title:'Tu reto gratis ya fue jugado', subtitle:'Sigue jugando con la membresía VIP', icon:'i-bolt',
-      body:`<div style="padding:10px 2px 4px;line-height:1.6;color:var(--text-2);font-size:13px">Sin membresía puedes jugar <strong style="color:var(--text)">un reto</strong>. Tus <strong style="color:var(--primary)">${_progreso.xp.toLocaleString('es-MX')} XP</strong> están guardados y se activan cuando te hagas VIP; entonces podrás seguir jugando y usarlos para desbloquear libros.</div>`,
+      body:`<div style="padding:10px 2px 4px;line-height:1.6;color:var(--text-2);font-size:13px">Sin membresía puedes jugar <strong style="color:var(--text)">un reto</strong>. Tus <strong style="color:var(--primary)">${_progreso.xp.toLocaleString('es-MX')} XP</strong> están guardados y se activan cuando te hagas VIP; entonces podrás seguir jugando y usarlos para desbloquear guías, recetas y libros.</div>`,
       footer:`<button class="btn btn--ghost" onclick="Modal.close('${id}')">Después</button><button class="btn btn--primary" onclick="Modal.close('${id}');navigateToSection('suscripcion')">Ver membresía</button>`
     });
   }
@@ -9265,6 +9608,8 @@ const Sections = (function(){
     if(r.tipo==='error') return _retoError(r);
     if(r.tipo==='imagen') return _retoImagen(r);
     if(r.tipo==='antesdespues') return _retoAntesDespues(r);
+    if(r.tipo==='quiz') return _retoQuiz(r);
+    if(r.tipo==='calculo') return _retoCalculo(r);
   }
 
   // ─── Tipo: ordenar secuencia (arrastrar) ───
@@ -10228,29 +10573,28 @@ const Sections = (function(){
     const retosCompletados = Array.isArray(_progreso.retosCompletados) ? _progreso.retosCompletados.length : 0;
     const totalRetos = (typeof RETOS_LIBRARY !== 'undefined' && RETOS_LIBRARY.length) ? RETOS_LIBRARY.length : 15;
     // ── Biblioteca de libros ──
-    // Solo obras de dominio público (autor fallecido hace más de 100 años) en español.
-    // Se leen dentro del panel y únicamente con membresía VIP; cada libro se desbloquea con los XP de Retos.
-    // El máximo de XP que dan los 18 retos es 595, por eso el último umbral queda por debajo.
+    // Tres secciones: Guías y Recetas (se desbloquean con XP de Retos; el contenido lo entrega el servidor)
+    // y Clásicos (dominio público; se abren por días de membresía: uno al empezar y otro cada 25 días).
     const LIBROS_BIBLIOTECA = [
-      { id:'confitero', xp:50,  tono:'#6B1526', tema:'Pastelería y confitería', titulo:'El confitero y pastelero', autor:'Eduardo Merin', anio:'1893', paginas:137,
+      // Clásicos de dominio público: con la membresía se abre el primero y luego uno cada 25 días ("dia" = día de membresía).
+      { id:'confitero', dia:0,  tono:'#6B1526', tema:'Pastelería y confitería', titulo:'El confitero y pastelero', autor:'Eduardo Merin', anio:'1893', paginas:137,
         pdf:'assets/libros/confitero-pastelero.pdf', portada:'assets/libros/portada-confitero-pastelero.webp',
         fuente:'Repositorio Minerva · Universidade de Santiago de Compostela', fuenteUrl:'https://minerva.usc.gal/entities/publication/50535701-38e2-4a32-b4ba-1b0113a8ff47/full' },
-      { id:'carrillo', xp:150, tono:'#B8862F', tema:'Cocina mexicana', titulo:'Nuevo y sencillo arte de cocina, repostería y refrescos', autor:'Antonia Carrillo', anio:'1836', paginas:460,
+      { id:'carrillo', dia:25, tono:'#B8862F', tema:'Cocina mexicana', titulo:'Nuevo y sencillo arte de cocina, repostería y refrescos', autor:'Antonia Carrillo', anio:'1836', paginas:460,
         pdf:'assets/libros/cocina-reposteria-refrescos.pdf', portada:'assets/libros/portada-cocina-reposteria-refrescos.webp',
         fuente:'Internet Archive', fuenteUrl:'https://archive.org/details/nuevoysencilloar00carr' },
-      { id:'montino', xp:300, tono:'#7A1B30', tema:'Cocina y pastelería clásica', titulo:'Arte de cocina, pastelería, vizcochería y conservería', autor:'Francisco Martínez Montiño', anio:'ed. 1778', paginas:492,
-        pdf:'assets/libros/arte-de-cocina.pdf', portada:'assets/libros/portada-arte-de-cocina.webp',
-        fuente:'Internet Archive', fuenteUrl:'https://archive.org/details/artedecocinapast00mart_1' },
-      { id:'practicon', xp:450, tono:'#71513D', tema:'Cocina general', titulo:'El Practicón: tratado completo de cocina', autor:'Ángel Muro', anio:'1894', paginas:1014,
+      { id:'practicon', dia:50, tono:'#71513D', tema:'Cocina general', titulo:'El Practicón: tratado completo de cocina', autor:'Ángel Muro', anio:'1894', paginas:1014,
         pdf:'assets/libros/practicon.pdf', portada:'assets/libros/portada-practicon.webp',
-        fuente:'Internet Archive', fuenteUrl:'https://archive.org/details/elpracticntrat00muro' }
+        fuente:'Internet Archive', fuenteUrl:'https://archive.org/details/elpracticntrat00muro' },
+      { id:'montino', dia:75, tono:'#7A1B30', tema:'Cocina y pastelería clásica', titulo:'Arte de cocina, pastelería, vizcochería y conservería', autor:'Francisco Martínez Montiño', anio:'ed. 1778', paginas:492,
+        pdf:'assets/libros/arte-de-cocina.pdf', portada:'assets/libros/portada-arte-de-cocina.webp',
+        fuente:'Internet Archive', fuenteUrl:'https://archive.org/details/artedecocinapast00mart_1' }
     ];
     const xpMaximoRetos = (typeof RETOS_LIBRARY !== 'undefined' && RETOS_LIBRARY.length)
-      ? RETOS_LIBRARY.reduce((t, r) => t + (Number(r.puntos) || 0), 0) : 595;
+      ? RETOS_LIBRARY.reduce((t, r) => t + (Number(r.puntos) || 0), 0) : 1580;
     const _fmtXP = (n) => Number(n).toLocaleString('es-MX');
     const _ICO_LOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
     const _ICO_BOOK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5Z"/><path d="M4 5.5V21.5"/></svg>';
-    const _estadoLibro = (l) => !tieneAccesoVipCompleto() ? 'membresia' : (xpActual < l.xp ? 'xp' : 'abierto');
 
     // Carga pdf.js (alojado en el mismo sitio) solo la primera vez que alguien abre un libro.
     const _cargarPdfJs = () => window.pdfjsLib ? Promise.resolve(window.pdfjsLib) : new Promise((ok, fail) => {
@@ -10373,68 +10717,229 @@ const Sections = (function(){
       }
     };
 
-    // Libro bloqueado: explica qué falta (membresía o XP) y lleva a donde se resuelve.
-    const avisoBloqueado = (libro) => {
-      const est = _estadoLibro(libro);
-      const faltan = Math.max(0, libro.xp - xpActual);
+    // ── Guías y recetas ──
+    // El cuerpo de cada guía o receta lo entrega el servidor (/api/biblioteca/item/:id) solo si la persona
+    // tiene membresía y ya juntó los XP; aquí solo se muestra el catálogo (título, descripción, XP).
+    const _BIB_API = () => (window.WEBHOOK_URL || 'https://dulcelab-webhook-production.up.railway.app') + '/api/biblioteca';
+    const _TONOS_BIB = {
+      'Pastelería':['#8a1e33','#4a0e1a'], 'Repostería':['#8a1e33','#4a0e1a'], 'Panadería':['#c9962f','#6d4b12'],
+      'Inocuidad':['#3f8a6c','#1f4a39'], 'Cocina':['#8a6a4f','#3f2d20'], 'Producción':['#8e2a3f','#3b0f1a']
+    };
+    const _tonoBib = (tema) => _TONOS_BIB[tema] || ['#8a1e33','#4a0e1a'];
+    let _bibCatalogo = null, _bibTab = 'guias';
+    const _minTxt = (m) => !m ? '' : m >= 1440 ? `${Math.round(m / 1440)} días` : m >= 60 ? `${Math.floor(m / 60)} h${m % 60 ? ' ' + (m % 60) + ' min' : ''}` : `${m} min`;
+    const _estadoItem = (it) => !tieneAccesoVipCompleto() ? 'membresia' : ((esAdminReal() || xpActual >= it.xp) ? 'abierto' : 'xp');
+    const _diasMembresiaBib = () => (typeof calcularDiasMembresia === 'function') ? calcularDiasMembresia() : 0;
+    const _estadoClasico = (l) => !tieneAccesoVipCompleto() ? 'membresia' : ((esAdminReal() || _diasMembresiaBib() >= l.dia) ? 'abierto' : 'tiempo');
+    const _estadoLibro = _estadoClasico;
+
+    async function _cargarCatalogoBib(){
+      if (_bibCatalogo) return _bibCatalogo;
+      const r = await fetch(_BIB_API() + '/catalogo');
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      _bibCatalogo = await r.json();
+      return _bibCatalogo;
+    }
+
+    // ── HTML del documento (todo el texto pasa por escapeHtml) ──
+    const _liHtml = (arr) => arr.map(t => `<li>${escapeHtml(t)}</li>`).join('');
+    function _htmlGuia(g){
+      const f = g.fuente;
+      return `<article class="lib-doc">
+        <header class="lib-doc__head"><span class="lib-doc__tag">Guía · ${escapeHtml(g.tema)}</span><h1>${escapeHtml(g.titulo)}</h1><p class="lib-doc__lead">${escapeHtml(g.resumen)}</p><div class="lib-doc__meta">${_minTxt(g.minutos)} de lectura</div></header>
+        ${g.contenido.map(s => `<section class="lib-doc__sec">
+          ${s.h ? `<h2>${escapeHtml(s.h)}</h2>` : ''}
+          ${(s.p || []).map(p => `<p>${escapeHtml(p)}</p>`).join('')}
+          ${s.ul ? `<ul>${_liHtml(s.ul)}</ul>` : ''}
+          ${s.ol ? `<ol>${_liHtml(s.ol)}</ol>` : ''}
+          ${s.nota ? `<aside class="lib-doc__nota">${escapeHtml(s.nota)}</aside>` : ''}
+        </section>`).join('')}
+        ${f ? `<footer class="lib-doc__fuente">Para profundizar (en inglés): <a href="${escapeHtml(f.url)}" target="_blank" rel="noopener">${escapeHtml(f.titulo)}</a> · ${escapeHtml(f.autor)} · ${escapeHtml(f.licencia)}</footer>` : ''}
+      </article>`;
+    }
+    function _htmlReceta(r){
+      return `<article class="lib-doc">
+        <header class="lib-doc__head"><span class="lib-doc__tag">Receta · ${escapeHtml(r.categoria)}</span><h1>${escapeHtml(r.titulo)}</h1><p class="lib-doc__lead">${escapeHtml(r.resumen)}</p>
+          <div class="lib-doc__chips"><span>${_minTxt(r.tiempo)}</span>${r.porciones ? `<span>${r.porciones} porciones</span>` : ''}<span>${escapeHtml(r.dificultad)}</span></div></header>
+        <section class="lib-doc__sec"><h2>Ingredientes</h2>
+          ${r.grupos.map(g => `<h3>${escapeHtml(g.g)}</h3><ul>${_liHtml(g.items)}</ul>`).join('')}</section>
+        <section class="lib-doc__sec"><h2>Preparación</h2><ol>${_liHtml(r.pasos)}</ol></section>
+        ${r.tips && r.tips.length ? `<section class="lib-doc__sec"><h2>Consejos</h2><ul>${_liHtml(r.tips)}</ul></section>` : ''}
+        ${r.nota ? `<aside class="lib-doc__nota">${escapeHtml(r.nota)}</aside>` : ''}
+      </article>`;
+    }
+
+    // ── Lector de guías y recetas (pantalla completa) ──
+    const abrirDocumento = async (it, tipo) => {
+      const overlay = document.createElement('section');
+      overlay.className = 'lib-reader';
+      overlay.setAttribute('role', 'dialog'); overlay.setAttribute('aria-modal', 'true'); overlay.setAttribute('aria-label', it.titulo);
+      overlay.innerHTML = `
+        <header class="lib-reader__bar" style="grid-template-columns:44px minmax(0,1fr) 44px">
+          <button type="button" class="lib-reader__close" data-lr="cerrar" aria-label="Cerrar">×</button>
+          <div class="lib-reader__tit"><b>${escapeHtml(it.titulo)}</b><span>${tipo === 'guia' ? 'Guía' : 'Receta'} · DulceLab Food</span></div><span></span>
+        </header>
+        <main class="lib-reader__scroll"><div class="lib-doc-wrap"><p class="lib-reader__msg" style="margin:40px auto">Cargando…</p></div></main>`;
+      document.body.appendChild(overlay);
+      const overflowAntes = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      const cerrar = () => { document.removeEventListener('keydown', tecla); document.body.style.overflow = overflowAntes; overlay.remove(); };
+      const tecla = (e) => { if (e.key === 'Escape') cerrar(); };
+      document.addEventListener('keydown', tecla);
+      overlay.querySelector('[data-lr="cerrar"]').addEventListener('click', cerrar);
+      const wrap = overlay.querySelector('.lib-doc-wrap');
+      try {
+        const token = await window.__currentUser.getIdToken();
+        const res = await fetch(_BIB_API() + '/item/' + encodeURIComponent(it.id), { headers: { Authorization: 'Bearer ' + token } });
+        const data = await res.json().catch(() => ({}));
+        if (res.status === 403) { cerrar(); avisoItem(it, data.faltan); return; }
+        if (!res.ok) throw new Error(data.error || ('HTTP ' + res.status));
+        wrap.innerHTML = tipo === 'guia' ? _htmlGuia(data) : _htmlReceta(data);
+      } catch (err) {
+        console.error('[biblioteca]', err);
+        wrap.innerHTML = '<p class="lib-reader__msg" style="margin:40px auto">No se pudo abrir el contenido. Revisa tu conexión e inténtalo de nuevo.</p>';
+      }
+    };
+
+    // ── Avisos cuando algo está bloqueado ──
+    const avisoItem = (it, faltanServidor) => {
+      const est = _estadoItem(it);
       const id = 'libro-bloqueado';
+      const faltan = (typeof faltanServidor === 'number' && faltanServidor > 0) ? faltanServidor : Math.max(0, it.xp - xpActual);
       if (est === 'membresia') {
         Modal.open({
-          id, title: 'Libro exclusivo para miembros', subtitle: libro.titulo, icon: 'i-shield-check',
-          body: `<div style="padding:10px 2px 4px;line-height:1.6;color:var(--text-2);font-size:13px">Los libros de la biblioteca se leen solo con la <strong style="color:var(--primary)">membresía VIP</strong>. Cuando la actives, este se desbloquea al llegar a <strong style="color:var(--text)">${_fmtXP(libro.xp)} XP</strong> completando retos.</div>`,
+          id, title: 'Exclusivo para miembros', subtitle: it.titulo, icon: 'i-shield-check',
+          body: `<div style="padding:10px 2px 4px;line-height:1.6;color:var(--text-2);font-size:13px">Las guías y recetas se leen con la <strong style="color:var(--primary)">membresía VIP</strong>. Cuando la actives, este contenido se desbloquea al llegar a <strong style="color:var(--text)">${_fmtXP(it.xp)} XP</strong> completando retos.</div>`,
           footer: `<button class="btn btn--ghost" onclick="Modal.close('${id}')">Después</button><button class="btn btn--primary" onclick="Modal.close('${id}');navigateToSection('suscripcion')">Ver membresía</button>`
         });
         return;
       }
       Modal.open({
-        id, title: 'Sigue sumando XP', subtitle: libro.titulo, icon: 'i-shield-check',
-        body: `<div style="padding:10px 2px 4px;line-height:1.6;color:var(--text-2);font-size:13px">Este libro se desbloquea con <strong style="color:var(--primary)">${_fmtXP(libro.xp)} XP</strong>. Llevas <strong style="color:var(--text)">${_fmtXP(xpActual)} XP</strong> y te faltan <strong style="color:var(--text)">${_fmtXP(faltan)} XP</strong>. Cada reto que completes suma de 30 a 50 XP.<div class="lib-bar" style="margin-top:14px"><i style="width:${Math.min(100, (xpActual / libro.xp) * 100)}%"></i></div></div>`,
+        id, title: 'Sigue sumando XP', subtitle: it.titulo, icon: 'i-shield-check',
+        body: `<div style="padding:10px 2px 4px;line-height:1.6;color:var(--text-2);font-size:13px">Se desbloquea con <strong style="color:var(--primary)">${_fmtXP(it.xp)} XP</strong>. Llevas <strong style="color:var(--text)">${_fmtXP(xpActual)} XP</strong> y te faltan <strong style="color:var(--text)">${_fmtXP(faltan)} XP</strong>. Cada reto suma entre 30 y 50 XP.<div class="lib-bar" style="margin-top:14px"><i style="width:${Math.min(100, (xpActual / it.xp) * 100)}%"></i></div></div>`,
         footer: `<button class="btn btn--ghost" onclick="Modal.close('${id}')">Después</button><button class="btn btn--primary" onclick="Modal.close('${id}');navigateToSection('retos')">Ir a los retos</button>`
       });
     };
+    const avisoClasico = (libro) => {
+      const est = _estadoClasico(libro);
+      const id = 'libro-bloqueado';
+      if (est === 'membresia') {
+        Modal.open({
+          id, title: 'Libro exclusivo para miembros', subtitle: libro.titulo, icon: 'i-shield-check',
+          body: `<div style="padding:10px 2px 4px;line-height:1.6;color:var(--text-2);font-size:13px">Los libros clásicos se leen con la <strong style="color:var(--primary)">membresía VIP</strong>: al activarla se abre el primero y, después, uno nuevo cada 25 días.</div>`,
+          footer: `<button class="btn btn--ghost" onclick="Modal.close('${id}')">Después</button><button class="btn btn--primary" onclick="Modal.close('${id}');navigateToSection('suscripcion')">Ver membresía</button>`
+        });
+        return;
+      }
+      const faltan = Math.max(0, libro.dia - _diasMembresiaBib());
+      Modal.open({
+        id, title: 'Se abre pronto', subtitle: libro.titulo, icon: 'i-clock',
+        body: `<div style="padding:10px 2px 4px;line-height:1.6;color:var(--text-2);font-size:13px">Este libro se abre el <strong style="color:var(--text)">día ${libro.dia}</strong> de tu membresía. Faltan <strong style="color:var(--primary)">${faltan} ${faltan === 1 ? 'día' : 'días'}</strong>. Mientras tanto puedes leer los que ya tienes abiertos.</div>`,
+        footer: `<button class="btn btn--primary" onclick="Modal.close('${id}')">Entendido</button>`
+      });
+    };
 
-    const pintarBiblioteca = (root) => {
+    // ── Pantalla de la biblioteca ──
+    const pintarBiblioteca = async (root) => {
       if (!root) return;
       const esVip = tieneAccesoVipCompleto();
-      const siguiente = esVip ? LIBROS_BIBLIOTECA.find(l => xpActual < l.xp) : LIBROS_BIBLIOTECA[0];
-      const portadaStyle = (l) => `--portada:url('${l.portada}');--tono:${l.tono}`;
+      const encabezado = `<div class="xp-library__head"><div><div class="xp-library__eyebrow">Biblioteca DulceLab Food</div><h2 class="xp-library__title">Guías, recetas y libros para tu formación</h2><p class="xp-library__sub">Todo se lee aquí mismo con tu membresía. Las guías y las recetas se desbloquean con los XP que ganas en Retos (los retos suman hasta ${_fmtXP(xpMaximoRetos)} XP); los libros clásicos se abren por días de membresía: uno al empezar y otro cada 25 días.</p></div><div class="xp-library__score"><b>${_fmtXP(xpActual)} <small>XP</small></b><span>Tu saldo</span></div></div>`;
+      root.innerHTML = encabezado + '<div class="foro-empty">Cargando biblioteca…</div>';
+      let cat;
+      try { cat = await _cargarCatalogoBib(); }
+      catch (e) {
+        console.error('[biblioteca] catálogo', e);
+        root.innerHTML = encabezado + '<div class="foro-empty">No se pudo cargar la biblioteca. <button type="button" class="retos-gratis__btn" data-bib-reintentar>Reintentar</button></div>';
+        root.querySelector('[data-bib-reintentar]')?.addEventListener('click', () => pintarBiblioteca(root));
+        return;
+      }
+      const guias = cat.guias.slice().sort((a, b) => a.xp - b.xp);
+      const recetas = cat.recetas.slice().sort((a, b) => a.xp - b.xp);
+      const premios = guias.concat(recetas);
+      const siguiente = esVip ? premios.filter(x => xpActual < x.xp).sort((a, b) => a.xp - b.xp)[0] : null;
+      const abiertos = (arr) => arr.filter(x => _estadoItem(x) === 'abierto').length;
+      const abiertosCl = LIBROS_BIBLIOTECA.filter(l => _estadoClasico(l) === 'abierto').length;
+
       let banner;
       if (!esVip) {
-        banner = `<div class="lib-next"><div class="lib-next__cover" style="${portadaStyle(siguiente)}"></div><div><div class="lib-next__eyebrow">Solo para miembros VIP</div><h3>Una biblioteca que se gana leyendo y practicando</h3><p>Activa tu membresía para leer estos libros dentro del panel. Se desbloquean uno a uno con los XP que ganas en los retos.</p></div><button type="button" class="btn btn--primary" data-lib-ir="suscripcion">Ver membresía</button></div>`;
+        banner = `<div class="lib-next"><div class="lib-next__cover" style="--portada:linear-gradient(160deg,#8a1e33,#4a0e1a);--tono:#4a0e1a"></div><div><div class="lib-next__eyebrow">Solo para miembros VIP</div><h3>Aprende y cocina con material que se gana jugando</h3><p>Activa tu membresía para leer las guías y recetas. Se desbloquean con los XP que ganas en los retos y, además, recibes 150 XP de regalo al empezar.</p></div><button type="button" class="btn btn--primary" data-lib-ir="suscripcion">Ver membresía</button></div>`;
       } else if (siguiente) {
-        const faltan = siguiente.xp - xpActual;
-        banner = `<div class="lib-next"><div class="lib-next__cover" style="${portadaStyle(siguiente)}"></div><div><div class="lib-next__eyebrow">Tu próximo libro</div><h3>${escapeHtml(siguiente.titulo)}</h3><p>Te faltan <strong>${_fmtXP(faltan)} XP</strong> para desbloquearlo (${_fmtXP(xpActual)} de ${_fmtXP(siguiente.xp)}). Cada reto suma de 30 a 50 XP.</p><div class="lib-bar"><i style="width:${Math.min(100, (xpActual / siguiente.xp) * 100)}%"></i></div></div><button type="button" class="btn btn--primary" data-lib-ir="retos">Ganar XP en Retos</button></div>`;
+        const prev = premios.filter(x => x.xp <= xpActual).reduce((m, x) => Math.max(m, x.xp), 0);
+        const pct = Math.max(0, Math.min(100, ((xpActual - prev) / (siguiente.xp - prev)) * 100));
+        banner = `<div class="lib-next"><div class="lib-next__cover" style="--portada:linear-gradient(160deg,${_tonoBib(siguiente.tema || siguiente.categoria)[0]},${_tonoBib(siguiente.tema || siguiente.categoria)[1]});--tono:${_tonoBib(siguiente.tema || siguiente.categoria)[1]}"></div><div><div class="lib-next__eyebrow">Tu próximo premio</div><h3>${escapeHtml(siguiente.titulo)}</h3><p>Te faltan <strong>${_fmtXP(siguiente.xp - xpActual)} XP</strong> para desbloquearlo (${_fmtXP(xpActual)} de ${_fmtXP(siguiente.xp)}). Los retos nuevos suman entre 35 y 50 XP cada uno.</p><div class="lib-bar"><i style="width:${pct}%"></i></div></div><button type="button" class="btn btn--primary" data-lib-ir="retos">Ganar XP en Retos</button></div>`;
       } else {
-        banner = `<div class="lib-next"><div class="lib-next__cover" style="${portadaStyle(LIBROS_BIBLIOTECA[LIBROS_BIBLIOTECA.length - 1])};filter:none"></div><div><div class="lib-next__eyebrow">Biblioteca completa</div><h3>Desbloqueaste todos los libros</h3><p>Puedes leerlos cuando quieras. Se guarda la página donde te quedaste.</p></div></div>`;
+        banner = `<div class="lib-next"><div class="lib-next__cover" style="--portada:linear-gradient(160deg,#c9962f,#6d4b12);--tono:#6d4b12"></div><div><div class="lib-next__eyebrow">Biblioteca completa</div><h3>Desbloqueaste todas las guías y recetas</h3><p>Puedes leerlas cuando quieras. ¡Gracias por seguir aprendiendo!</p></div></div>`;
       }
-      const tarjetas = LIBROS_BIBLIOTECA.map(l => {
-        const est = _estadoLibro(l);
-        const faltan = Math.max(0, l.xp - xpActual);
-        const chip = est === 'abierto' ? `${_ICO_BOOK}Leer` : `${_ICO_LOCK}${_fmtXP(l.xp)} XP`;
-        const estado = est === 'abierto'
-          ? `${_ICO_BOOK}<span>Disponible · leer ahora</span>`
-          : est === 'xp'
-            ? `${_ICO_LOCK}<span>Te faltan ${_fmtXP(faltan)} XP</span>`
-            : `${_ICO_LOCK}<span>Con membresía · ${_fmtXP(l.xp)} XP</span>`;
-        const barra = est === 'xp' ? `<span class="lib-bar"><i style="width:${Math.min(100, (xpActual / l.xp) * 100)}%"></i></span>` : '';
-        return `<button type="button" class="lib-book ${est === 'abierto' ? 'is-open' : 'is-locked'}" data-lib="${l.id}" style="${portadaStyle(l)}" aria-label="${escapeHtml(l.titulo)}${est === 'abierto' ? '' : ' (bloqueado)'}">
-          <span class="lib-book__cover"><span class="lib-book__tag">${escapeHtml(l.tema)}</span><span class="lib-book__chip">${chip}</span><span class="lib-book__name">${escapeHtml(l.titulo)}<small>${escapeHtml(l.autor)} · ${escapeHtml(l.anio)}</small></span></span>
-          <span class="lib-book__title">${escapeHtml(l.titulo)}</span>
-          <span class="lib-book__meta">${escapeHtml(l.autor)} · ${escapeHtml(l.anio)} · ${l.paginas.toLocaleString('es-MX')} págs.</span>
+
+      const tabs = [
+        { k: 'guias', t: 'Guías', n: `${abiertos(guias)}/${guias.length}` },
+        { k: 'recetas', t: 'Recetas', n: `${abiertos(recetas)}/${recetas.length}` },
+        { k: 'clasicos', t: 'Clásicos', n: `${abiertosCl}/${LIBROS_BIBLIOTECA.length}` }
+      ];
+
+      const tarjetaGuia = (g) => {
+        const est = _estadoItem(g);
+        const [c1, c2] = _tonoBib(g.tema);
+        const chip = est === 'abierto' ? `${_ICO_BOOK}Leer` : `${_ICO_LOCK}${_fmtXP(g.xp)} XP`;
+        const faltan = Math.max(0, g.xp - xpActual);
+        const estado = est === 'abierto' ? `${_ICO_BOOK}<span>Disponible · leer ahora</span>` : est === 'xp' ? `${_ICO_LOCK}<span>Te faltan ${_fmtXP(faltan)} XP</span>` : `${_ICO_LOCK}<span>Con membresía · ${_fmtXP(g.xp)} XP</span>`;
+        const barra = est === 'xp' ? `<span class="lib-bar"><i style="width:${Math.min(100, (xpActual / g.xp) * 100)}%"></i></span>` : '';
+        return `<button type="button" class="lib-book ${est === 'abierto' ? 'is-open' : 'is-locked'}" data-guia="${g.id}" style="--portada:linear-gradient(160deg,${c1},${c2});--tono:${c2}" aria-label="${escapeHtml(g.titulo)}${est === 'abierto' ? '' : ' (bloqueada)'}">
+          <span class="lib-book__cover"><span class="lib-book__tag">Guía · ${escapeHtml(g.tema)}</span><span class="lib-book__chip">${chip}</span><span class="lib-book__name">${escapeHtml(g.titulo)}<small>${_minTxt(g.minutos)} de lectura</small></span></span>
+          <span class="lib-book__title">${escapeHtml(g.titulo)}</span><span class="lib-book__meta">${escapeHtml(g.resumen)}</span>${barra}<span class="lib-book__state">${estado}</span></button>`;
+      };
+      const tarjetaReceta = (r) => {
+        const est = _estadoItem(r);
+        const [c1, c2] = _tonoBib(r.categoria);
+        const faltan = Math.max(0, r.xp - xpActual);
+        const estado = est === 'abierto' ? `${_ICO_BOOK}<span>Disponible · ver receta</span>` : est === 'xp' ? `${_ICO_LOCK}<span>Te faltan ${_fmtXP(faltan)} XP</span>` : `${_ICO_LOCK}<span>Con membresía · ${_fmtXP(r.xp)} XP</span>`;
+        const barra = est === 'xp' ? `<span class="lib-bar"><i style="width:${Math.min(100, (xpActual / r.xp) * 100)}%"></i></span>` : '';
+        return `<button type="button" class="rec-card ${est === 'abierto' ? 'is-open' : 'is-locked'}" data-receta="${r.id}" style="--c1:${c1};--c2:${c2}" aria-label="${escapeHtml(r.titulo)}${est === 'abierto' ? '' : ' (bloqueada)'}">
+          <span class="rec-card__top"><span class="rec-card__cat">${escapeHtml(r.categoria)}</span><span class="rec-card__xp">${est === 'abierto' ? `${_ICO_BOOK}Ver` : `${_ICO_LOCK}${_fmtXP(r.xp)} XP`}</span></span>
+          <span class="rec-card__title">${escapeHtml(r.titulo)}</span>
+          <span class="rec-card__meta">${_minTxt(r.tiempo)}${r.porciones ? ' · ' + r.porciones + ' porciones' : ''} · ${escapeHtml(r.dificultad)}</span>
           ${barra}<span class="lib-book__state">${estado}</span></button>`;
-      }).join('');
-      const pronto = `<div class="lib-book lib-book--pronto" aria-hidden="true"><span class="lib-book__cover"><span>Más libros<br>muy pronto</span></span><span class="lib-book__title">Nuevos títulos</span><span class="lib-book__meta">Seguiremos ampliando la biblioteca.</span></div>`;
-      root.innerHTML = `
-        <div class="xp-library__head"><div><div class="xp-library__eyebrow">Biblioteca clásica · Dominio público</div><h2 class="xp-library__title">Libros para tu formación gastronómica</h2><p class="xp-library__sub">Joyas de la cocina y la repostería en español, para leer aquí mismo con tu membresía. Se desbloquean con los XP que ganas en Retos: los 18 retos suman hasta ${_fmtXP(xpMaximoRetos)} XP.</p></div><div class="xp-library__score"><b>${_fmtXP(xpActual)} <small>/ ${_fmtXP(xpMaximoRetos)} XP</small></b><span>Tu progreso</span></div></div>
-        ${banner}
-        <div class="lib-grid">${tarjetas}${pronto}</div>
-        <p class="lib-nota">Son obras de dominio público, escritas en español de su época (ortografía y recetas antiguas): sirven para conocer la tradición culinaria y reposteril. Digitalizaciones de la Universidade de Santiago de Compostela y de Internet Archive.</p>`;
-      root.querySelectorAll('[data-lib]').forEach(b => b.addEventListener('click', () => {
-        const l = LIBROS_BIBLIOTECA.find(x => x.id === b.dataset.lib);
-        if (_estadoLibro(l) === 'abierto') abrirLector(l); else avisoBloqueado(l);
-      }));
-      root.querySelectorAll('[data-lib-ir]').forEach(b => b.addEventListener('click', () => navigateToSection(b.dataset.libIr)));
+      };
+      const tarjetaClasico = (l) => {
+        const est = _estadoClasico(l);
+        const dias = _diasMembresiaBib();
+        const faltan = Math.max(0, l.dia - dias);
+        const chip = est === 'abierto' ? `${_ICO_BOOK}Leer` : est === 'tiempo' ? `${_ICO_LOCK}Día ${l.dia}` : `${_ICO_LOCK}Membresía`;
+        const estado = est === 'abierto' ? `${_ICO_BOOK}<span>Disponible · leer ahora</span>` : est === 'tiempo' ? `${_ICO_LOCK}<span>Se abre en ${faltan} ${faltan === 1 ? 'día' : 'días'}</span>` : `${_ICO_LOCK}<span>Con membresía</span>`;
+        const barra = est === 'tiempo' ? `<span class="lib-bar"><i style="width:${Math.min(100, (dias / l.dia) * 100)}%"></i></span>` : '';
+        return `<button type="button" class="lib-book ${est === 'abierto' ? 'is-open' : 'is-locked'}" data-lib="${l.id}" style="--portada:url('${l.portada}');--tono:${l.tono}" aria-label="${escapeHtml(l.titulo)}${est === 'abierto' ? '' : ' (bloqueado)'}">
+          <span class="lib-book__cover"><span class="lib-book__tag">${escapeHtml(l.tema)}</span><span class="lib-book__chip">${chip}</span><span class="lib-book__name">${escapeHtml(l.titulo)}<small>${escapeHtml(l.autor)} · ${escapeHtml(l.anio)}</small></span></span>
+          <span class="lib-book__title">${escapeHtml(l.titulo)}</span><span class="lib-book__meta">${escapeHtml(l.autor)} · ${escapeHtml(l.anio)} · ${l.paginas.toLocaleString('es-MX')} págs.</span>${barra}<span class="lib-book__state">${estado}</span></button>`;
+      };
+
+      const contenidoTab = () => {
+        if (_bibTab === 'recetas') return `<p class="lib-intro">Recetas probadas para producir en casa o en tu negocio. Se desbloquean con XP: mientras más juegas, más se abre.</p><div class="rec-grid">${recetas.map(tarjetaReceta).join('')}</div>`;
+        if (_bibTab === 'clasicos') return `<p class="lib-intro">Libros clásicos de la cocina y la repostería en español (dominio público). Con tu membresía se abre uno al empezar y otro cada 25 días. Están escritos en español de su época.</p><div class="lib-grid">${LIBROS_BIBLIOTECA.map(tarjetaClasico).join('')}</div><p class="lib-nota">Digitalizaciones de la Universidade de Santiago de Compostela y de Internet Archive.</p>`;
+        return `<p class="lib-intro">Guías de estudio en español sobre pastelería, panadería, inocuidad, cortes de carne y gestión de cocina. Al final de cada una te decimos dónde profundizar.</p><div class="lib-grid">${guias.map(tarjetaGuia).join('')}</div>`;
+      };
+
+      const render = () => {
+        root.innerHTML = `${encabezado}${banner}
+          <div class="lib-tabs" role="tablist">${tabs.map(t => `<button type="button" role="tab" class="lib-tab ${_bibTab === t.k ? 'is-active' : ''}" aria-selected="${_bibTab === t.k}" data-tab="${t.k}">${t.t}<small>${t.n}</small></button>`).join('')}</div>
+          <div class="lib-panel">${contenidoTab()}</div>`;
+        root.querySelectorAll('[data-tab]').forEach(b => b.addEventListener('click', () => { _bibTab = b.dataset.tab; render(); }));
+        root.querySelectorAll('[data-lib-ir]').forEach(b => b.addEventListener('click', () => navigateToSection(b.dataset.libIr)));
+        root.querySelectorAll('[data-guia]').forEach(b => b.addEventListener('click', () => {
+          const g = guias.find(x => x.id === b.dataset.guia);
+          if (_estadoItem(g) === 'abierto') abrirDocumento(g, 'guia'); else avisoItem(g);
+        }));
+        root.querySelectorAll('[data-receta]').forEach(b => b.addEventListener('click', () => {
+          const r = recetas.find(x => x.id === b.dataset.receta);
+          if (_estadoItem(r) === 'abierto') abrirDocumento(r, 'receta'); else avisoItem(r);
+        }));
+        root.querySelectorAll('[data-lib]').forEach(b => b.addEventListener('click', () => {
+          const l = LIBROS_BIBLIOTECA.find(x => x.id === b.dataset.lib);
+          if (_estadoClasico(l) === 'abierto') abrirLector(l); else avisoClasico(l);
+        }));
+      };
+      render();
     };
+
     // Asegurar cursos cargados antes de renderizar
     if (!_cursosLoaded && !_cursosLoading) {
       container.innerHTML = `
@@ -14488,8 +14993,8 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     if (document.getElementById('regalo-pop')) return;
     var esVip = (window.UserState && window.UserState.modo === 'vip');
     var nota = esVip
-      ? 'Ya están en tu saldo y cuentan igual que los de los retos: sirven para desbloquear los libros de la biblioteca. Sigue ganando XP completando retos.'
-      : 'Ya están en tu saldo y cuentan igual que los de los retos. Con la membresía VIP los usas para desbloquear los libros de la biblioteca, y sigues ganando XP completando retos.';
+      ? 'Ya están en tu saldo y cuentan igual que los de los retos: sirven para desbloquear guías, recetas y libros de la biblioteca. Sigue ganando XP completando retos.'
+      : 'Ya están en tu saldo y cuentan igual que los de los retos. Con la membresía VIP los usas para desbloquear guías, recetas y libros de la biblioteca, y sigues ganando XP completando retos.';
     var el = document.createElement('div');
     el.id = 'regalo-pop';
     el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-labelledby', 'rg-title');
