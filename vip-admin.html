@@ -5827,7 +5827,14 @@ const Pages={
       } else {
         est = `<div class="pg-card pg-aviso"><h3>Todavía no ha llegado ningún aviso de Stripe</h3><p>Este diagnóstico empezó a registrar hace poco. Cuando entre un pago, un reembolso o una cancelación, aquí aparecerá la hora del último aviso. Si ya hubo pagos y sigue vacío, el destino «DulceLab Food» de Stripe no está llegando al servidor.</p></div>`;
       }
-      p.querySelector('#pg-estado').innerHTML = est;
+      // ── Cuenta de Stripe a la que pertenece la llave secreta del servidor ──
+      const ESPERADA = 'acct_1ThG5SDCxZfVu338'; // la misma cuenta de la llave pública (pk_live_51ThG5SDC…) que usa el panel
+      const cu = data.cuenta || {};
+      let cuentaHtml;
+      if (cu.id && cu.id === ESPERADA) cuentaHtml = `<div class="pg-card pg-ok"><h3>✅ La llave secreta del servidor es de la cuenta correcta</h3><p>${escapeHtml(cu.nombre || 'Bioorigen')} (${escapeHtml(cu.id)}): coincide con la llave pública del panel.</p></div>`;
+      else if (cu.id) cuentaHtml = `<div class="pg-card pg-mal"><h3>⚠️ La llave secreta de Railway es de OTRA cuenta de Stripe</h3><p>El servidor usa la cuenta ${escapeHtml(cu.nombre || '')} (${escapeHtml(cu.id)}), pero el panel y el webhook están en ${ESPERADA} (Bioorigen). Con esto los pagos no cuadran. En Railway, <code>STRIPE_SECRET_KEY</code> debe ser la clave secreta de la cuenta Bioorigen (Stripe → Desarrolladores → Claves de API).</p></div>`;
+      else cuentaHtml = `<div class="pg-card pg-aviso"><h3>No se pudo comprobar la cuenta de la llave secreta</h3><p>${escapeHtml(cu.error || 'Sin datos')}. Si usas una clave restringida, puede faltarle el permiso para leer la cuenta; no significa que esté mal.</p></div>`;
+      p.querySelector('#pg-estado').innerHTML = cuentaHtml + est;
 
       // ── Tabla de intentos ──
       const filas = data.intentos || [];
