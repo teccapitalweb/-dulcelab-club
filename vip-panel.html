@@ -3708,7 +3708,7 @@ body.has-fomo .main{padding-top:18px}
 (function(){
   var pend = {}, activos = {}, hasta = 0;
   function hayPopup(){
-    return !!document.querySelector('#splash-bienvenida, #name-modal, .modal-backdrop.is-open, .mvtour-overlay, #dulcelab-install-pop.show, .lib-reader');
+    return !!document.querySelector('#splash-bienvenida, #name-modal, .modal-backdrop.is-open, .mvtour-overlay, #dulcelab-install-pop.show, #regalo-pop, .lib-reader');
   }
   // reservar: avisa que esta ventana va a salir pronto, para que las de menor prioridad no se adelanten.
   function reservar(id, prio){
@@ -3716,6 +3716,7 @@ body.has-fomo .main{padding-top:18px}
     pend[id] = prio;
     setTimeout(function(){ if (!activos[id]) delete pend[id]; }, 20000);
   }
+  function liberar(id){ if (!activos[id]) delete pend[id]; }
   function pedir(id, prio, fn, maxMs){
     if (activos[id]) return;
     activos[id] = true;
@@ -3733,8 +3734,8 @@ body.has-fomo .main{padding-top:18px}
       setTimeout(intentar, 500);
     })();
   }
-  window.__Popups = { pedir: pedir, reservar: reservar, hayPopup: hayPopup };
-  // Orden: 1 bienvenida tras el pago · 2 guía del panel · 3 nombre · 4 curso gratis · 5 instalar app
+  window.__Popups = { pedir: pedir, reservar: reservar, liberar: liberar, hayPopup: hayPopup };
+  // Orden: 1 bienvenida tras el pago · 2 guía del panel · 3 nombre · 4 regalo de XP · 5 curso gratis · 6 instalar app
 })();
 </script>
 <!-- Stripe.js para Embedded Checkout (sección Suscripción) -->
@@ -3971,6 +3972,7 @@ if (window.__isDemoMode) {
     // Cargar noticias reales del home (Firestore noticias_auto)
     setTimeout(()=>{ if(typeof window.__cargarDescubreHoy==='function') window.__cargarDescubreHoy(); }, 300);
     setTimeout(()=>{ if(typeof window.__cargarProgreso==='function') window.__cargarProgreso(); }, 300);
+    setTimeout(()=>{ try { window.__regaloBienvenida && window.__regaloBienvenida(); } catch(e){} }, 700);
     // Llenar widgets de actividad con datos reales
     setTimeout(()=>{ if(typeof window.__actualizarWidgetsActividad==='function') window.__actualizarWidgetsActividad(); if(typeof window.__actualizarTuSemana==='function') window.__actualizarTuSemana(); }, 400);
 
@@ -5617,7 +5619,7 @@ const Sections = (function(){
     if (tieneAccesoVipCompleto() || cursoConPrimeraClaseGratis() || window.__pruebaGratisMostrada || window.__pruebaGratisPedida) return;
     if (!cursosElegiblesParaPrueba().length) { setTimeout(() => window.__mostrarInvitacionPruebaGratis(), 700); return; }
     window.__pruebaGratisPedida = true;
-    window.__Popups.pedir('prueba', 4, () => { window.__pruebaGratisPedida = false; mostrarInvitacionPruebaAhora(); });
+    window.__Popups.pedir('prueba', 5, () => { window.__pruebaGratisPedida = false; mostrarInvitacionPruebaAhora(); });
   };
   function mostrarInvitacionPruebaAhora() {
     if (tieneAccesoVipCompleto() || cursoConPrimeraClaseGratis() || window.__pruebaGratisMostrada) return;
@@ -14259,7 +14261,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   function mostrar(){
     if (yaInstalada() || fueDescartada() || !esSegundaVisitaOMas()) return;
     // Espera unos segundos antes de pedir turno, para que las demás ventanas (más importantes) lo pidan primero.
-    if (window.__Popups) setTimeout(function(){ window.__Popups.pedir('instalar', 5, function(){ pop.classList.add('show'); }, 600000); }, 6000);
+    if (window.__Popups) setTimeout(function(){ window.__Popups.pedir('instalar', 6, function(){ pop.classList.add('show'); }, 600000); }, 6000);
     else pop.classList.add('show');
   }
   function ocultar(recordar){
@@ -14291,6 +14293,108 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   });
   if (laterBtn) laterBtn.addEventListener('click', function(){ ocultar(true); });
   if (overlay) overlay.addEventListener('click', function(){ ocultar(false); });
+})();
+</script>
+<!-- ═══ Regalo de bienvenida: 150 XP una sola vez por persona ═══
+     El servidor los suma (POST /api/regalo-bienvenida) y avisa si es la primera vez. Sirven para desbloquear libros. -->
+<style>
+  #regalo-pop{position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;padding:20px;font-family:'Inter','Plus Jakarta Sans',system-ui,sans-serif}
+  #regalo-pop.show{display:flex;animation:rgFade .25s ease}
+  #regalo-pop .rg-ov{position:absolute;inset:0;background:rgba(7,5,3,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+  #regalo-pop .rg-card{position:relative;width:100%;max-width:430px;padding:30px 26px 24px;text-align:center;background:#2A0D16;border:1px solid rgba(213,161,61,.34);border-radius:24px;box-shadow:0 30px 70px -20px rgba(0,0,0,.7);animation:rgPop .35s cubic-bezier(.2,.8,.25,1)}
+  #regalo-pop .rg-x{position:absolute;top:14px;right:16px;width:30px;height:30px;border:0;background:none;color:#8A7468;font-size:22px;line-height:1;cursor:pointer}
+  #regalo-pop .rg-x:hover{color:#FFF3E5}
+  #regalo-pop .rg-ico{position:relative;display:grid;place-items:center;width:84px;height:84px;margin:2px auto 22px;border-radius:22px;background:linear-gradient(145deg,#E5B04A,#B8862F);color:#2A0D16;box-shadow:0 14px 34px -10px rgba(213,161,61,.65)}
+  #regalo-pop .rg-ico svg{width:40px;height:40px}
+  #regalo-pop .rg-plus{position:absolute;right:-16px;bottom:-9px;padding:3px 10px;border-radius:99px;background:#2A0D16;border:1px solid rgba(213,161,61,.7);color:#E5B04A;font-size:12px;font-weight:800;letter-spacing:.3px}
+  #regalo-pop .rg-eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:#D5A13D;margin-bottom:8px}
+  #regalo-pop h3{margin:0 0 10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:25px;font-weight:800;letter-spacing:-.5px;color:#FFF3E5;line-height:1.15}
+  #regalo-pop h3 b{color:#E5B04A}
+  #regalo-pop p{margin:0 0 18px;font-size:13.5px;line-height:1.6;color:#C9B8AE}
+  #regalo-pop .rg-saldo{display:flex;align-items:center;justify-content:space-between;margin:0 0 18px;padding:13px 16px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid rgba(245,239,232,.12);font-size:13px;color:#C9B8AE}
+  #regalo-pop .rg-saldo b{font-family:'JetBrains Mono',monospace;font-size:19px;color:#E5B04A}
+  #regalo-pop .rg-saldo small{font-size:11px;color:#C9B8AE;font-weight:600}
+  #regalo-pop .rg-btns{display:flex;gap:10px}
+  #regalo-pop .rg-btns button{flex:1;padding:14px 10px;border-radius:14px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:transform .15s}
+  #regalo-pop .rg-btns button:hover{transform:translateY(-1px)}
+  #regalo-pop .rg-later{background:transparent;border:1px solid rgba(245,239,232,.2);color:#FFF3E5}
+  #regalo-pop .rg-go{background:linear-gradient(145deg,#E5B04A,#C9922F);border:0;color:#2A0D16}
+  @keyframes rgFade{from{opacity:0}to{opacity:1}}
+  @keyframes rgPop{from{opacity:0;transform:translateY(18px) scale(.96)}to{opacity:1;transform:none}}
+  html[data-theme="day"] #regalo-pop .rg-card{background:#FFFFFF;border-color:#E5D3A6}
+  html[data-theme="day"] #regalo-pop h3{color:#2A0D16}
+  html[data-theme="day"] #regalo-pop h3 b{color:#B8862F}
+  html[data-theme="day"] #regalo-pop p,html[data-theme="day"] #regalo-pop .rg-saldo{color:#6B6152}
+  html[data-theme="day"] #regalo-pop .rg-saldo{background:#FBF5E8;border-color:#E5DCC9}
+  html[data-theme="day"] #regalo-pop .rg-saldo b{color:#9A6F1E}
+  html[data-theme="day"] #regalo-pop .rg-later{color:#2A0D16;border-color:#D9CBB3}
+  html[data-theme="day"] #regalo-pop .rg-x{color:#9A8D80}
+  @media(max-width:480px){#regalo-pop .rg-card{padding:26px 18px 20px}#regalo-pop h3{font-size:22px}#regalo-pop .rg-btns{flex-direction:column-reverse}}
+</style>
+<script>
+(function(){
+  var _ICO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="10.5" rx="1.5"/><rect x="3" y="7" width="18" height="3.5" rx="1"/><path d="M12 7v13.5M12 7C10.8 3.6 6.8 3.8 7 5.6 7.2 7.2 10 7 12 7Zm0 0c1.2-3.4 5.2-3.2 5-1.4-.2 1.6-3 1.4-5 1.4Z"/></svg>';
+  function esc(n){ return Number(n).toLocaleString('es-MX'); }
+
+  function mostrar(regalo, saldo){
+    if (document.getElementById('regalo-pop')) return;
+    var esVip = (window.UserState && window.UserState.modo === 'vip');
+    var nota = esVip
+      ? 'Ya están en tu saldo y cuentan igual que los de los retos: sirven para desbloquear los libros de la biblioteca. Sigue ganando XP completando retos.'
+      : 'Ya están en tu saldo y cuentan igual que los de los retos. Con la membresía VIP los usas para desbloquear los libros de la biblioteca, y sigues ganando XP completando retos.';
+    var el = document.createElement('div');
+    el.id = 'regalo-pop';
+    el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-labelledby', 'rg-title');
+    el.innerHTML =
+      '<div class="rg-ov"></div><div class="rg-card">' +
+        '<button type="button" class="rg-x" aria-label="Cerrar">×</button>' +
+        '<div class="rg-ico">' + _ICO + '<span class="rg-plus">+' + esc(regalo) + '</span></div>' +
+        '<div class="rg-eyebrow">Regalo de bienvenida</div>' +
+        '<h3 id="rg-title">¡Tienes <b>' + esc(regalo) + ' XP</b> de regalo!</h3>' +
+        '<p>Te los damos por unirte a DulceLab Food. ' + nota + '</p>' +
+        '<div class="rg-saldo"><span>Tu saldo actual</span><b>' + esc(saldo) + ' <small>XP</small></b></div>' +
+        '<div class="rg-btns"><button type="button" class="rg-later">Más tarde</button><button type="button" class="rg-go">Ver los libros →</button></div>' +
+      '</div>';
+    document.body.appendChild(el);
+    var cerrar = function(){ el.remove(); document.removeEventListener('keydown', tecla); };
+    var tecla = function(e){ if (e.key === 'Escape') cerrar(); };
+    document.addEventListener('keydown', tecla);
+    el.querySelector('.rg-ov').addEventListener('click', cerrar);
+    el.querySelector('.rg-x').addEventListener('click', cerrar);
+    el.querySelector('.rg-later').addEventListener('click', cerrar);
+    el.querySelector('.rg-go').addEventListener('click', function(){ cerrar(); if (window.navigateToSection) window.navigateToSection('pdfs'); });
+    requestAnimationFrame(function(){ el.classList.add('show'); });
+    // por si la pestaña está en segundo plano y no corre requestAnimationFrame
+    setTimeout(function(){ el.classList.add('show'); }, 80);
+  }
+
+  // Se llama al entrar al panel. Solo habla con el servidor una vez por persona y navegador.
+  window.__regaloBienvenida = async function(){
+    var P = window.__Popups;
+    try {
+      var S = window.UserState || {};
+      if (!S.uid || !window.__currentUser) return;
+      var KEY = 'dulcelab_regalo_bienvenida_' + S.uid;
+      try { if (localStorage.getItem(KEY) === '1') return; } catch(e){}
+      if (P) P.reservar('regalo', 4);
+      // primero se lee el progreso: así no choca con la creación del documento de XP
+      if (window.__cargarProgreso) await window.__cargarProgreso();
+      var token = await window.__currentUser.getIdToken();
+      var base = window.WEBHOOK_URL || 'https://dulcelab-webhook-production.up.railway.app';
+      var res = await fetch(base + '/api/regalo-bienvenida', { method: 'POST', headers: { Authorization: 'Bearer ' + token } });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      var data = await res.json();
+      try { localStorage.setItem(KEY, '1'); } catch(e){}
+      if (!data.nuevo) { if (P) P.liberar('regalo'); return; }
+      // el saldo ya cambió en el servidor: se vuelve a leer para que el panel lo muestre
+      if (window.__cargarProgreso) await window.__cargarProgreso();
+      var mostrarAhora = function(){ mostrar(data.regalo || 150, data.xp); };
+      if (P) P.pedir('regalo', 4, mostrarAhora, 300000); else mostrarAhora();
+    } catch(e){
+      console.warn('[regalo]', e && e.message);
+      if (P) P.liberar('regalo');
+    }
+  };
 })();
 </script>
 <script src="assets/onboarding-tour.js?v=3"></script>
