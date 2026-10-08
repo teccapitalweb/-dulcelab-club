@@ -140,11 +140,9 @@ body{
 /* Candado visual en Herramientas Pro / Comunidad cuando no hay membresía activa */
 .herramientas-bloqueadas .nav-item[data-tool]::after,
 .herramientas-bloqueadas .nav-item[data-section="foro"]::after,
-.herramientas-bloqueadas .nav-item[data-section="directorio"]::after,
 .herramientas-bloqueadas .nav-item[data-section="canal"]::after,
 .herramientas-bloqueadas .mobile-drawer__item[data-tool]::after,
 .herramientas-bloqueadas .mobile-drawer__item[data-section="foro"]::after,
-.herramientas-bloqueadas .mobile-drawer__item[data-section="directorio"]::after,
 .herramientas-bloqueadas .mobile-drawer__item[data-section="canal"]::after{
   content:"";width:11px;height:11px;margin-left:auto;flex:none;opacity:.5;
   background-color:var(--text-3);
@@ -2267,6 +2265,20 @@ body{
 .dir-cta:hover{transform:translateY(-2px);color:var(--primary);border-color:var(--primary)}
 .dir-cta .ic{width:17px;height:17px}
 .dir-cta--wa:hover{color:#25D366;border-color:#25D366}
+.dir-cta--lock{width:auto;padding:0 13px;gap:7px;cursor:pointer;font:inherit;font-size:12px;font-weight:700;color:var(--text-2)}
+.dir-cta--lock svg{width:13px;height:13px}
+.dir-cta--lock:hover{color:var(--primary);border-color:var(--primary)}
+.dir-lockbanner{display:flex;align-items:center;gap:12px;margin:0 0 18px;padding:13px 16px;border-radius:14px;border:1px solid color-mix(in srgb,var(--accent,#D5A13D) 40%,var(--border));background:color-mix(in srgb,var(--accent,#D5A13D) 9%,var(--surface));font-size:13px;line-height:1.5;color:var(--text-2)}
+.dir-lockbanner > svg{flex:none;width:18px;height:18px;color:var(--accent,#B8862F)}
+.dir-lockbanner b{color:var(--text)}
+.dir-lockbanner__btn{flex:none;margin-left:auto;padding:8px 16px;border:0;border-radius:99px;background:var(--primary);color:#fff;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
+.dir-profile-cta--lock{display:inline-flex;align-items:center;gap:8px}
+.dir-profile-cta--lock svg{width:14px;height:14px}
+.dir-det__lock{display:flex;gap:12px;align-items:flex-start;margin-top:16px;padding:14px 16px;border-radius:12px;background:var(--surface-2);border:1px dashed var(--border-2);color:var(--text-2)}
+.dir-det__lock > svg{flex:none;width:18px;height:18px;margin-top:2px;color:var(--accent,#B8862F)}
+.dir-det__lock b{display:block;margin-bottom:3px;font-size:13px;color:var(--text)}
+.dir-det__lock span{font-size:12.5px;line-height:1.5}
+@media(max-width:600px){.dir-lockbanner{flex-wrap:wrap}.dir-lockbanner__btn{margin-left:0;width:100%}}
 .dir-cta--li:hover{color:#0A66C2;border-color:#0A66C2}
 .dir-card__sincontacto{font-size:11px;color:var(--text-3);margin-top:auto;padding-top:6px;font-style:italic}
 /* Form de tarjeta */
@@ -8210,7 +8222,7 @@ const Sections = (function(){
       // No-VIP: el directorio es exclusivo VIP. En vez de pedirle algo que no puede hacer,
       // lo invitamos a hacerse miembro. El botón lleva a Suscripción.
       setTxt('com-title', 'Únete a la comunidad VIP');
-      setTxt('com-sub', 'Al ser miembro, crea tu tarjeta en el Directorio VIP y participa en el foro con cientos de profesionales.');
+      setTxt('com-sub', 'Mira el Directorio VIP y, al ser miembro, contacta a otros profesionales y comparte tu propia tarjeta.');
       setTxt('com-pct', '');
       setBar('com-bar', 0);
       if (comBtn) { comBtn.textContent = 'Hazte VIP'; comBtn.setAttribute('data-section', 'suscripcion'); }
@@ -11036,8 +11048,44 @@ const Sections = (function(){
     }
   }
 
+  // Quien no es VIP ve el directorio completo, pero no puede contactar ni publicar su tarjeta.
+  function dirEsVip(){ return window.UserState?.modo==='vip' || esAdminReal(); }
+  function dirAvisoMembresia(accion){
+    const id = 'dir-membresia';
+    const compartir = accion === 'compartir';
+    Modal.open({
+      id, icon:'i-user', size:'sm',
+      title: compartir ? 'Comparte tu tarjeta con la comunidad' : 'Contacta con los miembros',
+      subtitle: 'Disponible con la membresía VIP',
+      body: `<div style="padding:10px 2px 4px;line-height:1.6;color:var(--text-2);font-size:13px">${compartir
+        ? 'Crear y publicar tu tarjeta en el <strong style="color:var(--text)">Directorio VIP</strong> es exclusivo para miembros. Actívala con tu membresía y empieza a recibir contactos de otros profesionales.'
+        : 'Puedes ver quién está en el directorio, pero los <strong style="color:var(--text)">datos de contacto</strong> (WhatsApp, correo y redes) se desbloquean al activar tu membresía VIP.'}</div>`,
+      footer: `<button class="btn btn--ghost" onclick="Modal.close('${id}')">Después</button><button class="btn btn--primary" onclick="Modal.close('${id}');navigateToSection('suscripcion')">Ver membresía</button>`
+    });
+  }
+  const _DIR_ICO_LOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+
   function renderDirectorio(container){
-    const esVip = window.UserState?.modo==='vip' || esAdminReal();
+    const esVip = dirEsVip();
+    // Las reglas de Firestore exigen sesión para leer el directorio: sin cuenta se invita a crearla.
+    if (!window.UserState?.uid) {
+      container.innerHTML = `
+        <div class="fade-up dir-page">
+          <div class="dir-hero">
+            <span class="dir-hero__eyebrow">Networking profesional</span>
+            <h1 class="dir-hero__title">Directorio VIP</h1>
+            <p class="dir-hero__sub">Conecta con la comunidad DulceLab Food y descubre a otros profesionales de gastronomía, repostería e inocuidad alimentaria.</p>
+          </div>
+          <div class="tool-paywall" style="background:var(--surface);border:1px solid var(--border-2);border-radius:16px;padding:36px 24px;">
+            <div class="tool-paywall__ic"><svg class="ic"><use href="#i-user"/></svg></div>
+            <h3>Crea tu cuenta gratis para ver el directorio</h3>
+            <p>Regístrate sin costo y mira quién forma parte de la comunidad. Para contactar a los miembros y compartir tu tarjeta necesitas la membresía VIP.</p>
+            <button class="btn btn--accent" data-dir-registro>Crear mi cuenta gratis</button>
+          </div>
+        </div>`;
+      container.querySelector('[data-dir-registro]')?.addEventListener('click', ()=>{ window.location.href = 'vip-auth.html'; });
+      return;
+    }
     container.innerHTML = `
       <div class="fade-up dir-page">
         <div class="dir-hero">
@@ -11046,12 +11094,14 @@ const Sections = (function(){
           <p class="dir-hero__sub">Conecta con la comunidad DulceLab Food. Crea tu tarjeta profesional y descubre a otros profesionales de gastronomía, repostería e inocuidad alimentaria.</p>
         </div>
 
+        ${esVip ? '' : `<div class="dir-lockbanner">${_DIR_ICO_LOCK}<span>Estás viendo el directorio como visitante. <b>Contactar a los miembros</b> y <b>compartir tu propia tarjeta</b> se activa con tu membresía VIP.</span><button type="button" class="dir-lockbanner__btn" data-dir-vip>Activar membresía</button></div>`}
         <div class="dir-workbench">
           <div class="dir-search">
             <svg class="ic"><use href="#i-search"/></svg>
             <input type="text" id="dir-buscar" placeholder="Buscar por nombre, empresa o puesto…">
           </div>
-          ${esVip?`<button class="btn dir-profile-cta" id="dir-mi-tarjeta"><svg class="ic"><use href="#i-edit"/></svg>Mi tarjeta</button>`:''}
+          ${esVip?`<button class="btn dir-profile-cta" id="dir-mi-tarjeta"><svg class="ic"><use href="#i-edit"/></svg>Mi tarjeta</button>`
+            :`<button class="btn dir-profile-cta dir-profile-cta--lock" id="dir-mi-tarjeta-lock">${_DIR_ICO_LOCK}Compartir mi tarjeta</button>`}
         </div>
 
         <div class="dir-chips" id="dir-chips">
@@ -11079,6 +11129,10 @@ const Sections = (function(){
     });
     // Mi tarjeta
     if (esVip) container.querySelector('#dir-mi-tarjeta').addEventListener('click', dirEditarMiTarjeta);
+    else {
+      container.querySelector('#dir-mi-tarjeta-lock')?.addEventListener('click', ()=>dirAvisoMembresia('compartir'));
+      container.querySelector('[data-dir-vip]')?.addEventListener('click', ()=>navigateToSection('suscripcion'));
+    }
 
     dirSuscribir();
   }
@@ -11118,6 +11172,7 @@ const Sections = (function(){
       return;
     }
     const uid = window.UserState?.uid;
+    const vipDir = dirEsVip();
     // Seguridad: el link de LinkedIn/sitio web lo escribe el propio miembro en su
     // perfil — hay que validar que sea http(s) real y escapar antes de meterlo en
     // un atributo href, si no, se puede romper el atributo o abrir un esquema raro.
@@ -11131,6 +11186,8 @@ const Sections = (function(){
       } catch (e) { return ''; }
     };
     grid.innerHTML = cards.map(c=>{
+      // Sin membresía no se muestra ningún dato de contacto: ni se pinta ni queda en la página.
+      if (!vipDir) c = Object.assign({}, c, { whatsapp:'', email:'', linkedin:'', web:'' });
       const inicial = (c.nombre||'?').trim().slice(0,2).toUpperCase();
       const foto = c.foto
         ? `<img src="${c.foto}" alt="${escapeHtml(c.nombre||'')}" class="dir-card__foto">`
@@ -11140,6 +11197,7 @@ const Sections = (function(){
       if (c.email) contactos.push(`<button class="dir-cta dir-cta--mail" data-email="${escapeHtml(c.email)}" title="Copiar correo: ${escapeHtml(c.email)}"><svg class="ic"><use href="#i-mail"/></svg></button>`);
       if (c.linkedin && _dirSafeHref(c.linkedin)) contactos.push(`<a class="dir-cta dir-cta--li" href="${_dirSafeHref(c.linkedin)}" target="_blank" rel="noopener" title="LinkedIn"><svg class="ic"><use href="#i-linkedin"/></svg></a>`);
       if (c.web && _dirSafeHref(c.web)) contactos.push(`<a class="dir-cta" href="${_dirSafeHref(c.web)}" target="_blank" rel="noopener" title="Sitio web"><svg class="ic"><use href="#i-link"/></svg></a>`);
+      if (!vipDir) contactos.push(`<button type="button" class="dir-cta dir-cta--lock" data-dir-lock title="Disponible con la membresía VIP">${_DIR_ICO_LOCK}<span>Contactar</span></button>`);
       const esMia = c.id===uid;
       return `
       <article class="dir-card${esMia?' dir-card--mia':''}" data-dircard="${c.id}">
@@ -11165,6 +11223,9 @@ const Sections = (function(){
         dirVerDetalle(card.dataset.dircard);
       });
     });
+    grid.querySelectorAll('[data-dir-lock]').forEach(b=>{
+      b.addEventListener('click', (e)=>{ e.stopPropagation(); dirAvisoMembresia('contactar'); });
+    });
     // Botón de correo: copiar al portapapeles + intentar abrir cliente
     grid.querySelectorAll('.dir-cta--mail').forEach(b=>{
       b.addEventListener('click', (e)=>{
@@ -11175,7 +11236,10 @@ const Sections = (function(){
   }
 
   function dirVerDetalle(id){
-    const c = _dirCards.find(x=>x.id===id); if(!c) return;
+    const c0 = _dirCards.find(x=>x.id===id); if(!c0) return;
+    const vipDir = dirEsVip();
+    // Sin membresía no se muestra ningún dato de contacto.
+    const c = vipDir ? c0 : Object.assign({}, c0, { whatsapp:'', email:'', linkedin:'', web:'' });
     const uid = window.UserState?.uid;
     const esMia = c.id===uid;
     const inicial = (c.nombre||'?').trim().slice(0,2).toUpperCase();
@@ -11209,6 +11273,7 @@ const Sections = (function(){
           ${c.sector?`<span class="dir-det__sector">${escapeHtml(c.sector)}</span>`:''}
         </div>
         ${c.bio?`<div class="dir-det__bio">${escapeHtml(c.bio)}</div>`:''}
+        ${vipDir ? '' : `<div class="dir-det__lock">${_DIR_ICO_LOCK}<div><b>Contacto exclusivo para miembros VIP</b><span>Activa tu membresía para escribirle por WhatsApp o correo y ver sus redes profesionales.</span></div></div>`}
         <div class="dir-det__rows">
           ${row('i-whatsapp','WhatsApp',c.whatsapp, waNum?`https://wa.me/${waNum}`:'', 'dir-det__row--wa')}
           ${c.email?`<button class="dir-det__row dir-det__row--mail" data-detmail="${escapeHtml(c.email)}">
@@ -11218,15 +11283,17 @@ const Sections = (function(){
           ${row('i-linkedin','LinkedIn',c.linkedin, _dirSafeHref(c.linkedin), 'dir-det__row--li')}
           ${row('i-link','Sitio web',c.web, _dirSafeHref(c.web))}
         </div>
-        ${(!c.whatsapp&&!c.email&&!c.linkedin&&!c.web)?'<div class="dir-det__sincontacto">Este miembro no agregó datos de contacto.</div>':''}
+        ${(vipDir&&!c.whatsapp&&!c.email&&!c.linkedin&&!c.web)?'<div class="dir-det__sincontacto">Este miembro no agregó datos de contacto.</div>':''}
       </div>
     `;
     const footer = document.createElement('div');
     footer.innerHTML = esMia
       ? `<button class="btn btn--ghost" id="dirdet-cerrar">Cerrar</button><button class="btn btn--accent" id="dirdet-editar"><svg class="ic"><use href="#i-edit"/></svg>Editar mi tarjeta</button>`
-      : `<button class="btn btn--ghost" id="dirdet-cerrar">Cerrar</button>`;
+      : (vipDir ? `<button class="btn btn--ghost" id="dirdet-cerrar">Cerrar</button>`
+                : `<button class="btn btn--ghost" id="dirdet-cerrar">Cerrar</button><button class="btn btn--accent" id="dirdet-vip">Activar membresía</button>`);
     const m = Modal.open({id:'dir-det', title:'Tarjeta profesional', subtitle: esMia?'Tu tarjeta en el directorio':'Directorio VIP', icon:'i-user', size:'sm', body, footer});
     footer.querySelector('#dirdet-cerrar').addEventListener('click', ()=> m.close());
+    footer.querySelector('#dirdet-vip')?.addEventListener('click', ()=>{ m.close(); navigateToSection('suscripcion'); });
     if (esMia) footer.querySelector('#dirdet-editar').addEventListener('click', ()=>{ m.close(); setTimeout(dirEditarMiTarjeta, 150); });
     // Copiar correo desde el detalle
     const mailRow = document.querySelector('.dir-det__row--mail');
@@ -11236,6 +11303,7 @@ const Sections = (function(){
   }
 
   async function dirEditarMiTarjeta(){
+    if (!dirEsVip()) { dirAvisoMembresia('compartir'); return; }
     const fs = window.__fs;
     const uid = window.UserState?.uid;
     if (!uid){ Toast.error('Inicia sesión',''); return; }
@@ -13218,7 +13286,7 @@ function initNav(){
       }
       // Comunidad: exclusiva para miembros. Las herramientas sí se pueden explorar;
       // la membresía solo se solicita al intentar usar una calculadora.
-      const seccionesComunidadVIP = ['foro','directorio','canal'];
+      const seccionesComunidadVIP = ['foro','canal'];
       const esComunidadVIP = it.dataset.section && seccionesComunidadVIP.includes(it.dataset.section);
       if(esComunidadVIP && typeof toolEsVIP==='function' && !toolEsVIP()){
         if (it.classList.contains('mobile-drawer__item')) cerrarDrawerMovil();
