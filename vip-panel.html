@@ -3706,27 +3706,35 @@ body.has-fomo .main{padding-top:18px}
      Cada una pide su turno con una prioridad (1 sale primero); solo se muestra una a la vez. -->
 <script>
 (function(){
-  var pend = {}, hasta = 0;
+  var pend = {}, activos = {}, hasta = 0;
   function hayPopup(){
     return !!document.querySelector('#splash-bienvenida, #name-modal, .modal-backdrop.is-open, .mvtour-overlay, #dulcelab-install-pop.show, .lib-reader');
   }
+  // reservar: avisa que esta ventana va a salir pronto, para que las de menor prioridad no se adelanten.
+  function reservar(id, prio){
+    if (pend[id] !== undefined) return;
+    pend[id] = prio;
+    setTimeout(function(){ if (!activos[id]) delete pend[id]; }, 20000);
+  }
   function pedir(id, prio, fn, maxMs){
-    if (pend[id]) return;
+    if (activos[id]) return;
+    activos[id] = true;
     pend[id] = prio;
     var t0 = Date.now(), limite = maxMs || 180000;
     (function intentar(){
       var hayMayor = Object.keys(pend).some(function(k){ return k !== id && pend[k] < prio; });
       if (!hayPopup() && !hayMayor && Date.now() >= hasta){
-        delete pend[id];
+        delete pend[id]; delete activos[id];
         hasta = Date.now() + 1500; // margen para que este termine de dibujarse antes de dar turno a otro
         try { fn(); } catch(e){ console.warn('[popups]', id, e && e.message); }
         return;
       }
-      if (Date.now() - t0 > limite){ delete pend[id]; return; }
+      if (Date.now() - t0 > limite){ delete pend[id]; delete activos[id]; return; }
       setTimeout(intentar, 500);
     })();
   }
-  window.__Popups = { pedir: pedir, hayPopup: hayPopup };
+  window.__Popups = { pedir: pedir, reservar: reservar, hayPopup: hayPopup };
+  // Orden: 1 bienvenida tras el pago · 2 guía del panel · 3 nombre · 4 curso gratis · 5 instalar app
 })();
 </script>
 <!-- Stripe.js para Embedded Checkout (sección Suscripción) -->
@@ -3999,7 +4007,7 @@ if (window.__isDemoMode) {
 
     // ─── Popup: confirmar/editar nombre (1ª vez) · evita certificados con el email ───
     setTimeout(() => { try {
-      if (localStorage.getItem('dulcelab_name_confirmed') !== '1' && window.__maybeAskName) window.__Popups.pedir('nombre', 2, () => window.__maybeAskName());
+      if (localStorage.getItem('dulcelab_name_confirmed') !== '1' && window.__maybeAskName) window.__Popups.pedir('nombre', 3, () => window.__maybeAskName());
     } catch(e){} }, 900);
 
     // Arrancar listener de notificaciones de Firestore (tiempo real)
@@ -5609,7 +5617,7 @@ const Sections = (function(){
     if (tieneAccesoVipCompleto() || cursoConPrimeraClaseGratis() || window.__pruebaGratisMostrada || window.__pruebaGratisPedida) return;
     if (!cursosElegiblesParaPrueba().length) { setTimeout(() => window.__mostrarInvitacionPruebaGratis(), 700); return; }
     window.__pruebaGratisPedida = true;
-    window.__Popups.pedir('prueba', 3, () => { window.__pruebaGratisPedida = false; mostrarInvitacionPruebaAhora(); });
+    window.__Popups.pedir('prueba', 4, () => { window.__pruebaGratisPedida = false; mostrarInvitacionPruebaAhora(); });
   };
   function mostrarInvitacionPruebaAhora() {
     if (tieneAccesoVipCompleto() || cursoConPrimeraClaseGratis() || window.__pruebaGratisMostrada) return;
@@ -14285,7 +14293,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   if (overlay) overlay.addEventListener('click', function(){ ocultar(false); });
 })();
 </script>
-<script src="assets/onboarding-tour.js?v=2"></script>
+<script src="assets/onboarding-tour.js?v=3"></script>
 <script>
 window.DulceLabOnboarding = new window.MembershipTour({
   namespace: 'dulcelab',

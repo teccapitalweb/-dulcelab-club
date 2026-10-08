@@ -91,10 +91,11 @@
         var id = '';
         try { id = self.identity() || ''; } catch (e) {}
         if (yaVisto(self.namespace, self.version, id)) return; // ya lo vio este usuario
+        // La guía va antes que las demás ventanas: reserva su turno desde ya y arranca tras la pausa.
+        if (window.__Popups && window.__Popups.reservar) window.__Popups.reservar('guia', 2);
         setTimeout(function () {
           var iniciar = function () { self.start(); };
-          // Si hay un coordinador de ventanas, espera su turno para no encimarse con otras.
-          if (window.__Popups && window.__Popups.pedir) window.__Popups.pedir('guia', 4, iniciar, 300000);
+          if (window.__Popups && window.__Popups.pedir) window.__Popups.pedir('guia', 2, iniciar, 300000);
           else iniciar();
         }, self.autoDelay);
       } else if (waited >= READY_TIMEOUT_MS) {
