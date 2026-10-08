@@ -1246,6 +1246,7 @@ window.__signOut = async () => {
     <div class="nav-section">
       <div class="nav-label">Comunidad</div>
       <a class="nav-item" data-section="miembros"><svg class="ic"><use href="#i-users"/></svg>Miembros VIP<span class="nav-item__badge" id="badge-miembros">0</span></a>
+      <a class="nav-item" data-section="pagos"><svg class="ic"><use href="#i-credit-card"/></svg>Pagos</a>
       <a class="nav-item" data-section="encuesta"><svg class="ic"><use href="#i-chart-bar"/></svg>Encuesta de clientes</a>
       <a class="nav-item" data-section="noticias"><svg class="ic"><use href="#i-news"/></svg>Descubre algo nuevo</a>
       <a class="nav-item" data-section="foro"><svg class="ic"><use href="#i-users"/></svg>Foro<span class="nav-item__badge" id="badge-foro">0</span></a>
@@ -5739,6 +5740,136 @@ const Pages={
     });
     return conteo;
   },
+  // ═══════════════════════════════════════════════════════
+  // PAGOS · qué pasó con cada intento de pago (sin preguntarle al cliente)
+  // Lee del servidor: estado del webhook de Stripe y los últimos intentos de pago de DulceLab.
+  // ═══════════════════════════════════════════════════════
+  async pagos(p){
+    if (!document.getElementById('pg-css')) {
+      const st = document.createElement('style'); st.id = 'pg-css';
+      st.textContent = `
+        .pg-card{margin:0 0 18px;padding:16px 18px;border-radius:16px;border:1px solid var(--border);background:var(--surface)}
+        .pg-card h3{margin:0 0 6px;font-size:15px}
+        .pg-card p{margin:0;font-size:13px;line-height:1.55;color:var(--text-2)}
+        .pg-ok{border-color:color-mix(in srgb,var(--success) 45%,var(--border));background:color-mix(in srgb,var(--success) 8%,var(--surface))}
+        .pg-mal{border-color:color-mix(in srgb,var(--danger) 45%,var(--border));background:color-mix(in srgb,var(--danger) 8%,var(--surface))}
+        .pg-aviso{border-color:color-mix(in srgb,var(--warning) 45%,var(--border));background:color-mix(in srgb,var(--warning) 8%,var(--surface))}
+        .pg-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:16px;background:var(--surface)}
+        .pg-tabla{width:100%;border-collapse:collapse;font-size:13px;min-width:760px}
+        .pg-tabla th{padding:11px 14px;text-align:left;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text-3);border-bottom:1px solid var(--border);background:var(--surface-2)}
+        .pg-tabla td{padding:12px 14px;border-bottom:1px solid var(--border);vertical-align:top}
+        .pg-tabla tr:last-child td{border-bottom:0}
+        .pg-pill{display:inline-block;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700;white-space:nowrap}
+        .pg-pill--pagado{background:color-mix(in srgb,var(--success) 16%,transparent);color:var(--success)}
+        .pg-pill--sin-cobro{background:color-mix(in srgb,var(--warning) 18%,transparent);color:var(--warning)}
+        .pg-pill--no{background:color-mix(in srgb,var(--danger) 14%,transparent);color:var(--danger)}
+        .pg-pill--gris{background:var(--surface-3);color:var(--text-3)}
+        .pg-hint{display:block;margin-top:4px;font-size:11.5px;line-height:1.45;color:var(--text-3);max-width:340px}
+      `;
+      document.head.appendChild(st);
+    }
+    p.innerHTML = `
+      <div class="fade-up">
+        <div class="sec-hero">
+          <span class="sec-hero__eyebrow">Cobros con Stripe</span>
+          <h1 class="sec-hero__title">Pagos</h1>
+          <p class="sec-hero__sub">Aquí ves qué pasó con cada intento de pago de DulceLab, sin tener que preguntarle al cliente. Se muestran los últimos 30.</p>
+        </div>
+        <div id="pg-estado"></div>
+        <div style="display:flex;justify-content:flex-end;margin:0 0 10px"><button class="btn btn--ghost btn--sm" id="pg-recargar">Actualizar</button></div>
+        <div id="pg-tabla"><div class="empty-state">Cargando…</div></div>
+      </div>`;
+
+    if (!window._fb?.auth?.currentUser) {
+      await new Promise(resolve => {
+        const onReady = () => { window.removeEventListener('adminready', onReady); resolve(); };
+        window.addEventListener('adminready', onReady);
+        setTimeout(resolve, 4000);
+      });
+    }
+
+    const fmt = (iso) => iso ? new Date(iso).toLocaleString('es-MX', { dateStyle: 'medium', timeStyle: 'short' }) : '—';
+    const dinero = (n) => '$' + Number(n || 0).toLocaleString('es-MX', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+    const ETQ = {
+      'pagado':             { t: 'Pagó',                    c: 'pagado',   h: 'El pago se completó y se cobró.' },
+      'completo-sin-cobro': { t: 'Completó sin cobro',      c: 'sin-cobro', h: 'Terminó el proceso pero no se cobró nada: casi siempre fue un código de descuento del 100 %.' },
+      'sin-terminar':       { t: 'No terminó de pagar',     c: 'no',       h: 'Abrió la pantalla de pago pero no la completó: dejó de pagar o su tarjeta no pasó. Aún puede terminar si sigue abierta (hasta 24 h).' },
+      'expirada':           { t: 'Expiró sin pagar',        c: 'gris',     h: 'Pasaron 24 horas sin que completara el pago.' }
+    };
+
+    async function cargar(){
+      const cont = p.querySelector('#pg-tabla');
+      cont.innerHTML = '<div class="empty-state">Cargando…</div>';
+      let token;
+      try { token = await Pages._getAuthToken(); } catch (e) { cont.innerHTML = '<div class="empty-state">No se pudo verificar tu sesión de admin.</div>'; return; }
+      let data;
+      try {
+        const res = await fetch(`${Pages._webhookUrl}/stripe/diagnostico`, { headers: { Authorization: `Bearer ${token}` } });
+        data = await res.json();
+        if (!res.ok) throw new Error(data.error || res.statusText);
+      } catch (e) {
+        cont.innerHTML = `<div class="pg-card pg-mal"><h3>No se pudo cargar el diagnóstico</h3><p>${escapeHtml(e.message)}</p></div>`;
+        return;
+      }
+
+      // ── Estado del aviso de Stripe (webhook) ──
+      const w = data.webhook || {};
+      const tEv = w.ultimoEventoEn ? Date.parse(w.ultimoEventoEn) : 0;
+      const tRe = w.ultimoRechazoEn ? Date.parse(w.ultimoRechazoEn) : 0;
+      const tEr = w.ultimoErrorEn ? Date.parse(w.ultimoErrorEn) : 0;
+      let est;
+      if (tRe && tRe >= tEv) {
+        est = `<div class="pg-card pg-mal"><h3>⚠️ Stripe avisa, pero el servidor lo rechaza</h3><p>El último aviso fue rechazado el ${fmt(w.ultimoRechazoEn)} (${escapeHtml(w.ultimoRechazoMotivo || 'firma inválida')}). Casi siempre significa que el <strong>secreto del webhook</strong> en Railway (<code>STRIPE_WEBHOOK_SECRET</code>) no es el del destino «DulceLab Food» en Stripe. Mientras eso no se corrija, las renovaciones y cancelaciones no se registran solas. Las compras nuevas sí se activan, porque el panel las confirma directamente.</p></div>`;
+      } else if (tEr && tEr >= tEv) {
+        est = `<div class="pg-card pg-aviso"><h3>Llegó un aviso pero falló al procesarlo</h3><p>${fmt(w.ultimoErrorEn)}: ${escapeHtml(w.ultimoErrorMotivo || 'error interno')}.</p></div>`;
+      } else if (tEv) {
+        est = `<div class="pg-card pg-ok"><h3>✅ El aviso de Stripe está funcionando</h3><p>Último aviso recibido: ${fmt(w.ultimoEventoEn)} (${escapeHtml(w.ultimoEventoTipo || '')}).</p></div>`;
+      } else {
+        est = `<div class="pg-card pg-aviso"><h3>Todavía no ha llegado ningún aviso de Stripe</h3><p>Este diagnóstico empezó a registrar hace poco. Cuando entre un pago, un reembolso o una cancelación, aquí aparecerá la hora del último aviso. Si ya hubo pagos y sigue vacío, el destino «DulceLab Food» de Stripe no está llegando al servidor.</p></div>`;
+      }
+      p.querySelector('#pg-estado').innerHTML = est;
+
+      // ── Tabla de intentos ──
+      const filas = data.intentos || [];
+      if (!filas.length) { cont.innerHTML = '<div class="empty-state">Todavía no hay intentos de pago de DulceLab.</div>'; return; }
+      cont.innerHTML = `<div class="pg-wrap"><table class="pg-tabla"><thead><tr><th>Fecha</th><th>Correo</th><th>Plan</th><th>Monto</th><th>Qué pasó</th><th>Membresía</th><th></th></tr></thead><tbody>
+        ${filas.map(f => {
+          const e = ETQ[f.estado] || { t: f.estado, c: 'gris', h: '' };
+          const desc = f.descuento > 0 ? `<span class="pg-hint">Descuento aplicado: ${dinero(f.descuento)}</span>` : '';
+          return `<tr>
+            <td>${fmt(f.creada)}</td>
+            <td>${escapeHtml(f.email || 'sin correo todavía')}</td>
+            <td>${escapeHtml(f.plan || '—')}</td>
+            <td>${dinero(f.monto)}${desc}</td>
+            <td><span class="pg-pill pg-pill--${e.c}">${e.t}</span><span class="pg-hint">${e.h}</span></td>
+            <td>${f.activa ? '<span class="pg-pill pg-pill--pagado">Activa</span>' : '<span class="pg-pill pg-pill--gris">No activa</span>'}</td>
+            <td>${f.puedeActivar ? `<button class="btn btn--accent btn--sm" data-activar="${escapeHtml(f.id)}">Activar membresía</button>` : ''}</td>
+          </tr>`;
+        }).join('')}
+      </tbody></table></div>
+      <p class="pg-hint" style="max-width:none;margin-top:10px">«Activar membresía» aparece cuando el pago está completo pero la membresía no quedó activa. Úsalo solo con compras que sí reconoces.</p>`;
+      cont.querySelectorAll('[data-activar]').forEach(b => b.addEventListener('click', async () => {
+        b.disabled = true; b.textContent = 'Activando…';
+        try {
+          const t = await Pages._getAuthToken();
+          const r = await fetch(`${Pages._webhookUrl}/stripe/diagnostico/activar`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${t}` },
+            body: JSON.stringify({ session_id: b.dataset.activar })
+          });
+          const d = await r.json();
+          if (!r.ok || !d.ok) throw new Error(d.error || r.statusText);
+          Toast.success('Membresía activada', 'Ya aparece como activa');
+          cargar();
+        } catch (e) {
+          Toast.error('No se pudo activar', e.message);
+          b.disabled = false; b.textContent = 'Activar membresía';
+        }
+      }));
+    }
+    p.querySelector('#pg-recargar').addEventListener('click', cargar);
+    cargar();
+  },
+
   async encuesta(p){
     p.innerHTML = `
       <div class="fade-up">
@@ -6637,7 +6768,7 @@ function dirAdminCargar(){
    refresh te deja donde estabas, los botones atrás/adelante del
    navegador funcionan y puedes compartir un link directo a la sección.
    ═══════════════════════════════════════════════════════════════════ */
-const SECCIONES_VALIDAS = ['dashboard','notificaciones','cursos','webinars','pdfs','certificados','miembros','encuesta','noticias','config','foro','directorio'];
+const SECCIONES_VALIDAS = ['dashboard','notificaciones','cursos','webinars','pdfs','certificados','miembros','pagos','encuesta','noticias','config','foro','directorio'];
 
 function seccionDesdeHash(){
   const h = (window.location.hash || '').replace(/^#\/?/, '').trim();
