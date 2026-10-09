@@ -1235,6 +1235,7 @@ window.__signOut = async () => {
       <a class="nav-item" data-section="cursos"><svg class="ic"><use href="#i-book"/></svg>Cursos<span class="nav-item__badge" id="badge-cursos">0</span></a>
       <a class="nav-item" data-section="webinars"><svg class="ic"><use href="#i-broadcast"/></svg>Clases en vivo<span class="nav-item__badge" id="badge-vivo">0</span></a>
       <a class="nav-item" data-section="pdfs"><svg class="ic"><use href="#i-news"/></svg>PDFs y material<span class="nav-item__badge" id="badge-pdfs">0</span></a>
+      <a class="nav-item" data-externo="vip-panel.html#pdfs" title="Abre el panel del miembro en otra pestaña"><svg class="ic"><use href="#i-book"/></svg>Biblioteca (vista del miembro)</a>
       <a class="nav-item" data-section="certificados"><svg class="ic"><use href="#i-certificate"/></svg>Certificados<span class="nav-item__badge" id="badge-cert">0</span></a>
     </div>
 
@@ -7123,6 +7124,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.querySelectorAll('.nav-item, .mobile-nav__item').forEach(b=>b.addEventListener('click',e=>{
     e.preventDefault();
     if(b.id==='btn-logout'){if(confirm('¿Cerrar sesión?')){AdminStore.destroy();if(window.__signOut)window.__signOut();else Toast.info('Cerrando…');}return;}
+    if(b.dataset.externo){window.open(b.dataset.externo,'_blank','noopener');return;}
     if(b.dataset.section)navigate(b.dataset.section);
   }));
   document.getElementById('modal-close').addEventListener('click',()=>Modal.close());
