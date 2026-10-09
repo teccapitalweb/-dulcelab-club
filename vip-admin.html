@@ -1247,6 +1247,7 @@ window.__signOut = async () => {
     <div class="nav-section">
       <div class="nav-label">Comunidad</div>
       <a class="nav-item" data-section="miembros"><svg class="ic"><use href="#i-users"/></svg>Miembros VIP<span class="nav-item__badge" id="badge-miembros">0</span></a>
+      <a class="nav-item" data-section="metricas"><svg class="ic"><use href="#i-chart-bar"/></svg>Métricas</a>
       <a class="nav-item" data-section="pagos"><svg class="ic"><use href="#i-credit-card"/></svg>Pagos</a>
       <a class="nav-item" data-section="encuesta"><svg class="ic"><use href="#i-chart-bar"/></svg>Encuesta de clientes</a>
       <a class="nav-item" data-section="noticias"><svg class="ic"><use href="#i-news"/></svg>Descubre algo nuevo</a>
@@ -5745,6 +5746,210 @@ const Pages={
   // PAGOS · qué pasó con cada intento de pago (sin preguntarle al cliente)
   // Lee del servidor: estado del webhook de Stripe y los últimos intentos de pago de DulceLab.
   // ═══════════════════════════════════════════════════════
+  // ═══════════════════════════════════════════════════════
+  // MÉTRICAS · cuánta gente visita el sitio y la membresía, y de qué medio llega
+  // Lee del servidor (/api/metricas/resumen). No guarda datos personales: cada visitante es un identificador anónimo.
+  // ═══════════════════════════════════════════════════════
+  async metricas(p){
+    if (!document.getElementById('mt-css')) {
+      const st = document.createElement('style'); st.id = 'mt-css';
+      st.textContent = `
+        .mt-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 18px}
+        .mt-seg{display:inline-flex;border:1px solid var(--border);border-radius:99px;overflow:hidden;background:var(--surface)}
+        .mt-seg button{padding:8px 15px;border:0;background:none;color:var(--text-2);font:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
+        .mt-seg button.is-on{background:var(--primary);color:#fff}
+        .mt-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:0 0 20px}
+        .mt-kpi{padding:16px 18px;border:1px solid var(--border);border-radius:16px;background:var(--surface)}
+        .mt-kpi small{display:block;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.9px;text-transform:uppercase;color:var(--text-3)}
+        .mt-kpi b{display:block;font-size:28px;letter-spacing:-.8px;margin:6px 0 2px;color:var(--text)}
+        .mt-kpi span{font-size:12px;color:var(--text-3)}
+        .mt-card{margin:0 0 20px;padding:18px 20px;border:1px solid var(--border);border-radius:16px;background:var(--surface)}
+        .mt-card h3{margin:0 0 4px;font-size:15px}
+        .mt-card > p{margin:0 0 14px;font-size:12.5px;line-height:1.55;color:var(--text-3)}
+        .mt-fun{display:grid;gap:9px}
+        .mt-fun__row{display:grid;grid-template-columns:minmax(120px,190px) 1fr 92px;gap:12px;align-items:center;font-size:13px}
+        .mt-fun__track{height:14px;border-radius:99px;background:var(--surface-2);overflow:hidden}
+        .mt-fun__fill{height:100%;border-radius:99px;background:var(--primary)}
+        .mt-fun__num{text-align:right;font-weight:800;font-variant-numeric:tabular-nums}
+        .mt-fun__num small{font-weight:600;color:var(--text-3)}
+        .mt-wrap{overflow-x:auto}
+        .mt-tabla{width:100%;border-collapse:collapse;font-size:13px;min-width:640px}
+        .mt-tabla th{padding:9px 10px;text-align:left;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text-3);border-bottom:1px solid var(--border)}
+        .mt-tabla td{padding:10px;border-bottom:1px solid var(--border);font-variant-numeric:tabular-nums}
+        .mt-tabla tr:last-child td{border-bottom:0}
+        .mt-tabla td:first-child{font-weight:700}
+        .mt-dias{display:flex;align-items:flex-end;gap:3px;height:120px;padding-top:6px}
+        .mt-dias i{flex:1;min-width:3px;border-radius:4px 4px 0 0;background:color-mix(in srgb,var(--primary) 70%,transparent);position:relative}
+        .mt-dias i:hover{background:var(--primary)}
+        .mt-eje{display:flex;justify-content:space-between;margin-top:6px;font-size:11px;color:var(--text-3)}
+        .mt-grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+        .mt-nota{font-size:12px;line-height:1.55;color:var(--text-3);margin:10px 0 0}
+        .mt-gen{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:10px}
+        .mt-gen select,.mt-gen input{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:var(--surface-2);color:var(--text);font:inherit;font-size:13px}
+        .mt-out{display:flex;gap:8px;align-items:center}
+        .mt-out input{flex:1;min-width:0;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:var(--surface-2);color:var(--text);font:inherit;font-size:12.5px}
+        @media(max-width:640px){.mt-fun__row{grid-template-columns:1fr 70px}.mt-fun__track{grid-column:1 / -1;order:3}}
+      `;
+      document.head.appendChild(st);
+    }
+
+    let dias = 30;
+    try { dias = Number(sessionStorage.getItem('mt_dias')) || 30; } catch (e) {}
+
+    p.innerHTML = `
+      <div class="fade-up">
+        <div class="sec-hero">
+          <span class="sec-hero__eyebrow">Visitas y membresía</span>
+          <h1 class="sec-hero__title">Métricas</h1>
+          <p class="sec-hero__sub">Cuántas personas visitan el sitio y el club, cuántas llegan a ver la membresía y a pagar, y por qué medio llegaron. Cada visitante cuenta una sola vez por día.</p>
+        </div>
+        <div class="mt-bar">
+          <div class="mt-seg" id="mt-dias">
+            <button data-d="7">7 días</button><button data-d="30">30 días</button><button data-d="90">90 días</button>
+          </div>
+          <button class="btn btn--ghost btn--sm" id="mt-recargar">Actualizar</button>
+          <label style="display:inline-flex;gap:7px;align-items:center;font-size:12.5px;color:var(--text-2);margin-left:auto;cursor:pointer">
+            <input type="checkbox" id="mt-excluir"> No contar mis visitas en este navegador
+          </label>
+        </div>
+        <div id="mt-cuerpo"><div class="empty-state">Cargando…</div></div>
+      </div>`;
+
+    // Este navegador (el del admin) no se cuenta, para que probar el sitio no infle los números.
+    const exc = p.querySelector('#mt-excluir');
+    try { exc.checked = localStorage.getItem('dlf_no_metricas') === '1'; } catch (e) {}
+    exc.addEventListener('change', () => {
+      try { exc.checked ? localStorage.setItem('dlf_no_metricas', '1') : localStorage.removeItem('dlf_no_metricas'); } catch (e) {}
+      Toast.info(exc.checked ? 'Este navegador ya no se cuenta' : 'Este navegador sí se cuenta', exc.checked ? 'Tus visitas de prueba no cambiarán los números.' : 'Úsalo para probar que las métricas funcionan.');
+    });
+
+    const fmt = (n) => Number(n || 0).toLocaleString('es-MX');
+    const dinero = (n) => '$' + Number(n || 0).toLocaleString('es-MX', { maximumFractionDigits: 0 });
+    const pct = (a, b) => b ? (Math.round(a / b * 1000) / 10).toLocaleString('es-MX') + ' %' : '—';
+
+    async function cargar(){
+      p.querySelectorAll('#mt-dias button').forEach(b => b.classList.toggle('is-on', Number(b.dataset.d) === dias));
+      const cuerpo = p.querySelector('#mt-cuerpo');
+      cuerpo.innerHTML = '<div class="empty-state">Cargando…</div>';
+      let token;
+      try { token = await Pages._getAuthToken(); } catch (e) { cuerpo.innerHTML = '<div class="empty-state">No se pudo verificar tu sesión de admin.</div>'; return; }
+      let d;
+      try {
+        const r = await fetch(`${Pages._webhookUrl}/api/metricas/resumen?dias=${dias}`, { headers: { Authorization: `Bearer ${token}` } });
+        d = await r.json();
+        if (!r.ok) throw new Error(d.error || r.statusText);
+      } catch (e) {
+        cuerpo.innerHTML = `<div class="mt-card"><h3>No se pudieron cargar las métricas</h3><p>${escapeHtml(e.message)}</p></div>`;
+        return;
+      }
+
+      const t = d.totales, e = d.embudo;
+      const base = Math.max(1, t.visitantes);
+      const pasos = [
+        ['Visitantes en total', t.visitantes],
+        ['Entraron al sitio (dulcelabfood.com)', e.sitio],
+        ['Entraron al club (registro o panel)', e.clubOPanel],
+        ['Se registraron', e.registro],
+        ['Vieron la membresía', e.membresia],
+        ['Abrieron el pago', e.checkout],
+        ['Compraron', e.compra]
+      ];
+      const maxSerie = Math.max(1, ...d.serie.map(x => x.visitantes));
+      const fuentesTotal = d.fuentes.reduce((s, f) => s + f.visitantes, 0) || 1;
+      const sinFuente = d.fuentes.find(f => String(f.fuente).startsWith('Directo'));
+
+      cuerpo.innerHTML = `
+        <div class="mt-kpis">
+          <div class="mt-kpi"><small>Visitantes únicos</small><b>${fmt(t.visitantes)}</b><span>${fmt(t.vistas)} páginas vistas</span></div>
+          <div class="mt-kpi"><small>Vieron la membresía</small><b>${fmt(e.membresia)}</b><span>${pct(e.membresia, base)} de los visitantes</span></div>
+          <div class="mt-kpi"><small>Abrieron el pago</small><b>${fmt(e.checkout)}</b><span>${pct(e.checkout, Math.max(1, e.membresia))} de los que vieron la membresía</span></div>
+          <div class="mt-kpi"><small>Compras</small><b>${fmt(t.compras)}</b><span>${dinero(t.ingresos)} cobrados</span></div>
+        </div>
+
+        <div class="mt-card">
+          <h3>El camino hacia la membresía</h3>
+          <p>Cuántas personas llegaron a cada paso en los últimos ${d.dias} días. Una persona que da varios pasos cuenta en cada uno.</p>
+          <div class="mt-fun">
+            ${pasos.map(([n, v]) => `<div class="mt-fun__row"><span>${n}</span><div class="mt-fun__track"><div class="mt-fun__fill" style="width:${Math.min(100, Math.round(v / base * 100))}%"></div></div><span class="mt-fun__num">${fmt(v)} <small>${pct(v, base)}</small></span></div>`).join('')}
+          </div>
+        </div>
+
+        <div class="mt-card">
+          <h3>¿Por qué medio llegan?</h3>
+          <p>El medio desde el que entró cada visitante (el último que se conoce). «Directo / no identificado» es gente que escribió la dirección, o cuya aplicación no avisa de dónde viene.</p>
+          ${d.fuentes.length ? `<div class="mt-wrap"><table class="mt-tabla"><thead><tr><th>Medio</th><th>Visitantes</th><th>% del total</th><th>Vieron membresía</th><th>Abrieron pago</th><th>Registros</th><th>Compras</th><th>Conversión</th></tr></thead><tbody>
+            ${d.fuentes.map(f => `<tr><td>${escapeHtml(f.fuente)}<div style="font-weight:500;font-size:11px;color:var(--text-3)">${escapeHtml(f.medio || '')}</div></td><td>${fmt(f.visitantes)}</td><td>${pct(f.visitantes, fuentesTotal)}</td><td>${fmt(f.membresia)}</td><td>${fmt(f.checkout)}</td><td>${fmt(f.registro)}</td><td>${fmt(f.compras)}${f.ingresos ? ` <small style="color:var(--text-3)">· ${dinero(f.ingresos)}</small>` : ''}</td><td>${pct(f.compras, f.visitantes)}</td></tr>`).join('')}
+          </tbody></table></div>` : '<div class="empty-state">Aún no hay visitas registradas. En cuanto alguien entre al sitio aparecerá aquí.</div>'}
+          ${sinFuente && fuentesTotal > 0 && sinFuente.visitantes / fuentesTotal > 0.5 ? '<p class="mt-nota">Más de la mitad entra «directo / no identificado». Instagram, WhatsApp y TikTok casi nunca avisan de dónde vienen. Para saber cuál medio trae gente, comparte tus enlaces con el generador de abajo.</p>' : ''}
+        </div>
+
+        <div class="mt-grid2">
+          <div class="mt-card">
+            <h3>Visitantes por día</h3>
+            <p>Últimos ${d.dias} días.</p>
+            <div class="mt-dias">${d.serie.map(x => `<i title="${x.dia}: ${x.visitantes} visitantes" style="height:${Math.max(2, Math.round(x.visitantes / maxSerie * 100))}%"></i>`).join('')}</div>
+            <div class="mt-eje"><span>${escapeHtml(d.serie[0] ? d.serie[0].dia : '')}</span><span>${escapeHtml(d.serie.length ? d.serie[d.serie.length - 1].dia : '')}</span></div>
+          </div>
+          <div class="mt-card">
+            <h3>Desde qué aparato</h3>
+            <p>Visitantes por tipo de dispositivo.</p>
+            <div class="mt-fun">
+              ${['celular', 'computadora', 'tablet'].map(k => `<div class="mt-fun__row" style="grid-template-columns:110px 1fr 70px"><span style="text-transform:capitalize">${k}</span><div class="mt-fun__track"><div class="mt-fun__fill" style="width:${Math.round((d.dispositivos[k] || 0) / base * 100)}%"></div></div><span class="mt-fun__num">${fmt(d.dispositivos[k] || 0)}</span></div>`).join('')}
+            </div>
+          </div>
+        </div>
+
+        ${d.campanas.length ? `<div class="mt-card"><h3>Campañas</h3><p>Enlaces con campaña que se han usado.</p><div class="mt-wrap"><table class="mt-tabla" style="min-width:420px"><thead><tr><th>Campaña</th><th>Medio</th><th>Visitantes</th><th>Compras</th></tr></thead><tbody>
+          ${d.campanas.map(c => `<tr><td>${escapeHtml(c.campana)}</td><td>${escapeHtml(c.fuente)}</td><td>${fmt(c.visitantes)}</td><td>${fmt(c.compras)}</td></tr>`).join('')}
+        </tbody></table></div></div>` : ''}
+
+        <div class="mt-card">
+          <h3>Generador de enlaces con medio</h3>
+          <p>Para saber exactamente de dónde llega la gente, usa estos enlaces en cada lugar donde compartas el sitio (bio de Instagram, mensajes de WhatsApp, publicaciones, anuncios). Cada uno lleva una marca que el panel entiende.</p>
+          <div class="mt-gen">
+            <select id="mt-g-dest">
+              <option value="https://dulcelabfood.com/">Sitio (dulcelabfood.com)</option>
+              <option value="https://club.dulcelabfood.com/vip-auth.html?tab=register">Registro del club</option>
+            </select>
+            <select id="mt-g-src">
+              <option value="instagram">Instagram</option><option value="facebook">Facebook</option><option value="whatsapp">WhatsApp</option>
+              <option value="tiktok">TikTok</option><option value="youtube">YouTube</option><option value="correo">Correo</option><option value="google">Google</option>
+            </select>
+            <input id="mt-g-camp" type="text" maxlength="40" placeholder="Campaña (opcional, ej. promo-octubre)">
+          </div>
+          <div class="mt-out"><input id="mt-g-url" type="text" readonly><button class="btn btn--accent btn--sm" id="mt-g-copiar">Copiar</button></div>
+        </div>
+        ${d.truncado ? '<p class="mt-nota">Hay tantos datos que se muestran solo los más recientes. Acorta el periodo para ver todo.</p>' : ''}
+      `;
+
+      const gen = () => {
+        const base = cuerpo.querySelector('#mt-g-dest').value;
+        const src = cuerpo.querySelector('#mt-g-src').value;
+        const camp = cuerpo.querySelector('#mt-g-camp').value.trim().toLowerCase().replace(/[^a-z0-9_-]+/g, '-').replace(/^-+|-+$/g, '');
+        const u = new URL(base);
+        u.searchParams.set('utm_source', src);
+        u.searchParams.set('utm_medium', src === 'correo' ? 'correo' : (src === 'google' ? 'busqueda' : 'social'));
+        if (camp) u.searchParams.set('utm_campaign', camp);
+        cuerpo.querySelector('#mt-g-url').value = u.toString();
+      };
+      ['#mt-g-dest', '#mt-g-src', '#mt-g-camp'].forEach(s => cuerpo.querySelector(s).addEventListener('input', gen));
+      gen();
+      cuerpo.querySelector('#mt-g-copiar').addEventListener('click', async () => {
+        const v = cuerpo.querySelector('#mt-g-url').value;
+        try { await navigator.clipboard.writeText(v); Toast.success('Enlace copiado', 'Pégalo donde lo vayas a compartir'); }
+        catch (e) { cuerpo.querySelector('#mt-g-url').select(); Toast.info('Selecciona y copia', 'Ctrl + C'); }
+      });
+    }
+
+    p.querySelectorAll('#mt-dias button').forEach(b => b.addEventListener('click', () => {
+      dias = Number(b.dataset.d);
+      try { sessionStorage.setItem('mt_dias', String(dias)); } catch (e) {}
+      cargar();
+    }));
+    p.querySelector('#mt-recargar').addEventListener('click', cargar);
+    cargar();
+  },
+
   async pagos(p){
     if (!document.getElementById('pg-css')) {
       const st = document.createElement('style'); st.id = 'pg-css';
@@ -6776,7 +6981,7 @@ function dirAdminCargar(){
    refresh te deja donde estabas, los botones atrás/adelante del
    navegador funcionan y puedes compartir un link directo a la sección.
    ═══════════════════════════════════════════════════════════════════ */
-const SECCIONES_VALIDAS = ['dashboard','notificaciones','cursos','webinars','pdfs','certificados','miembros','pagos','encuesta','noticias','config','foro','directorio'];
+const SECCIONES_VALIDAS = ['dashboard','metricas','notificaciones','cursos','webinars','pdfs','certificados','miembros','pagos','encuesta','noticias','config','foro','directorio'];
 
 function seccionDesdeHash(){
   const h = (window.location.hash || '').replace(/^#\/?/, '').trim();
@@ -7127,6 +7332,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     if(b.dataset.externo){window.open(b.dataset.externo,'_blank','noopener');return;}
     if(b.dataset.section)navigate(b.dataset.section);
   }));
+  // El navegador del administrador no cuenta como visita (la primera vez; se puede cambiar en Métricas).
+  try{ if(localStorage.getItem('dlf_no_metricas')===null && !localStorage.getItem('dlf_mt_decidido')){ localStorage.setItem('dlf_no_metricas','1'); localStorage.setItem('dlf_mt_decidido','1'); } }catch(e){}
   document.getElementById('modal-close').addEventListener('click',()=>Modal.close());
   document.getElementById('modal-backdrop').addEventListener('click',e=>{if(e.target.id==='modal-backdrop')Modal.close();});
   document.addEventListener('keydown',e=>{if(e.key==='Escape')Modal.close();});

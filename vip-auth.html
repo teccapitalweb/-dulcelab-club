@@ -700,6 +700,7 @@ document.getElementById('btn-register').addEventListener('click', async () => {
   try{
     const cred = await createUserWithEmailAndPassword(auth, email, pass);
     await updateProfile(cred.user, { displayName: name });
+    try{ window.dlfTrack && window.dlfTrack('registro', 'club'); }catch(_){}
     try{ await sendEmailVerification(cred.user); }catch(e){ console.warn('[verify] no se pudo mandar el correo:', e.message); }
     const docResult = await ensureMiembroDoc(cred.user, name, 'registro-web');
     if (docResult && docResult.ok === false){
@@ -726,7 +727,8 @@ document.querySelectorAll('[data-google]').forEach(btn => {
     clearAlert();
     btn.disabled = true;
     try{
-      await signInWithPopup(auth, googleProvider);
+      const gr = await signInWithPopup(auth, googleProvider);
+      try{ const md = gr.user.metadata; if (md && md.creationTime === md.lastSignInTime && window.dlfTrack) window.dlfTrack('registro', 'club'); }catch(_){}
       showAlert('success', 'Listo!', 'Entrando con Google...');
     }catch(e){
       btn.disabled = false;
@@ -761,6 +763,7 @@ document.getElementById('forgot-link').addEventListener('click', async (e) => {
 });
 </script>
 
+<script src="assets/dlf-metricas.js?v=1" defer></script>
 <script src="pwa.js" defer></script>
 <!-- ═══════════════════════════════════════════════════════════════
      Aviso de cookies · DulceLab Food (estilo aviso simple, tipo Starbucks:

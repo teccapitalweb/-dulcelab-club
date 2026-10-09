@@ -12698,6 +12698,7 @@ const Sections = (function(){
 
   /* ─── Estado: SIN membresía (logueado pero no pagó) o INVITADO (demo) ─── */
   function renderSuscripcionActivar(container, S){
+    try { window.dlfTrack && window.dlfTrack('membresia', 'panel'); } catch (e) {}
     const intentPlan = localStorage.getItem('dulcelab_intent_plan') || 'anual';
     const isInvitado = S.modo === 'invitado';
 
@@ -12815,6 +12816,7 @@ const Sections = (function(){
         window.__dulcelabCheckout = null;
       }
       mountEl.innerHTML = `<div class="sub-loading"><div class="sub-loading__spin"></div><div>Cargando plan ${selectedPlan}…</div></div>`;
+      try { window.dlfTrack && window.dlfTrack('checkout', 'panel'); } catch (e) {}
       try {
         const res = await fetch(`${window.WEBHOOK_URL || 'https://dulcelab-webhook-production.up.railway.app'}/stripe/checkout`, {
           method:'POST',
@@ -12822,7 +12824,9 @@ const Sections = (function(){
           body: JSON.stringify({
             plan: selectedPlan,
             uid: S.uid,
-            email: S.email
+            email: S.email,
+            vid: window.dlfVid || undefined,
+            origen: window.dlfOrigen || undefined
           })
         });
         if (!res.ok) {
@@ -15440,6 +15444,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   };
 })();
 </script>
+<script src="assets/dlf-metricas.js?v=1" defer></script>
 <script src="assets/onboarding-tour.js?v=4"></script>
 <script>
 window.DulceLabOnboarding = new window.MembershipTour({
