@@ -82,6 +82,9 @@
     if (this._autoTried) return;
     this._autoTried = true;
     var waited = 0;
+    // Reserva el turno desde el primer momento: así ninguna otra ventana (nombre, regalo, curso gratis) sale antes que la guía.
+    // Si resulta que esta persona ya la vio, o nunca queda lista, se libera enseguida.
+    if (window.__Popups && window.__Popups.reservar) window.__Popups.reservar('guia', 2);
     var poll = setInterval(function () {
       waited += READY_POLL_MS;
       var listo = false;
@@ -90,7 +93,7 @@
         clearInterval(poll);
         var id = '';
         try { id = self.identity() || ''; } catch (e) {}
-        if (yaVisto(self.namespace, self.version, id)) return; // ya lo vio este usuario
+        if (yaVisto(self.namespace, self.version, id)) { if (window.__Popups && window.__Popups.liberar) window.__Popups.liberar('guia'); return; } // ya lo vio este usuario
         // La guía va antes que las demás ventanas: reserva su turno desde ya y arranca tras la pausa.
         if (window.__Popups && window.__Popups.reservar) window.__Popups.reservar('guia', 2);
         setTimeout(function () {
@@ -100,6 +103,7 @@
         }, self.autoDelay);
       } else if (waited >= READY_TIMEOUT_MS) {
         clearInterval(poll); // nunca estuvo listo · no forzamos nada
+        if (window.__Popups && window.__Popups.liberar) window.__Popups.liberar('guia');
       }
     }, READY_POLL_MS);
   };

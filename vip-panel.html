@@ -4092,7 +4092,7 @@ if (window.__isDemoMode) {
 
     // ─── Popup: confirmar/editar nombre (1ª vez) · evita certificados con el email ───
     setTimeout(() => { try {
-      if (localStorage.getItem('dulcelab_name_confirmed') !== '1' && window.__maybeAskName) window.__Popups.pedir('nombre', 3, () => window.__maybeAskName());
+      if (window.__nombreConfirmado && !window.__nombreConfirmado() && window.__maybeAskName) window.__Popups.pedir('nombre', 3, () => window.__maybeAskName());
     } catch(e){} }, 900);
 
     // Arrancar listener de notificaciones de Firestore (tiempo real)
@@ -5640,6 +5640,30 @@ const Sections = (function(){
     return (cursos || []).filter(c => c && c.pruebaGratis !== false && c.marcarProximamente !== true && Array.isArray(c.sesiones) && c.sesiones.length > 0);
   }
 
+  // El servidor es quien valida qué clases se ven gratis, así que debe saber qué curso eligió la persona.
+  // La primera elección gana y ya no cambia; si el servidor ya tenía otra, se usa esa.
+  let _pruebaSync = null;
+  function sincronizarCursoPrueba(force) {
+    if (!window.__currentUser) return Promise.resolve();
+    const elegido = localStorage.getItem(_pruebaCursoKey());
+    if (!elegido) return Promise.resolve();
+    if (_pruebaSync && !force) return _pruebaSync;
+    _pruebaSync = (async () => {
+      try {
+        const token = await window.__currentUser.getIdToken();
+        const res = await fetch(`${window.WEBHOOK_URL}/api/bunny/curso-prueba`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+          body: JSON.stringify({ cursoId: elegido })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && data.cursoId && data.cursoId !== elegido) localStorage.setItem(_pruebaCursoKey(), data.cursoId);
+        if (!res.ok) _pruebaSync = null; // reintenta la próxima vez
+      } catch (e) { _pruebaSync = null; }
+    })();
+    return _pruebaSync;
+  }
+  window.__sincronizarCursoPrueba = sincronizarCursoPrueba;
+
   const MATERIALES_GRATIS = 1;
   function esPrimeraClaseGratis(cursoId, indexClase) {
     if (tieneAccesoVipCompleto()) return false;
@@ -5692,6 +5716,7 @@ const Sections = (function(){
       root.querySelector('#prueba-ver-otros')?.setAttribute('disabled', '');
       setTimeout(() => {
         localStorage.setItem(_pruebaCursoKey(), curso.id);
+        sincronizarCursoPrueba(true);
         window.__selectorPruebaActivo = false;
         Modal.close(id);
         Toast.success('¡Tu prueba está lista!', `Elegiste ${curso.titulo}.`);
@@ -6361,6 +6386,7 @@ const Sections = (function(){
     if (videoId) {
       try {
         frame.src = 'about:blank';
+        if (!tieneAccesoVipCompleto() && window.__sincronizarCursoPrueba) await window.__sincronizarCursoPrueba();
         const headers = { 'Content-Type': 'application/json' };
         if (window.__currentUser) {
           headers.Authorization = 'Bearer ' + await window.__currentUser.getIdToken();
@@ -13380,9 +13406,12 @@ function openPasswordResetModal(){
 // genérico, ofrecemos editarlo; si no, igual avisamos con qué nombre
 // se emitirán los certificados.
 // ═══════════════════════════════════════════════════════════════════
+// La confirmación del nombre es POR CUENTA (antes era una sola marca por navegador: quien probaba con otra cuenta nunca veía la pregunta).
+window.__nombreKey = function(){ return 'dulcelab_name_confirmed_' + ((window.UserState && window.UserState.uid) || 'anon'); };
+window.__nombreConfirmado = function(){ try { return localStorage.getItem(window.__nombreKey()) === '1'; } catch(e){ return false; } };
 window.__maybeAskName = function(){
   try {
-    if (localStorage.getItem('dulcelab_name_confirmed') === '1') return;
+    if (window.__nombreConfirmado()) return;
     if (document.getElementById('name-modal')) return;
     const S = window.UserState || {};
     const email = S.email || '';
@@ -13459,7 +13488,7 @@ window.__maybeAskName = function(){
       window.UserState.iniciales = (window.calcIniciales ? window.calcIniciales(val) : val.slice(0,2).toUpperCase());
       if (window.memberData) window.memberData.nombre = val;
       try { const ls=JSON.parse(localStorage.getItem('dulcelab_profile')||'{}'); ls.nombre=val; localStorage.setItem('dulcelab_profile',JSON.stringify(ls)); } catch(e){}
-      localStorage.setItem('dulcelab_name_confirmed','1');
+      localStorage.setItem(window.__nombreKey(),'1');
       if (typeof window.__applyUserState==='function') window.__applyUserState();
       if (window.Toast) Toast.success('Nombre guardado', val);
       ov.remove();
@@ -13469,7 +13498,7 @@ window.__maybeAskName = function(){
     document.getElementById('nm-skip').addEventListener('click', ()=>{
       // No volver a molestar, pero NO marcamos como "confirmado" para que el
       // perfil siga sugiriendo completarlo. Marcamos solo "preguntado".
-      localStorage.setItem('dulcelab_name_confirmed','1');
+      localStorage.setItem(window.__nombreKey(),'1');
       ov.remove();
       if (window.Toast) Toast.info('Puedes cambiarlo luego', 'Mi perfil → Nombre completo');
     });
@@ -15411,7 +15440,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   };
 })();
 </script>
-<script src="assets/onboarding-tour.js?v=3"></script>
+<script src="assets/onboarding-tour.js?v=4"></script>
 <script>
 window.DulceLabOnboarding = new window.MembershipTour({
   namespace: 'dulcelab',
@@ -15450,7 +15479,7 @@ window.DulceLabOnboarding = new window.MembershipTour({
       mobileSelectors: '.mobile-drawer .mobile-drawer__item[data-section="pdfs"]',
       mobileDrawer: true,
       title: 'PDFs y material',
-      copy: 'Formatos descargables para tus cursos y una biblioteca de libros que se desbloquea con los XP que ganas en los retos.'
+      copy: 'Formatos descargables para tus cursos y una biblioteca de guías, recetas y libros. Las guías y recetas se abren gastando los XP que ganas en los retos.'
     },
     {
       desktopSelectors: '.sidebar [data-tour="tools"]',
