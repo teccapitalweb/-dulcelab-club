@@ -3462,6 +3462,13 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
   .modal__header{padding:14px 18px 12px}
   .modal__footer{padding:12px 18px;flex-wrap:wrap}
   .modal__footer .btn{flex:1;min-width:100px}
+  /* Las actividades de cada clase se ajustan al alto visible del teléfono.
+     El crucigrama se reduce desde JavaScript y las pistas pasan a una columna. */
+  .modal-backdrop[data-modal-id^="actividad-clase"]{align-items:flex-start;padding-top:max(12px,env(safe-area-inset-top))}
+  .modal-backdrop[data-modal-id^="actividad-clase"] .modal{max-height:calc(100svh - 24px);border-radius:16px}
+  .modal-backdrop[data-modal-id^="actividad-clase"] .modal__body{padding:14px 12px 18px}
+  .modal-backdrop[data-modal-id^="actividad-clase"] #cru-pistas{grid-template-columns:1fr!important;gap:10px!important;font-size:11.5px!important}
+  .modal-backdrop[data-modal-id^="actividad-clase"] #cru-grid-wrap{margin-bottom:12px!important}
 
   /* IPER mobile */
   .iper-form{grid-template-columns:1fr}
@@ -7196,7 +7203,13 @@ const Sections = (function(){
     const elAyuda = root.querySelector('#cru-ayuda');
     const elRendirse = root.querySelector('#cru-rendirse');
     const elReintentar = root.querySelector('#cru-reintentar');
-    const cellPx = (filas*cols > 140) ? 26 : 32;
+    // En una pantalla estrecha el crucigrama debe caber completo antes de que
+    // aparezca el teclado. La misma cuadrícula se reduce, sin recortar pistas.
+    const cellBase = (filas * cols > 140) ? 26 : 32;
+    const anchoDisponible = Math.min(window.innerWidth || 420, 520) - 48;
+    const cellPx = window.matchMedia('(max-width: 880px)').matches
+      ? Math.max(19, Math.min(cellBase, Math.floor(anchoDisponible / Math.max(1, cols))))
+      : cellBase;
     elGrid.style.gridTemplateColumns = `repeat(${cols}, ${cellPx}px)`;
     elGrid.style.gridTemplateRows = `repeat(${filas}, ${cellPx}px)`;
 
@@ -7221,13 +7234,31 @@ const Sections = (function(){
         }
         const inp = document.createElement('input');
         inp.maxLength = 1;
-        inp.style.cssText = `width:100%;height:100%;text-align:center;font-weight:800;font-size:${cellPx>=30?15:13}px;border:1.5px solid var(--border-2);border-radius:3px;background:var(--surface);color:var(--text);text-transform:uppercase;padding:0;`;
+        inp.inputMode = 'text';
+        inp.autocomplete = 'off';
+        inp.autocapitalize = 'characters';
+        inp.style.cssText = `width:100%;height:100%;text-align:center;font-weight:800;font-size:${cellPx>=30?15:Math.max(11, cellPx-8)}px;border:1.5px solid var(--border-2);border-radius:3px;background:var(--surface);color:var(--text);text-transform:uppercase;padding:0;`;
         inp.addEventListener('input', () => { inp.value = inp.value.toUpperCase().replace(/[^A-ZÑ]/g,''); });
         cont.appendChild(inp);
         elGrid.appendChild(cont);
         inputs.set(key, inp);
       }
     }
+    // En móvil avanza a la siguiente casilla al escribir, para no obligar a
+    // tocar una por una mientras el teclado de iPhone ocupa media pantalla.
+    const ordenInputs = Array.from(inputs.values());
+    ordenInputs.forEach((inp, i) => {
+      inp.addEventListener('input', () => {
+        if (inp.value && window.matchMedia('(max-width: 880px)').matches) {
+          setTimeout(() => ordenInputs[i + 1]?.focus(), 0);
+        }
+      });
+      inp.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Backspace' && !inp.value && i > 0 && window.matchMedia('(max-width: 880px)').matches) {
+          ordenInputs[i - 1].focus();
+        }
+      });
+    });
     const horiz = colocadas.filter(p => p.dir==='H').sort((a,b)=>a.numero-b.numero);
     const vert = colocadas.filter(p => p.dir==='V').sort((a,b)=>a.numero-b.numero);
     elPistas.innerHTML = `
