@@ -5795,6 +5795,17 @@ const Pages={
         .mt-gen select,.mt-gen input{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:var(--surface-2);color:var(--text);font:inherit;font-size:13px}
         .mt-out{display:flex;gap:8px;align-items:center}
         .mt-out input{flex:1;min-width:0;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:var(--surface-2);color:var(--text);font:inherit;font-size:12.5px}
+        .mt-overview{padding:34px 0 4px;background:radial-gradient(circle at 78% 10%,color-mix(in srgb,var(--accent) 12%,transparent),transparent 34%)}
+        .mt-overview__eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:800;letter-spacing:1.5px;color:var(--success);text-transform:uppercase}
+        .mt-overview h1{font-size:32px;letter-spacing:-1.2px;margin:8px 0 6px}.mt-overview p{margin:0;max-width:690px;color:var(--text-2);line-height:1.55;font-size:13.5px}
+        .mt-range{display:flex;align-items:center;justify-content:space-between;gap:14px;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:11px 13px;margin:22px 0 18px}.mt-range__label{font-family:'JetBrains Mono',monospace;color:var(--text-3);letter-spacing:1px;text-align:center;font-size:10px}.mt-range__label b{display:block;color:var(--text);font-size:12px;letter-spacing:.2px;margin-bottom:3px}
+        .mt-spark{width:100%;height:38px;margin-top:14px;overflow:visible}.mt-spark path{fill:none;stroke:var(--mt-color,var(--primary));stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}.mt-kpi{border-radius:17px;border-left:4px solid var(--mt-color,var(--primary));overflow:hidden}.mt-kpi b{font-size:32px}
+        .mt-chart{margin:0 0 20px;padding:22px;border:1px solid var(--border);border-radius:18px;background:var(--surface)}.mt-chart__head{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;margin-bottom:18px}.mt-chart__head h3{font-size:17px;margin:0}.mt-chart__head p{margin:5px 0 0;font-size:12px;color:var(--text-3)}
+        .mt-bars{height:250px;display:flex;align-items:flex-end;gap:9px;padding:0 12px 22px;border-bottom:1px solid var(--border);background:repeating-linear-gradient(to bottom,transparent 0,transparent 49px,color-mix(in srgb,var(--border) 65%,transparent) 50px)}.mt-bar-day{height:100%;display:flex;gap:4px;align-items:flex-end;justify-content:center;flex:1;min-width:10px;position:relative}.mt-bar-day i{display:block;width:42%;border-radius:8px 8px 2px 2px;background:var(--success);min-height:2px}.mt-bar-day i:last-child{background:#4c82e9}.mt-bar-day small{position:absolute;bottom:-21px;font-size:10px;color:var(--text-3)}
+        .mt-cards-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}.mt-list{list-style:none;padding:0;margin:0}.mt-list li{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--border);font-size:12.5px}.mt-list li:last-child{border-bottom:0}.mt-list__dot{width:8px;height:8px;border-radius:50%;background:var(--primary);flex:0 0 auto}.mt-list__time{font-family:'JetBrains Mono',monospace;color:var(--text-3);font-size:10px;width:94px}.mt-list__count{margin-left:auto;font-weight:800}
+        .mt-donut{width:155px;height:155px;border-radius:50%;margin:10px auto 14px;display:grid;place-items:center;position:relative}.mt-donut:after{content:'';position:absolute;width:103px;height:103px;border-radius:50%;background:var(--surface)}.mt-donut strong,.mt-donut small{position:relative;z-index:1;text-align:center}.mt-donut strong{font-size:28px}.mt-donut small{display:block;color:var(--text-3);font-size:9px;letter-spacing:1px;text-transform:uppercase}.mt-legend{display:flex;justify-content:center;flex-wrap:wrap;gap:8px 12px;font-size:11px;color:var(--text-2)}.mt-legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
+        .mt-heat{display:grid;grid-template-columns:30px repeat(24,1fr);gap:4px;align-items:center}.mt-heat label{font-size:10px;color:var(--text-3)}.mt-heat i{display:block;aspect-ratio:1;border-radius:3px;background:var(--surface-2)}
+        @media(max-width:760px){.mt-range{align-items:flex-start;flex-wrap:wrap}.mt-range__label{order:3;width:100%}.mt-cards-2{grid-template-columns:1fr}.mt-bars{gap:4px;padding-left:4px;padding-right:4px}.mt-overview h1{font-size:27px}}
         @media(max-width:640px){.mt-fun__row{grid-template-columns:1fr 70px}.mt-fun__track{grid-column:1 / -1;order:3}}
       `;
       document.head.appendChild(st);
@@ -5804,17 +5815,18 @@ const Pages={
     try { dias = Number(sessionStorage.getItem('mt_dias')) || 30; } catch (e) {}
 
     p.innerHTML = `
-      <div class="fade-up">
-        <div class="sec-hero">
-          <span class="sec-hero__eyebrow">Visitas y membresía</span>
-          <h1 class="sec-hero__title">Métricas</h1>
-          <p class="sec-hero__sub">Cuántas personas visitan el sitio y el club, cuántas llegan a ver la membresía y a pagar, y por qué medio llegaron. Cada visitante cuenta una sola vez por día.</p>
-        </div>
-        <div class="mt-bar">
+      <div class="fade-up mt-overview">
+        <div class="mt-overview__eyebrow">Marketing · DulceLab Food</div>
+        <h1>Métricas de visitas</h1>
+        <p>Cuánta gente visita DulceLab Food, desde dónde llega y qué acciones realiza. El conteo es anónimo y se conserva día a día para consultar su evolución.</p>
+        <div class="mt-range">
           <div class="mt-seg" id="mt-dias">
-            <button data-d="7">7 días</button><button data-d="30">30 días</button><button data-d="90">90 días</button>
+            <button data-d="7">Semana</button><button data-d="30">30 días</button><button data-d="90">90 días</button><button data-d="365">12 meses</button>
           </div>
+          <div class="mt-range__label"><b id="mt-periodo">Periodo seleccionado</b>Historial de visitas</div>
           <button class="btn btn--ghost btn--sm" id="mt-recargar">Actualizar</button>
+        </div>
+        <div class="mt-bar" style="margin-top:-4px">
           <label style="display:inline-flex;gap:7px;align-items:center;font-size:12.5px;color:var(--text-2);margin-left:auto;cursor:pointer">
             <input type="checkbox" id="mt-excluir"> No contar mis visitas en este navegador
           </label>
@@ -5876,13 +5888,45 @@ const Pages={
         directo: { t: 'Directo / no identificado', s: 'Escribieron la dirección o la app no avisa', v: 0, c: 0, l: [] } };
       d.fuentes.forEach(f => { const g = grupos[grupoDe(f)]; g.v += f.visitantes; g.c += f.compras; g.l.push(f); });
       const gOrden = ['redes', 'busqueda', 'sitios', 'correo', 'directo'].filter(k => k === 'redes' || k === 'busqueda' || k === 'directo' || grupos[k].v > 0);
+      const periodo = p.querySelector('#mt-periodo');
+      if (periodo) periodo.textContent = `${d.desde} — hoy`;
+      const serie = Array.isArray(d.serie) ? d.serie : [];
+      const maxDia = Math.max(1, ...serie.map(x => Math.max(x.visitantes || 0, x.vistas || 0)));
+      const spark = (campo) => {
+        const vals = serie.slice(-14).map(x => Number(x[campo]) || 0);
+        const mx = Math.max(1, ...vals);
+        return vals.length < 2 ? '' : `<svg class="mt-spark" viewBox="0 0 100 36" preserveAspectRatio="none"><path d="${vals.map((v,i) => `${i ? 'L' : 'M'}${(i/(vals.length-1))*100},${34-(v/mx)*29}`).join(' ')}"/></svg>`;
+      };
+      const diasCortos = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+      const nombrePagina = { sitio: 'Página principal', club: 'Inicio de sesión', panel: 'Panel de miembros' };
+      const paginas = Array.isArray(d.paginas) ? d.paginas : [];
+      const calor = Array.isArray(d.calor) ? d.calor : Array.from({ length: 7 }, () => Array(24).fill(0));
+      const maxCalor = Math.max(1, ...calor.flat());
+      const totalDisp = Math.max(1, Object.values(d.dispositivos || {}).reduce((a,b) => a + (Number(b) || 0), 0));
+      const dCel = d.dispositivos?.celular || 0, dComp = d.dispositivos?.computadora || 0, dTab = d.dispositivos?.tablet || 0;
+      const dispDonut = `conic-gradient(#63be22 0 ${(dCel/totalDisp)*360}deg,#4c82e9 ${(dCel/totalDisp)*360}deg ${((dCel+dComp)/totalDisp)*360}deg,#d5a13d ${((dCel+dComp)/totalDisp)*360}deg 360deg)`;
 
       cuerpo.innerHTML = `
         <div class="mt-kpis">
-          <div class="mt-kpi"><small>Visitantes únicos</small><b>${fmt(t.visitantes)}</b><span>${fmt(t.vistas)} páginas vistas</span></div>
-          <div class="mt-kpi"><small>Vieron la membresía</small><b>${fmt(e.membresia)}</b><span>${pct(e.membresia, base)} de los visitantes</span></div>
-          <div class="mt-kpi"><small>Abrieron el pago</small><b>${fmt(e.checkout)}</b><span>${pct(e.checkout, Math.max(1, e.membresia))} de los que vieron la membresía</span></div>
-          <div class="mt-kpi"><small>Compras</small><b>${fmt(t.compras)}</b><span>${dinero(t.ingresos)} cobrados</span></div>
+          <div class="mt-kpi" style="--mt-color:#63be22"><small>Visitas</small><b>${fmt(t.vistas)}</b><span>Páginas vistas</span>${spark('vistas')}</div>
+          <div class="mt-kpi" style="--mt-color:#4c82e9"><small>Personas distintas</small><b>${fmt(t.visitantes)}</b><span>Visitantes únicos por día</span>${spark('visitantes')}</div>
+          <div class="mt-kpi" style="--mt-color:#d5a13d"><small>Cuentas nuevas</small><b>${fmt(e.registro)}</b><span>Personas que crearon su cuenta</span>${spark('registro')}</div>
+          <div class="mt-kpi" style="--mt-color:#9a62e4"><small>Promedio por día</small><b>${fmt(Math.round(t.vistas / Math.max(1, d.dias)))}</b><span>${fmt(t.compras)} compras · ${dinero(t.ingresos)}</span>${spark('compras')}</div>
+        </div>
+
+        <div class="mt-chart">
+          <div class="mt-chart__head"><div><h3>Visitas por día</h3><p>Visitas y personas distintas durante el periodo seleccionado.</p></div><div class="mt-legend"><span><i style="background:#63be22"></i>Visitas</span><span><i style="background:#4c82e9"></i>Personas distintas</span></div></div>
+          <div class="mt-bars">${serie.map(x => { const fecha = new Date(`${x.dia}T12:00:00`); const etiqueta = Number.isNaN(fecha) ? x.dia : diasCortos[fecha.getDay()]; return `<div class="mt-bar-day" title="${x.dia}: ${x.vistas || 0} visitas · ${x.visitantes || 0} personas"><i style="height:${Math.max(2, ((x.vistas || 0)/maxDia)*100)}%"></i><i style="height:${Math.max(2, ((x.visitantes || 0)/maxDia)*100)}%"></i><small>${etiqueta}</small></div>`; }).join('')}</div>
+        </div>
+
+        <div class="mt-cards-2">
+          <div class="mt-chart"><div class="mt-chart__head"><div><h3>Visitas por periodo</h3><p>Actividad diaria registrada más recientemente.</p></div></div><ul class="mt-list">${serie.slice(-8).reverse().map(x => `<li><span class="mt-list__time">${escapeHtml(x.dia)}</span><i class="mt-list__dot"></i><span>${fmt(x.vistas)} visitas · ${fmt(x.visitantes)} personas</span><span class="mt-list__count">${fmt(x.compras)} compra${Number(x.compras)===1?'':'s'}</span></li>`).join('') || '<li>Sin actividad todavía.</li>'}</ul></div>
+          <div class="mt-chart"><div class="mt-chart__head"><div><h3>Mapa de calor · día y hora</h3><p>Más intenso significa más visitas. Hora de México.</p></div></div><div class="mt-heat">${calor.map((fila,di) => `<label>${diasCortos[di]}</label>${fila.map((v,h) => `<i title="${diasCortos[di]} · ${h}:00 · ${v} visita${v===1?'':'s'}" style="background:color-mix(in srgb,var(--success) ${Math.max(5, Math.round((v/maxCalor)*100))}%,var(--surface-2))"></i>`).join('')}`).join('')}</div><div class="mt-eje"><span>12 a. m.</span><span>6 a. m.</span><span>12 p. m.</span><span>6 p. m.</span></div></div>
+        </div>
+
+        <div class="mt-cards-2">
+          <div class="mt-chart"><div class="mt-chart__head"><div><h3>Dispositivos</h3><p>Desde qué aparato entra la gente.</p></div></div><div class="mt-donut" style="background:${dispDonut}"><div><strong>${fmt(totalDisp)}</strong><small>personas</small></div></div><div class="mt-legend"><span><i style="background:#63be22"></i>Teléfono ${pct(dCel,totalDisp)}</span><span><i style="background:#4c82e9"></i>Computadora ${pct(dComp,totalDisp)}</span><span><i style="background:#d5a13d"></i>Tableta ${pct(dTab,totalDisp)}</span></div></div>
+          <div class="mt-chart"><div class="mt-chart__head"><div><h3>Páginas más vistas</h3><p>Por dónde entra la gente.</p></div></div><div class="mt-fun">${paginas.length ? paginas.map(x => `<div class="mt-fun__row" style="grid-template-columns:minmax(130px,1fr) 1fr 45px"><span>${escapeHtml(nombrePagina[x.pagina] || x.pagina)}</span><div class="mt-fun__track"><div class="mt-fun__fill" style="width:${Math.round((x.vistas/Math.max(1,paginas[0].vistas))*100)}%"></div></div><span class="mt-fun__num">${fmt(x.vistas)}</span></div>`).join('') : '<p class="mt-nota">Las páginas comenzarán a aparecer conforme se registren nuevas visitas.</p>'}</div></div>
         </div>
 
         <div class="mt-card">
