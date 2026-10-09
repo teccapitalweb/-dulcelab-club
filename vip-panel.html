@@ -10867,7 +10867,7 @@ const Sections = (function(){
     const pintarBiblioteca = async (root) => {
       if (!root) return;
       const esVip = tieneAccesoVipCompleto();
-      const encabezado = `<div class="xp-library__head"><div><div class="xp-library__eyebrow">Biblioteca DulceLab Food</div><h2 class="xp-library__title">Guías, recetas y libros para tu formación</h2><p class="xp-library__sub">Todo se lee aquí mismo con tu membresía. Las guías y las recetas se desbloquean con los XP que ganas en Retos (los retos suman hasta ${_fmtXP(xpMaximoRetos)} XP) y con el regalo de 300 XP por cada curso que termines; los libros clásicos se abren por días de membresía: uno al empezar y otro cada 25 días.</p></div><div class="xp-library__score"><b>${_fmtXP(xpActual)} <small>XP</small></b><span>${esVip ? 'Tu saldo' : 'XP guardados'}</span></div></div>`;
+      const encabezado = `<div class="xp-library__head"><div><div class="xp-library__eyebrow">Biblioteca DulceLab Food</div><h2 class="xp-library__title">Guías, recetas y libros para tu formación</h2><p class="xp-library__sub">Todo se lee aquí mismo con tu membresía. Las guías y las recetas se desbloquean con los XP que ganas en Retos (los retos suman hasta ${_fmtXP(xpMaximoRetos)} XP) y con el regalo de 15 XP por cada curso que termines; los libros clásicos se abren por días de membresía: uno al empezar y otro cada 25 días.</p></div><div class="xp-library__score"><b>${_fmtXP(xpActual)} <small>XP</small></b><span>${esVip ? 'Tu saldo' : 'XP guardados'}</span></div></div>`;
       root.innerHTML = encabezado + '<div class="foro-empty">Cargando biblioteca…</div>';
       let cat;
       try { cat = await _cargarCatalogoBib(); }
