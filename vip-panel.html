@@ -3763,7 +3763,7 @@ body.has-fomo .main{padding-top:18px}
 (function(){
   var pend = {}, activos = {}, hasta = 0;
   function hayPopup(){
-    return !!document.querySelector('#splash-bienvenida, #name-modal, .modal-backdrop.is-open, .mvtour-overlay, #dulcelab-install-pop.show, #regalo-pop, .lib-reader');
+    return !!document.querySelector('#splash-bienvenida, #name-modal, .modal-backdrop.is-open, .mvtour-overlay, #dulcelab-install-pop.show, #regalo-pop, #cofre-pop, #splash-completado, .lib-reader');
   }
   // reservar: avisa que esta ventana va a salir pronto, para que las de menor prioridad no se adelanten.
   function reservar(id, prio){
@@ -5881,6 +5881,9 @@ const Sections = (function(){
     } catch(e) {}
   }
 
+  window.__cursosCompletados = function(){
+    try { return (cursos || []).filter(c => c && getProgresoCurso(c.id).completado).map(c => ({ id: c.id, titulo: c.titulo })); } catch (e) { return []; }
+  };
   window.marcarClaseVista = function(cursoId, numeroClase) {
     const p = getProgreso();
     let hayCambio = false;
@@ -5905,6 +5908,8 @@ const Sections = (function(){
       emitirCertificadoFirestore(curso);
       // Mostrar splash de felicitación
       setTimeout(() => mostrarSplashCompletado(curso), 400);
+      // Regalo de XP por terminar el curso (el servidor lo verifica); el aviso sale después de la felicitación
+      setTimeout(() => { window.__regaloCurso && window.__regaloCurso(curso.id, curso.titulo); }, 3000);
     }
     // Celebración chica por cada clase — pero no si ya viene el splash grande
     // de curso completado, para no encimar dos festejos.
@@ -7442,6 +7447,8 @@ const Sections = (function(){
       setTimeout(() => {
         if (!document.getElementById('splash-bienvenida')) window.__mostrarInvitacionPruebaGratis?.();
       }, 450);
+      // Cursos ya terminados que todavía no cobraron su regalo de XP
+      setTimeout(() => { window.__revisarRegalosCurso && window.__revisarRegalosCurso(); }, 4000);
     }
   }
   window.__cargarCursosFirestore = cargarCursosFirestore;
@@ -10860,7 +10867,7 @@ const Sections = (function(){
     const pintarBiblioteca = async (root) => {
       if (!root) return;
       const esVip = tieneAccesoVipCompleto();
-      const encabezado = `<div class="xp-library__head"><div><div class="xp-library__eyebrow">Biblioteca DulceLab Food</div><h2 class="xp-library__title">Guías, recetas y libros para tu formación</h2><p class="xp-library__sub">Todo se lee aquí mismo con tu membresía. Las guías y las recetas se desbloquean con los XP que ganas en Retos (los retos suman hasta ${_fmtXP(xpMaximoRetos)} XP); los libros clásicos se abren por días de membresía: uno al empezar y otro cada 25 días.</p></div><div class="xp-library__score"><b>${_fmtXP(xpActual)} <small>XP</small></b><span>${esVip ? 'Tu saldo' : 'XP guardados'}</span></div></div>`;
+      const encabezado = `<div class="xp-library__head"><div><div class="xp-library__eyebrow">Biblioteca DulceLab Food</div><h2 class="xp-library__title">Guías, recetas y libros para tu formación</h2><p class="xp-library__sub">Todo se lee aquí mismo con tu membresía. Las guías y las recetas se desbloquean con los XP que ganas en Retos (los retos suman hasta ${_fmtXP(xpMaximoRetos)} XP) y con el regalo de 300 XP por cada curso que termines; los libros clásicos se abren por días de membresía: uno al empezar y otro cada 25 días.</p></div><div class="xp-library__score"><b>${_fmtXP(xpActual)} <small>XP</small></b><span>${esVip ? 'Tu saldo' : 'XP guardados'}</span></div></div>`;
       root.innerHTML = encabezado + '<div class="foro-empty">Cargando biblioteca…</div>';
       let cat;
       try { cat = await _cargarCatalogoBib(); }
@@ -15069,6 +15076,115 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
       console.warn('[regalo]', e && e.message);
       if (P) P.liberar('regalo');
     }
+  };
+})();
+</script>
+<!-- ═══ Regalo por terminar un curso (cofre) ═══
+     El servidor comprueba que de verdad se terminó el curso y suma los XP (POST /api/regalo-bienvenida/curso). -->
+<style>
+  #cofre-pop{position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;padding:20px;font-family:'Inter','Plus Jakarta Sans',system-ui,sans-serif}
+  #cofre-pop.show{display:flex;animation:cfFade .25s ease}
+  #cofre-pop .cf-ov{position:absolute;inset:0;background:rgba(7,5,3,.78);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+  #cofre-pop .cf-card{position:relative;overflow:hidden;width:100%;max-width:380px;padding:26px 24px 22px;text-align:center;color:#FFF3E5;
+    background:radial-gradient(120% 90% at 50% 18%,#4a2c10 0%,#25140a 58%,#170c06 100%);border:2px solid rgba(229,176,74,.65);border-radius:26px;
+    box-shadow:0 0 0 1px rgba(0,0,0,.4),0 30px 70px -18px rgba(0,0,0,.8),0 0 60px -10px rgba(229,176,74,.35);animation:cfPop .4s cubic-bezier(.2,.9,.25,1.1)}
+  #cofre-pop .cf-rayos{position:absolute;left:50%;top:-30px;width:520px;height:520px;margin-left:-260px;opacity:.5;pointer-events:none;
+    background:repeating-conic-gradient(from 0deg,rgba(255,213,110,.34) 0 7deg,transparent 7deg 18deg);
+    -webkit-mask:radial-gradient(circle at 50% 36%,#000 0,#000 18%,transparent 62%);mask:radial-gradient(circle at 50% 36%,#000 0,#000 18%,transparent 62%);animation:cfGira 26s linear infinite}
+  #cofre-pop .cf-cofre{position:relative;width:170px;margin:0 auto 6px;filter:drop-shadow(0 12px 18px rgba(0,0,0,.5));animation:cfSalto .9s ease-out .15s both}
+  #cofre-pop .cf-cofre svg{display:block;width:100%;height:auto}
+  #cofre-pop .cf-eyebrow{position:relative;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#E5B04A;margin-top:4px}
+  #cofre-pop .cf-xp{position:relative;font-family:'Plus Jakarta Sans',sans-serif;font-size:44px;font-weight:800;letter-spacing:-1.2px;line-height:1.1;margin:4px 0 2px;color:#FFE9B0;text-shadow:0 3px 14px rgba(229,176,74,.45)}
+  #cofre-pop .cf-sub{position:relative;font-size:12.5px;color:#D9C7B6}
+  #cofre-pop .cf-sub b{color:#FFE9B0}
+  #cofre-pop .cf-curso{position:relative;margin:12px 4px 0;font-size:12.5px;line-height:1.5;color:#B8A596}
+  #cofre-pop .cf-btns{position:relative;display:flex;gap:10px;margin-top:20px}
+  #cofre-pop .cf-btns button{flex:1;padding:13px 10px;border-radius:14px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:transform .15s}
+  #cofre-pop .cf-btns button:hover{transform:translateY(-1px)}
+  #cofre-pop .cf-later{background:transparent;border:1px solid rgba(245,239,232,.28);color:#FFF3E5}
+  #cofre-pop .cf-go{background:linear-gradient(145deg,#F0BD55,#C9922F);border:0;color:#2A0D16}
+  @keyframes cfFade{from{opacity:0}to{opacity:1}}
+  @keyframes cfPop{from{opacity:0;transform:translateY(22px) scale(.94)}to{opacity:1;transform:none}}
+  @keyframes cfSalto{0%{transform:translateY(26px) scale(.7);opacity:0}60%{transform:translateY(-8px) scale(1.04);opacity:1}100%{transform:none}}
+  @keyframes cfGira{to{transform:rotate(360deg)}}
+  @media(prefers-reduced-motion:reduce){#cofre-pop .cf-rayos,#cofre-pop .cf-cofre,#cofre-pop .cf-card{animation:none}}
+  @media(max-width:480px){#cofre-pop .cf-card{padding:22px 18px 18px}#cofre-pop .cf-xp{font-size:38px}#cofre-pop .cf-btns{flex-direction:column-reverse}}
+</style>
+<script>
+(function(){
+  var COFRE = '<svg viewBox="0 0 200 150" aria-hidden="true"><defs>' +
+    '<linearGradient id="cfOro" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE48F"/><stop offset=".55" stop-color="#E5B04A"/><stop offset="1" stop-color="#A9741F"/></linearGradient>' +
+    '<linearGradient id="cfMad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#B0692E"/><stop offset="1" stop-color="#5A2F12"/></linearGradient></defs>' +
+    '<ellipse cx="100" cy="141" rx="74" ry="7" fill="rgba(0,0,0,.45)"/>' +
+    '<g transform="rotate(-16 40 72)"><path d="M40 72 Q38 28 100 22 Q162 28 160 72Z" fill="url(#cfMad)" stroke="#34190a" stroke-width="3"/>' +
+    '<path d="M40 72 Q38 28 100 22 Q162 28 160 72" fill="none" stroke="url(#cfOro)" stroke-width="7"/><rect x="92" y="22" width="16" height="50" fill="url(#cfOro)" opacity=".9"/></g>' +
+    '<g fill="url(#cfOro)" stroke="#8b5a14" stroke-width="1.5"><circle cx="64" cy="66" r="9"/><circle cx="84" cy="60" r="10"/><circle cx="106" cy="58" r="10"/><circle cx="127" cy="63" r="9"/><circle cx="96" cy="68" r="9"/><circle cx="76" cy="70" r="8"/><circle cx="118" cy="70" r="8"/></g>' +
+    '<rect x="36" y="70" width="128" height="62" rx="8" fill="url(#cfMad)" stroke="#34190a" stroke-width="3"/>' +
+    '<rect x="36" y="70" width="128" height="12" fill="url(#cfOro)" stroke="#34190a" stroke-width="2"/>' +
+    '<rect x="54" y="70" width="10" height="62" fill="url(#cfOro)"/><rect x="136" y="70" width="10" height="62" fill="url(#cfOro)"/>' +
+    '<rect x="86" y="84" width="28" height="30" rx="6" fill="url(#cfOro)" stroke="#6b4310" stroke-width="2.5"/>' +
+    '<circle cx="100" cy="96" r="4.5" fill="#34190a"/><rect x="98" y="97" width="4" height="10" rx="2" fill="#34190a"/></svg>';
+  function f(n){ return Number(n).toLocaleString('es-MX'); }
+  function esc(t){ return String(t == null ? '' : t).replace(/[&<>"']/g, function(c){ return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]; }); }
+
+  function mostrarCofre(regalo, total, titulo){
+    if (document.getElementById('cofre-pop')) return;
+    var el = document.createElement('div');
+    el.id = 'cofre-pop';
+    el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-labelledby', 'cf-xp');
+    el.innerHTML =
+      '<div class="cf-ov"></div><div class="cf-card"><div class="cf-rayos"></div>' +
+      '<div class="cf-cofre">' + COFRE + '</div>' +
+      '<div class="cf-eyebrow">¡Curso completado!</div>' +
+      '<div class="cf-xp" id="cf-xp">+' + f(regalo) + ' XP</div>' +
+      '<div class="cf-sub">Se sumaron a tu saldo · Total <b>' + f(total) + '</b></div>' +
+      (titulo ? '<p class="cf-curso">Terminaste «' + esc(titulo) + '». Usa tus XP para desbloquear guías, recetas y libros.</p>' : '') +
+      '<div class="cf-btns"><button type="button" class="cf-later">Seguir</button><button type="button" class="cf-go">Ver la biblioteca →</button></div></div>';
+    document.body.appendChild(el);
+    var cerrar = function(){ el.remove(); document.removeEventListener('keydown', tecla); };
+    var tecla = function(e){ if (e.key === 'Escape') cerrar(); };
+    document.addEventListener('keydown', tecla);
+    el.querySelector('.cf-ov').addEventListener('click', cerrar);
+    el.querySelector('.cf-later').addEventListener('click', cerrar);
+    el.querySelector('.cf-go').addEventListener('click', function(){ cerrar(); if (window.navigateToSection) window.navigateToSection('pdfs'); });
+    requestAnimationFrame(function(){ el.classList.add('show'); });
+    setTimeout(function(){ el.classList.add('show'); }, 80);
+  }
+
+  // Pide el regalo de un curso terminado. Es seguro llamarla de más: el servidor solo lo da una vez por curso.
+  async function pedirRegalo(cursoId, titulo, intento){
+    var S = window.UserState || {};
+    if (!S.uid || !window.__currentUser || !cursoId) return;
+    var KEY = 'dulcelab_regalo_curso_' + S.uid + '_' + cursoId;
+    try { if (localStorage.getItem(KEY) === '1') return; } catch(e){}
+    var P = window.__Popups;
+    try {
+      if (window.__cargarProgreso) await window.__cargarProgreso();
+      var token = await window.__currentUser.getIdToken();
+      var base = window.WEBHOOK_URL || 'https://dulcelab-webhook-production.up.railway.app';
+      var res = await fetch(base + '/api/regalo-bienvenida/curso', {
+        method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+        body: JSON.stringify({ cursoId: cursoId })
+      });
+      // 409: el servidor todavía no ve todas las clases (el avance sube a Firestore unos segundos después). Reintenta.
+      if (res.status === 409) { if ((intento || 0) < 3) setTimeout(function(){ pedirRegalo(cursoId, titulo, (intento || 0) + 1); }, 4000 * ((intento || 0) + 1)); return; }
+      if (res.status === 403) return; // sin membresía activa: no aplica
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      var data = await res.json();
+      try { localStorage.setItem(KEY, '1'); } catch(e){}
+      if (!data.nuevo) return;
+      if (window.__cargarProgreso) await window.__cargarProgreso();
+      var ahora = function(){ mostrarCofre(data.regalo, data.xp, titulo); };
+      if (P) P.pedir('regalo-curso', 4, ahora, 300000); else ahora();
+    } catch(e){ console.warn('[regalo curso]', e && e.message); }
+  }
+  window.__regaloCurso = function(id, titulo){ pedirRegalo(id, titulo, 0); };
+  // Al entrar: si hay cursos ya terminados que no cobraron su regalo (p. ej. antes de que existiera), se piden ahora.
+  window.__revisarRegalosCurso = function(){
+    try {
+      var lista = window.__cursosCompletados ? window.__cursosCompletados() : [];
+      lista.forEach(function(c, i){ setTimeout(function(){ pedirRegalo(c.id, c.titulo, 0); }, i * 1500); });
+    } catch(e){}
   };
 })();
 </script>
