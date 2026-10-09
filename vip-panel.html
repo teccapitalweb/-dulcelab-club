@@ -3133,6 +3133,19 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 .lib-book--pronto .lib-book__cover::before,.lib-book--pronto .lib-book__cover::after{display:none}
 .lib-book--pronto .lib-book__cover span{font-size:12px;font-weight:700;line-height:1.35}
 .lib-nota{margin:22px 0 0;padding-top:14px;border-top:1px solid var(--border);font-size:11px;line-height:1.55;color:var(--text-3)}
+.lib-book.is-buyable .lib-book__chip,.rec-card.is-buyable .rec-card__xp{background:var(--primary);border-color:var(--primary);color:#fff}
+.rec-card.is-buyable{border-color:color-mix(in srgb,var(--primary) 55%,var(--border))}
+.retos-niv-wrap{margin:0 0 26px}
+.retos-niv{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.retos-niv__card{padding:15px 16px;border-radius:16px;border:1px solid var(--border);background:var(--surface)}
+.retos-niv__card.is-done{border-color:color-mix(in srgb,var(--success) 50%,var(--border))}
+.retos-niv__card.is-lock{opacity:.7}
+.retos-niv__top{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:14px;font-weight:800;color:var(--text)}
+.retos-niv__n{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--text-3)}
+.retos-niv__pie{font-size:12px;line-height:1.45;color:var(--text-2)}
+.retos-niv__pie b{color:var(--primary)}
+.retos-niv__pie b.retos-niv__ok{color:var(--success)}
+@media(max-width:700px){.retos-niv{grid-template-columns:1fr}}
 .lib-tabs{display:flex;gap:8px;margin:0 0 16px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
 .lib-tabs::-webkit-scrollbar{display:none}
 .lib-tab{flex:none;display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:99px;border:1px solid var(--border);background:var(--surface-2);color:var(--text-2);font:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:background .15s,color .15s}
@@ -8773,8 +8786,21 @@ const Sections = (function(){
       if(_esErrorPermiso(e)) _progresoSinPermiso = true;
     }
     _progresoListo = true;
+    if (!window.__nivelesRevisados) { window.__nivelesRevisados = true; setTimeout(() => { try { window.__revisarRegalosNivel && window.__revisarRegalosNivel(); } catch (e) {} }, 5000); }
   }
   window.__cargarProgreso = _cargarProgreso;
+  // XP ganados (el nivel de Retos usa este total, que nunca baja) y saldo para gastar en la biblioteca (ganados − gastados).
+  const _saldoXP = () => Math.max(0, (Number(_progreso.xp) || 0) - (Number(_progreso.xpGastado) || 0));
+  window.__saldoXP = _saldoXP;
+  // Niveles de retos ya terminados cuyo cofre aún no se cobra (se piden al servidor).
+  window.__nivelesPendientes = function(){
+    if (typeof toolEsVIP === 'function' && !toolEsVIP()) return [];
+    const hechos = _progreso.retosCompletados || [];
+    return NIVELES_COFRE.filter(n => {
+      const lista = RETOS_LIBRARY.filter(r => r.dificultad === n.dif);
+      return lista.length && lista.every(r => hechos.includes(r.id)) && !(_progreso.nivelesPremiados || {})[n.k];
+    });
+  };
   async function _guardarProgreso(){
     try{
       const fs = window.__fs; const db = window.__db;
@@ -9062,7 +9088,73 @@ const Sections = (function(){
         { p:'Una masa sobrefermentada normalmente…', o:['Se ve tensa y alta','Se hunde, huele muy ácido y pierde estructura','Queda siempre con corteza muy dura'], c:1, e:'Se hunde, huele muy ácido y su gluten se debilita. Hay que hornearla un poco antes en la próxima ocasión.' },
         { p:'Fermentar la masa en refrigerador normalmente…', o:['Desarrolla más sabor y da flexibilidad de horario','Mata la levadura','Hace que el pan no suba'], c:0, e:'La fermentación lenta y fría da más sabor y te permite hornear cuando lo necesites.' },
         { p:'Una causa común de pan denso es…', o:['Haber fermentado muy poco','Haber usado demasiado vapor','Haber enfriado el pan en rejilla'], c:0, e:'Poca fermentación: la masa no produjo suficiente gas. También influyen harina floja o falta de agua.' }
-      ] }
+      ] },
+    // ── Nivel AVANZADO · preguntas de 6 con 5 aciertos para pasar, y cuentas de varios pasos. 50 XP cada uno. ──
+    { id:'q-haccp', tipo:'quiz', categoria:'Inocuidad', titulo:'Inocuidad nivel chef: HACCP y temperaturas', dificultad:'Avanzado', puntos:50, aprobar:5,
+      preguntas:[
+        { p:'Un punto crítico de control (PCC) es…', o:['Cualquier paso de la receta','Un paso donde se puede prevenir, eliminar o reducir un peligro a un nivel aceptable','El lugar donde se guarda el termómetro'], c:1, e:'Es el paso exacto donde un control evita o reduce el peligro (por ejemplo, la cocción a 74 °C). Si falla ahí, ya no hay otro paso que lo arregle.' },
+        { p:'Para enfriar de forma segura un caldo caliente, la regla común es bajar de 60 °C a 21 °C en 2 horas y de 21 °C a 5 °C en…', o:['4 horas más','12 horas más','1 hora más'], c:0, e:'En 4 horas más (6 horas en total). Por eso se divide en recipientes bajos, se usa baño de hielo y no se mete una olla enorme al refrigerador.' },
+        { p:'Las sobras se recalientan hasta que el centro llegue a…', o:['50 °C','74 °C','60 °C'], c:1, e:'74 °C en el centro, en todas las partes del alimento. Recalentar «hasta que salga vapor» no es una medida confiable.' },
+        { p:'Para comprobar que un termómetro de sonda está bien calibrado se mete en agua con mucho hielo. Debe marcar…', o:['0 °C','4 °C','10 °C'], c:0, e:'0 °C (con una tolerancia de más o menos 1 °C). Si marca otra cosa, se ajusta o se cambia.' },
+        { p:'¿Cuál de estos NO es uno de los alérgenos que se declaran con más frecuencia en etiquetas?', o:['Cacahuate','Soya','Ajo'], c:2, e:'El ajo puede dar molestias, pero no está entre los alérgenos de declaración común. Sí lo están leche, huevo, trigo, soya, cacahuate, frutos secos, pescado, mariscos y ajonjolí.' },
+        { p:'La contaminación cruzada más peligrosa en una cocina es…', o:['Cortar fruta con una tabla de fruta','Usar la misma tabla y cuchillo para pollo crudo y para ensalada','Tener las verduras junto a las tortillas'], c:1, e:'Pollo crudo y alimento listo para comer comparten bacterias sin ningún paso de cocción que las elimine. Por eso se separan tablas, cuchillos y se lava y desinfecta entre usos.' }
+      ] },
+    { id:'q-pasteleria-pro', tipo:'quiz', categoria:'Repostería', titulo:'Pastelería nivel chef: chocolate, azúcar y cremas', dificultad:'Avanzado', puntos:50, aprobar:5,
+      preguntas:[
+        { p:'Templar el chocolate sirve para…', o:['Que se derrita más rápido','Cristalizar la manteca de cacao en la forma estable y lograr brillo y chasquido','Quitarle el amargor'], c:1, e:'Se busca que la manteca de cacao cristalice en la forma estable. Si no se templa, el chocolate queda opaco, blando y con vetas blancas.' },
+        { p:'El merengue italiano se prepara…', o:['Batiendo claras con azúcar sin calor','Vertiendo jarabe de azúcar a unos 118 a 121 °C sobre las claras mientras se baten','Calentando las claras a baño maría hasta 30 °C'], c:1, e:'El jarabe caliente cuece las claras: queda muy estable y es seguro para cremas y decoraciones que no se hornean.' },
+        { p:'La crema pastelera con yema debe hervir unos instantes porque…', o:['Así lleva menos azúcar','El calor desactiva una enzima de la yema que la desharía y el almidón termina de espesar','Se vuelve más blanca'], c:1, e:'Una enzima de la yema rompe el almidón y la crema se adelgaza al reposar. Hervirla un momento (sin dejar de batir) la desactiva.' },
+        { p:'Un ganache más firme, para hacer trufas, lleva aproximadamente…', o:['1 parte de chocolate por 2 de crema','2 partes de chocolate por 1 de crema','Partes iguales de chocolate y crema'], c:1, e:'2 de chocolate por 1 de crema (en peso). Con partes iguales queda más suave, ideal para cubrir o rellenar.' },
+        { p:'Un pastel que se hunde en el centro suele deberse a…', o:['Haberlo dejado reposar en rejilla','Estar subcocido o abrir el horno demasiado pronto','Haber usado molde redondo'], c:1, e:'La estructura aún no estaba formada cuando la sacaste o le abriste la puerta al horno. Hay que esperar al menos los dos tercios del tiempo y comprobar con un palillo.' },
+        { p:'Para que el caramelo no se cristalice mientras se cocina…', o:['Se agita fuerte con cuchara de madera','Se limpian las paredes de la olla con pincel húmedo y se evita remover; ayuda un poco de glucosa o limón','Se cocina con la tapa puesta y fuego muy alto'], c:1, e:'Un solo cristal en la pared puede iniciar una cadena. Pincel con agua, no revolver y un poco de glucosa o ácido lo evitan.' }
+      ] },
+    { id:'q-panaderia-pro', tipo:'quiz', categoria:'Panadería', titulo:'Panadería nivel chef: porcentajes, vapor y cocción', dificultad:'Avanzado', puntos:50, aprobar:5,
+      preguntas:[
+        { p:'En los porcentajes del panadero, todos los ingredientes se calculan con respecto a…', o:['El peso total de la masa','El peso total de la harina, que es el 100 %','El peso del agua'], c:1, e:'La harina siempre es 100 %. Así, 70 % de hidratación significa 700 g de agua por cada 1,000 g de harina.' },
+        { p:'Una masa con hidratación alta (80 % o más) normalmente da una miga…', o:['Muy cerrada y compacta','Abierta, con alvéolos grandes, pero más difícil de manejar','Sin burbujas'], c:1, e:'Más agua da una miga abierta y húmeda, pero la masa es pegajosa y exige buen manejo y fermentación.' },
+        { p:'El vapor al inicio del horneado sirve para…', o:['Que el pan se queme menos','Mantener flexible la superficie para que el pan crezca y luego dar corteza brillante','Que el horno caliente más rápido'], c:1, e:'La superficie húmeda no se endurece de inmediato, así que el pan se expande más (el «golpe de horno») y la corteza queda brillante.' },
+        { p:'Un pan magro (baguette, hogaza) está bien cocido cuando el centro llega a unos…', o:['70 °C','95 °C','130 °C'], c:1, e:'Alrededor de 95 °C en el centro. También suena hueco al golpear la base.' },
+        { p:'La sal en una masa de pan se usa normalmente alrededor de…', o:['0.2 % de la harina','2 % de la harina','8 % de la harina'], c:1, e:'Cerca del 2 %. De menos, el pan sabe insípido y fermenta sin control; de más, frena a la levadura.' },
+        { p:'Tu pan sale con corteza pálida y poco sabor. Una causa probable es…', o:['Haber fermentado demasiado poco tiempo frío o hornear a temperatura baja','Haber usado harina en el banco','Haber usado un molde de metal'], c:0, e:'La corteza se dora por la reacción de Maillard y la caramelización, que necesitan calor alto y masa con azúcares desarrollados por una fermentación suficiente.' }
+      ] },
+    { id:'q-cocina-pro', tipo:'quiz', categoria:'Cocina', titulo:'Cocina nivel chef: técnica y fundamentos', dificultad:'Avanzado', puntos:50, aprobar:5,
+      preguntas:[
+        { p:'Sellar la carne a fuego fuerte sirve sobre todo para…', o:['Encerrar los jugos para que no salgan','Desarrollar sabor y color por la reacción de Maillard','Cocinarla por dentro más rápido'], c:1, e:'Es un mito que «encierre los jugos». Lo que hace es crear sabor y color en la superficie.' },
+        { p:'Reposar la carne unos minutos después de cocinarla sirve para…', o:['Que se enfríe para poder comerla','Que los jugos se redistribuyan y no se escurran al cortar','Que pierda grasa'], c:1, e:'Al reposar, las fibras se relajan y retienen mejor los jugos. Cortar enseguida los deja en la tabla.' },
+        { p:'El mirepoix clásico es una base de cebolla, zanahoria y apio en proporción de…', o:['1 : 1 : 1','2 : 1 : 1','4 : 1 : 1'], c:1, e:'2 partes de cebolla por 1 de zanahoria y 1 de apio, en peso.' },
+        { p:'Después de blanquear una verdura se pasa a agua con hielo para…', o:['Quitarle sal','Detener la cocción y fijar el color','Hacerla más suave'], c:1, e:'El choque de frío corta la cocción en seco y conserva el verde brillante y la textura.' },
+        { p:'Para cocer pasta, el agua debe llevar aproximadamente…', o:['1 g de sal por litro','10 g de sal por litro','50 g de sal por litro'], c:1, e:'Alrededor de 10 g de sal por litro (1 %). Es la única oportunidad de sazonar la pasta por dentro.' },
+        { p:'Un fondo oscuro de res se obtiene…', o:['Hirviendo huesos crudos con agua','Dorando antes los huesos y verduras y luego cocinando lento con agua','Agregando colorante al caldo'], c:1, e:'Dorar los huesos y las verduras antes da color y sabor tostado; luego se cocina lento sin hervir fuerte para que quede claro.' }
+      ] },
+    { id:'q-negocio-pro', tipo:'quiz', categoria:'Producción', titulo:'Negocio nivel chef: costos, merma y precio', dificultad:'Avanzado', puntos:50, aprobar:5,
+      preguntas:[
+        { p:'Para costear un platillo bien, el costo de cada ingrediente debe incluir…', o:['Solo el precio de compra por kilo','El rendimiento real después de la merma','Solo lo que se ve en el plato'], c:1, e:'Si compras 1 kg y solo aprovechas 800 g, el costo real por kg utilizable es mayor al precio de compra.' },
+        { p:'Un platillo cuesta $40 y lo vendes en $100. ¿Cuál es el margen sobre el precio de venta?', o:['40 %','60 %','150 %'], c:1, e:'Ganas $60 de cada $100: 60 % de margen. El 150 % sería el margen sobre el costo, que es otra cosa.' },
+        { p:'La receta estándar sirve principalmente para…', o:['Que el cocinero no piense','Obtener siempre el mismo resultado y poder calcular el costo','Hacer recetas más largas'], c:1, e:'Con cantidades y método fijos, el platillo sale igual todos los días y su costo es predecible.' },
+        { p:'El método PEPS o FIFO significa…', o:['Primero en entrar, primero en salir','Primero en salir, primero en pudrirse','Pedido especial por semana'], c:0, e:'Lo que llegó primero se usa primero. Reduce mermas por caducidad y evita producto olvidado al fondo del refrigerador.' },
+        { p:'En muchos restaurantes un costo de alimentos razonable ronda…', o:['5 al 10 % del precio','28 al 35 % del precio','60 al 70 % del precio'], c:1, e:'Más o menos entre 28 y 35 % del precio de venta; el resto cubre sueldos, renta, servicios y utilidad.' },
+        { p:'Para saber si una receta es negocio, además del costo de ingredientes hay que considerar…', o:['Solo el color del empaque','Empaque, mano de obra, gas y luz, y gastos fijos','Nada más'], c:1, e:'El ingrediente es solo una parte. Si no repartes empaque, mano de obra y gastos fijos, parece que ganas lo que en realidad pierdes.' }
+      ] },
+    { id:'c-pan-masa', tipo:'calculo', categoria:'Panadería', titulo:'¿Cuánto pesa la masa completa?', dificultad:'Avanzado', puntos:50, respuesta:1710, tolerancia:0.5, unidad:'gramos de masa',
+      enunciado:'Tu fórmula usa 1,000 g de harina con 68 % de hidratación, 2 % de sal y 1 % de levadura fresca (todo en porcentaje del panadero). ¿Cuánto pesa la masa completa?',
+      pista:'Calcula cada ingrediente como porcentaje de 1,000 g de harina y suma todo, incluida la harina.',
+      explicacion:'Agua: 1,000 × 0.68 = 680 g. Sal: 1,000 × 0.02 = 20 g. Levadura: 1,000 × 0.01 = 10 g. Total: 1,000 + 680 + 20 + 10 = 1,710 g.' },
+    { id:'c-precio-pastel', tipo:'calculo', categoria:'Producción', titulo:'El precio que de verdad deja ganancia', dificultad:'Avanzado', puntos:50, respuesta:920, tolerancia:0.5, unidad:'$ de precio de venta',
+      enunciado:'Un pastel te cuesta $320 de ingredientes y $48 de empaque. Quieres que el costo total sea el 40 % del precio de venta (o sea, 60 % de margen). ¿En cuánto lo vendes?',
+      pista:'El costo total es el 40 % del precio. Si el 40 % son $368, ¿cuánto es el 100 %?',
+      explicacion:'Costo total: 320 + 48 = $368. Si $368 es el 40 % del precio, el precio es 368 ÷ 0.40 = $920. Multiplicar el costo por 1.6 sería un error: eso da un margen menor.' },
+    { id:'c-merma-lomo', tipo:'calculo', categoria:'Cocina', titulo:'El costo real del lomo', dificultad:'Avanzado', puntos:50, respuesta:280, tolerancia:0.5, unidad:'$ por kg utilizable',
+      enunciado:'Compras 12 kg de lomo a $210 el kilo. Al limpiarlo y porcionarlo te quedan 9 kg utilizables. ¿Cuál es el costo real por kilo utilizable?',
+      pista:'Calcula primero cuánto pagaste en total y luego divídelo entre los kilos que sí puedes usar.',
+      explicacion:'Pagaste 12 × 210 = $2,520. Se aprovechan 9 kg: 2,520 ÷ 9 = $280 por kg utilizable (la merma fue del 25 %).' },
+    { id:'c-galletas-evento', tipo:'calculo', categoria:'Repostería', titulo:'Galletas para el evento', dificultad:'Avanzado', puntos:50, respuesta:1125, tolerancia:0.5, unidad:'gramos de mantequilla',
+      enunciado:'Tu receta rinde 24 galletas y lleva 300 g de mantequilla. Para un evento necesitas 90 galletas. ¿Cuántos gramos de mantequilla necesitas?',
+      pista:'Calcula el factor de escala: galletas que necesitas entre galletas que rinde la receta.',
+      explicacion:'Factor: 90 ÷ 24 = 3.75. Mantequilla: 300 × 3.75 = 1,125 g (1.125 kg).' },
+    { id:'c-perdida-horneado', tipo:'calculo', categoria:'Panadería', titulo:'La pérdida en el horno', dificultad:'Avanzado', puntos:50, respuesta:11.1, tolerancia:0.1, unidad:'% de pérdida',
+      enunciado:'Cada pieza de masa cruda pesa 90 g y, después de hornear, pesa 80 g. ¿Qué porcentaje de su peso se pierde en el horno?',
+      pista:'Resta el peso final al inicial y divide entre el peso inicial.',
+      explicacion:'Pérdida: 90 − 80 = 10 g. 10 ÷ 90 = 0.111, es decir 11.1 %. Es agua que se evapora y es normal en pan, entre 8 y 15 % según el tamaño.' }
   ];
   // Se intercalan con los retos de siempre para que no haya seguidos del mismo tipo.
   (function mezclarRetosNuevos(){
@@ -9070,7 +9162,18 @@ const Sections = (function(){
     const base = RETOS_LIBRARY.splice(0, RETOS_LIBRARY.length);
     base.forEach(r => { RETOS_LIBRARY.push(r); const n = nuevos.shift(); if (n) RETOS_LIBRARY.push(n); });
     nuevos.forEach(n => RETOS_LIBRARY.push(n));
+    // Tres niveles de dificultad. Se juegan en este orden y no se puede saltar ninguno:
+    // para entrar al siguiente reto hay que superar el anterior. Dentro de cada nivel se conserva la mezcla de formatos.
+    const RANGO = { 'Básico':0, 'Intermedio':1, 'Avanzado':2 };
+    const orden = RETOS_LIBRARY.map((r, i) => ({ r, i })).sort((a, b) => (RANGO[a.r.dificultad] - RANGO[b.r.dificultad]) || (a.i - b.i));
+    RETOS_LIBRARY.splice(0, RETOS_LIBRARY.length, ...orden.map(x => x.r));
   })();
+  // Niveles y su cofre (el servidor da el regalo: dulcelab-webhook/data/retos.js debe tener los mismos retos por nivel).
+  const NIVELES_COFRE = [
+    { k:'basico', dif:'Básico', nombre:'Básico', xp:100 },
+    { k:'intermedio', dif:'Intermedio', nombre:'Intermedio', xp:200 },
+    { k:'avanzado', dif:'Avanzado', nombre:'Avanzado', xp:300 }
+  ];
 
   const RETO_CAT_META = {
     'Repostería':{icon:'i-bn-whisk', color:'var(--primary)'},
@@ -9250,6 +9353,24 @@ const Sections = (function(){
       <div class="retos-route__scroll"><div class="retos-route__track">${rutaItems}</div></div>
     </section>`;
 
+    // Niveles de dificultad: se superan en orden (Básico → Intermedio → Avanzado) y cada uno termina con un cofre de XP.
+    const nivelesHtml = `<section class="retos-niv-wrap" aria-label="Niveles de dificultad">
+      <div class="retos2-sec"><div><div class="retos2-sec__eyebrow">Sube de dificultad</div><h2 class="retos2-sec__title">Tres niveles, tres cofres</h2></div><span class="retos2-sec__note">Se juegan en orden: hay que superar cada reto para avanzar</span></div>
+      <div class="retos-niv">${NIVELES_COFRE.map((n, i) => {
+        const lista = RETOS_LIBRARY.filter(r => r.dificultad === n.dif);
+        const h = lista.filter(hecho).length, completo = lista.length > 0 && h === lista.length;
+        const cobrado = !!(_progreso.nivelesPremiados || {})[n.k];
+        const previo = i === 0 ? true : RETOS_LIBRARY.filter(r => r.dificultad === NIVELES_COFRE[i - 1].dif).every(hecho);
+        const pie = cobrado ? `<b class="retos-niv__ok">✓ Cofre cobrado · +${n.xp} XP</b>`
+                  : completo ? `<b class="retos-niv__ok">¡Nivel superado! Tu cofre de +${n.xp} XP llega enseguida</b>`
+                  : !previo ? `Se abre al terminar el nivel ${NIVELES_COFRE[i - 1].nombre}`
+                  : `Supéralo completo y gana un cofre de <b>+${n.xp} XP</b>`;
+        return `<div class="retos-niv__card ${completo ? 'is-done' : ''} ${previo ? '' : 'is-lock'}">
+          <div class="retos-niv__top"><span>Nivel ${n.nombre}</span><span class="retos-niv__n">${h}/${lista.length}</span></div>
+          <div class="hero-progress__bar" style="margin:9px 0 8px"><div class="hero-progress__fill" style="width:${lista.length ? Math.round(h / lista.length * 100) : 0}%"></div></div>
+          <div class="retos-niv__pie">${pie}</div></div>`;
+      }).join('')}</div></section>`;
+
     const avisoGratis = esVipRetos ? '' : (bloqueoPlan
       ? `<div class="retos-gratis retos-gratis--fin"><b>Ya jugaste tu reto gratis.</b> Tus <b>${_progreso.xp.toLocaleString('es-MX')} XP</b> están guardados, pero no se pueden usar ni sumar más hasta que actives tu membresía VIP. <button type="button" class="retos-gratis__btn" data-retos-vip>Activar membresía</button></div>`
       : `<div class="retos-gratis"><b>Prueba gratis:</b> puedes jugar <b>1 reto</b> sin membresía. Los puntos que ganes se guardan, y para seguir jugando y usarlos activas tu membresía VIP.</div>`);
@@ -9298,10 +9419,12 @@ const Sections = (function(){
           ${rutaHtml}
         </div>
 
+        ${nivelesHtml}
+
         <section class="retos2-zone">
           <div class="retos2-sec">
             <div><div class="retos2-sec__eyebrow">Entrena tus conocimientos</div><h2 class="retos2-sec__title">Zona de retos</h2></div>
-            <span class="retos2-sec__note">${_progreso.xp.toLocaleString('es-MX')} XP ${esVipRetos ? 'acumulados' : 'guardados · se activan con tu membresía'}</span>
+            <span class="retos2-sec__note">${esVipRetos ? `${_saldoXP().toLocaleString('es-MX')} XP de saldo · ${_progreso.xp.toLocaleString('es-MX')} ganados en total` : `${_progreso.xp.toLocaleString('es-MX')} XP guardados · se activan con tu membresía`}</span>
           </div>
           ${nextHtml}
         </section>
@@ -9471,7 +9594,13 @@ const Sections = (function(){
     const dyn = document.getElementById('dynamic-section');
     if(dyn && dyn.querySelector('[data-reto-id]')) renderRetos(dyn);
     setTimeout(()=>Modal.close('reto-'+r.id), msCierre || 1500);
+    // ¿Se acabó el nivel? Entonces llega su cofre (después de cerrar el reto).
+    setTimeout(() => { try { window.__revisarRegalosNivel && window.__revisarRegalosNivel(); } catch (e) {} }, (msCierre || 1500) + 1500);
   }
+  window.__refrescarRetos = function(){
+    const dyn = document.getElementById('dynamic-section');
+    if(dyn && dyn.querySelector('[data-reto-id]')) renderRetos(dyn);
+  };
 
   function _celebrarLogros(nuevosLogros){
     if(!nuevosLogros.length) return;
@@ -9572,7 +9701,7 @@ const Sections = (function(){
       </div>
       <div class="rc-fb" style="margin-top:12px;font-size:12.5px;line-height:1.6"></div>`;
     const footer = document.createElement('div');
-    footer.innerHTML = `<button class="btn btn--ghost" id="reto-cerrar">Cerrar</button><button class="btn btn--ghost rc-sol" style="display:none">Ver solución</button><button class="btn btn--primary rc-ok">Comprobar</button>`;
+    footer.innerHTML = `<button class="btn btn--ghost" id="reto-cerrar">Cerrar</button><button class="btn btn--primary rc-ok">Comprobar</button>`;
     Modal.open({ id, title: r.titulo, subtitle: r.categoria + ' · +' + r.puntos + ' pts', icon: 'i-bolt', size: 'md', body, footer });
     const inp = body.querySelector('.rc-in'), fb = body.querySelector('.rc-fb');
     const parse = (t) => {
@@ -9592,7 +9721,6 @@ const Sections = (function(){
         inp.disabled = true;
         fb.innerHTML = `<span style="color:var(--success);font-weight:700">¡Correcto!</span> <span style="color:var(--text-2)">${escapeHtml(r.explicacion)}</span>`;
         footer.querySelector('.rc-ok').style.display = 'none';
-        footer.querySelector('.rc-sol').style.display = 'none';
         const res = await _otorgarXP(r.id, r.puntos);
         if (!res.yaCompletado) _avisarResultadoXP(r, res, r.titulo);
         _celebrarLogros(res.nuevosLogros);
@@ -9600,14 +9728,15 @@ const Sections = (function(){
       } else {
         intentos++;
         fb.innerHTML = `<span style="color:var(--danger);font-weight:700">No es esa.</span> <span style="color:var(--text-2)">${intentos >= 1 && r.pista ? 'Pista: ' + escapeHtml(r.pista) : 'Revisa tu cuenta e inténtalo otra vez.'}</span>`;
-        if (intentos >= 2) footer.querySelector('.rc-sol').style.display = '';
+        if (intentos >= 2) {
+          // Tras dos errores toca esperar unos segundos antes de volver a intentar: no se puede ganar probando números al azar.
+          const okb = footer.querySelector('.rc-ok'); let t = 15; okb.disabled = true; okb.textContent = 'Espera ' + t + ' s';
+          const iv = setInterval(() => { t--; if (!document.body.contains(okb)) { clearInterval(iv); return; } if (t <= 0) { clearInterval(iv); okb.disabled = false; okb.textContent = 'Comprobar'; } else okb.textContent = 'Espera ' + t + ' s'; }, 1000);
+        }
       }
     }
     footer.querySelector('#reto-cerrar').addEventListener('click', () => Modal.close(id));
     footer.querySelector('.rc-ok').addEventListener('click', comprobar);
-    footer.querySelector('.rc-sol').addEventListener('click', () => {
-      fb.innerHTML = `<span style="color:var(--text);font-weight:700">Solución:</span> <span style="color:var(--text-2)">${escapeHtml(r.explicacion)}</span> <span style="color:var(--text-3)">Escríbela arriba para ganar los puntos.</span>`;
-    });
     inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); comprobar(); } });
     setTimeout(() => inp.focus(), 250);
   }
@@ -9634,6 +9763,23 @@ const Sections = (function(){
     if(r.tipo==='antesdespues') return _retoAntesDespues(r);
     if(r.tipo==='quiz') return _retoQuiz(r);
     if(r.tipo==='calculo') return _retoCalculo(r);
+  }
+
+  // Cuando un reto no se supera: se muestra qué pasó y se puede volver a intentar tras unos segundos.
+  // Rendirse o fallar NO da puntos: el reto sigue pendiente y bloquea los siguientes hasta que se supere.
+  function _retoReintento(r, fb, mensaje, esperaSeg){
+    let t = esperaSeg == null ? 10 : esperaSeg;
+    fb.innerHTML = `<div style="color:var(--danger);font-weight:600;line-height:1.5">${mensaje}</div><div style="margin-top:10px"><button type="button" class="btn btn--primary" data-reintento ${t > 0 ? 'disabled' : ''}>${t > 0 ? 'Intentar de nuevo en ' + t + ' s' : 'Intentar de nuevo'}</button></div>`;
+    const b = fb.querySelector('[data-reintento]');
+    if (t > 0) {
+      const iv = setInterval(() => {
+        if (!document.body.contains(b)) { clearInterval(iv); return; }
+        t--;
+        if (t <= 0) { clearInterval(iv); b.disabled = false; b.textContent = 'Intentar de nuevo'; }
+        else b.textContent = 'Intentar de nuevo en ' + t + ' s';
+      }, 1000);
+    }
+    b.addEventListener('click', () => { Modal.close('reto-' + r.id); setTimeout(() => _abrirReto(r.id), 250); });
   }
 
   // ─── Tipo: ordenar secuencia (arrastrar) ───
@@ -9698,7 +9844,7 @@ const Sections = (function(){
     footer.innerHTML = `
       <button class="btn btn--ghost" id="reto-cerrar">Cerrar</button>
       <button class="btn btn--ghost" id="reto-hint" data-bypass-paywall="true"><svg class="ic"><use href="#i-info"/></svg>Pista</button>
-      <button class="btn btn--ghost" id="reto-giveup" style="display:none;color:var(--danger);">Rendirme</button>
+      <button class="btn btn--ghost" id="reto-giveup" style="display:none;color:var(--danger);">Ver respuesta (sin puntos)</button>
       <button class="btn btn--accent" id="reto-check">Comprobar orden</button>
     `;
     Modal.open({ id:'reto-'+r.id, title:r.titulo, subtitle:r.categoria+' · +'+r.puntos+' pts', icon:'i-bolt', size:'md', body, footer, onClose:()=>cronometro.detener() });
@@ -9754,11 +9900,7 @@ const Sections = (function(){
       pintarLista();
       bloquearTodo();
       const fb = body.querySelector('#reto-sec-fb');
-      fb.innerHTML = '<span style="color:var(--text-2);font-weight:600;">Aquí está el orden correcto. ¡La próxima te sale!</span>';
-      const res = await _otorgarXP(r.id, r.puntos);
-      if(!res.yaCompletado) _avisarResultadoXP(r, res, r.titulo);
-      _celebrarLogros(res.nuevosLogros);
-      _trasCompletarReto(r);
+      _retoReintento(r, fb, 'Este es el orden correcto. Rendirse no suma puntos: vuelve a intentarlo y supéralo para seguir avanzando.', 10);
     });
   }
 
@@ -9800,7 +9942,7 @@ const Sections = (function(){
     footer.innerHTML = `
       <button class="btn btn--ghost" id="reto-cerrar">Cerrar</button>
       <button class="btn btn--ghost" id="reto-hint" data-bypass-paywall="true"><svg class="ic"><use href="#i-info"/></svg>Pista</button>
-      <button class="btn btn--ghost" id="reto-giveup" style="display:none;color:var(--danger);">Rendirme</button>
+      <button class="btn btn--ghost" id="reto-giveup" style="display:none;color:var(--danger);">Ver respuesta (sin puntos)</button>
     `;
     Modal.open({ id:'reto-'+r.id, title:r.titulo, subtitle:r.categoria+' · +'+r.puntos+' pts', icon:'i-bolt', size:'md', body, footer, onClose:()=>cronometro.detener() });
     function bloquearTodo(){
@@ -9836,11 +9978,7 @@ const Sections = (function(){
       });
       body.querySelector('#reto-err-n').textContent = String(r.hotspots.length);
       bloquearTodo();
-      body.querySelector('#reto-err-fb').innerHTML = '<span style="color:var(--text-2);font-weight:600;">Ahí están las '+r.hotspots.length+' fallas. ¡La próxima las encuentras solo!</span>';
-      const res = await _otorgarXP(r.id, r.puntos);
-      if(!res.yaCompletado) _avisarResultadoXP(r, res, r.titulo);
-      _celebrarLogros(res.nuevosLogros);
-      _trasCompletarReto(r);
+      _retoReintento(r, body.querySelector('#reto-err-fb'), 'Ahí están las ' + r.hotspots.length + ' fallas. Rendirse no suma puntos: vuelve a intentarlo y encuéntralas tú.', 10);
     });
     body.querySelectorAll('.reto-err-spot').forEach(spot=>{
       spot.addEventListener('click', async ()=>{
@@ -9878,11 +10016,12 @@ const Sections = (function(){
   function _retoImagen(r){
     const segundos = RETO_TIEMPO_POR_TIPO.imagen;
     const cronometro = _crearCronometro(segundos);
+    const opc = _barajar(r.opciones); // las fotos cambian de lugar en cada intento
     const body = document.createElement('div');
     body.innerHTML = `
       ${_timerHtml(segundos)}
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;">
-        ${r.opciones.map((o,i)=>`
+        ${opc.map((o,i)=>`
           <div class="reto-img-opt" data-i="${i}" style="cursor:pointer;">
             <div style="aspect-ratio:1/1;">${o.imagen?`<img src="${o.imagen}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;border:1px solid var(--border-2);">`:_placeholderImg(o.label)}</div>
           </div>
@@ -9901,7 +10040,7 @@ const Sections = (function(){
     body.querySelectorAll('.reto-img-opt').forEach(opt=>{
       opt.addEventListener('click', async ()=>{
         if(cronometro.vencido) return;
-        const o = r.opciones[Number(opt.dataset.i)];
+        const o = opc[Number(opt.dataset.i)];
         const fb = body.querySelector('#reto-img-fb');
         if(o.correcta){
           cronometro.detener();
@@ -9911,7 +10050,9 @@ const Sections = (function(){
           _celebrarLogros(res.nuevosLogros);
           _trasCompletarReto(r);
         } else {
-          fb.innerHTML = '<span style="color:var(--danger);font-weight:600;">No es esa, intenta con otra.</span>';
+          cronometro.detener();
+          body.querySelectorAll('.reto-img-opt').forEach(el => el.style.pointerEvents = 'none');
+          _retoReintento(r, fb, 'No es esa. Un error y se acaba el intento: fíjate bien antes de elegir.', 10);
         }
       });
     });
@@ -9921,11 +10062,12 @@ const Sections = (function(){
   function _retoAntesDespues(r){
     const segundos = RETO_TIEMPO_POR_TIPO.antesdespues;
     const cronometro = _crearCronometro(segundos);
+    const opc = _barajar(r.opciones);
     const body = document.createElement('div');
     body.innerHTML = `
       ${_timerHtml(segundos)}
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-        ${r.opciones.map((o,i)=>`
+        ${opc.map((o,i)=>`
           <div class="reto-ad-opt" data-i="${i}" style="cursor:pointer;">
             <div style="aspect-ratio:1/1;">${o.imagen?`<img src="${o.imagen}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;border:1px solid var(--border-2);">`:_placeholderImg(o.label)}</div>
             <div style="font-size:11.5px;color:var(--text-3);text-align:center;margin-top:6px;">${o.label}</div>
@@ -9945,7 +10087,7 @@ const Sections = (function(){
     body.querySelectorAll('.reto-ad-opt').forEach(opt=>{
       opt.addEventListener('click', async ()=>{
         if(cronometro.vencido) return;
-        const o = r.opciones[Number(opt.dataset.i)];
+        const o = opc[Number(opt.dataset.i)];
         const fb = body.querySelector('#reto-ad-fb');
         if(o.correcta){
           cronometro.detener();
@@ -9955,7 +10097,9 @@ const Sections = (function(){
           _celebrarLogros(res.nuevosLogros);
           _trasCompletarReto(r);
         } else {
-          fb.innerHTML = '<span style="color:var(--danger);font-weight:600;">Esa no era · '+r.explicacion+'</span>';
+          cronometro.detener();
+          body.querySelectorAll('.reto-ad-opt').forEach(el => el.style.pointerEvents = 'none');
+          _retoReintento(r, fb, 'Esa no era. ' + r.explicacion + ' Un error y se acaba el intento.', 12);
         }
       });
     });
@@ -10593,7 +10737,7 @@ const Sections = (function(){
   async function renderPDFs(container){
     // Las lecturas de gastronomía se desbloquean por XP real de los retos.
     if (!_progresoListo) await _cargarProgreso();
-    const xpActual = Number(_progreso.xp) || 0;
+    const xpActual = _saldoXP(); // saldo para gastar (ganados − gastados)
     const retosCompletados = Array.isArray(_progreso.retosCompletados) ? _progreso.retosCompletados.length : 0;
     const totalRetos = (typeof RETOS_LIBRARY !== 'undefined' && RETOS_LIBRARY.length) ? RETOS_LIBRARY.length : 15;
     // ── Biblioteca de libros ──
@@ -10750,9 +10894,10 @@ const Sections = (function(){
       'Inocuidad':['#3f8a6c','#1f4a39'], 'Cocina':['#8a6a4f','#3f2d20'], 'Producción':['#8e2a3f','#3b0f1a']
     };
     const _tonoBib = (tema) => _TONOS_BIB[tema] || ['#8a1e33','#4a0e1a'];
-    let _bibCatalogo = null, _bibTab = 'guias';
+    let _bibCatalogo = null, _bibTab = window.__bibTab || 'guias';
+    const _desbloqueados = () => _progreso.desbloqueados || {};
     const _minTxt = (m) => !m ? '' : m >= 1440 ? `${Math.round(m / 1440)} días` : m >= 60 ? `${Math.floor(m / 60)} h${m % 60 ? ' ' + (m % 60) + ' min' : ''}` : `${m} min`;
-    const _estadoItem = (it) => !tieneAccesoVipCompleto() ? 'membresia' : ((esAdminReal() || xpActual >= it.xp) ? 'abierto' : 'xp');
+    const _estadoItem = (it) => !tieneAccesoVipCompleto() ? 'membresia' : ((esAdminReal() || _desbloqueados()[it.id]) ? 'abierto' : (xpActual >= it.xp ? 'comprable' : 'xp'));
     const _diasMembresiaBib = () => (typeof calcularDiasMembresia === 'function') ? calcularDiasMembresia() : 0;
     const _estadoClasico = (l) => !tieneAccesoVipCompleto() ? 'membresia' : ((esAdminReal() || _diasMembresiaBib() >= l.dia) ? 'abierto' : 'tiempo');
     const _estadoLibro = _estadoClasico;
@@ -10816,13 +10961,49 @@ const Sections = (function(){
         const token = await window.__currentUser.getIdToken();
         const res = await fetch(_BIB_API() + '/item/' + encodeURIComponent(it.id), { headers: { Authorization: 'Bearer ' + token } });
         const data = await res.json().catch(() => ({}));
-        if (res.status === 403) { cerrar(); avisoItem(it, data.faltan); return; }
+        if (res.status === 403) { cerrar(); if (data.error === 'sin-desbloquear' && _estadoItem(it) === 'comprable') confirmarCompra(it, tipo); else avisoItem(it, data.faltan); return; }
         if (!res.ok) throw new Error(data.error || ('HTTP ' + res.status));
         wrap.innerHTML = tipo === 'guia' ? _htmlGuia(data) : _htmlReceta(data);
       } catch (err) {
         console.error('[biblioteca]', err);
         wrap.innerHTML = '<p class="lib-reader__msg" style="margin:40px auto">No se pudo abrir el contenido. Revisa tu conexión e inténtalo de nuevo.</p>';
       }
+    };
+
+    // ── Gastar XP para abrir un material (el servidor descuenta y lo deja abierto para siempre) ──
+    const confirmarCompra = (it, tipo) => {
+      const id = 'libro-comprar';
+      const queda = Math.max(0, xpActual - it.xp);
+      Modal.open({
+        id, title: 'Abrir con tus XP', subtitle: it.titulo, icon: 'i-shield-check',
+        body: `<div style="padding:10px 2px 4px;line-height:1.65;color:var(--text-2);font-size:13px">Vas a gastar <strong style="color:var(--primary)">${_fmtXP(it.xp)} XP</strong> para abrir ${tipo === 'guia' ? 'esta guía' : 'esta receta'}. Tienes <strong style="color:var(--text)">${_fmtXP(xpActual)} XP</strong> y te quedarán <strong style="color:var(--text)">${_fmtXP(queda)} XP</strong>.<br>Se paga una sola vez: después queda abierta para siempre.</div>`,
+        footer: `<button class="btn btn--ghost" onclick="Modal.close('${id}')">Ahora no</button><button class="btn btn--primary" data-comprar>Gastar ${_fmtXP(it.xp)} XP y abrir</button>`
+      });
+      const b = document.querySelector('[data-comprar]');
+      if (!b) return;
+      b.addEventListener('click', async () => {
+        b.disabled = true; b.textContent = 'Abriendo…';
+        try {
+          const token = await window.__currentUser.getIdToken();
+          const res = await fetch(_BIB_API() + '/desbloquear/' + encodeURIComponent(it.id), { method: 'POST', headers: { Authorization: 'Bearer ' + token } });
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok || !data.ok) {
+            Modal.close(id);
+            if (data.error === 'xp-insuficiente') { await _cargarProgreso(); renderPDFs(container); Toast.error('Te faltan XP', `Te faltan ${_fmtXP(data.faltan || 0)} XP para abrirlo`); }
+            else Toast.error('No se pudo abrir', 'Inténtalo de nuevo en un momento');
+            return;
+          }
+          Modal.close(id);
+          await _cargarProgreso();
+          Toast.success('¡Desbloqueada!', data.ya ? it.titulo : `−${_fmtXP(data.gastado)} XP · te quedan ${_fmtXP(data.saldo)}`);
+          await renderPDFs(container);
+          abrirDocumento(it, tipo);
+        } catch (e) {
+          console.error('[biblioteca] desbloquear', e);
+          Modal.close(id);
+          Toast.error('No se pudo abrir', 'Revisa tu conexión e inténtalo de nuevo');
+        }
+      });
     };
 
     // ── Avisos cuando algo está bloqueado ──
@@ -10833,14 +11014,14 @@ const Sections = (function(){
       if (est === 'membresia') {
         Modal.open({
           id, title: 'Exclusivo para miembros', subtitle: it.titulo, icon: 'i-shield-check',
-          body: `<div style="padding:10px 2px 4px;line-height:1.6;color:var(--text-2);font-size:13px">Las guías y recetas se leen con la <strong style="color:var(--primary)">membresía VIP</strong>. Cuando la actives, este contenido se desbloquea al llegar a <strong style="color:var(--text)">${_fmtXP(it.xp)} XP</strong> completando retos.</div>`,
+          body: `<div style="padding:10px 2px 4px;line-height:1.6;color:var(--text-2);font-size:13px">Las guías y recetas se leen con la <strong style="color:var(--primary)">membresía VIP</strong>. Cuando la actives, se abre gastando <strong style="color:var(--text)">${_fmtXP(it.xp)} XP</strong> de los que ganes en retos, cofres y cursos.</div>`,
           footer: `<button class="btn btn--ghost" onclick="Modal.close('${id}')">Después</button><button class="btn btn--primary" onclick="Modal.close('${id}');navigateToSection('suscripcion')">Ver membresía</button>`
         });
         return;
       }
       Modal.open({
         id, title: 'Sigue sumando XP', subtitle: it.titulo, icon: 'i-shield-check',
-        body: `<div style="padding:10px 2px 4px;line-height:1.6;color:var(--text-2);font-size:13px">Se desbloquea con <strong style="color:var(--primary)">${_fmtXP(it.xp)} XP</strong>. Llevas <strong style="color:var(--text)">${_fmtXP(xpActual)} XP</strong> y te faltan <strong style="color:var(--text)">${_fmtXP(faltan)} XP</strong>. Cada reto suma entre 30 y 50 XP.<div class="lib-bar" style="margin-top:14px"><i style="width:${Math.min(100, (xpActual / it.xp) * 100)}%"></i></div></div>`,
+        body: `<div style="padding:10px 2px 4px;line-height:1.6;color:var(--text-2);font-size:13px">Se abre gastando <strong style="color:var(--primary)">${_fmtXP(it.xp)} XP</strong>. Tu saldo es de <strong style="color:var(--text)">${_fmtXP(xpActual)} XP</strong> y te faltan <strong style="color:var(--text)">${_fmtXP(faltan)} XP</strong>. Cada reto suma de 30 a 50 XP y cada nivel superado da un cofre.<div class="lib-bar" style="margin-top:14px"><i style="width:${Math.min(100, (xpActual / it.xp) * 100)}%"></i></div></div>`,
         footer: `<button class="btn btn--ghost" onclick="Modal.close('${id}')">Después</button><button class="btn btn--primary" onclick="Modal.close('${id}');navigateToSection('retos')">Ir a los retos</button>`
       });
     };
@@ -10867,7 +11048,7 @@ const Sections = (function(){
     const pintarBiblioteca = async (root) => {
       if (!root) return;
       const esVip = tieneAccesoVipCompleto();
-      const encabezado = `<div class="xp-library__head"><div><div class="xp-library__eyebrow">Biblioteca DulceLab Food</div><h2 class="xp-library__title">Guías, recetas y libros para tu formación</h2><p class="xp-library__sub">Todo se lee aquí mismo con tu membresía. Las guías y las recetas se desbloquean con los XP que ganas en Retos (los retos suman hasta ${_fmtXP(xpMaximoRetos)} XP) y con el regalo de 15 XP por cada curso que termines; los libros clásicos se abren por días de membresía: uno al empezar y otro cada 25 días.</p></div><div class="xp-library__score"><b>${_fmtXP(xpActual)} <small>XP</small></b><span>${esVip ? 'Tu saldo' : 'XP guardados'}</span></div></div>`;
+      const encabezado = `<div class="xp-library__head"><div><div class="xp-library__eyebrow">Biblioteca DulceLab Food</div><h2 class="xp-library__title">Guías, recetas y libros para tu formación</h2><p class="xp-library__sub">Todo se lee aquí mismo con tu membresía. Las guías y las recetas se abren <strong>gastando XP</strong>: cada una se paga una sola vez y queda tuya. Los XP los ganas en Retos (hasta ${_fmtXP(xpMaximoRetos)} XP), con un cofre por cada nivel de retos que superes y 15 XP por cada curso que termines. Los libros clásicos se abren por días de membresía: uno al empezar y otro cada 25 días.</p></div><div class="xp-library__score"><b>${_fmtXP(xpActual)} <small>XP</small></b><span>${esVip ? 'Tu saldo' : 'XP guardados'}</span></div></div>`;
       root.innerHTML = encabezado + '<div class="foro-empty">Cargando biblioteca…</div>';
       let cat;
       try { cat = await _cargarCatalogoBib(); }
@@ -10880,19 +11061,23 @@ const Sections = (function(){
       const guias = cat.guias.slice().sort((a, b) => a.xp - b.xp);
       const recetas = cat.recetas.slice().sort((a, b) => a.xp - b.xp);
       const premios = guias.concat(recetas);
-      const siguiente = esVip ? premios.filter(x => xpActual < x.xp).sort((a, b) => a.xp - b.xp)[0] : null;
+      const pendientes = premios.filter(x => !_desbloqueados()[x.id]);
+      const alcanzan = esVip ? pendientes.filter(x => x.xp <= xpActual) : [];
+      const siguiente = esVip ? pendientes.filter(x => xpActual < x.xp).sort((a, b) => a.xp - b.xp)[0] : null;
       const abiertos = (arr) => arr.filter(x => _estadoItem(x) === 'abierto').length;
       const abiertosCl = LIBROS_BIBLIOTECA.filter(l => _estadoClasico(l) === 'abierto').length;
 
       let banner;
       if (!esVip) {
-        banner = `<div class="lib-next"><div class="lib-next__cover" style="--portada:linear-gradient(160deg,#8a1e33,#4a0e1a);--tono:#4a0e1a"></div><div><div class="lib-next__eyebrow">Solo para miembros VIP</div><h3>Tus XP están guardados</h3><p>Llevas <strong>${_fmtXP(xpActual)} XP</strong> (tu regalo de bienvenida y lo que ganes en los retos). Se quedan guardados, pero <strong>no se pueden usar</strong> para abrir guías, recetas ni libros hasta que actives tu membresía VIP. Al activarla, se usan de inmediato.</p></div><button type="button" class="btn btn--primary" data-lib-ir="suscripcion">Ver membresía</button></div>`;
+        banner = `<div class="lib-next"><div class="lib-next__cover" style="--portada:linear-gradient(160deg,#8a1e33,#4a0e1a);--tono:#4a0e1a"></div><div><div class="lib-next__eyebrow">Solo para miembros VIP</div><h3>Tus XP están guardados</h3><p>Llevas <strong>${_fmtXP(xpActual)} XP</strong> (tu regalo de bienvenida y lo que ganes en los retos). Se quedan guardados, pero <strong>no se pueden gastar</strong> para abrir guías, recetas ni libros hasta que actives tu membresía VIP. Al activarla, ya puedes usarlos.</p></div><button type="button" class="btn btn--primary" data-lib-ir="suscripcion">Ver membresía</button></div>`;
+      } else if (alcanzan.length) {
+        const barato = alcanzan.slice().sort((a, b) => a.xp - b.xp)[0];
+        banner = `<div class="lib-next"><div class="lib-next__cover" style="--portada:linear-gradient(160deg,#c9962f,#6d4b12);--tono:#6d4b12"></div><div><div class="lib-next__eyebrow">Tienes XP para gastar</div><h3>${_fmtXP(xpActual)} XP de saldo</h3><p>Te alcanza para <strong>${alcanzan.length === 1 ? 'este material' : alcanzan.length + ' materiales distintos'}</strong>, desde ${_fmtXP(barato.xp)} XP. Elige cuál abrir: cada uno que abras descuenta su precio de tu saldo, se paga una sola vez y queda tuyo.${siguiente ? ` El siguiente que aún no alcanzas cuesta ${_fmtXP(siguiente.xp)} XP.` : ''}</p></div><button type="button" class="btn btn--primary" data-lib-ir="retos">Ganar más XP</button></div>`;
       } else if (siguiente) {
-        const prev = premios.filter(x => x.xp <= xpActual).reduce((m, x) => Math.max(m, x.xp), 0);
-        const pct = Math.max(0, Math.min(100, ((xpActual - prev) / (siguiente.xp - prev)) * 100));
-        banner = `<div class="lib-next"><div class="lib-next__cover" style="--portada:linear-gradient(160deg,${_tonoBib(siguiente.tema || siguiente.categoria)[0]},${_tonoBib(siguiente.tema || siguiente.categoria)[1]});--tono:${_tonoBib(siguiente.tema || siguiente.categoria)[1]}"></div><div><div class="lib-next__eyebrow">Tu próximo premio</div><h3>${escapeHtml(siguiente.titulo)}</h3><p>Te faltan <strong>${_fmtXP(siguiente.xp - xpActual)} XP</strong> para desbloquearlo (${_fmtXP(xpActual)} de ${_fmtXP(siguiente.xp)}). Los retos nuevos suman entre 35 y 50 XP cada uno.</p><div class="lib-bar"><i style="width:${pct}%"></i></div></div><button type="button" class="btn btn--primary" data-lib-ir="retos">Ganar XP en Retos</button></div>`;
+        const pct = Math.max(0, Math.min(100, (xpActual / siguiente.xp) * 100));
+        banner = `<div class="lib-next"><div class="lib-next__cover" style="--portada:linear-gradient(160deg,${_tonoBib(siguiente.tema || siguiente.categoria)[0]},${_tonoBib(siguiente.tema || siguiente.categoria)[1]});--tono:${_tonoBib(siguiente.tema || siguiente.categoria)[1]}"></div><div><div class="lib-next__eyebrow">Lo más cercano</div><h3>${escapeHtml(siguiente.titulo)}</h3><p>Cuesta <strong>${_fmtXP(siguiente.xp)} XP</strong> y tu saldo es de <strong>${_fmtXP(xpActual)} XP</strong>: te faltan <strong>${_fmtXP(siguiente.xp - xpActual)} XP</strong>. Supera retos para ganarlos.</p><div class="lib-bar"><i style="width:${pct}%"></i></div></div><button type="button" class="btn btn--primary" data-lib-ir="retos">Ganar XP en Retos</button></div>`;
       } else {
-        banner = `<div class="lib-next"><div class="lib-next__cover" style="--portada:linear-gradient(160deg,#c9962f,#6d4b12);--tono:#6d4b12"></div><div><div class="lib-next__eyebrow">Biblioteca completa</div><h3>Desbloqueaste todas las guías y recetas</h3><p>Puedes leerlas cuando quieras. ¡Gracias por seguir aprendiendo!</p></div></div>`;
+        banner = `<div class="lib-next"><div class="lib-next__cover" style="--portada:linear-gradient(160deg,#c9962f,#6d4b12);--tono:#6d4b12"></div><div><div class="lib-next__eyebrow">Biblioteca completa</div><h3>Abriste todas las guías y recetas</h3><p>Puedes leerlas cuando quieras. ¡Gracias por seguir aprendiendo!</p></div></div>`;
       }
 
       const tabs = [
@@ -10904,11 +11089,11 @@ const Sections = (function(){
       const tarjetaGuia = (g) => {
         const est = _estadoItem(g);
         const [c1, c2] = _tonoBib(g.tema);
-        const chip = est === 'abierto' ? `${_ICO_BOOK}Leer` : `${_ICO_LOCK}${_fmtXP(g.xp)} XP`;
+        const chip = est === 'abierto' ? `${_ICO_BOOK}Leer` : est === 'comprable' ? `${_ICO_BOOK}Abrir · ${_fmtXP(g.xp)} XP` : `${_ICO_LOCK}${_fmtXP(g.xp)} XP`;
         const faltan = Math.max(0, g.xp - xpActual);
-        const estado = est === 'abierto' ? `${_ICO_BOOK}<span>Disponible · leer ahora</span>` : est === 'xp' ? `${_ICO_LOCK}<span>Te faltan ${_fmtXP(faltan)} XP</span>` : `${_ICO_LOCK}<span>Con membresía · ${_fmtXP(g.xp)} XP</span>`;
+        const estado = est === 'abierto' ? `${_ICO_BOOK}<span>Tuya · leer ahora</span>` : est === 'comprable' ? `${_ICO_BOOK}<span>Tienes saldo · toca para abrirla</span>` : est === 'xp' ? `${_ICO_LOCK}<span>Te faltan ${_fmtXP(faltan)} XP</span>` : `${_ICO_LOCK}<span>Con membresía · ${_fmtXP(g.xp)} XP</span>`;
         const barra = est === 'xp' ? `<span class="lib-bar"><i style="width:${Math.min(100, (xpActual / g.xp) * 100)}%"></i></span>` : '';
-        return `<button type="button" class="lib-book ${est === 'abierto' ? 'is-open' : 'is-locked'}" data-guia="${g.id}" style="--portada:linear-gradient(160deg,${c1},${c2});--tono:${c2}" aria-label="${escapeHtml(g.titulo)}${est === 'abierto' ? '' : ' (bloqueada)'}">
+        return `<button type="button" class="lib-book ${est === 'abierto' ? 'is-open' : est === 'comprable' ? 'is-buyable' : 'is-locked'}" data-guia="${g.id}" style="--portada:linear-gradient(160deg,${c1},${c2});--tono:${c2}" aria-label="${escapeHtml(g.titulo)}${est === 'abierto' ? '' : ' (bloqueada)'}">
           <span class="lib-book__cover"><span class="lib-book__tag">Guía · ${escapeHtml(g.tema)}</span><span class="lib-book__chip">${chip}</span><span class="lib-book__name">${escapeHtml(g.titulo)}<small>${_minTxt(g.minutos)} de lectura</small></span></span>
           <span class="lib-book__title">${escapeHtml(g.titulo)}</span><span class="lib-book__meta">${escapeHtml(g.resumen)}</span>${barra}<span class="lib-book__state">${estado}</span></button>`;
       };
@@ -10916,10 +11101,10 @@ const Sections = (function(){
         const est = _estadoItem(r);
         const [c1, c2] = _tonoBib(r.categoria);
         const faltan = Math.max(0, r.xp - xpActual);
-        const estado = est === 'abierto' ? `${_ICO_BOOK}<span>Disponible · ver receta</span>` : est === 'xp' ? `${_ICO_LOCK}<span>Te faltan ${_fmtXP(faltan)} XP</span>` : `${_ICO_LOCK}<span>Con membresía · ${_fmtXP(r.xp)} XP</span>`;
+        const estado = est === 'abierto' ? `${_ICO_BOOK}<span>Tuya · ver receta</span>` : est === 'comprable' ? `${_ICO_BOOK}<span>Tienes saldo · toca para abrirla</span>` : est === 'xp' ? `${_ICO_LOCK}<span>Te faltan ${_fmtXP(faltan)} XP</span>` : `${_ICO_LOCK}<span>Con membresía · ${_fmtXP(r.xp)} XP</span>`;
         const barra = est === 'xp' ? `<span class="lib-bar"><i style="width:${Math.min(100, (xpActual / r.xp) * 100)}%"></i></span>` : '';
-        return `<button type="button" class="rec-card ${est === 'abierto' ? 'is-open' : 'is-locked'}" data-receta="${r.id}" style="--c1:${c1};--c2:${c2}" aria-label="${escapeHtml(r.titulo)}${est === 'abierto' ? '' : ' (bloqueada)'}">
-          <span class="rec-card__top"><span class="rec-card__cat">${escapeHtml(r.categoria)}</span><span class="rec-card__xp">${est === 'abierto' ? `${_ICO_BOOK}Ver` : `${_ICO_LOCK}${_fmtXP(r.xp)} XP`}</span></span>
+        return `<button type="button" class="rec-card ${est === 'abierto' ? 'is-open' : est === 'comprable' ? 'is-buyable' : 'is-locked'}" data-receta="${r.id}" style="--c1:${c1};--c2:${c2}" aria-label="${escapeHtml(r.titulo)}${est === 'abierto' ? '' : ' (bloqueada)'}">
+          <span class="rec-card__top"><span class="rec-card__cat">${escapeHtml(r.categoria)}</span><span class="rec-card__xp">${est === 'abierto' ? `${_ICO_BOOK}Ver` : est === 'comprable' ? `${_ICO_BOOK}Abrir · ${_fmtXP(r.xp)} XP` : `${_ICO_LOCK}${_fmtXP(r.xp)} XP`}</span></span>
           <span class="rec-card__title">${escapeHtml(r.titulo)}</span>
           <span class="rec-card__meta">${_minTxt(r.tiempo)}${r.porciones ? ' · ' + r.porciones + ' porciones' : ''} · ${escapeHtml(r.dificultad)}</span>
           ${barra}<span class="lib-book__state">${estado}</span></button>`;
@@ -10937,7 +11122,7 @@ const Sections = (function(){
       };
 
       const contenidoTab = () => {
-        if (_bibTab === 'recetas') return `<p class="lib-intro">Recetas probadas para producir en casa o en tu negocio. Se desbloquean con XP: mientras más juegas, más se abre.</p><div class="rec-grid">${recetas.map(tarjetaReceta).join('')}</div>`;
+        if (_bibTab === 'recetas') return `<p class="lib-intro">Recetas probadas para producir en casa o en tu negocio. Se abren gastando XP: cada una se paga una sola vez y queda tuya.</p><div class="rec-grid">${recetas.map(tarjetaReceta).join('')}</div>`;
         if (_bibTab === 'clasicos') return `<p class="lib-intro">Libros clásicos de la cocina y la repostería en español (dominio público). Con tu membresía se abre uno al empezar y otro cada 25 días. Están escritos en español de su época.</p><div class="lib-grid">${LIBROS_BIBLIOTECA.map(tarjetaClasico).join('')}</div><p class="lib-nota">Digitalizaciones de la Universidade de Santiago de Compostela y de Internet Archive.</p>`;
         return `<p class="lib-intro">Guías de estudio en español sobre pastelería, panadería, inocuidad, cortes de carne y gestión de cocina. Al final de cada una te decimos dónde profundizar.</p><div class="lib-grid">${guias.map(tarjetaGuia).join('')}</div>`;
       };
@@ -10946,15 +11131,15 @@ const Sections = (function(){
         root.innerHTML = `${encabezado}${banner}
           <div class="lib-tabs" role="tablist">${tabs.map(t => `<button type="button" role="tab" class="lib-tab ${_bibTab === t.k ? 'is-active' : ''}" aria-selected="${_bibTab === t.k}" data-tab="${t.k}">${t.t}<small>${t.n}</small></button>`).join('')}</div>
           <div class="lib-panel">${contenidoTab()}</div>`;
-        root.querySelectorAll('[data-tab]').forEach(b => b.addEventListener('click', () => { _bibTab = b.dataset.tab; render(); }));
+        root.querySelectorAll('[data-tab]').forEach(b => b.addEventListener('click', () => { _bibTab = b.dataset.tab; window.__bibTab = _bibTab; render(); }));
         root.querySelectorAll('[data-lib-ir]').forEach(b => b.addEventListener('click', () => navigateToSection(b.dataset.libIr)));
         root.querySelectorAll('[data-guia]').forEach(b => b.addEventListener('click', () => {
           const g = guias.find(x => x.id === b.dataset.guia);
-          if (_estadoItem(g) === 'abierto') abrirDocumento(g, 'guia'); else avisoItem(g);
+          { const e = _estadoItem(g); if (e === 'abierto') abrirDocumento(g, 'guia'); else if (e === 'comprable') confirmarCompra(g, 'guia'); else avisoItem(g); }
         }));
         root.querySelectorAll('[data-receta]').forEach(b => b.addEventListener('click', () => {
           const r = recetas.find(x => x.id === b.dataset.receta);
-          if (_estadoItem(r) === 'abierto') abrirDocumento(r, 'receta'); else avisoItem(r);
+          { const e = _estadoItem(r); if (e === 'abierto') abrirDocumento(r, 'receta'); else if (e === 'comprable') confirmarCompra(r, 'receta'); else avisoItem(r); }
         }));
         root.querySelectorAll('[data-lib]').forEach(b => b.addEventListener('click', () => {
           const l = LIBROS_BIBLIOTECA.find(x => x.id === b.dataset.lib);
@@ -15127,7 +15312,8 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   function f(n){ return Number(n).toLocaleString('es-MX'); }
   function esc(t){ return String(t == null ? '' : t).replace(/[&<>"']/g, function(c){ return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]; }); }
 
-  function mostrarCofre(regalo, total, titulo){
+  function mostrarCofre(regalo, total, titulo, opts){
+    opts = opts || {};
     if (document.getElementById('cofre-pop')) return;
     var el = document.createElement('div');
     el.id = 'cofre-pop';
@@ -15135,10 +15321,10 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     el.innerHTML =
       '<div class="cf-ov"></div><div class="cf-card"><div class="cf-rayos"></div>' +
       '<div class="cf-cofre">' + COFRE + '</div>' +
-      '<div class="cf-eyebrow">¡Curso completado!</div>' +
+      '<div class="cf-eyebrow">' + esc(opts.eyebrow || '¡Curso completado!') + '</div>' +
       '<div class="cf-xp" id="cf-xp">+' + f(regalo) + ' XP</div>' +
       '<div class="cf-sub">Se sumaron a tu saldo · Total <b>' + f(total) + '</b></div>' +
-      (titulo ? '<p class="cf-curso">Terminaste «' + esc(titulo) + '». Usa tus XP para desbloquear guías, recetas y libros.</p>' : '') +
+      (opts.texto ? '<p class="cf-curso">' + esc(opts.texto) + '</p>' : (titulo ? '<p class="cf-curso">Terminaste «' + esc(titulo) + '». Usa tus XP para abrir guías, recetas y libros.</p>' : '')) +
       '<div class="cf-btns"><button type="button" class="cf-later">Seguir</button><button type="button" class="cf-go">Ver la biblioteca →</button></div></div>';
     document.body.appendChild(el);
     var cerrar = function(){ el.remove(); document.removeEventListener('keydown', tecla); };
@@ -15174,10 +15360,45 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
       try { localStorage.setItem(KEY, '1'); } catch(e){}
       if (!data.nuevo) return;
       if (window.__cargarProgreso) await window.__cargarProgreso();
-      var ahora = function(){ mostrarCofre(data.regalo, data.xp, titulo); };
+      var ahora = function(){ mostrarCofre(data.regalo, data.saldo != null ? data.saldo : data.xp, titulo); };
       if (P) P.pedir('regalo-curso', 4, ahora, 300000); else ahora();
     } catch(e){ console.warn('[regalo curso]', e && e.message); }
   }
+  // Pide el cofre de un nivel de retos terminado (Básico, Intermedio o Avanzado). El servidor revisa los retos y lo da una sola vez.
+  async function pedirRegaloNivel(clave, nombre, intento){
+    var S = window.UserState || {};
+    if (!S.uid || !window.__currentUser || !clave) return;
+    var KEY = 'dulcelab_regalo_nivel_' + S.uid + '_' + clave;
+    try { if (localStorage.getItem(KEY) === '1') return; } catch(e){}
+    var P = window.__Popups;
+    try {
+      var token = await window.__currentUser.getIdToken();
+      var base = window.WEBHOOK_URL || 'https://dulcelab-webhook-production.up.railway.app';
+      var res = await fetch(base + '/api/regalo-bienvenida/nivel', {
+        method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+        body: JSON.stringify({ nivel: clave })
+      });
+      if (res.status === 409) { if ((intento || 0) < 2) setTimeout(function(){ pedirRegaloNivel(clave, nombre, (intento || 0) + 1); }, 4000); return; }
+      if (res.status === 403) return;
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      var data = await res.json();
+      try { localStorage.setItem(KEY, '1'); } catch(e){}
+      if (!data.nuevo) return;
+      if (window.__cargarProgreso) await window.__cargarProgreso();
+      var ahora = function(){
+        mostrarCofre(data.regalo, data.saldo != null ? data.saldo : data.xp, '', { eyebrow: '¡Nivel ' + nombre + ' superado!', texto: 'Superaste todos los retos del nivel ' + nombre + '. Gasta tus XP en la biblioteca o sigue con el siguiente nivel.' });
+        if (window.__refrescarRetos) window.__refrescarRetos();
+      };
+      if (P) P.pedir('regalo-nivel', 4, ahora, 300000); else ahora();
+    } catch(e){ console.warn('[regalo nivel]', e && e.message); }
+  }
+  window.__regaloNivel = function(clave, nombre){ pedirRegaloNivel(clave, nombre, 0); };
+  window.__revisarRegalosNivel = function(){
+    try {
+      var lista = window.__nivelesPendientes ? window.__nivelesPendientes() : [];
+      lista.forEach(function(n, i){ setTimeout(function(){ pedirRegaloNivel(n.k, n.nombre, 0); }, i * 1500); });
+    } catch(e){}
+  };
   window.__regaloCurso = function(id, titulo){ pedirRegalo(id, titulo, 0); };
   // Al entrar: si hay cursos ya terminados que no cobraron su regalo (p. ej. antes de que existiera), se piden ahora.
   window.__revisarRegalosCurso = function(){
