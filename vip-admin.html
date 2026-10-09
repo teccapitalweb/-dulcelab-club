@@ -1248,6 +1248,7 @@ window.__signOut = async () => {
       <div class="nav-label">Comunidad</div>
       <a class="nav-item" data-section="miembros"><svg class="ic"><use href="#i-users"/></svg>Miembros VIP<span class="nav-item__badge" id="badge-miembros">0</span></a>
       <a class="nav-item" data-section="metricas"><svg class="ic"><use href="#i-chart-bar"/></svg>Métricas</a>
+      <a class="nav-item" data-section="pruebas"><svg class="ic"><use href="#i-chart-bar"/></svg>Pruebas gratuitas</a>
       <a class="nav-item" data-section="pagos"><svg class="ic"><use href="#i-credit-card"/></svg>Pagos</a>
       <a class="nav-item" data-section="encuesta"><svg class="ic"><use href="#i-chart-bar"/></svg>Encuesta de clientes</a>
       <a class="nav-item" data-section="noticias"><svg class="ic"><use href="#i-news"/></svg>Descubre algo nuevo</a>
@@ -5750,6 +5751,52 @@ const Pages={
   // MÉTRICAS · cuánta gente visita el sitio y la membresía, y de qué medio llega
   // Lee del servidor (/api/metricas/resumen). No guarda datos personales: cada visitante es un identificador anónimo.
   // ═══════════════════════════════════════════════════════
+  async pruebas(p){
+    if (!document.getElementById('trial-css')) {
+      const st = document.createElement('style'); st.id = 'trial-css';
+      st.textContent = `
+        .trial-hero{margin:-4px 0 24px;padding:34px 32px;border:1px solid var(--border);border-left:4px solid var(--primary);border-radius:22px;background:radial-gradient(circle at 92% 12%,color-mix(in srgb,var(--accent) 15%,transparent),transparent 28%),var(--surface)}
+        .trial-eyebrow,.trial-kpi small,.trial-head{font:800 10px 'JetBrains Mono',monospace;letter-spacing:1.4px;text-transform:uppercase;color:var(--text-3)}
+        .trial-hero h1{font-size:36px;letter-spacing:-1.5px;margin:10px 0 8px}.trial-hero p{max-width:680px;margin:0;color:var(--text-2);line-height:1.55}
+        .trial-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:22px}.trial-kpi{min-height:128px;padding:19px;border:1px solid var(--border);border-left:4px solid var(--trial,var(--primary));border-radius:17px;background:var(--surface);overflow:hidden}.trial-kpi b{display:block;margin:9px 0 4px;font-size:32px;letter-spacing:-1px;color:var(--text)}.trial-kpi span{font-size:12px;line-height:1.45;color:var(--text-3)}
+        .trial-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.trial-card{padding:20px;border:1px solid var(--border);border-radius:18px;background:var(--surface)}.trial-card h3{margin:0;font-size:16px}.trial-card>p{margin:5px 0 18px;font-size:12.5px;color:var(--text-3)}
+        .trial-course{display:grid;grid-template-columns:minmax(120px,1fr) 1.7fr 28px;gap:11px;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);font-size:12px}.trial-course:last-child{border:0}.trial-track{height:13px;border-radius:99px;background:var(--surface-2);overflow:hidden}.trial-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--primary),var(--accent))}.trial-course b{text-align:right}
+        .trial-days{height:210px;display:flex;align-items:flex-end;gap:5px;padding:0 4px 25px;border-bottom:1px solid var(--border);background:repeating-linear-gradient(to bottom,transparent 0,transparent 50px,color-mix(in srgb,var(--border) 55%,transparent) 51px)}.trial-day{position:relative;display:flex;justify-content:center;align-items:flex-end;flex:1;height:100%;min-width:8px}.trial-day i{width:78%;min-height:2px;border-radius:7px 7px 1px 1px;background:#4a83e8}.trial-day small{position:absolute;bottom:-20px;font-size:9px;color:var(--text-3);white-space:nowrap}
+        .trial-table{margin-top:20px}.trial-wrap{overflow:auto}.trial-table table{width:100%;min-width:680px;border-collapse:collapse;font-size:13px}.trial-table th{padding:10px;text-align:left;border-bottom:1px solid var(--border);font:800 10px 'JetBrains Mono',monospace;letter-spacing:1px;text-transform:uppercase;color:var(--text-3)}.trial-table td{padding:12px 10px;border-bottom:1px solid var(--border);color:var(--text-2)}.trial-name{display:block;font-weight:800;color:var(--text)}.trial-email{display:block;margin-top:2px;font-size:11px;color:var(--text-3)}.trial-pill{display:inline-block;padding:4px 8px;border-radius:999px;background:color-mix(in srgb,var(--primary) 10%,var(--surface));color:var(--text-2);font-size:11px;font-weight:800}.trial-pill--paid{background:color-mix(in srgb,var(--success) 15%,var(--surface));color:var(--success)}
+        @media(max-width:960px){.trial-kpis{grid-template-columns:repeat(2,1fr)}.trial-grid{grid-template-columns:1fr}}@media(max-width:600px){.trial-hero{padding:26px 20px}.trial-hero h1{font-size:29px}.trial-kpis{grid-template-columns:1fr}.trial-course{grid-template-columns:1fr 1fr 28px}.trial-course .trial-track{grid-column:1 / 3;grid-row:2}}
+      `;
+      document.head.appendChild(st);
+    }
+    p.innerHTML = `<div class="fade-up"><section class="trial-hero"><div class="trial-eyebrow">Marketing · DulceLab Food</div><h1>Pruebas gratuitas</h1><p>Qué curso eligen las cuentas nuevas como prueba gratuita y cuántas de ellas terminan activando la membresía.</p></section><div id="trial-body" class="empty-state">Cargando pruebas gratuitas…</div></div>`;
+    const body = p.querySelector('#trial-body');
+    try {
+      const token = await Pages._getAuthToken();
+      const res = await fetch(`${Pages._webhookUrl}/api/bunny/pruebas-gratis`, { headers: { Authorization: `Bearer ${token}` } });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || 'No se pudo cargar la información');
+      const t = data.totales || {}, cursos = Array.isArray(data.cursos) ? data.cursos : [], serie = Array.isArray(data.serie) ? data.serie : [], ultimas = Array.isArray(data.ultimas) ? data.ultimas : [];
+      const porcentaje = t.cuentas ? Math.round((Number(t.elegidas || 0) / t.cuentas) * 100) : 0;
+      const maxCursos = Math.max(1, ...cursos.map(x => Number(x.cantidad) || 0));
+      const maxDia = Math.max(1, ...serie.map(x => Number(x.cantidad) || 0));
+      const fecha = (v) => v ? new Intl.DateTimeFormat('es-MX', { day:'numeric', month:'short', year:'numeric' }).format(new Date(v)) : 'Sin fecha';
+      const etiquetaDia = (v) => String(v || '').slice(5).replace('-', '/');
+      body.className = '';
+      body.innerHTML = `
+        <div class="trial-kpis">
+          <article class="trial-kpi" style="--trial:#68bd22"><small>Pruebas elegidas</small><b>${Number(t.elegidas || 0)}</b><span>${porcentaje}% de las cuentas registradas (${Number(t.cuentas || 0)})</span></article>
+          <article class="trial-kpi" style="--trial:#e39b28"><small>Cuentas sin elegir</small><b>${Number(t.sinElegir || 0)}</b><span>Registradas y todavía sin seleccionar un curso.</span></article>
+          <article class="trial-kpi" style="--trial:#4a83e8"><small>Eligieron y ya pagaron</small><b>${Number(t.eligieronYPagaron || 0)}</b><span>Personas que eligieron una prueba y activaron su membresía.</span></article>
+          <article class="trial-kpi" style="--trial:#a964df"><small>Pagaron sin elegir curso</small><b>${Number(t.pagaronSinElegir || 0)}</b><span>Activaron la membresía sin usar una prueba.</span></article>
+        </div>
+        <div class="trial-grid">
+          <section class="trial-card"><h3>Cursos más elegidos</h3><p>Preferencias de las personas que ya seleccionaron su prueba.</p>${cursos.length ? cursos.slice(0,8).map(x => `<div class="trial-course" title="${escapeHtml(x.titulo)}"><span>${escapeHtml(x.titulo)}</span><div class="trial-track"><div class="trial-fill" style="width:${(Number(x.cantidad || 0) / maxCursos) * 100}%"></div></div><b>${Number(x.cantidad || 0)}</b></div>`).join('') : '<div class="empty-state">Aún no hay cursos elegidos.</div>'}</section>
+          <section class="trial-card"><h3>Pruebas elegidas por día</h3><p>Últimos 14 días.</p><div class="trial-days">${serie.map(x => `<div class="trial-day" title="${escapeHtml(x.dia)}: ${Number(x.cantidad || 0)}"><i style="height:${Math.max(2, (Number(x.cantidad || 0) / maxDia) * 100)}%"></i><small>${etiquetaDia(x.dia)}</small></div>`).join('')}</div></section>
+        </div>
+        <section class="trial-card trial-table"><h3>Últimas pruebas elegidas</h3><p>Elección de curso y estado actual de la membresía.</p><div class="trial-wrap"><table><thead><tr><th>Miembro</th><th>Curso elegido</th><th>Estado</th><th>Fecha</th></tr></thead><tbody>${ultimas.length ? ultimas.map(x => `<tr><td><span class="trial-name">${escapeHtml(x.nombre)}</span><span class="trial-email">${escapeHtml(x.email || 'Sin correo')}</span></td><td>${escapeHtml(x.curso)}</td><td><span class="trial-pill ${x.pagado ? 'trial-pill--paid' : ''}">${x.pagado ? 'Membresía activa' : 'Sin pagar'}</span></td><td>${fecha(x.fecha)}</td></tr>`).join('') : '<tr><td colspan="4" style="text-align:center;color:var(--text-3);padding:28px">Aún no hay elecciones de prueba registradas.</td></tr>'}</tbody></table></div></section>`;
+    } catch (error) {
+      body.innerHTML = `<section class="trial-card"><h3>No se pudieron cargar las pruebas gratuitas</h3><p>${escapeHtml(error.message || 'Inténtalo de nuevo más tarde.')}</p></section>`;
+    }
+  },
   async metricas(p){
     if (!document.getElementById('mt-css')) {
       const st = document.createElement('style'); st.id = 'mt-css';
@@ -7053,7 +7100,7 @@ function dirAdminCargar(){
    refresh te deja donde estabas, los botones atrás/adelante del
    navegador funcionan y puedes compartir un link directo a la sección.
    ═══════════════════════════════════════════════════════════════════ */
-const SECCIONES_VALIDAS = ['dashboard','metricas','notificaciones','cursos','webinars','pdfs','certificados','miembros','pagos','encuesta','noticias','config','foro','directorio'];
+const SECCIONES_VALIDAS = ['dashboard','metricas','pruebas','notificaciones','cursos','webinars','pdfs','certificados','miembros','pagos','encuesta','noticias','config','foro','directorio'];
 
 function seccionDesdeHash(){
   const h = (window.location.hash || '').replace(/^#\/?/, '').trim();
