@@ -5671,7 +5671,9 @@ const Sections = (function(){
   }
   window.__sincronizarCursoPrueba = sincronizarCursoPrueba;
 
-  const MATERIALES_GRATIS = 1;
+  // La prueba respeta la misma regla para clases y presentaciones: del curso
+  // elegido se abre todo menos el último contenido, que queda como cierre VIP.
+  const materialesGratisDe = (curso) => Math.max(0, ((curso && curso.materiales && curso.materiales.length) || 0) - 1);
   function esPrimeraClaseGratis(cursoId, indexClase) {
     if (tieneAccesoVipCompleto()) return false;
     const curso = cursoConPrimeraClaseGratis();
@@ -5683,7 +5685,8 @@ const Sections = (function(){
     return !tieneAccesoVipCompleto() &&
       Boolean(cursoGratis) &&
       cursoGratis.id === cursoId &&
-      Number(indexMaterial) < MATERIALES_GRATIS;
+      Number(indexMaterial) >= 0 &&
+      Number(indexMaterial) < materialesGratisDe(cursoGratis);
   }
 
   function textoPaywallCurso(curso) {
@@ -8150,7 +8153,7 @@ const Sections = (function(){
 
         const totalMat = c.materiales.length;
         const PREVIEW_COUNT = cursoConPrimeraClaseGratis()?.id === c.id && !tieneAccesoVipCompleto()
-          ? MATERIALES_GRATIS
+          ? materialesGratisDe(c)
           : 3;
 
         bodyContent += `
