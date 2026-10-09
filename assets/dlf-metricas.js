@@ -75,12 +75,9 @@
   var ruta = window.location.pathname;
   var PAG = /vip-panel/.test(ruta) ? 'panel' : (/vip-auth|vip-registro|vip-login/.test(ruta) ? 'club' : (/^club\./.test(host) ? 'club' : 'sitio'));
 
-  function consentido() {
-    return !(window.dlfCookieConsent && window.dlfCookieConsent.analytics === false);
-  }
-
+  // Nota: no se condiciona al botón «Acepto» del aviso de cookies. El aviso dice que navegar el sitio implica aceptarlo,
+  // y esta medición es anónima (sin cookies, correo, nombre ni IP). «No rastrear» del navegador sí se respeta.
   function enviar(tipo, pagina) {
-    if (!consentido()) return;
     var body = JSON.stringify({ vid: vid, tipo: tipo, pagina: pagina || PAG, origen: origen });
     try {
       if (navigator.sendBeacon && navigator.sendBeacon(API, new Blob([body], { type: 'text/plain' }))) return;
