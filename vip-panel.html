@@ -3772,14 +3772,14 @@ body.has-fomo .main{padding-top:18px}
     setTimeout(function(){ if (!activos[id]) delete pend[id]; }, 20000);
   }
   function liberar(id){ if (!activos[id]) delete pend[id]; }
-  function pedir(id, prio, fn, maxMs){
+  function pedir(id, prio, fn, maxMs, listo){
     if (activos[id]) return;
     activos[id] = true;
     pend[id] = prio;
     var t0 = Date.now(), limite = maxMs || 180000;
     (function intentar(){
       var hayMayor = Object.keys(pend).some(function(k){ return k !== id && pend[k] < prio; });
-      if (!hayPopup() && !hayMayor && Date.now() >= hasta){
+      if (!hayPopup() && !hayMayor && Date.now() >= hasta && (!listo || listo())){
         delete pend[id]; delete activos[id];
         hasta = Date.now() + 1500; // margen para que este termine de dibujarse antes de dar turno a otro
         try { fn(); } catch(e){ console.warn('[popups]', id, e && e.message); }
@@ -5680,7 +5680,8 @@ const Sections = (function(){
         window.__selectorPruebaActivo = false;
         Modal.close(id);
         Toast.success('¡Tu prueba está lista!', `Elegiste ${curso.titulo}.`);
-        setTimeout(() => openCursoDetalle(curso.id), 260);
+        window.navigateToSection?.('cursos');
+        setTimeout(() => openCursoDetalle(curso.id), 320);
       }, 650);
     });
   }
@@ -5689,7 +5690,8 @@ const Sections = (function(){
     if (tieneAccesoVipCompleto() || cursoConPrimeraClaseGratis() || window.__pruebaGratisMostrada || window.__pruebaGratisPedida) return;
     if (!cursosElegiblesParaPrueba().length) { setTimeout(() => window.__mostrarInvitacionPruebaGratis(), 700); return; }
     window.__pruebaGratisPedida = true;
-    window.__Popups.pedir('prueba', 5, () => { window.__pruebaGratisPedida = false; mostrarInvitacionPruebaAhora(); });
+    window.__Popups.pedir('prueba', 5, () => { window.__pruebaGratisPedida = false; mostrarInvitacionPruebaAhora(); }, 300000,
+      () => Date.now() >= (window.__retrasoPrueba || 0));
   };
   function mostrarInvitacionPruebaAhora() {
     if (tieneAccesoVipCompleto() || cursoConPrimeraClaseGratis() || window.__pruebaGratisMostrada) return;
@@ -10858,7 +10860,7 @@ const Sections = (function(){
     const pintarBiblioteca = async (root) => {
       if (!root) return;
       const esVip = tieneAccesoVipCompleto();
-      const encabezado = `<div class="xp-library__head"><div><div class="xp-library__eyebrow">Biblioteca DulceLab Food</div><h2 class="xp-library__title">Guías, recetas y libros para tu formación</h2><p class="xp-library__sub">Todo se lee aquí mismo con tu membresía. Las guías y las recetas se desbloquean con los XP que ganas en Retos (los retos suman hasta ${_fmtXP(xpMaximoRetos)} XP); los libros clásicos se abren por días de membresía: uno al empezar y otro cada 25 días.</p></div><div class="xp-library__score"><b>${_fmtXP(xpActual)} <small>XP</small></b><span>Tu saldo</span></div></div>`;
+      const encabezado = `<div class="xp-library__head"><div><div class="xp-library__eyebrow">Biblioteca DulceLab Food</div><h2 class="xp-library__title">Guías, recetas y libros para tu formación</h2><p class="xp-library__sub">Todo se lee aquí mismo con tu membresía. Las guías y las recetas se desbloquean con los XP que ganas en Retos (los retos suman hasta ${_fmtXP(xpMaximoRetos)} XP); los libros clásicos se abren por días de membresía: uno al empezar y otro cada 25 días.</p></div><div class="xp-library__score"><b>${_fmtXP(xpActual)} <small>XP</small></b><span>${esVip ? 'Tu saldo' : 'XP guardados'}</span></div></div>`;
       root.innerHTML = encabezado + '<div class="foro-empty">Cargando biblioteca…</div>';
       let cat;
       try { cat = await _cargarCatalogoBib(); }
@@ -10877,7 +10879,7 @@ const Sections = (function(){
 
       let banner;
       if (!esVip) {
-        banner = `<div class="lib-next"><div class="lib-next__cover" style="--portada:linear-gradient(160deg,#8a1e33,#4a0e1a);--tono:#4a0e1a"></div><div><div class="lib-next__eyebrow">Solo para miembros VIP</div><h3>Aprende y cocina con material que se gana jugando</h3><p>Activa tu membresía para leer las guías y recetas. Se desbloquean con los XP que ganas en los retos y, además, recibes 150 XP de regalo al empezar.</p></div><button type="button" class="btn btn--primary" data-lib-ir="suscripcion">Ver membresía</button></div>`;
+        banner = `<div class="lib-next"><div class="lib-next__cover" style="--portada:linear-gradient(160deg,#8a1e33,#4a0e1a);--tono:#4a0e1a"></div><div><div class="lib-next__eyebrow">Solo para miembros VIP</div><h3>Tus XP están guardados</h3><p>Llevas <strong>${_fmtXP(xpActual)} XP</strong> (tu regalo de bienvenida y lo que ganes en los retos). Se quedan guardados, pero <strong>no se pueden usar</strong> para abrir guías, recetas ni libros hasta que actives tu membresía VIP. Al activarla, se usan de inmediato.</p></div><button type="button" class="btn btn--primary" data-lib-ir="suscripcion">Ver membresía</button></div>`;
       } else if (siguiente) {
         const prev = premios.filter(x => x.xp <= xpActual).reduce((m, x) => Math.max(m, x.xp), 0);
         const pct = Math.max(0, Math.min(100, ((xpActual - prev) / (siguiente.xp - prev)) * 100));
@@ -15030,7 +15032,12 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     el.querySelector('.rg-ov').addEventListener('click', cerrar);
     el.querySelector('.rg-x').addEventListener('click', cerrar);
     el.querySelector('.rg-later').addEventListener('click', cerrar);
-    el.querySelector('.rg-go').addEventListener('click', function(){ cerrar(); if (window.navigateToSection) window.navigateToSection('pdfs'); });
+    el.querySelector('.rg-go').addEventListener('click', function(){
+      // da unos segundos para ver la biblioteca antes de que salga la invitación al curso gratis
+      window.__retrasoPrueba = Date.now() + 12000;
+      cerrar();
+      if (window.navigateToSection) window.navigateToSection('pdfs');
+    });
     requestAnimationFrame(function(){ el.classList.add('show'); });
     // por si la pestaña está en segundo plano y no corre requestAnimationFrame
     setTimeout(function(){ el.classList.add('show'); }, 80);
