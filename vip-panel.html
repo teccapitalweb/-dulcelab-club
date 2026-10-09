@@ -3814,7 +3814,7 @@ body.has-fomo .main{padding-top:18px}
 <!-- Banner sticky FOMO · solo visible para invitado y sin-membresia -->
 <div class="fomo-banner" id="fomo-banner" style="display:none">
   <span class="fomo-banner__icon" aria-hidden="true">⭐</span>
-  <span class="fomo-banner__text" id="fomo-banner-text"><strong>Tus primeras 4 clases y el primer material del primer curso son gratis.</strong> Activa tu suscripción para desbloquear todos los cursos y materiales.</span>
+  <span class="fomo-banner__text" id="fomo-banner-text"><strong>De tu curso de prueba ves todas las clases menos la última, y el primer material es gratis.</strong> Activa tu suscripción para desbloquear todos los cursos y materiales.</span>
   <span class="fomo-banner__timer" id="fomo-banner-timer" style="display:none">5:00</span>
   <button class="fomo-banner__cta" id="fomo-banner-cta" type="button">
     Suscribirme
@@ -5625,7 +5625,9 @@ const Sections = (function(){
     return window.UserState?.modo === 'vip' || esAdminReal();
   }
 
-  const CLASES_PRUEBA_GRATIS = 4;
+  // Prueba gratuita: del curso elegido se ven TODAS las clases menos la última (sea de 2, 3, 5 o 10 clases).
+  // La última clase —la que cierra el curso y da el certificado— es solo para miembros.
+  const clasesGratisDe = (curso) => Math.max(0, ((curso && curso.sesiones && curso.sesiones.length) || 0) - 1);
   function _pruebaCursoKey() {
     return `dulcelab_curso_prueba_${window.UserState?.uid || 'anon'}`;
   }
@@ -5642,7 +5644,7 @@ const Sections = (function(){
   function esPrimeraClaseGratis(cursoId, indexClase) {
     if (tieneAccesoVipCompleto()) return false;
     const curso = cursoConPrimeraClaseGratis();
-    return Boolean(curso && curso.id === cursoId && Number(indexClase) >= 0 && Number(indexClase) < Math.min(CLASES_PRUEBA_GRATIS, curso.sesiones.length));
+    return Boolean(curso && curso.id === cursoId && Number(indexClase) >= 0 && Number(indexClase) < clasesGratisDe(curso));
   }
 
   function esMaterialGratis(cursoId, indexMaterial) {
@@ -5654,7 +5656,7 @@ const Sections = (function(){
   }
 
   function textoPaywallCurso(curso) {
-    return `Tu prueba incluye las primeras ${CLASES_PRUEBA_GRATIS} clases del curso que elijas. Activa tu membresía para abrir el resto del contenido y obtener tu certificado.`;
+    return `Tu prueba incluye todas las clases del curso que elijas, menos la última. Activa tu membresía para abrir la clase final y obtener tu certificado.`;
   }
 
   function abrirSelectorCursoPrueba() {
@@ -5678,7 +5680,7 @@ const Sections = (function(){
         <div style="display:flex;align-items:center;gap:11px;padding-bottom:14px;border-bottom:1px solid var(--border);"><div style="width:38px;height:38px;border-radius:11px;background:color-mix(in srgb,var(--success) 14%,var(--surface));display:grid;place-items:center;font-size:18px;">▷</div><div><h3 style="font-size:17px;line-height:1.1;margin:0;color:var(--text);">¿Seguro que deseas este curso?</h3><p style="font-size:12px;color:var(--text-3);margin:4px 0 0;">Tu prueba gratuita</p></div></div>
         <img src="${portada}" alt="" style="width:100%;height:150px;object-fit:cover;border-radius:12px;margin:18px 0 13px;display:block;">
         <h4 style="font-size:16px;margin:0 0 10px;color:var(--text);">${escapeHtml(curso.titulo || 'Curso DulceLab Food')}</h4>
-        <p style="font-size:13px;color:var(--text-2);line-height:1.55;margin:0 0 10px;">Será tu <strong style="color:var(--text);">prueba gratuita</strong> y podrás avanzar en sus primeras ${Math.min(CLASES_PRUEBA_GRATIS, curso.sesiones.length)} clases.</p>
+        <p style="font-size:13px;color:var(--text-2);line-height:1.55;margin:0 0 10px;">Será tu <strong style="color:var(--text);">prueba gratuita</strong> y podrás ver todas sus clases menos la última, que se abre con la membresía.</p>
         <p style="font-size:13px;font-weight:700;color:var(--text);line-height:1.45;margin:0;">Solo puedes elegir uno y después no se puede cambiar.</p>
         <div style="display:flex;gap:9px;justify-content:flex-end;margin-top:20px;"><button type="button" class="btn btn--ghost" id="prueba-ver-otros">No, ver otros cursos</button><button type="button" class="btn btn--primary" id="prueba-confirmar">Sí, es mi prueba gratuita</button></div>
       </div>` });
@@ -5714,7 +5716,7 @@ const Sections = (function(){
       <div style="padding:7px 2px 4px;">
         <div style="display:flex;gap:12px;align-items:center;padding-bottom:15px;border-bottom:1px solid var(--border);"><div style="width:42px;height:42px;border-radius:12px;background:color-mix(in srgb,var(--success) 14%,var(--surface));display:grid;place-items:center;font-size:19px;">▷</div><div><h3 style="font-size:18px;line-height:1.1;margin:0;color:var(--text);">Tu prueba gratuita</h3><p style="font-size:12px;color:var(--text-3);margin:4px 0 0;">Una función para usuarios nuevos</p></div></div>
         <p style="font-size:14px;line-height:1.5;color:var(--text-2);margin:21px 0 0;">Al ser un usuario nuevo, <strong style="color:var(--text);">te damos a elegir un curso de tu interés como prueba gratuita.</strong></p>
-        <p style="font-size:13px;line-height:1.5;color:var(--text-2);margin:11px 0 20px;">Podrás ver sus primeras ${CLASES_PRUEBA_GRATIS} clases en <strong style="color:var(--text);">Mis cursos</strong>. El certificado se habilita al activar tu membresía.</p>
+        <p style="font-size:13px;line-height:1.5;color:var(--text-2);margin:11px 0 20px;">Podrás ver todas sus clases menos la última en <strong style="color:var(--text);">Mis cursos</strong>. El certificado se habilita al activar tu membresía.</p>
         <div style="display:flex;justify-content:flex-end;"><button type="button" class="btn btn--primary" id="abrir-selector-prueba">Elegir mi curso</button></div>
       </div>` });
     const root = document.querySelector(`[data-modal-id="${id}"]`);
@@ -6089,7 +6091,7 @@ const Sections = (function(){
 
   function claseDesbloqueada(cursoId, indexClase, sesiones) {
     if (!tieneAccesoVipCompleto()) {
-      // No-VIP: solo las 4 clases gratis, secuenciales (marcar vista para abrir la siguiente)
+      // No-VIP: solo las clases gratis (todas menos la última), secuenciales (marcar vista para abrir la siguiente)
       if (!esPrimeraClaseGratis(cursoId, indexClase)) return false;
       if (Number(indexClase) === 0) return true;
       const progFree = getProgresoCurso(cursoId);
@@ -7860,7 +7862,7 @@ const Sections = (function(){
       // La prueba se asigna a un solo curso elegido por la persona. Sus primeras
       // cuatro clases se ven, mientras que las demás permanecen como contenido VIP.
       const esCursoMuestra = cursoConPrimeraClaseGratis()?.id === c.id && !accesoCompleto;
-      const numClasesGratis = esCursoMuestra ? Math.min(CLASES_PRUEBA_GRATIS, c.sesiones?.length || 0) : 0;
+      const numClasesGratis = esCursoMuestra ? clasesGratisDe(c) : 0;
       const diasFalta = diasParaDesbloquear(cursoIdx, c);
       const portada = c.portada || coverSVG(c.area, c.titulo);
       const areaColor = COLOR_AREA[c.area]||'#C4577A';
@@ -7878,7 +7880,7 @@ const Sections = (function(){
             ? `<span class="curso-card__cover-badge" style="left:12px;background:var(--success);color:#fff;border-color:var(--success);"><svg class="ic" style="width:10px;height:10px;"><use href="#i-check"/></svg>Completado</span>`
             : estado === 'progreso'
               ? `<span class="curso-card__cover-badge" style="left:12px;">${pct}%</span>`
-              : esCursoMuestra
+              : (esCursoMuestra && numClasesGratis > 0)
                 ? `<span class="curso-card__cover-badge" style="left:12px;background:var(--success);color:#fff;border-color:var(--success);">${numClasesGratis} CLASE${numClasesGratis===1?'':'S'} GRATIS</span>`
                 : `<span class="curso-card__cover-badge" style="left:12px;background:rgba(0,0,0,.45);color:#fff;">${c.area}</span>`
         }
@@ -8008,7 +8010,7 @@ const Sections = (function(){
                 </div>`;
               }
               // Bloqueada para no-VIP:
-              // · si es una de las 4 clases gratis → falta ver la anterior (sin paywall)
+              // · si es una de las clases gratis → falta ver la anterior (sin paywall)
               // · si no es gratis → el click abre el paywall sobre este detalle.
               if (!accesoCompleto) {
                 if (esMuestraGratis) {
@@ -14392,7 +14394,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
       } else { // sin-membresia
         banner.style.display = '';
         document.body.classList.add('has-fomo');
-        if (bannerText) bannerText.innerHTML = '<strong>Tus primeras 4 clases y el primer material del primer curso son gratis.</strong> Activa tu suscripción para desbloquear todos los cursos y materiales.';
+        if (bannerText) bannerText.innerHTML = '<strong>De tu curso de prueba ves todas las clases menos la última, y el primer material es gratis.</strong> Activa tu suscripción para desbloquear todos los cursos y materiales.';
         if (bannerTimer) bannerTimer.style.display = 'none';
       }
     }
