@@ -5772,6 +5772,13 @@ const Pages={
         .mt-fun__fill{height:100%;border-radius:99px;background:var(--primary)}
         .mt-fun__num{text-align:right;font-weight:800;font-variant-numeric:tabular-nums}
         .mt-fun__num small{font-weight:600;color:var(--text-3)}
+        .mt-cats{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+        .mt-cat{padding:15px 16px;border:1px solid var(--border);border-radius:14px;background:var(--surface-2)}
+        .mt-cat small{display:block;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.9px;text-transform:uppercase;color:var(--text-3)}
+        .mt-cat b{display:block;font-size:26px;letter-spacing:-.6px;margin:5px 0 1px;color:var(--text)}
+        .mt-cat em{font-style:normal;font-size:12px;color:var(--text-3)}
+        .mt-cat ul{list-style:none;margin:10px 0 0;padding:0;font-size:12.5px;color:var(--text-2)}
+        .mt-cat li{display:flex;justify-content:space-between;gap:8px;padding:3px 0;border-top:1px solid var(--border)}
         .mt-wrap{overflow-x:auto}
         .mt-tabla{width:100%;border-collapse:collapse;font-size:13px;min-width:640px}
         .mt-tabla th{padding:9px 10px;text-align:left;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text-3);border-bottom:1px solid var(--border)}
@@ -5857,6 +5864,18 @@ const Pages={
       const maxSerie = Math.max(1, ...d.serie.map(x => x.visitantes));
       const fuentesTotal = d.fuentes.reduce((s, f) => s + f.visitantes, 0) || 1;
       const sinFuente = d.fuentes.find(f => String(f.fuente).startsWith('Directo'));
+      // Agrupa los medios en 4 grandes grupos para ver de un vistazo si llegan por redes, por buscadores, por otras páginas o directo.
+      const REDES = ['Instagram', 'Facebook', 'WhatsApp', 'TikTok', 'YouTube', 'X (Twitter)', 'LinkedIn', 'Telegram', 'Pinterest'];
+      const BUSC = ['Google', 'Bing'];
+      const grupoDe = (f) => REDES.includes(f.fuente) ? 'redes' : BUSC.includes(f.fuente) ? 'busqueda'
+        : String(f.fuente).startsWith('Directo') ? 'directo' : f.fuente === 'Correo' ? 'correo' : 'sitios';
+      const grupos = { redes: { t: 'Redes sociales', s: 'Instagram, Facebook, WhatsApp, TikTok…', v: 0, c: 0, l: [] },
+        busqueda: { t: 'Buscadores de internet', s: 'Google y Bing', v: 0, c: 0, l: [] },
+        sitios: { t: 'Otras páginas de internet', s: 'Enlaces desde otros sitios web', v: 0, c: 0, l: [] },
+        correo: { t: 'Correo', s: 'Enlaces en correos', v: 0, c: 0, l: [] },
+        directo: { t: 'Directo / no identificado', s: 'Escribieron la dirección o la app no avisa', v: 0, c: 0, l: [] } };
+      d.fuentes.forEach(f => { const g = grupos[grupoDe(f)]; g.v += f.visitantes; g.c += f.compras; g.l.push(f); });
+      const gOrden = ['redes', 'busqueda', 'sitios', 'correo', 'directo'].filter(k => k === 'redes' || k === 'busqueda' || k === 'directo' || grupos[k].v > 0);
 
       cuerpo.innerHTML = `
         <div class="mt-kpis">
@@ -5875,7 +5894,16 @@ const Pages={
         </div>
 
         <div class="mt-card">
-          <h3>¿Por qué medio llegan?</h3>
+          <h3>¿Cómo llegan a la página?</h3>
+          <p>Los visitantes agrupados por tipo de origen, en los últimos ${d.dias} días.</p>
+          <div class="mt-cats">
+            ${gOrden.map(k => { const g = grupos[k]; return `<div class="mt-cat"><small>${g.t}</small><b>${fmt(g.v)}</b><em>${pct(g.v, fuentesTotal)} de los visitantes${g.c ? ' · ' + fmt(g.c) + ' compra' + (g.c === 1 ? '' : 's') : ''}</em>
+              ${g.l.length ? `<ul>${g.l.slice().sort((a, b) => b.visitantes - a.visitantes).slice(0, 6).map(f => `<li><span>${escapeHtml(f.fuente)}</span><b style="font-size:12.5px;margin:0;letter-spacing:0">${fmt(f.visitantes)}</b></li>`).join('')}</ul>` : `<ul><li><span style="color:var(--text-3)">${g.s}</span></li></ul>`}</div>`; }).join('')}
+          </div>
+        </div>
+
+        <div class="mt-card">
+          <h3>¿Por qué medio llegan? (detalle)</h3>
           <p>El medio desde el que entró cada visitante (el último que se conoce). «Directo / no identificado» es gente que escribió la dirección, o cuya aplicación no avisa de dónde viene.</p>
           ${d.fuentes.length ? `<div class="mt-wrap"><table class="mt-tabla"><thead><tr><th>Medio</th><th>Visitantes</th><th>% del total</th><th>Vieron membresía</th><th>Abrieron pago</th><th>Registros</th><th>Compras</th><th>Conversión</th></tr></thead><tbody>
             ${d.fuentes.map(f => `<tr><td>${escapeHtml(f.fuente)}<div style="font-weight:500;font-size:11px;color:var(--text-3)">${escapeHtml(f.medio || '')}</div></td><td>${fmt(f.visitantes)}</td><td>${pct(f.visitantes, fuentesTotal)}</td><td>${fmt(f.membresia)}</td><td>${fmt(f.checkout)}</td><td>${fmt(f.registro)}</td><td>${fmt(f.compras)}${f.ingresos ? ` <small style="color:var(--text-3)">· ${dinero(f.ingresos)}</small>` : ''}</td><td>${pct(f.compras, f.visitantes)}</td></tr>`).join('')}
