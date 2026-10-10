@@ -4095,6 +4095,9 @@ if (window.__isDemoMode) {
       // Va aquí (no en init) porque ya se sabe si es VIP, sin-membresía o admin,
       // y las secciones se renderizan según ese estado.
       window.__restaurarSeccionPanel && window.__restaurarSeccionPanel();
+      if (new URLSearchParams(window.location.search).get('activar-vip-regalo') === '1') {
+        setTimeout(() => window.__mostrarActivacionOfertaVip?.(), 350);
+      }
     }, 50);
 
     // ─── Popup: confirmar/editar nombre (1ª vez) · evita certificados con el email ───
@@ -5631,6 +5634,11 @@ const Sections = (function(){
     if (PREVIEW_AS_USER) return false;
     return window.UserState?.modo === 'vip' || esAdminReal();
   }
+  // El regalo de 3 días permite estudiar todo, pero no emitir certificados
+  // oficiales. La membresía pagada sí conserva ese derecho.
+  function tieneAccesoCertificado() {
+    return tieneAccesoVipCompleto() && !window.UserState?.membership?.certificadoBloqueado;
+  }
 
   // Prueba gratuita: del curso elegido se ven TODAS las clases menos la última (sea de 2, 3, 5 o 10 clases).
   // La última clase —la que cierra el curso y da el certificado— es solo para miembros.
@@ -5780,6 +5788,27 @@ const Sections = (function(){
   window.__dulcelabTieneAccesoVipCompleto = tieneAccesoVipCompleto;
   window.__dulcelabEsPrimeraClaseGratis = esPrimeraClaseGratis;
   window.__dulcelabEsMaterialGratis = esMaterialGratis;
+
+  window.__mostrarActivacionOfertaVip = function() {
+    const oferta = window.UserState?.membership?.ofertaVip || {};
+    if (oferta.estado !== 'enviada' || !window.__currentUser) {
+      Toast.info('Este regalo ya no está disponible', 'Inicia sesión con la cuenta que recibió la invitación.');
+      return;
+    }
+    const id = 'activar-vip-regalo';
+    Modal.open({ id, size:'sm', closeOnBackdrop:true, body:`<div style="padding:7px 3px;text-align:center"><div style="font-size:30px;margin-bottom:10px">🎁</div><h2 style="font-size:21px;margin:0 0 9px">Activa tus 3 días VIP</h2><p style="margin:0;color:var(--text-2);line-height:1.55;font-size:13.5px">Durante 3 días podrás explorar todos los cursos, clases, materiales, herramientas y retos. Los certificados oficiales requieren una membresía pagada.</p><button class="btn btn--primary" id="activar-regalo-confirmar" style="margin-top:20px">Activar mis 3 días VIP</button></div>` });
+    const root = document.querySelector(`[data-modal-id="${id}"]`);
+    root?.querySelector('#activar-regalo-confirmar')?.addEventListener('click', async ev => {
+      const b = ev.currentTarget; b.disabled = true; b.textContent = 'Activando…';
+      try {
+        const token = await window.__currentUser.getIdToken();
+        const r = await fetch(`${window.WEBHOOK_URL}/api/bunny/activar-oferta-vip`, { method:'POST', headers:{ 'Content-Type':'application/json', Authorization:'Bearer ' + token } });
+        const d = await r.json().catch(()=>({}));
+        if (!r.ok) throw new Error(d.error || 'No se pudo activar el regalo');
+        window.location.href = 'vip-panel.html';
+      } catch (e) { b.disabled = false; b.textContent = 'Activar mis 3 días VIP'; Toast.error('No se pudo activar', e.message); }
+    });
+  };
 
   // ═══════════════════════════════════════════════════════════════
   // 🎛️ Dropdown custom fancy · reemplaza select nativo (sin cuadro azul horrible)
@@ -5946,10 +5975,25 @@ const Sections = (function(){
     }
     setProgreso(p);
 
+    // Al terminar la última clase disponible de su muestra, agenda el correo
+    // de regalo. No muestra ni activa nada en este momento: espera 24 horas.
+    const cursoDePrueba = cursoConPrimeraClaseGratis();
+    if (!tieneAccesoVipCompleto() && cursoDePrueba?.id === cursoId && p[cursoId].clasesVistas.length >= clasesGratisDe(cursoDePrueba)) {
+      (async () => {
+        try {
+          const token = await window.__currentUser?.getIdToken?.();
+          if (!token) return;
+          await fetch(`${window.WEBHOOK_URL}/api/bunny/oferta-vip`, {
+            method:'POST', headers:{ 'Content-Type':'application/json', Authorization:'Bearer ' + token }, body:JSON.stringify({ cursoId })
+          });
+        } catch (e) { console.warn('[oferta VIP]', e.message); }
+      })();
+    }
+
     // Detectar si se completó el curso
     let cursoRecienCompletado = false;
     const curso = cursos.find(c => c.id === cursoId);
-    if (tieneAccesoVipCompleto() && curso && curso.sesiones && p[cursoId].clasesVistas.length >= curso.sesiones.length && !p[cursoId].completado) {
+    if (tieneAccesoCertificado() && curso && curso.sesiones && p[cursoId].clasesVistas.length >= curso.sesiones.length && !p[cursoId].completado) {
       p[cursoId].completado = true;
       p[cursoId].fechaCompletado = new Date().toISOString();
       setProgreso(p);
@@ -6039,7 +6083,7 @@ const Sections = (function(){
         const recienCompletos = [];
         (cursos || []).forEach(c => {
           const u = unido[c.id];
-          if (tieneAccesoVipCompleto() && u && c.sesiones?.length && u.clasesVistas.length >= c.sesiones.length && !u.completado) {
+          if (tieneAccesoCertificado() && u && c.sesiones?.length && u.clasesVistas.length >= c.sesiones.length && !u.completado) {
             u.completado = true; u.fechaCompletado = u.fechaCompletado || new Date().toISOString();
             recienCompletos.push(c);
           }
@@ -6149,6 +6193,19 @@ const Sections = (function(){
 
     if (!tieneAccesoVipCompleto()) {
       if (!esPrimeraClaseGratis(cursoId, indexClase)) {
+        // Al intentar abrir la clase final, se programa un solo correo para
+        // 24 h después. El regalo no se activa hasta que la persona lo acepte.
+        if (cursoConPrimeraClaseGratis()?.id === cursoId && Number(indexClase) >= clasesGratisDe(curso)) {
+          (async () => {
+            try {
+              const token = await window.__currentUser?.getIdToken?.();
+              if (!token) return;
+              await fetch(`${window.WEBHOOK_URL}/api/bunny/oferta-vip`, {
+                method:'POST', headers:{ 'Content-Type':'application/json', Authorization:'Bearer ' + token }, body:JSON.stringify({ cursoId })
+              });
+            } catch (e) { console.warn('[oferta VIP]', e.message); }
+          })();
+        }
         mostrarPaywallCurso(curso);
         return;
       }
@@ -6222,7 +6279,7 @@ const Sections = (function(){
     try {
       // Un curso de prueba puede completarse parcialmente, pero nunca emite
       // certificado. Esta validación también protege cualquier llamada directa.
-      if (!tieneAccesoVipCompleto()) return;
+      if (!tieneAccesoCertificado()) return;
       const fs = window.__fs;
       const uid = window.UserState?.uid;
       if (!fs || !fs.setDoc || !uid) return;
