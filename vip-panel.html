@@ -3783,7 +3783,7 @@ body.has-fomo .main{padding-top:18px}
 (function(){
   var pend = {}, activos = {}, hasta = 0;
   function hayPopup(){
-    return !!document.querySelector('#splash-bienvenida, #name-modal, .modal-backdrop.is-open, .mvtour-overlay, #dulcelab-install-pop.show, #regalo-pop, #cofre-pop, #splash-completado, .lib-reader');
+  return !!document.querySelector('#splash-bienvenida, #name-modal, #professional-card-modal, .modal-backdrop.is-open, .mvtour-overlay, #dulcelab-install-pop.show, #regalo-pop, #cofre-pop, #splash-completado, .lib-reader');
   }
   // reservar: avisa que esta ventana va a salir pronto, para que las de menor prioridad no se adelanten.
   function reservar(id, prio){
@@ -13590,25 +13590,25 @@ window.__maybeAskName = function(){
     if (!document.getElementById('nm-css')) {
       const st=document.createElement('style'); st.id='nm-css';
       st.textContent = `
-        #name-modal{position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;padding:20px}
-        #name-modal .nm-ov{position:absolute;inset:0;background:rgba(10,12,20,.72);backdrop-filter:blur(4px)}
-        #name-modal .nm-box{position:relative;width:100%;max-width:440px;background:var(--surface,#15110C);border:1px solid var(--border-2,rgba(255,230,200,.14));border-radius:20px;padding:30px 26px 24px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.55);animation:nmIn .25s ease}
+        #name-modal,#professional-card-modal{position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;padding:20px}
+        #name-modal .nm-ov,#professional-card-modal .nm-ov{position:absolute;inset:0;background:rgba(10,12,20,.72);backdrop-filter:blur(4px)}
+        #name-modal .nm-box,#professional-card-modal .nm-box{position:relative;width:100%;max-width:440px;background:var(--surface,#15110C);border:1px solid var(--border-2,rgba(255,230,200,.14));border-radius:20px;padding:30px 26px 24px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.55);animation:nmIn .25s ease}
         @keyframes nmIn{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
-        #name-modal .nm-ic{font-size:34px;margin-bottom:10px}
-        #name-modal .nm-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:800;letter-spacing:-.4px;color:var(--text,#F5EFE6);line-height:1.25;margin-bottom:8px}
-        #name-modal .nm-desc{font-size:13.5px;color:var(--text-2,#B8AC9C);line-height:1.6;margin-bottom:18px}
-        #name-modal .nm-input{width:100%;padding:14px 16px;border-radius:12px;border:1.5px solid var(--border-2,rgba(255,230,200,.18));background:var(--surface-2,#1E1812);color:var(--text,#F5EFE6);font-size:16px;font-family:inherit;outline:none;transition:border .15s;text-align:center}
-        #name-modal .nm-input:focus{border-color:var(--primary,#C4577A)}
-        #name-modal .nm-hint{font-size:12px;color:#E0894A;min-height:16px;margin:8px 0 4px}
+        #name-modal .nm-ic,#professional-card-modal .nm-ic{font-size:34px;margin-bottom:10px}
+        #name-modal .nm-title,#professional-card-modal .nm-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:800;letter-spacing:-.4px;color:var(--text,#F5EFE6);line-height:1.25;margin-bottom:8px}
+        #name-modal .nm-desc,#professional-card-modal .nm-desc{font-size:13.5px;color:var(--text-2,#B8AC9C);line-height:1.6;margin-bottom:18px}
+        #name-modal .nm-input,#professional-card-modal .nm-input{width:100%;padding:14px 16px;border-radius:12px;border:1.5px solid var(--border-2,rgba(255,230,200,.18));background:var(--surface-2,#1E1812);color:var(--text,#F5EFE6);font-size:16px;font-family:inherit;outline:none;transition:border .15s;text-align:center}
+        #name-modal .nm-input:focus,#professional-card-modal .nm-input:focus{border-color:var(--primary,#C4577A)}
+        #name-modal .nm-hint,#professional-card-modal .nm-hint{font-size:12px;color:#E0894A;min-height:16px;margin:8px 0 4px}
         #professional-card-modal .nm-field{display:block;margin:12px 0 0;font-size:12px;font-weight:700;color:var(--text,#F5EFE6)}
         #professional-card-modal .nm-field b{color:var(--primary,#C4577A)}
         #professional-card-modal .nm-field span{font-weight:500;color:var(--text-3,#8A7E6E)}
         #professional-card-modal .nm-field .nm-input{display:block;margin-top:6px;text-align:left;font-size:14px;padding:11px 13px}
         #professional-card-modal textarea.nm-input{resize:vertical;min-height:72px}
-        #name-modal .nm-save{width:100%;margin-top:12px;padding:14px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--primary,#C4577A),var(--highlight,#D5A13D));color:#2A0D16;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit}
-        #name-modal .nm-save:active{transform:translateY(1px)}
-        #name-modal .nm-skip{width:100%;margin-top:9px;padding:11px;border:1px solid var(--border-2,rgba(255,230,200,.16));border-radius:12px;background:none;color:var(--text-2,#B8AC9C);font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit}
-        #name-modal .nm-foot{font-size:11.5px;color:var(--text-3,#8A7E6E);margin-top:14px;line-height:1.5}`;
+        #name-modal .nm-save,#professional-card-modal .nm-save{width:100%;margin-top:12px;padding:14px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--primary,#C4577A),var(--highlight,#D5A13D));color:#2A0D16;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit}
+        #name-modal .nm-save:active,#professional-card-modal .nm-save:active{transform:translateY(1px)}
+        #name-modal .nm-skip,#professional-card-modal .nm-skip{width:100%;margin-top:9px;padding:11px;border:1px solid var(--border-2,rgba(255,230,200,.16));border-radius:12px;background:none;color:var(--text-2,#B8AC9C);font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit}
+        #name-modal .nm-foot,#professional-card-modal .nm-foot{font-size:11.5px;color:var(--text-3,#8A7E6E);margin-top:14px;line-height:1.5}`;
       document.head.appendChild(st);
     }
     const input = document.getElementById('nm-input');
@@ -13689,6 +13689,13 @@ window.__maybeAskProfessionalCard = function(){
         <button class="nm-skip" id="pc-skip">Completar después</button>
         <p class="nm-foot" style="text-align:center">Tus datos de contacto quedan privados hasta que actives VIP y publiques tu tarjeta.</p>
       </div>`;
+    // También puede aparecer para una cuenta cuyo nombre ya estaba confirmado,
+    // así que no depende de que se haya creado antes el CSS del modal de nombre.
+    if (!document.getElementById('professional-card-css')) {
+      const st = document.createElement('style'); st.id = 'professional-card-css';
+      st.textContent = '#professional-card-modal{position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;padding:20px}#professional-card-modal .nm-ov{position:absolute;inset:0;background:rgba(10,12,20,.72);backdrop-filter:blur(4px)}#professional-card-modal .nm-box{position:relative;width:100%;max-width:500px;background:var(--surface,#15110C);border:1px solid var(--border-2,rgba(255,230,200,.14));border-radius:20px;padding:30px 26px 24px;box-shadow:0 30px 80px rgba(0,0,0,.55)}#professional-card-modal .nm-title{font-family:inherit;font-size:20px;font-weight:800;color:var(--text,#F5EFE6);margin:0 0 8px}#professional-card-modal .nm-desc{font-size:13.5px;color:var(--text-2,#B8AC9C);line-height:1.6;margin:0 0 18px}#professional-card-modal .nm-input{box-sizing:border-box;width:100%;padding:11px 13px;border-radius:12px;border:1.5px solid var(--border-2,rgba(255,230,200,.18));background:var(--surface-2,#1E1812);color:var(--text,#F5EFE6);font:inherit;outline:none}#professional-card-modal .nm-field{display:block;margin:12px 0 0;font-size:12px;font-weight:700;color:var(--text,#F5EFE6)}#professional-card-modal .nm-field b{color:var(--primary,#C4577A)}#professional-card-modal .nm-field span{font-weight:500;color:var(--text-3,#8A7E6E)}#professional-card-modal .nm-field .nm-input{display:block;margin-top:6px;text-align:left;font-size:14px}#professional-card-modal textarea.nm-input{resize:vertical;min-height:72px}#professional-card-modal .nm-hint{font-size:12px;color:#E0894A;min-height:16px;margin:8px 0 4px}#professional-card-modal .nm-save{width:100%;margin-top:12px;padding:14px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--primary,#C4577A),var(--highlight,#D5A13D));color:#2A0D16;font:inherit;font-size:15px;font-weight:800;cursor:pointer}#professional-card-modal .nm-skip{width:100%;margin-top:9px;padding:11px;border:1px solid var(--border-2,rgba(255,230,200,.16));border-radius:12px;background:none;color:var(--text-2,#B8AC9C);font:inherit;font-size:13.5px;font-weight:600;cursor:pointer}#professional-card-modal .nm-foot{font-size:11.5px;color:var(--text-3,#8A7E6E);margin:14px 0 0;line-height:1.5}';
+      document.head.appendChild(st);
+    }
     document.body.appendChild(ov);
     const sector = document.getElementById('pc-sector');
     sector.value = ['Repostería','Panadería','Cocina','Catering','Restaurante','Negocio propio','Docencia','Consultoría','Otro'].includes(perfil.sector) ? perfil.sector : '';
