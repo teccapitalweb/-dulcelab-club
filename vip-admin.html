@@ -1249,6 +1249,7 @@ window.__signOut = async () => {
       <a class="nav-item" data-section="miembros"><svg class="ic"><use href="#i-users"/></svg>Miembros VIP<span class="nav-item__badge" id="badge-miembros">0</span></a>
       <a class="nav-item" data-section="metricas"><svg class="ic"><use href="#i-chart-bar"/></svg>Métricas</a>
       <a class="nav-item" data-section="pruebas"><svg class="ic"><use href="#i-chart-bar"/></svg>Pruebas gratuitas</a>
+      <a class="nav-item" data-section="pruebas-vip"><svg class="ic"><use href="#i-bell"/></svg>Pruebas VIP</a>
       <a class="nav-item" data-section="pagos"><svg class="ic"><use href="#i-credit-card"/></svg>Pagos</a>
       <a class="nav-item" data-section="encuesta"><svg class="ic"><use href="#i-chart-bar"/></svg>Encuesta de clientes</a>
       <a class="nav-item" data-section="noticias"><svg class="ic"><use href="#i-news"/></svg>Descubre algo nuevo</a>
@@ -5797,6 +5798,37 @@ const Pages={
       body.innerHTML = `<section class="trial-card"><h3>No se pudieron cargar las pruebas gratuitas</h3><p>${escapeHtml(error.message || 'Inténtalo de nuevo más tarde.')}</p></section>`;
     }
   },
+  async ['pruebas-vip'](p){
+    if (!document.getElementById('vip-trial-css')) {
+      const st = document.createElement('style'); st.id = 'vip-trial-css';
+      st.textContent = `
+        .vt-hero{margin:-4px 0 22px;padding:34px 32px;border:1px solid var(--border);border-left:4px solid #b076df;border-radius:22px;background:radial-gradient(circle at 92% 12%,color-mix(in srgb,#b076df 18%,transparent),transparent 30%),var(--surface)}.vt-eyebrow,.vt-kpi small{font:800 10px 'JetBrains Mono',monospace;letter-spacing:1.4px;text-transform:uppercase;color:var(--text-3)}.vt-hero h1{font-size:36px;letter-spacing:-1.5px;margin:10px 0 8px}.vt-hero p{max-width:720px;margin:0;color:var(--text-2);line-height:1.55}.vt-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:20px}.vt-kpi{padding:18px;border:1px solid var(--border);border-left:4px solid var(--tone,var(--primary));border-radius:17px;background:var(--surface)}.vt-kpi b{display:block;margin:8px 0 4px;font-size:30px;letter-spacing:-1px}.vt-kpi span{font-size:12px;line-height:1.4;color:var(--text-3)}.vt-card{padding:20px;border:1px solid var(--border);border-radius:18px;background:var(--surface)}.vt-card h3{margin:0;font-size:16px}.vt-card>p{margin:5px 0 18px;color:var(--text-3);font-size:12.5px}.vt-wrap{overflow:auto}.vt-table{width:100%;min-width:940px;border-collapse:collapse;font-size:13px}.vt-table th{padding:10px;text-align:left;border-bottom:1px solid var(--border);font:800 10px 'JetBrains Mono',monospace;letter-spacing:1px;text-transform:uppercase;color:var(--text-3)}.vt-table td{padding:12px 10px;border-bottom:1px solid var(--border);vertical-align:top;color:var(--text-2)}.vt-name{display:block;font-weight:800;color:var(--text)}.vt-email,.vt-date{display:block;margin-top:2px;font-size:11px;color:var(--text-3)}.vt-state{display:inline-block;padding:5px 8px;border-radius:999px;font-size:11px;font-weight:800;background:var(--surface-2);color:var(--text-2)}.vt-state--programada{background:color-mix(in srgb,#e39b28 16%,var(--surface));color:#a46100}.vt-state--enviada{background:color-mix(in srgb,#4a83e8 16%,var(--surface));color:#2863b9}.vt-state--activada{background:color-mix(in srgb,#68bd22 17%,var(--surface));color:#348007}.vt-state--vencida,.vt-state--terminada{background:color-mix(in srgb,#9ca3af 18%,var(--surface));color:#667085}.vt-state--convertida{background:color-mix(in srgb,#8b5cf6 18%,var(--surface));color:#6941c6}.vt-state--pago-sin-activar{background:color-mix(in srgb,#d5a13d 18%,var(--surface));color:#93620a}@media(max-width:960px){.vt-kpis{grid-template-columns:repeat(2,1fr)}}@media(max-width:600px){.vt-hero{padding:26px 20px}.vt-hero h1{font-size:29px}.vt-kpis{grid-template-columns:1fr}}
+      `;
+      document.head.appendChild(st);
+    }
+    p.innerHTML = `<div class="fade-up"><section class="vt-hero"><div class="vt-eyebrow">Seguimiento comercial · 3 días ilimitados</div><h1>Pruebas VIP</h1><p>Controla quién terminó su parte gratuita, cuándo recibe la invitación, quién activa sus 3 días y quién finalmente paga su membresía.</p></section><div id="vip-trial-body" class="empty-state">Cargando el seguimiento de pruebas VIP…</div></div>`;
+    const body = p.querySelector('#vip-trial-body');
+    try {
+      const token = await Pages._getAuthToken();
+      const res = await fetch(`${Pages._webhookUrl}/api/bunny/ofertas-vip`, { headers: { Authorization: `Bearer ${token}` } });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || 'No se pudo cargar el seguimiento');
+      const t = data.totales || {}, filas = Array.isArray(data.filas) ? data.filas : [];
+      const fecha = value => value ? new Intl.DateTimeFormat('es-MX', { day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }).format(new Date(value)) : '—';
+      const etiquetas = { programada:'Pendiente de correo', enviada:'Correo enviado', vencida:'Oferta vencida', activada:'Prueba VIP activa', terminada:'Prueba VIP terminada', convertida:'Convirtió a pago', 'pago-sin-activar':'Pagó sin activar prueba' };
+      body.className = '';
+      body.innerHTML = `
+        <div class="vt-kpis">
+          <article class="vt-kpi" style="--tone:#e39b28"><small>Pendientes de correo</small><b>${Number(t.pendientes || 0)}</b><span>Terminaron la parte gratuita; el correo sale 24 h después.</span></article>
+          <article class="vt-kpi" style="--tone:#4a83e8"><small>Ofertas enviadas</small><b>${Number(t.enviados || 0)}</b><span>${Number(t.tasaAceptacion || 0)}% activó sus 3 días VIP.</span></article>
+          <article class="vt-kpi" style="--tone:#68bd22"><small>VIP activos ahora</small><b>${Number(t.activas || 0)}</b><span>Acceso total temporal; sin certificado durante el regalo.</span></article>
+          <article class="vt-kpi" style="--tone:#8b5cf6"><small>Convirtieron a pago</small><b>${Number(t.convertidas || 0)}</b><span>${Number(t.tasaConversion || 0)}% de quienes aceptaron la prueba VIP.</span></article>
+        </div>
+        <section class="vt-card"><h3>Seguimiento individual</h3><p>La oferta vence 48 horas después del envío. Las filas se actualizan según el estado real de cada cuenta.</p><div class="vt-wrap"><table class="vt-table"><thead><tr><th>Persona</th><th>Curso gratuito</th><th>Estado</th><th>Correo / vencimiento</th><th>Activación / fin VIP</th></tr></thead><tbody>${filas.length ? filas.map(x => `<tr><td><span class="vt-name">${escapeHtml(x.nombre || 'Miembro')}</span><span class="vt-email">${escapeHtml(x.email || 'Sin correo')}</span></td><td>${escapeHtml(x.curso || '—')}</td><td><span class="vt-state vt-state--${escapeHtml(x.estado)}">${escapeHtml(etiquetas[x.estado] || x.estado)}</span></td><td><span class="vt-date">Enviado: ${fecha(x.correoEnviadoAt)}</span><span class="vt-date">Vence: ${fecha(x.venceAt)}</span></td><td><span class="vt-date">Aceptó: ${fecha(x.activadaAt)}</span><span class="vt-date">VIP hasta: ${fecha(x.vipHasta)}</span></td></tr>`).join('') : '<tr><td colspan="5" style="text-align:center;padding:30px;color:var(--text-3)">Aún no hay personas dentro del flujo de 3 días VIP.</td></tr>'}</tbody></table></div></section>`;
+    } catch (error) {
+      body.innerHTML = `<section class="vt-card"><h3>No se pudo cargar Pruebas VIP</h3><p>${escapeHtml(error.message || 'Inténtalo de nuevo más tarde.')}</p></section>`;
+    }
+  },
   async metricas(p){
     if (!document.getElementById('mt-css')) {
       const st = document.createElement('style'); st.id = 'mt-css';
@@ -7100,7 +7132,7 @@ function dirAdminCargar(){
    refresh te deja donde estabas, los botones atrás/adelante del
    navegador funcionan y puedes compartir un link directo a la sección.
    ═══════════════════════════════════════════════════════════════════ */
-const SECCIONES_VALIDAS = ['dashboard','metricas','pruebas','notificaciones','cursos','webinars','pdfs','certificados','miembros','pagos','encuesta','noticias','config','foro','directorio'];
+const SECCIONES_VALIDAS = ['dashboard','metricas','pruebas','pruebas-vip','notificaciones','cursos','webinars','pdfs','certificados','miembros','pagos','encuesta','noticias','config','foro','directorio'];
 
 function seccionDesdeHash(){
   const h = (window.location.hash || '').replace(/^#\/?/, '').trim();
