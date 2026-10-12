@@ -4083,12 +4083,9 @@ if (window.__isDemoMode) {
       window.UserState.iniciales = calcIniciales(nombre);
     })();
 
-    // Al entrar con membresía activa se crea una tarjeta básica automáticamente.
-    // Solo muestra nombre y "Miembro DulceLab Food"; los datos de contacto
-    // siguen vacíos hasta que el miembro los agregue voluntariamente.
-    if (window.UserState.modo === 'vip') {
-      window.__asegurarTarjetaDirectorio().catch(e => console.warn('[directorio] no se pudo autorrellenar:', e.message));
-    }
+    // Al registrarse se crea una tarjeta básica oculta. Cuando esa cuenta paga,
+    // el servidor la publica automáticamente; no contiene datos de contacto.
+    window.__asegurarTarjetaDirectorio().catch(e => console.warn('[directorio] no se pudo autorrellenar:', e.message));
 
     document.body.style.visibility = 'visible';
 
