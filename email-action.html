@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#74142a">
+  <title>DulceLab Food · Confirmación de correo</title>
+  <style>
+    :root{color-scheme:light;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#351722;background:#f8efed}
+    *{box-sizing:border-box} body{min-height:100dvh;margin:0;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at 85% 5%,#f6d7cf 0,transparent 33%),linear-gradient(135deg,#fffaf7,#f7e9e5)}
+    main{width:min(100%,460px);padding:36px 30px;border:1px solid #e6c9c3;border-radius:24px;background:#fff;box-shadow:0 24px 70px #42101d24;text-align:center}
+    .brand{font-weight:900;letter-spacing:.08em;font-size:13px;color:#8d1832;text-transform:uppercase}.icon{width:58px;height:58px;margin:22px auto 17px;display:grid;place-items:center;border-radius:18px;background:#f8df9e;color:#602019;font-size:29px}
+    h1{font-size:25px;line-height:1.2;margin:0 0 10px;letter-spacing:-.04em}p{color:#735c56;line-height:1.58;margin:0}.status{margin-top:20px;min-height:24px;font-size:14px}.status.error{color:#a42335}.status.ok{color:#277247;font-weight:700}
+    form{display:none;margin-top:22px;text-align:left}label{display:block;font-size:13px;font-weight:700;margin:14px 0 6px}input{width:100%;padding:13px;border:1px solid #d8bcb5;border-radius:11px;font:inherit}button,.link{display:inline-flex;justify-content:center;align-items:center;width:100%;margin-top:20px;padding:14px;border:0;border-radius:12px;background:#83172f;color:#fff;text-decoration:none;font:inherit;font-weight:800;cursor:pointer}.link{display:none}.note{margin-top:17px;font-size:12px;color:#947d77}
+  </style>
+</head>
+<body>
+  <main>
+    <div class="brand">DulceLab Food</div>
+    <div class="icon" id="icon" aria-hidden="true">✉</div>
+    <h1 id="title">Estamos confirmando tu correo</h1>
+    <p id="description">Espera un momento, por favor.</p>
+    <p id="status" class="status" role="status"></p>
+    <form id="reset-form">
+      <label for="new-password">Nueva contraseña</label>
+      <input id="new-password" type="password" autocomplete="new-password" minlength="6" required>
+      <label for="confirm-password">Confirma tu contraseña</label>
+      <input id="confirm-password" type="password" autocomplete="new-password" minlength="6" required>
+      <button type="submit">Guardar nueva contraseña</button>
+    </form>
+    <a id="continue" class="link" href="vip-auth.html">Ir al Club</a>
+    <p class="note">Si este enlace venció, solicita uno nuevo desde el acceso al Club.</p>
+  </main>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+    import { getAuth, applyActionCode, verifyPasswordResetCode, confirmPasswordReset, checkActionCode } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+
+    const app = initializeApp({
+      apiKey: 'AIzaSyDQOWXjkshC2f6io0J8RUSiqAoVVKV-bLA',
+      authDomain: 'dulcelab-club.firebaseapp.com',
+      projectId: 'dulcelab-club',
+      appId: '1:672123803779:web:a0885646e6f19311df23b6'
+    });
+    const auth = getAuth(app);
+    const params = new URLSearchParams(location.search);
+    const mode = params.get('mode');
+    const code = params.get('oobCode');
+    const title = document.getElementById('title');
+    const description = document.getElementById('description');
+    const status = document.getElementById('status');
+    const icon = document.getElementById('icon');
+    const resetForm = document.getElementById('reset-form');
+    const continueButton = document.getElementById('continue');
+    const fallback = 'https://club.dulcelabfood.com/vip-auth.html';
+    const requestedContinue = params.get('continueUrl');
+    let continueUrl = fallback;
+    try {
+      const candidate = new URL(requestedContinue || fallback);
+      if (candidate.origin === 'https://club.dulcelabfood.com') continueUrl = candidate.href;
+    } catch (_) {}
+
+    function message(text, type='') { status.textContent = text; status.className = 'status ' + type; }
+    function done(headline, text) {
+      icon.textContent = '✓';
+      title.textContent = headline;
+      description.textContent = text;
+      message('Te llevaremos al Club en un momento.', 'ok');
+      continueButton.href = continueUrl;
+      continueButton.style.display = 'inline-flex';
+      setTimeout(() => location.replace(continueUrl), 2200);
+    }
+    function failure(text) {
+      icon.textContent = '!';
+      title.textContent = 'No pudimos usar este enlace';
+      description.textContent = text;
+      message('Puede que ya se haya usado o que haya vencido.', 'error');
+      continueButton.href = fallback;
+      continueButton.textContent = 'Volver al acceso';
+      continueButton.style.display = 'inline-flex';
+    }
+
+    if (!code || !mode) {
+      failure('El enlace no contiene los datos necesarios para continuar.');
+    } else if (mode === 'verifyEmail') {
+      try {
+        await applyActionCode(auth, code);
+        done('Correo confirmado', 'Tu cuenta ya está lista. Ahora podrás entrar a DulceLab Food.');
+      } catch (error) {
+        failure('No fue posible confirmar tu correo.');
+      }
+    } else if (mode === 'resetPassword') {
+      try {
+        await verifyPasswordResetCode(auth, code);
+        icon.textContent = '🔑';
+        title.textContent = 'Crea una nueva contraseña';
+        description.textContent = 'Usa al menos 6 caracteres para recuperar tu acceso.';
+        resetForm.style.display = 'block';
+        resetForm.addEventListener('submit', async event => {
+          event.preventDefault();
+          const password = document.getElementById('new-password').value;
+          const confirmation = document.getElementById('confirm-password').value;
+          if (password.length < 6) return message('La contraseña debe tener al menos 6 caracteres.', 'error');
+          if (password !== confirmation) return message('Las contraseñas no coinciden.', 'error');
+          try {
+            await confirmPasswordReset(auth, code, password);
+            resetForm.style.display = 'none';
+            done('Contraseña actualizada', 'Ya puedes iniciar sesión con tu nueva contraseña.');
+          } catch (_) { failure('No fue posible actualizar la contraseña.'); }
+        });
+      } catch (_) { failure('No fue posible validar este enlace de recuperación.'); }
+    } else if (mode === 'recoverEmail') {
+      try {
+        await checkActionCode(auth, code);
+        await applyActionCode(auth, code);
+        done('Correo restaurado', 'La dirección anterior se restauró correctamente.');
+      } catch (_) { failure('No fue posible restaurar el correo.'); }
+    } else {
+      failure('Este tipo de enlace no es compatible.');
+    }
+  </script>
+</body>
+</html>
