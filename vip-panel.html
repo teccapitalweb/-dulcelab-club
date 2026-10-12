@@ -3949,6 +3949,32 @@ window.__cargarContactoClub();
 const WEBHOOK_URL = 'https://dulcelab-webhook-production.up.railway.app';
 window.WEBHOOK_URL = WEBHOOK_URL;
 
+// Las tarjetas profesionales se guardan mediante el servidor. Además de no
+// depender de reglas del navegador, hay un límite de espera para que el botón
+// nunca se quede congelado en “Guardando…” si falla la red.
+async function directorioApi(ruta, datos, esperaMs = 15000){
+  const user = window.__currentUser;
+  if (!user) throw new Error('Inicia sesión para continuar');
+  const controlador = new AbortController();
+  const reloj = setTimeout(() => controlador.abort(), esperaMs);
+  try {
+    const token = await user.getIdToken();
+    const respuesta = await fetch(`${WEBHOOK_URL}/api/directorio/${ruta}`, {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json', 'Authorization':'Bearer ' + token },
+      body: JSON.stringify(datos || {}), signal: controlador.signal
+    });
+    const cuerpo = await respuesta.json().catch(() => ({}));
+    if (!respuesta.ok || !cuerpo.ok) throw new Error(cuerpo.error || 'No se pudo guardar tu tarjeta');
+    return cuerpo;
+  } catch (error) {
+    if (error?.name === 'AbortError') throw new Error('La conexión tardó demasiado. Revisa internet e inténtalo de nuevo.');
+    throw error;
+  } finally { clearTimeout(reloj); }
+}
+window.__asegurarTarjetaDirectorio = () => directorioApi('asegurar', { nombre: window.UserState?.nombre || window.UserState?.displayName || '' });
+window.__guardarTarjetaDirectorio = (tarjeta) => directorioApi('mi-tarjeta', tarjeta);
+
 const ADMIN_EMAILS = ['teccapitalweb@gmail.com','fisiotec25@gmail.com'];
 
 function calcIniciales(nameOrEmail){
@@ -4056,6 +4082,13 @@ if (window.__isDemoMode) {
       window.UserState.displayName = nombre;        // todo el panel lee de aquí
       window.UserState.iniciales = calcIniciales(nombre);
     })();
+
+    // Al entrar con membresía activa se crea una tarjeta básica automáticamente.
+    // Solo muestra nombre y "Miembro DulceLab Food"; los datos de contacto
+    // siguen vacíos hasta que el miembro los agregue voluntariamente.
+    if (window.UserState.modo === 'vip') {
+      window.__asegurarTarjetaDirectorio().catch(e => console.warn('[directorio] no se pudo autorrellenar:', e.message));
+    }
 
     document.body.style.visibility = 'visible';
 
@@ -12213,7 +12246,6 @@ const Sections = (function(){
       if (nombre.length<3){ Toast.error('Falta tu nombre','Escribe tu nombre completo'); return; }
       const btn = footer.querySelector('#dirf-guardar'); btn.disabled=true; btn.textContent='Guardando…';
       const payload = {
-        uid,
         nombre,
         puesto: document.getElementById('dirf-puesto').value.trim(),
         empresa: document.getElementById('dirf-empresa').value.trim(),
@@ -12223,14 +12255,13 @@ const Sections = (function(){
         email: document.getElementById('dirf-email').value.trim(),
         linkedin: document.getElementById('dirf-linkedin').value.trim(),
         web: document.getElementById('dirf-web').value.trim(),
-        visible: document.getElementById('dirf-visible').checked,
-        color: dirColorFor(uid),
-        updatedAt: fs.serverTimestamp()
+        visible: document.getElementById('dirf-visible').checked
       };
       if (_dirFotoTmp !== undefined) payload.foto = _dirFotoTmp; // string o null
       else if (data.foto) payload.foto = data.foto; // conservar
       try {
-        await fs.setDoc(fs.doc(fs.db,'directorio',uid), payload, { merge:true });
+        if (typeof window.__guardarTarjetaDirectorio !== 'function') throw new Error('No se pudo conectar el guardado seguro');
+        await window.__guardarTarjetaDirectorio(payload);
         Toast.success('Tarjeta guardada','Ya apareces en el directorio');
         m.close();
       } catch(e){ console.error(e); Toast.error('No se pudo guardar', e.message||''); btn.disabled=false; btn.textContent='Guardar tarjeta'; }
