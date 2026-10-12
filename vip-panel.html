@@ -13682,10 +13682,12 @@ window.__maybeAskProfessionalCard = function(){
         <label class="nm-field">Empresa o negocio <span>(opcional)</span><input id="pc-empresa" class="nm-input" type="text" value="${esc(perfil.empresa)}" placeholder="Ej. Pastelería Dulce Nube" maxlength="60" autocomplete="organization"></label>
         <label class="nm-field">Área principal <b>*</b><select id="pc-sector" class="nm-input"><option value="">Selecciona un área</option>${['Repostería','Panadería','Cocina','Catering','Restaurante','Negocio propio','Docencia','Consultoría','Otro'].map(x => `<option value="${x}">${x}</option>`).join('')}</select></label>
         <label class="nm-field">Cuéntanos brevemente sobre tu experiencia <span>(opcional)</span><textarea id="pc-bio" class="nm-input" rows="3" maxlength="160" placeholder="Ej. Especialista en pasteles para eventos y mesas de postres.">${esc(perfil.bio)}</textarea></label>
+        <label class="nm-field">WhatsApp profesional <span>(opcional)</span><input id="pc-whatsapp" class="nm-input" type="tel" value="${esc(perfil.whatsapp)}" placeholder="Ej. +52 55 1234 5678" maxlength="20" autocomplete="tel"></label>
+        <label class="nm-field">Correo de contacto <span>(opcional)</span><input id="pc-email" class="nm-input" type="email" value="${esc(perfil.email)}" placeholder="Ej. hola@tunegocio.com" maxlength="80" autocomplete="email"></label>
         <div class="nm-hint" id="pc-hint"></div>
         <button class="nm-save" id="pc-save">Guardar mi perfil profesional</button>
         <button class="nm-skip" id="pc-skip">Completar después</button>
-        <p class="nm-foot" style="text-align:center">No pedimos teléfono ni correo aquí. Podrás agregarlos tú misma más adelante si quieres recibir contactos.</p>
+        <p class="nm-foot" style="text-align:center">Tus datos de contacto quedan privados hasta que actives VIP y publiques tu tarjeta.</p>
       </div>`;
     document.body.appendChild(ov);
     const sector = document.getElementById('pc-sector');
@@ -13696,12 +13698,14 @@ window.__maybeAskProfessionalCard = function(){
       const puesto = document.getElementById('pc-puesto').value.trim();
       const empresa = document.getElementById('pc-empresa').value.trim();
       const bio = document.getElementById('pc-bio').value.trim();
+      const whatsapp = document.getElementById('pc-whatsapp').value.trim();
+      const email = document.getElementById('pc-email').value.trim();
       if (puesto.length < 2) { hint.textContent = 'Escribe tu puesto o profesión.'; return; }
       if (!sector.value) { hint.textContent = 'Selecciona el área que mejor te representa.'; return; }
       const btn = document.getElementById('pc-save'); btn.disabled = true; btn.textContent = 'Guardando…';
       try {
-        await window.__asegurarTarjetaDirectorio({ puesto, empresa, sector: sector.value, bio });
-        try { const ls = JSON.parse(localStorage.getItem('dulcelab_profile') || '{}'); Object.assign(ls, { puesto, empresa, sector: sector.value, bio }); localStorage.setItem('dulcelab_profile', JSON.stringify(ls)); } catch(e) {}
+        await window.__asegurarTarjetaDirectorio({ puesto, empresa, sector: sector.value, bio, whatsapp, email });
+        try { const ls = JSON.parse(localStorage.getItem('dulcelab_profile') || '{}'); Object.assign(ls, { puesto, empresa, sector: sector.value, bio, whatsapp, email }); localStorage.setItem('dulcelab_profile', JSON.stringify(ls)); } catch(e) {}
         terminar();
         window.Toast?.success('Perfil preparado', 'Tu tarjeta se publicará cuando actives VIP.');
       } catch (error) {
