@@ -3972,7 +3972,10 @@ async function directorioApi(ruta, datos, esperaMs = 15000){
     throw error;
   } finally { clearTimeout(reloj); }
 }
-window.__asegurarTarjetaDirectorio = () => directorioApi('asegurar', { nombre: window.UserState?.nombre || window.UserState?.displayName || '' });
+window.__asegurarTarjetaDirectorio = (datos = {}) => directorioApi('asegurar', {
+  nombre: window.UserState?.nombre || window.UserState?.displayName || '',
+  ...datos
+});
 window.__guardarTarjetaDirectorio = (tarjeta) => directorioApi('mi-tarjeta', tarjeta);
 
 const ADMIN_EMAILS = ['teccapitalweb@gmail.com','fisiotec25@gmail.com'];
@@ -4132,7 +4135,11 @@ if (window.__isDemoMode) {
 
     // ─── Popup: confirmar/editar nombre (1ª vez) · evita certificados con el email ───
     setTimeout(() => { try {
-      if (window.__nombreConfirmado && !window.__nombreConfirmado() && window.__maybeAskName) window.__Popups.pedir('nombre', 3, () => window.__maybeAskName());
+      if (window.__nombreConfirmado && !window.__nombreConfirmado() && window.__maybeAskName) {
+        window.__Popups.pedir('nombre', 3, () => window.__maybeAskName());
+      } else if (window.__maybeAskProfessionalCard) {
+        window.__maybeAskProfessionalCard();
+      }
     } catch(e){} }, 900);
 
     // Arrancar listener de notificaciones de Firestore (tiempo real)
@@ -13593,6 +13600,11 @@ window.__maybeAskName = function(){
         #name-modal .nm-input{width:100%;padding:14px 16px;border-radius:12px;border:1.5px solid var(--border-2,rgba(255,230,200,.18));background:var(--surface-2,#1E1812);color:var(--text,#F5EFE6);font-size:16px;font-family:inherit;outline:none;transition:border .15s;text-align:center}
         #name-modal .nm-input:focus{border-color:var(--primary,#C4577A)}
         #name-modal .nm-hint{font-size:12px;color:#E0894A;min-height:16px;margin:8px 0 4px}
+        #professional-card-modal .nm-field{display:block;margin:12px 0 0;font-size:12px;font-weight:700;color:var(--text,#F5EFE6)}
+        #professional-card-modal .nm-field b{color:var(--primary,#C4577A)}
+        #professional-card-modal .nm-field span{font-weight:500;color:var(--text-3,#8A7E6E)}
+        #professional-card-modal .nm-field .nm-input{display:block;margin-top:6px;text-align:left;font-size:14px;padding:11px 13px}
+        #professional-card-modal textarea.nm-input{resize:vertical;min-height:72px}
         #name-modal .nm-save{width:100%;margin-top:12px;padding:14px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--primary,#C4577A),var(--highlight,#D5A13D));color:#2A0D16;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit}
         #name-modal .nm-save:active{transform:translateY(1px)}
         #name-modal .nm-skip{width:100%;margin-top:9px;padding:11px;border:1px solid var(--border-2,rgba(255,230,200,.16));border-radius:12px;background:none;color:var(--text-2,#B8AC9C);font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit}
@@ -13633,6 +13645,7 @@ window.__maybeAskName = function(){
       if (typeof window.__applyUserState==='function') window.__applyUserState();
       if (window.Toast) Toast.success('Nombre guardado', val);
       ov.remove();
+       setTimeout(() => window.__maybeAskProfessionalCard?.(), 120);
     }
     document.getElementById('nm-save').addEventListener('click', guardar);
     input.addEventListener('keydown', e=>{ if(e.key==='Enter') guardar(); });
@@ -13642,8 +13655,62 @@ window.__maybeAskName = function(){
       localStorage.setItem(window.__nombreKey(),'1');
       ov.remove();
       if (window.Toast) Toast.info('Puedes cambiarlo luego', 'Mi perfil → Nombre completo');
+       setTimeout(() => window.__maybeAskProfessionalCard?.(), 120);
     });
   } catch(e){ console.warn('maybeAskName:', e); }
+};
+
+// ─── Perfil profesional inicial ────────────────────────────────────
+// Se solicita al registrarse, pero la ficha permanece privada hasta que la
+// persona activa su membresía. Así no necesita volver a capturar datos al pagar.
+window.__tarjetaProfesionalKey = function(){ return 'dulcelab_directory_profile_asked_' + ((window.UserState && window.UserState.uid) || 'anon'); };
+window.__maybeAskProfessionalCard = function(){
+  try {
+    if (!window.UserState?.uid || localStorage.getItem(window.__tarjetaProfesionalKey()) === '1') return;
+    if (document.getElementById('name-modal') || document.getElementById('professional-card-modal')) return;
+    const esc = v => String(v || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+    const perfil = (() => { try { return JSON.parse(localStorage.getItem('dulcelab_profile') || '{}'); } catch(e) { return {}; } })();
+    const ov = document.createElement('div');
+    ov.id = 'professional-card-modal';
+    ov.innerHTML = `
+      <div class="nm-ov"></div>
+      <div class="nm-box" style="text-align:left;max-width:500px">
+        <div class="nm-ic" style="text-align:center">🪪</div>
+        <h2 class="nm-title" style="text-align:center">Tu perfil profesional</h2>
+        <p class="nm-desc" style="text-align:center">Guardaremos estos datos para preparar tu tarjeta del <strong>Directorio VIP</strong>. Permanecerá privada hasta que actives tu membresía.</p>
+        <label class="nm-field">Puesto o profesión <b>*</b><input id="pc-puesto" class="nm-input" type="text" value="${esc(perfil.puesto || perfil.especialidad)}" placeholder="Ej. Chef, repostera, propietaria" maxlength="60" autocomplete="organization-title"></label>
+        <label class="nm-field">Empresa o negocio <span>(opcional)</span><input id="pc-empresa" class="nm-input" type="text" value="${esc(perfil.empresa)}" placeholder="Ej. Pastelería Dulce Nube" maxlength="60" autocomplete="organization"></label>
+        <label class="nm-field">Área principal <b>*</b><select id="pc-sector" class="nm-input"><option value="">Selecciona un área</option>${['Repostería','Panadería','Cocina','Catering','Restaurante','Negocio propio','Docencia','Consultoría','Otro'].map(x => `<option value="${x}">${x}</option>`).join('')}</select></label>
+        <label class="nm-field">Cuéntanos brevemente sobre tu experiencia <span>(opcional)</span><textarea id="pc-bio" class="nm-input" rows="3" maxlength="160" placeholder="Ej. Especialista en pasteles para eventos y mesas de postres.">${esc(perfil.bio)}</textarea></label>
+        <div class="nm-hint" id="pc-hint"></div>
+        <button class="nm-save" id="pc-save">Guardar mi perfil profesional</button>
+        <button class="nm-skip" id="pc-skip">Completar después</button>
+        <p class="nm-foot" style="text-align:center">No pedimos teléfono ni correo aquí. Podrás agregarlos tú misma más adelante si quieres recibir contactos.</p>
+      </div>`;
+    document.body.appendChild(ov);
+    const sector = document.getElementById('pc-sector');
+    sector.value = ['Repostería','Panadería','Cocina','Catering','Restaurante','Negocio propio','Docencia','Consultoría','Otro'].includes(perfil.sector) ? perfil.sector : '';
+    const hint = document.getElementById('pc-hint');
+    const terminar = () => { localStorage.setItem(window.__tarjetaProfesionalKey(), '1'); ov.remove(); };
+    document.getElementById('pc-save').addEventListener('click', async () => {
+      const puesto = document.getElementById('pc-puesto').value.trim();
+      const empresa = document.getElementById('pc-empresa').value.trim();
+      const bio = document.getElementById('pc-bio').value.trim();
+      if (puesto.length < 2) { hint.textContent = 'Escribe tu puesto o profesión.'; return; }
+      if (!sector.value) { hint.textContent = 'Selecciona el área que mejor te representa.'; return; }
+      const btn = document.getElementById('pc-save'); btn.disabled = true; btn.textContent = 'Guardando…';
+      try {
+        await window.__asegurarTarjetaDirectorio({ puesto, empresa, sector: sector.value, bio });
+        try { const ls = JSON.parse(localStorage.getItem('dulcelab_profile') || '{}'); Object.assign(ls, { puesto, empresa, sector: sector.value, bio }); localStorage.setItem('dulcelab_profile', JSON.stringify(ls)); } catch(e) {}
+        terminar();
+        window.Toast?.success('Perfil preparado', 'Tu tarjeta se publicará cuando actives VIP.');
+      } catch (error) {
+        hint.textContent = error.message || 'No se pudo guardar. Inténtalo de nuevo.';
+        btn.disabled = false; btn.textContent = 'Guardar mi perfil profesional';
+      }
+    });
+    document.getElementById('pc-skip').addEventListener('click', () => { terminar(); window.Toast?.info('Podrás completarlo después', 'Al activar VIP podrás editar tu tarjeta.'); });
+  } catch(e) { console.warn('maybeAskProfessionalCard:', e); }
 };
 
 function openEditField(field){
