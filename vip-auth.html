@@ -530,6 +530,15 @@ const auth = getAuth(app);
 const db   = getFirestore(app);
 setPersistence(auth, browserLocalPersistence);
 
+// Después de confirmar el correo, Firebase vuelve al acceso oficial del club.
+// Sin esta URL, el enlace termina en el manejador genérico de firebaseapp.com,
+// que en navegadores móviles puede quedarse en una página blanca.
+const emailActionSettings = {
+  url: 'https://club.dulcelabfood.com/vip-auth.html?verified=1',
+  handleCodeInApp: false
+};
+const regresoDeVerificacion = new URLSearchParams(window.location.search).get('verified') === '1';
+
 /* ══ MODIFICADO · Precio en vivo del hero (patrón SYNOVA) ══
    Lee config/club y actualiza los data-precio-* — el mismo documento que
    consume el webhook para armar el cobro real en Stripe, así el precio que
@@ -603,6 +612,12 @@ async function ensureMiembroDoc(user, displayName, origen){
 
 onAuthStateChanged(auth, async (user) => {
   if (!user) return;
+  // El código de Firebase ya verificó el correo antes de redirigir aquí.
+  // Recargamos el usuario para no mostrar de nuevo la pantalla de confirmación.
+  if (regresoDeVerificacion) {
+    try { await user.reload(); } catch(e) { console.warn('[verify] no se pudo actualizar la sesión:', e.message); }
+    try { window.history.replaceState({}, document.title, 'vip-auth.html'); } catch(e) {}
+  }
   const esConGoogle = user.providerData.some(p => p.providerId === 'google.com');
   // Google ya verifica el correo por su cuenta — solo bloqueamos cuentas de correo+contraseña sin confirmar
   if (!esConGoogle && !user.emailVerified){
@@ -636,7 +651,7 @@ function mostrarPuertaVerificacion(user){
   });
   document.getElementById('btn-verify-resend').addEventListener('click', async () => {
     try{
-      await sendEmailVerification(user);
+      await sendEmailVerification(user, emailActionSettings);
       elAlert.innerHTML = '<div class="alert alert--success"><div class="alert__msg">Te mandamos el correo de nuevo.</div></div>';
     }catch(e){ elAlert.innerHTML = '<div class="alert alert--error"><div class="alert__msg">Espera un momento antes de volver a pedirlo.</div></div>'; }
   });
@@ -701,7 +716,7 @@ document.getElementById('btn-register').addEventListener('click', async () => {
     const cred = await createUserWithEmailAndPassword(auth, email, pass);
     await updateProfile(cred.user, { displayName: name });
     try{ window.dlfTrack && window.dlfTrack('registro', 'club'); }catch(_){}
-    try{ await sendEmailVerification(cred.user); }catch(e){ console.warn('[verify] no se pudo mandar el correo:', e.message); }
+    try{ await sendEmailVerification(cred.user, emailActionSettings); }catch(e){ console.warn('[verify] no se pudo mandar el correo:', e.message); }
     const docResult = await ensureMiembroDoc(cred.user, name, 'registro-web');
     if (docResult && docResult.ok === false){
       const motivo = docResult.reason || 'desconocido';
