@@ -4876,7 +4876,9 @@ const Modal=(function(){
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&stack.length>0){e.preventDefault();close(stack[stack.length-1].id);}});
   function open(cfg){
     if(!cfg.id)cfg.id='m_'+Date.now().toString(36);
-    const exist=stack.find(s=>s.id===cfg.id);if(exist)close(cfg.id);
+    // Un mismo toque puede disparar click y teclado/touch casi al mismo tiempo.
+    // Conservamos la ventana ya abierta para no apilar dos modales iguales.
+    const exist=stack.find(s=>s.id===cfg.id);if(exist)return{id:cfg.id,close:()=>close(cfg.id)};
     const bd=document.createElement('div');bd.className='modal-backdrop';bd.dataset.modalId=cfg.id;bd.setAttribute('role','dialog');bd.setAttribute('aria-modal','true');
     const m=document.createElement('div');m.className='modal'+(cfg.size==='lg'?' modal--lg':cfg.size==='sm'?' modal--sm':'');
     if(cfg.title){
@@ -4896,7 +4898,16 @@ const Modal=(function(){
     requestAnimationFrame(()=>requestAnimationFrame(()=>bd.classList.add('is-open')));
     return{id:cfg.id,close:()=>close(cfg.id)};
   }
-  function close(id){const i=stack.findIndex(s=>s.id===id);if(i<0)return;const e=stack[i];e.element.classList.remove('is-open');setTimeout(()=>{e.element.parentNode?.removeChild(e.element);stack.splice(i,1);if(stack.length===0)unlockBody();e.onClose?.();},250);}
+  function close(id){
+    const i=stack.findIndex(s=>s.id===id);if(i<0)return;
+    const e=stack[i];
+    // Se retira del control de inmediato: durante la animación de 250 ms no
+    // queda una referencia que permita cerrarla dos veces o duplicarla.
+    stack.splice(i,1);
+    e.element.classList.remove('is-open');
+    if(stack.length===0)unlockBody();
+    setTimeout(()=>{e.element.parentNode?.removeChild(e.element);e.onClose?.();},250);
+  }
   return{open,close};
 })();
 
@@ -9834,7 +9845,7 @@ const Sections = (function(){
         const res = await _otorgarXP(r.id, r.puntos);
         if (!res.yaCompletado) _avisarResultadoXP(r, res, r.titulo);
         _celebrarLogros(res.nuevosLogros);
-        _trasCompletarReto(r, 4500);
+        _trasCompletarReto(r, 2200);
       }
     }
     Modal.open({ id, title: r.titulo, subtitle: r.categoria + ' · +' + r.puntos + ' pts', icon: 'i-bolt', size: 'md', body, footer });
@@ -9878,7 +9889,7 @@ const Sections = (function(){
         const res = await _otorgarXP(r.id, r.puntos);
         if (!res.yaCompletado) _avisarResultadoXP(r, res, r.titulo);
         _celebrarLogros(res.nuevosLogros);
-        _trasCompletarReto(r, 5000);
+        _trasCompletarReto(r, 2200);
       } else {
         intentos++;
         fb.innerHTML = `<span style="color:var(--danger);font-weight:700">No es esa.</span> <span style="color:var(--text-2)">${intentos >= 1 && r.pista ? 'Pista: ' + escapeHtml(r.pista) : 'Revisa tu cuenta e inténtalo otra vez.'}</span>`;
