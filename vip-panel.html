@@ -3469,6 +3469,13 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
   .modal-backdrop[data-modal-id^="actividad-clase"] .modal__body{padding:14px 12px 18px}
   .modal-backdrop[data-modal-id^="actividad-clase"] #cru-pistas{grid-template-columns:1fr!important;gap:10px!important;font-size:11.5px!important}
   .modal-backdrop[data-modal-id^="actividad-clase"] #cru-grid-wrap{margin-bottom:12px!important}
+  /* Confirmación de curso: las dos opciones caben y se pueden tocar aun en pantallas angostas. */
+  .modal-backdrop[data-modal-id="confirmar-curso-prueba"]{padding:12px}
+  .modal-backdrop[data-modal-id="confirmar-curso-prueba"] .modal{max-height:calc(100svh - 24px)}
+  .modal-backdrop[data-modal-id="confirmar-curso-prueba"] .modal__body{padding:16px}
+  .modal-backdrop[data-modal-id="confirmar-curso-prueba"] .prueba-portada{height:118px!important;margin:14px 0 11px!important}
+  .modal-backdrop[data-modal-id="confirmar-curso-prueba"] .prueba-actions{flex-wrap:wrap!important;margin-top:15px!important}
+  .modal-backdrop[data-modal-id="confirmar-curso-prueba"] .prueba-actions .btn{flex:1 1 100%;min-height:43px}
 
   /* IPER mobile */
   .iper-form{grid-template-columns:1fr}
@@ -5773,11 +5780,11 @@ const Sections = (function(){
     Modal.open({ id, size:'sm', closeOnBackdrop:true, body: `
       <div style="padding:5px 1px 3px;">
         <div style="display:flex;align-items:center;gap:11px;padding-bottom:14px;border-bottom:1px solid var(--border);"><div style="width:38px;height:38px;border-radius:11px;background:color-mix(in srgb,var(--success) 14%,var(--surface));display:grid;place-items:center;font-size:18px;">▷</div><div><h3 style="font-size:17px;line-height:1.1;margin:0;color:var(--text);">¿Seguro que deseas este curso?</h3><p style="font-size:12px;color:var(--text-3);margin:4px 0 0;">Tu prueba gratuita</p></div></div>
-        <img src="${portada}" alt="" style="width:100%;height:150px;object-fit:cover;border-radius:12px;margin:18px 0 13px;display:block;">
+        <img class="prueba-portada" src="${portada}" alt="" style="width:100%;height:150px;object-fit:cover;border-radius:12px;margin:18px 0 13px;display:block;">
         <h4 style="font-size:16px;margin:0 0 10px;color:var(--text);">${escapeHtml(curso.titulo || 'Curso DulceLab Food')}</h4>
         <p style="font-size:13px;color:var(--text-2);line-height:1.55;margin:0 0 10px;">Será tu <strong style="color:var(--text);">prueba gratuita</strong> y podrás ver todas sus clases menos la última, que se abre con la membresía.</p>
         <p style="font-size:13px;font-weight:700;color:var(--text);line-height:1.45;margin:0;">Solo puedes elegir uno y después no se puede cambiar.</p>
-        <div style="display:flex;gap:9px;justify-content:flex-end;margin-top:20px;"><button type="button" class="btn btn--ghost" id="prueba-ver-otros">No, ver otros cursos</button><button type="button" class="btn btn--primary" id="prueba-confirmar">Sí, es mi prueba gratuita</button></div>
+        <div class="prueba-actions" style="display:flex;gap:9px;justify-content:flex-end;margin-top:20px;"><button type="button" class="btn btn--ghost" id="prueba-ver-otros">No, ver otros cursos</button><button type="button" class="btn btn--primary" id="prueba-confirmar">Sí, es mi prueba gratuita</button></div>
       </div>` });
     const root = document.querySelector(`[data-modal-id="${id}"]`);
     root?.querySelector('#prueba-ver-otros')?.addEventListener('click', () => Modal.close(id));
@@ -6876,7 +6883,11 @@ const Sections = (function(){
     const elAyuda = root.querySelector('#sopa-ayuda');
     const elRendirse = root.querySelector('#sopa-rendirse');
     const elReintentar = root.querySelector('#sopa-reintentar');
-    const cellPx = n >= 12 ? 24 : n >= 10 ? 27 : 30;
+    // La sopa nunca debe recortarse: calculamos el tamaño desde el ancho real
+    // del modal, no desde el ancho general del teléfono.
+    const anchoDisponible = Math.max(190, (root.clientWidth || window.innerWidth || 360) - 12);
+    const preferido = n >= 12 ? 24 : n >= 10 ? 27 : 30;
+    const cellPx = Math.max(18, Math.min(preferido, Math.floor((anchoDisponible - Math.max(0, n - 1) * 2) / n)));
     elGrid.style.gridTemplateColumns = `repeat(${n}, ${cellPx}px)`;
 
     const maxPistas = Math.max(1, Math.ceil(colocadas.length/3));
