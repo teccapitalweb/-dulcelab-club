@@ -13675,19 +13675,23 @@ window.__maybeAskProfessionalCard = function(){
     ov.innerHTML = `
       <div class="nm-ov"></div>
       <div class="nm-box" style="text-align:left;max-width:500px">
-        <div class="nm-ic" style="text-align:center">🪪</div>
-        <h2 class="nm-title" style="text-align:center">Tu perfil profesional</h2>
-        <p class="nm-desc" style="text-align:center">Guardaremos estos datos para preparar tu tarjeta del <strong>Directorio VIP</strong>. Permanecerá privada hasta que actives tu membresía.</p>
-        <label class="nm-field">Puesto o profesión <b>*</b><input id="pc-puesto" class="nm-input" type="text" value="${esc(perfil.puesto || perfil.especialidad)}" placeholder="Ej. Chef, repostera, propietaria" maxlength="60" autocomplete="organization-title"></label>
-        <label class="nm-field">Empresa o negocio <span>(opcional)</span><input id="pc-empresa" class="nm-input" type="text" value="${esc(perfil.empresa)}" placeholder="Ej. Pastelería Dulce Nube" maxlength="60" autocomplete="organization"></label>
-        <label class="nm-field">Área principal <b>*</b><select id="pc-sector" class="nm-input"><option value="">Selecciona un área</option>${['Repostería','Panadería','Cocina','Catering','Restaurante','Negocio propio','Docencia','Consultoría','Otro'].map(x => `<option value="${x}">${x}</option>`).join('')}</select></label>
-        <label class="nm-field">Cuéntanos brevemente sobre tu experiencia <span>(opcional)</span><textarea id="pc-bio" class="nm-input" rows="3" maxlength="160" placeholder="Ej. Especialista en pasteles para eventos y mesas de postres.">${esc(perfil.bio)}</textarea></label>
-        <label class="nm-field">WhatsApp profesional <span>(opcional)</span><input id="pc-whatsapp" class="nm-input" type="tel" value="${esc(perfil.whatsapp)}" placeholder="Ej. +52 55 1234 5678" maxlength="20" autocomplete="tel"></label>
-        <label class="nm-field">Correo de contacto <span>(opcional)</span><input id="pc-email" class="nm-input" type="email" value="${esc(perfil.email)}" placeholder="Ej. hola@tunegocio.com" maxlength="80" autocomplete="email"></label>
-        <div class="nm-hint" id="pc-hint"></div>
+        <div class="pc-content">
+          <div class="nm-ic" style="text-align:center">🪪</div>
+          <h2 class="nm-title" style="text-align:center">Tu perfil profesional</h2>
+          <p class="nm-desc" style="text-align:center">Guardaremos estos datos para preparar tu tarjeta del <strong>Directorio VIP</strong>. Permanecerá privada hasta que actives tu membresía.</p>
+          <label class="nm-field">Puesto o profesión <b>*</b><input id="pc-puesto" class="nm-input" type="text" value="${esc(perfil.puesto || perfil.especialidad)}" placeholder="Ej. Chef, repostera, propietaria" maxlength="60" autocomplete="organization-title"></label>
+          <label class="nm-field">Empresa o negocio <span>(opcional)</span><input id="pc-empresa" class="nm-input" type="text" value="${esc(perfil.empresa)}" placeholder="Ej. Pastelería Dulce Nube" maxlength="60" autocomplete="organization"></label>
+          <label class="nm-field">Área principal <b>*</b><select id="pc-sector" class="nm-input"><option value="">Selecciona un área</option>${['Repostería','Panadería','Cocina','Catering','Restaurante','Negocio propio','Docencia','Consultoría','Otro'].map(x => `<option value="${x}">${x}</option>`).join('')}</select></label>
+          <label class="nm-field">Cuéntanos brevemente sobre tu experiencia <span>(opcional)</span><textarea id="pc-bio" class="nm-input" rows="3" maxlength="160" placeholder="Ej. Especialista en pasteles para eventos y mesas de postres.">${esc(perfil.bio)}</textarea></label>
+          <label class="nm-field">WhatsApp profesional <span>(opcional)</span><input id="pc-whatsapp" class="nm-input" type="tel" value="${esc(perfil.whatsapp)}" placeholder="Ej. +52 55 1234 5678" maxlength="20" autocomplete="tel"></label>
+          <label class="nm-field">Correo de contacto <span>(opcional)</span><input id="pc-email" class="nm-input" type="email" value="${esc(perfil.email)}" placeholder="Ej. hola@tunegocio.com" maxlength="80" autocomplete="email"></label>
+          <div class="nm-hint" id="pc-hint"></div>
+        </div>
+        <div class="pc-actions">
         <button class="nm-save" id="pc-save">Guardar mi perfil profesional</button>
         <button class="nm-skip" id="pc-skip">Completar después</button>
         <p class="nm-foot" style="text-align:center">Tus datos de contacto quedan privados hasta que actives VIP y publiques tu tarjeta.</p>
+        </div>
       </div>`;
     // También puede aparecer para una cuenta cuyo nombre ya estaba confirmado,
     // así que no depende de que se haya creado antes el CSS del modal de nombre.
@@ -13695,6 +13699,12 @@ window.__maybeAskProfessionalCard = function(){
       const st = document.createElement('style'); st.id = 'professional-card-css';
       st.textContent = '#professional-card-modal{position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}#professional-card-modal .nm-ov{position:fixed;inset:0;background:rgba(10,12,20,.72);backdrop-filter:blur(4px)}#professional-card-modal .nm-box{position:relative;width:100%;max-width:500px;background:var(--surface,#15110C);border:1px solid var(--border-2,rgba(255,230,200,.14));border-radius:20px;padding:30px 26px 24px;box-shadow:0 30px 80px rgba(0,0,0,.55)}#professional-card-modal .nm-title{font-family:inherit;font-size:20px;font-weight:800;color:var(--text,#F5EFE6);margin:0 0 8px}#professional-card-modal .nm-desc{font-size:13.5px;color:var(--text-2,#B8AC9C);line-height:1.6;margin:0 0 18px}#professional-card-modal .nm-input{box-sizing:border-box;width:100%;padding:11px 13px;border-radius:12px;border:1.5px solid var(--border-2,rgba(255,230,200,.18));background:var(--surface-2,#1E1812);color:var(--text,#F5EFE6);font:inherit;outline:none}#professional-card-modal .nm-field{display:block;margin:12px 0 0;font-size:12px;font-weight:700;color:var(--text,#F5EFE6)}#professional-card-modal .nm-field b{color:var(--primary,#C4577A)}#professional-card-modal .nm-field span{font-weight:500;color:var(--text-3,#8A7E6E)}#professional-card-modal .nm-field .nm-input{display:block;margin-top:6px;text-align:left;font-size:14px}#professional-card-modal textarea.nm-input{resize:vertical;min-height:72px}#professional-card-modal .nm-hint{font-size:12px;color:#E0894A;min-height:16px;margin:8px 0 4px}#professional-card-modal .nm-save{width:100%;margin-top:12px;padding:14px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--primary,#C4577A),var(--highlight,#D5A13D));color:#2A0D16;font:inherit;font-size:15px;font-weight:800;cursor:pointer}#professional-card-modal .nm-skip{width:100%;margin-top:9px;padding:11px;border:1px solid var(--border-2,rgba(255,230,200,.16));border-radius:12px;background:none;color:var(--text-2,#B8AC9C);font:inherit;font-size:13.5px;font-weight:600;cursor:pointer}#professional-card-modal .nm-foot{font-size:11.5px;color:var(--text-3,#8A7E6E);margin:14px 0 0;line-height:1.5}@media(max-width:600px),(max-height:760px){#professional-card-modal{align-items:flex-start;padding:12px 12px calc(24px + env(safe-area-inset-bottom))}#professional-card-modal .nm-box{margin:0 auto;padding:20px 18px 22px}#professional-card-modal .nm-ic{font-size:28px;margin-bottom:6px}#professional-card-modal .nm-title{font-size:19px}#professional-card-modal .nm-desc{margin-bottom:12px}#professional-card-modal .nm-field{margin-top:10px}#professional-card-modal textarea.nm-input{min-height:62px}}';
       document.head.appendChild(st);
+    }
+    if (!document.getElementById('professional-card-mobile-css')) {
+      const mobileStyle = document.createElement('style');
+      mobileStyle.id = 'professional-card-mobile-css';
+      mobileStyle.textContent = '@media(max-width:600px),(max-height:760px){#professional-card-modal .nm-box{padding:20px 18px 16px;max-height:calc(100dvh - 24px - env(safe-area-inset-bottom));display:flex;flex-direction:column;overflow:hidden}#professional-card-modal .pc-content{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 2px 6px}#professional-card-modal .pc-actions{flex:0 0 auto;padding-top:8px;background:var(--surface,#15110C);border-top:1px solid var(--border-2,rgba(255,230,200,.14))}#professional-card-modal .nm-save{margin-top:2px}}';
+      document.head.appendChild(mobileStyle);
     }
     document.body.appendChild(ov);
     const sector = document.getElementById('pc-sector');
