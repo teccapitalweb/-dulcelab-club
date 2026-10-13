@@ -10119,10 +10119,8 @@ const Sections = (function(){
 
   // ─── Tipo: encontrar el error (ilustración con puntos clicables) ───
   function _retoError(r){
-    const encontrados = new Set();
-    const segundos = RETO_TIEMPO_POR_TIPO.error;
-    const cronometro = _crearCronometro(segundos);
-    let intentosFallidos = 0;
+    const seleccionados = new Set();
+    let resuelto = false;
     const body = document.createElement('div');
     const puntosHtml = r.hotspots.map((h,i)=>`<circle class="reto-err-spot" data-i="${i}" cx="${h.x}" cy="${h.y}" r="${h.r}" fill="transparent" stroke="transparent" style="cursor:pointer;"/>`).join('');
     const escena = r.imagen
@@ -10141,36 +10139,33 @@ const Sections = (function(){
           <ellipse cx="38" cy="82" rx="10" ry="4" fill="#6B7280" opacity=".8"/>
         </svg>`;
     body.innerHTML = `
-      ${_timerHtml(segundos)}
-      <p style="font-size:12.5px;color:var(--text-2);margin-bottom:10px;">Toca las ${r.hotspots.length} zonas donde ves una falla de inocuidad.</p>
+      <p style="font-size:12.5px;color:var(--text-2);margin-bottom:10px;">Toca las ${r.hotspots.length} zonas donde veas una falla. Al terminar, pulsa <strong>Verificar</strong>.</p>
       <div id="reto-err-wrap" style="position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--border-2);cursor:crosshair;">
         ${escena}
         <svg viewBox="0 0 100 100" style="position:absolute;inset:0;width:100%;height:100%;">
           ${puntosHtml}
         </svg>
       </div>
-      <div id="reto-err-fb" style="margin-top:10px;font-size:12.5px;color:var(--text-2);">Encontrados: <strong id="reto-err-n">0</strong> de ${r.hotspots.length}</div>
+      <div id="reto-err-fb" style="margin-top:10px;font-size:12.5px;color:var(--text-2);">Seleccionadas: <strong id="reto-err-n">0</strong> de ${r.hotspots.length}</div>
     `;
     const footer = document.createElement('div');
     footer.innerHTML = `
       <button class="btn btn--ghost" id="reto-cerrar">Cerrar</button>
       <button class="btn btn--ghost" id="reto-hint" data-bypass-paywall="true"><svg class="ic"><use href="#i-info"/></svg>Pista</button>
+      <button class="btn btn--primary" id="reto-verificar" disabled>Verificar</button>
       <button class="btn btn--ghost" id="reto-giveup" style="display:none;color:var(--danger);">Ver respuesta (sin puntos)</button>
     `;
-    Modal.open({ id:'reto-'+r.id, title:r.titulo, subtitle:r.categoria+' · +'+r.puntos+' pts', icon:'i-bolt', size:'md', body, footer, onClose:()=>cronometro.detener() });
+    Modal.open({ id:'reto-'+r.id, title:r.titulo, subtitle:r.categoria+' · +'+r.puntos+' pts', icon:'i-bolt', size:'md', body, footer });
     function bloquearTodo(){
       body.querySelectorAll('.reto-err-spot').forEach(spot => spot.style.pointerEvents = 'none');
       footer.querySelector('#reto-hint').disabled = true;
+      footer.querySelector('#reto-verificar').disabled = true;
       const gu = footer.querySelector('#reto-giveup'); if(gu) gu.disabled = true;
     }
-    cronometro.iniciar(body.querySelector('#reto-timer-txt'), () => {
-      body.querySelector('#reto-err-fb').innerHTML = '<span style="color:var(--danger);font-weight:600;">⏰ Se acabó el tiempo. Cierra y vuelve a intentar.</span>';
-      bloquearTodo();
-    });
     footer.querySelector('#reto-cerrar').addEventListener('click', ()=>Modal.close('reto-'+r.id));
     footer.querySelector('#reto-hint').addEventListener('click', ()=>{
-      if(cronometro.vencido) return;
-      const faltante = r.hotspots.findIndex((h,i)=>!encontrados.has(i));
+      if(resuelto) return;
+      const faltante = r.hotspots.findIndex((h,i)=>!seleccionados.has(i));
       if(faltante<0) return;
       const spot = body.querySelector(`.reto-err-spot[data-i="${faltante}"]`);
       if(spot){
@@ -10182,10 +10177,8 @@ const Sections = (function(){
       footer.querySelector('#reto-giveup').style.display = '';
     });
     footer.querySelector('#reto-giveup').addEventListener('click', async ()=>{
-      if(cronometro.vencido) return;
-      cronometro.detener();
       r.hotspots.forEach((h,i)=>{
-        encontrados.add(i);
+        seleccionados.add(i);
         const spot = body.querySelector(`.reto-err-spot[data-i="${i}"]`);
         if(spot){ spot.setAttribute('fill','rgba(122,154,110,.35)'); spot.setAttribute('stroke','#7A9A6E'); spot.setAttribute('stroke-width','1.5'); spot.style.animation=''; }
       });
@@ -10194,34 +10187,50 @@ const Sections = (function(){
       _retoReintento(r, body.querySelector('#reto-err-fb'), 'Ahí están las ' + r.hotspots.length + ' fallas. Rendirse no suma puntos: vuelve a intentarlo y encuéntralas tú.', 10);
     });
     body.querySelectorAll('.reto-err-spot').forEach(spot=>{
-      spot.addEventListener('click', async ()=>{
-        if(cronometro.vencido) return;
+      spot.addEventListener('click', ()=>{
+        if(resuelto) return;
         const i = Number(spot.dataset.i);
-        if(encontrados.has(i)) return;
-        encontrados.add(i);
-        spot.setAttribute('fill','rgba(122,154,110,.35)');
-        spot.setAttribute('stroke','#7A9A6E');
-        spot.setAttribute('stroke-width','1.5');
-        spot.style.animation = '';
-        body.querySelector('#reto-err-n').textContent = String(encontrados.size);
-        body.querySelector('#reto-err-fb').innerHTML = '<span style="color:var(--success);font-weight:600;">¡Esa sí! Encontrados: '+encontrados.size+' de '+r.hotspots.length+'</span>';
-        if(encontrados.size === r.hotspots.length){
-          cronometro.detener();
-          bloquearTodo();
-          const res = await _otorgarXP(r.id, r.puntos);
-          if(!res.yaCompletado) _avisarResultadoXP(r, res, '¡Encontraste las '+r.hotspots.length+' fallas!');
-          _celebrarLogros(res.nuevosLogros);
-          _trasCompletarReto(r);
+        if(seleccionados.has(i)){
+          seleccionados.delete(i);
+          spot.setAttribute('fill','transparent');
+          spot.setAttribute('stroke','transparent');
+          spot.setAttribute('stroke-width','0');
+        } else {
+          seleccionados.add(i);
+          spot.setAttribute('fill','rgba(213,161,61,.26)');
+          spot.setAttribute('stroke','#D5A13D');
+          spot.setAttribute('stroke-width','1.8');
         }
+        spot.style.animation = '';
+        body.querySelector('#reto-err-n').textContent = String(seleccionados.size);
+        const faltan = r.hotspots.length - seleccionados.size;
+        body.querySelector('#reto-err-fb').innerHTML = faltan
+          ? 'Seleccionaste <strong>'+seleccionados.size+'</strong> de '+r.hotspots.length+'. Te faltan '+faltan+'; puedes quitar una selección tocándola de nuevo.'
+          : '<span style="color:var(--primary);font-weight:600;">Listo. Pulsa Verificar para comprobar tus respuestas.</span>';
+        footer.querySelector('#reto-verificar').disabled = seleccionados.size !== r.hotspots.length;
       });
+    });
+    footer.querySelector('#reto-verificar').addEventListener('click', async ()=>{
+      if(resuelto || seleccionados.size !== r.hotspots.length) return;
+      resuelto = true;
+      r.hotspots.forEach((h,i)=>{
+        const spot = body.querySelector(`.reto-err-spot[data-i="${i}"]`);
+        if(spot){ spot.setAttribute('fill','rgba(122,154,110,.35)'); spot.setAttribute('stroke','#53814D'); spot.setAttribute('stroke-width','1.7'); }
+      });
+      bloquearTodo();
+      footer.querySelector('#reto-verificar').textContent = 'Resuelto ✓';
+      const res = await _otorgarXP(r.id, r.puntos);
+      const mensaje = res.yaCompletado ? 'Este reto ya estaba resuelto.' : '¡Correcto! Encontraste las '+r.hotspots.length+' fallas y ganaste '+r.puntos+' puntos.';
+      body.querySelector('#reto-err-fb').innerHTML = '<span style="color:var(--success);font-weight:700;">'+mensaje+'</span>';
+      if(!res.yaCompletado) _avisarResultadoXP(r, res, '¡Encontraste las '+r.hotspots.length+' fallas!');
+      _celebrarLogros(res.nuevosLogros);
+      _trasCompletarReto(r, 2400);
     });
     // Clic en zona vacía (no es ninguna falla) · da feedback de "no es aquí"
     body.querySelector('#reto-err-wrap').addEventListener('click', (e)=>{
-      if(cronometro.vencido) return;
+      if(resuelto) return;
       if(e.target.classList && e.target.classList.contains('reto-err-spot')) return;
-      intentosFallidos++;
-      body.querySelector('#reto-err-fb').innerHTML = '<span style="color:var(--danger);font-weight:600;">Ahí no hay ninguna falla, sigue buscando.</span>';
-      if(intentosFallidos>=3) footer.querySelector('#reto-giveup').style.display = '';
+      body.querySelector('#reto-err-fb').innerHTML = '<span style="color:var(--danger);font-weight:600;">Esa zona no quedó seleccionada. Busca una falla y toca directamente sobre ella.</span>';
     });
   }
 
