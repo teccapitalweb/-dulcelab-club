@@ -9125,26 +9125,29 @@ const Sections = (function(){
         {x:72,y:85,r:6,label:'Termómetro tirado, sin usarse para verificar temperatura'},
         {x:74,y:71,r:6,label:'Trapo/jerga sucia sobre la superficie de preparación'}
       ] },
-    { id:'err2', tipo:'quiz', categoria:'Inocuidad', titulo:'Refrigeración segura de alimentos', dificultad:'Intermedio', puntos:45, aprobar:2,
+    { id:'err2', tipo:'error', categoria:'Inocuidad', titulo:'Revisa la refrigeración segura', dificultad:'Intermedio', puntos:50,
       imagen:'assets/err2-refrigeracion.png',
-      preguntas:[
-        {p:'¿En qué zona del refrigerador debe ir el pollo crudo?',o:['En la repisa inferior, bien tapado','Arriba de los alimentos listos','En la puerta'],c:0,e:'Los crudos van abajo y cubiertos, para que sus líquidos no contaminen otros alimentos.'},
-        {p:'¿Qué dato debe llevar un recipiente con comida preparada?',o:['Solo el nombre del platillo','Fecha de preparación o caducidad','Ninguna etiqueta'],c:1,e:'Etiquetar con fecha permite rotar y desechar alimentos a tiempo.'},
-        {p:'¿Cuál es la temperatura recomendada para un refrigerador?',o:['4 °C o menos','12 °C','20 °C'],c:0,e:'A 4 °C o menos se reduce el crecimiento de bacterias.'}
+      hotspots:[
+        {x:36,y:17,r:10,label:'Pollo crudo sin cubrir en la repisa superior, sobre alimentos listos para comer'},
+        {x:66,y:21,r:8,label:'Huevos sin proteger junto a alimentos preparados'},
+        {x:58,y:40,r:8,label:'Arroz cocido guardado sin etiqueta ni fecha'},
+        {x:45,y:66,r:9,label:'Carne cruda con líquido escurriendo dentro del refrigerador'}
       ] },
-    { id:'err3', tipo:'quiz', categoria:'Inocuidad', titulo:'Higiene personal en cocina', dificultad:'Intermedio', puntos:45, aprobar:2,
+    { id:'err3', tipo:'error', categoria:'Inocuidad', titulo:'Detecta las fallas de higiene', dificultad:'Intermedio', puntos:50,
       imagen:'assets/err3-higiene.png',
-      preguntas:[
-        {p:'Antes de ponerse guantes para manipular alimentos, lo primero es…',o:['Lavarse las manos correctamente','Limpiar los guantes con una servilleta','Ponerse doble guante'],c:0,e:'Los guantes no sustituyen el lavado de manos.'},
-        {p:'¿Cómo debe llevarse el cabello al trabajar con alimentos?',o:['Suelto si está limpio','Recogido y protegido con cofia o red','Con gorra solamente'],c:1,e:'El cabello debe quedar recogido y protegido para evitar contaminación.'},
-        {p:'¿Dónde se guardan los químicos de limpieza?',o:['Junto a los alimentos para tenerlos cerca','Separados y claramente identificados','Dentro del refrigerador'],c:1,e:'Los químicos se almacenan separados de ingredientes y utensilios.'}
+      hotspots:[
+        {x:56,y:26,r:10,label:'Cabello largo suelto, sin cofia ni red para cabello'},
+        {x:62,y:67,r:10,label:'Guantes sucios usados al manipular un alimento listo para comer'},
+        {x:18,y:49,r:12,label:'Lavamanos bloqueado con utensilios sucios'},
+        {x:92,y:58,r:8,label:'Químico de limpieza colocado junto a los alimentos'}
       ] },
-    { id:'err4', tipo:'quiz', categoria:'Inocuidad', titulo:'Servicio seguro en barra y buffet', dificultad:'Avanzado', puntos:50, aprobar:2,
+    { id:'err4', tipo:'error', categoria:'Inocuidad', titulo:'Evalúa la barra de servicio', dificultad:'Avanzado', puntos:60,
       imagen:'assets/err4-servicio.png',
-      preguntas:[
-        {p:'¿A qué temperatura se deben conservar los alimentos calientes en una barra?',o:['A 60 °C o más','A temperatura ambiente','A 35 °C'],c:0,e:'Los alimentos calientes deben mantenerse a 60 °C o más.'},
-        {p:'Para servir una ensalada fría de forma segura se debe…',o:['Mantenerla fría y protegida','Dejarla junto a alimentos crudos','Mezclarla con la guarnición caliente'],c:0,e:'Los alimentos fríos se mantienen refrigerados y separados de crudos.'},
-        {p:'Los platos limpios para el servicio se almacenan…',o:['Directamente sobre el piso','En una superficie limpia y protegida','Debajo de la barra sin cubrir'],c:1,e:'Así se evita que se contaminen antes de servirlos.'}
+      hotspots:[
+        {x:23,y:43,r:13,label:'Alimento caliente servido sin fuente de calor para conservar la temperatura segura'},
+        {x:43,y:36,r:11,label:'Ensalada fría expuesta junto a alimentos crudos'},
+        {x:58,y:38,r:10,label:'Pollo crudo colocado en una barra de autoservicio'},
+        {x:85,y:78,r:10,label:'Platos limpios colocados directamente sobre el piso'}
       ] },
     { id:'sec2', tipo:'secuencia', categoria:'Cocina', titulo:'Ordena cómo se prepara una salsa bechamel', dificultad:'Básico', puntos:30,
       pasos:['Derretir la mantequilla','Agregar la harina y cocinar el roux','Incorporar la leche poco a poco','Sazonar y dejar espesar'] },
