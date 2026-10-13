@@ -10122,7 +10122,7 @@ const Sections = (function(){
   function _retoError(r){
     let resuelto = false;
     const body = document.createElement('div');
-    const puntosHtml = r.hotspots.map((h,i)=>`<circle class="reto-err-spot" data-i="${i}" cx="${h.x}" cy="${h.y}" r="${h.r}" fill="transparent" stroke="transparent" style="cursor:pointer;"/>`).join('');
+    const puntosHtml = r.hotspots.map((h,i)=>`<button type="button" class="reto-err-spot" data-i="${i}" aria-label="Seleccionar zona ${i+1}" style="position:absolute;left:${h.x-h.r}%;top:${h.y-h.r}%;width:${h.r*2}%;aspect-ratio:1;border-radius:50%;border:3px solid transparent;background:transparent;cursor:pointer;padding:0;z-index:2;"></button>`).join('');
     const escena = r.imagen
       ? `<img src="${r.imagen}" style="width:100%;display:block;">`
       : `<svg viewBox="0 0 100 100" style="width:100%;display:block;background:#EDE6DA">
@@ -10142,9 +10142,7 @@ const Sections = (function(){
       <p style="font-size:12.5px;color:var(--text-2);margin-bottom:10px;">Toca las ${r.hotspots.length} zonas donde veas una falla. Al terminar, pulsa <strong>Verificar</strong>.</p>
       <div id="reto-err-wrap" style="position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--border-2);cursor:crosshair;">
         ${escena}
-        <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;">
-          ${puntosHtml}
-        </svg>
+        ${puntosHtml}
       </div>
       <div id="reto-err-fb" style="margin-top:10px;font-size:12.5px;color:var(--text-2);">Seleccionadas: <strong id="reto-err-n">0</strong> de ${r.hotspots.length}</div>
     `;
@@ -10156,9 +10154,7 @@ const Sections = (function(){
       <button class="btn btn--ghost" id="reto-giveup" style="display:none;color:var(--danger);">Ver respuesta (sin puntos)</button>
     `;
     Modal.open({ id:'reto-'+r.id, title:r.titulo, subtitle:r.categoria+' · +'+r.puntos+' pts', icon:'i-bolt', size:'md', body, footer });
-    // El estado visual es la fuente de verdad: evita que una marca visible y el
-    // contador puedan desincronizarse en SVGs de distinto tamaño.
-    const spotsSeleccionados = () => Array.from(body.querySelectorAll('.reto-err-spot')).filter(spot => spot.dataset.seleccionado === 'si' || spot.getAttribute('stroke') === '#D5A13D');
+    const spotsSeleccionados = () => Array.from(body.querySelectorAll('.reto-err-spot[data-seleccionado="si"]'));
     const totalSeleccionado = () => spotsSeleccionados().length;
     function bloquearTodo(){
       body.querySelectorAll('.reto-err-spot').forEach(spot => spot.style.pointerEvents = 'none');
@@ -10173,8 +10169,8 @@ const Sections = (function(){
       if(faltante<0) return;
       const spot = body.querySelector(`.reto-err-spot[data-i="${faltante}"]`);
       if(spot){
-        spot.setAttribute('stroke','#6687B5');
-        spot.setAttribute('stroke-width','2.5');
+        spot.style.borderColor = '#6687B5';
+        spot.style.boxShadow = '0 0 0 4px rgba(102,135,181,.2)';
         spot.style.animation = 'retoHintPulse 1s ease-in-out infinite';
       }
       body.querySelector('#reto-err-fb').innerHTML = '<span style="color:var(--primary);font-weight:600;">💡 Hay una falla marcada con un círculo azul.</span>';
@@ -10183,7 +10179,7 @@ const Sections = (function(){
     footer.querySelector('#reto-giveup').addEventListener('click', async ()=>{
       r.hotspots.forEach((h,i)=>{
         const spot = body.querySelector(`.reto-err-spot[data-i="${i}"]`);
-        if(spot){ spot.setAttribute('fill','rgba(122,154,110,.35)'); spot.setAttribute('stroke','#7A9A6E'); spot.setAttribute('stroke-width','1.5'); spot.style.animation=''; }
+        if(spot){ spot.style.background='rgba(122,154,110,.35)'; spot.style.borderColor='#53814D'; spot.style.animation=''; }
       });
       body.querySelector('#reto-err-n').textContent = String(r.hotspots.length);
       bloquearTodo();
@@ -10195,14 +10191,13 @@ const Sections = (function(){
         const i = Number(spot.dataset.i);
         if(spot.dataset.seleccionado === 'si'){
           delete spot.dataset.seleccionado;
-          spot.setAttribute('fill','transparent');
-          spot.setAttribute('stroke','transparent');
-          spot.setAttribute('stroke-width','0');
+          spot.style.background='transparent';
+          spot.style.borderColor='transparent';
+          spot.style.boxShadow='none';
         } else {
           spot.dataset.seleccionado = 'si';
-          spot.setAttribute('fill','rgba(213,161,61,.26)');
-          spot.setAttribute('stroke','#D5A13D');
-          spot.setAttribute('stroke-width','1.8');
+          spot.style.background='rgba(213,161,61,.26)';
+          spot.style.borderColor='#D5A13D';
         }
         spot.style.animation = '';
         const cantidad = totalSeleccionado();
@@ -10219,7 +10214,7 @@ const Sections = (function(){
       resuelto = true;
       r.hotspots.forEach((h,i)=>{
         const spot = body.querySelector(`.reto-err-spot[data-i="${i}"]`);
-        if(spot){ spot.setAttribute('fill','rgba(122,154,110,.35)'); spot.setAttribute('stroke','#53814D'); spot.setAttribute('stroke-width','1.7'); }
+        if(spot){ spot.style.background='rgba(122,154,110,.35)'; spot.style.borderColor='#53814D'; spot.style.boxShadow='none'; }
       });
       bloquearTodo();
       footer.querySelector('#reto-verificar').textContent = 'Resuelto ✓';
