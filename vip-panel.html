@@ -2350,6 +2350,34 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
   .dir-chips{margin-bottom:16px}
   .dir-empty{min-height:245px;padding:24px 16px}
 }
+/* Directorio profesional: jerarquía visual inspirada en un directorio editorial,
+   adaptada a la identidad vino/dorado de DulceLab Food. */
+.dir-page{max-width:1200px}
+.dir-hero{min-height:164px;padding:31px 34px 30px;border-color:#3e1c18;background:radial-gradient(circle at 86% 22%,rgba(213,161,61,.30),transparent 22%),linear-gradient(112deg,#180d0e 0%,#351715 57%,#6b351b 100%);box-shadow:0 16px 32px rgba(56,17,14,.16)}
+.dir-hero::before{right:44px;top:28px;width:84px;height:84px;border:8px solid rgba(255,255,255,.11);box-shadow:0 0 0 14px rgba(255,255,255,.045),0 0 0 29px rgba(255,255,255,.025)}
+.dir-hero::after{left:34px;background:linear-gradient(90deg,#E0A735,#fff0bd)}
+.dir-hero__eyebrow{color:#f0c35e;background:rgba(255,255,255,.08);border-color:rgba(240,195,94,.33)}
+.dir-hero__title{color:#fff}.dir-hero__sub{color:rgba(255,255,255,.76);max-width:620px}
+.dir-spotlight{display:flex;align-items:center;gap:14px;margin:-5px 0 14px;padding:14px 17px;border:1px solid rgba(211,161,61,.55);border-radius:17px;background:linear-gradient(100deg,#29130f,#512315);color:#fff;box-shadow:0 9px 20px rgba(62,20,15,.12)}
+.dir-spotlight__icon{width:42px;height:42px;border-radius:12px;background:linear-gradient(145deg,#f5cf6a,#c98920);color:#351811;display:grid;place-items:center;flex:none}.dir-spotlight__icon .ic{width:21px;height:21px}
+.dir-spotlight__copy{min-width:0;flex:1}.dir-spotlight__copy b{display:block;font-size:14px;margin-bottom:2px}.dir-spotlight__copy span{font-size:12.5px;color:rgba(255,255,255,.72)}
+.dir-spotlight .dir-profile-cta{min-width:136px;background:#dfa52c;border-color:#dfa52c;color:#2b120d;box-shadow:none}.dir-spotlight .dir-profile-cta::before{background:#672016;box-shadow:none}
+.dir-workbench{display:block;margin:0 0 13px}.dir-search{min-height:48px;border-radius:13px;background:var(--surface);box-shadow:none}
+.dir-chips{margin-bottom:19px}.dir-chip{padding:8px 14px}.dir-grid{grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.dir-section-head{grid-column:1/-1;display:flex;align-items:center;gap:10px;margin:8px 0 -3px;padding-bottom:9px;border-bottom:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:800;letter-spacing:1.05px;text-transform:uppercase;color:var(--text-2)}
+.dir-section-head::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--accent,#D5A13D);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent,#D5A13D) 16%,transparent)}
+.dir-section-head span{margin-left:auto;font-size:10px;color:var(--text-3)}
+.dir-card{min-height:281px;padding:0 0 16px;border-radius:17px;align-items:stretch;text-align:left;background:var(--surface);box-shadow:0 8px 18px rgba(62,20,15,.055)}
+.dir-card::before{display:none}.dir-card:hover{transform:translateY(-4px);box-shadow:0 15px 28px rgba(62,20,15,.14)}
+.dir-card__cover{height:57px;background:linear-gradient(120deg,var(--dir-color),color-mix(in srgb,var(--dir-color) 48%,#fff));position:relative;overflow:hidden}.dir-card__cover::after{content:"";position:absolute;width:120px;height:120px;border:20px solid rgba(255,255,255,.16);border-radius:50%;right:-50px;top:-76px}
+.dir-card__top{margin:-38px 0 8px 18px;align-self:flex-start}.dir-card__foto{width:78px;height:78px;border-color:var(--surface);box-shadow:0 6px 16px rgba(0,0,0,.18)}
+.dir-card__body-m{display:flex;flex:1;min-width:0;flex-direction:column;padding:0 18px}.dir-card__name{font-size:16px}.dir-card__puesto{min-height:17px;font-size:12.5px;color:var(--text-2)}
+.dir-card__empresa{margin-bottom:8px}.dir-card__sector{align-self:flex-start;margin-bottom:9px}.dir-card__bio{text-align:left;margin-bottom:11px}.dir-card__ctas{justify-content:flex-start;padding-top:0}.dir-card__sincontacto{text-align:left;padding-top:8px}.dir-card__badge-mia{top:12px;right:12px;background:#6e1628}
+.dir-form__intro{display:flex;align-items:center;gap:8px;margin:0 0 16px;padding:10px 12px;border:1px solid var(--border-2);border-radius:12px;background:var(--surface-2);font-size:12px;color:var(--text-2)}
+.dir-form__intro .ic{width:16px;height:16px;color:var(--primary)}.dir-form__intro b{color:var(--text)}
+.dir-form__cover{height:56px;border-radius:12px;margin:3px 0 8px;background:linear-gradient(120deg,var(--dir-form-color,#C4577A),color-mix(in srgb,var(--dir-form-color,#C4577A) 48%,#fff));border:1px solid color-mix(in srgb,var(--dir-form-color,#C4577A) 55%,var(--border));position:relative;overflow:hidden}.dir-form__cover::after{content:"";position:absolute;width:120px;height:120px;border:20px solid rgba(255,255,255,.18);border-radius:50%;right:-32px;top:-78px}
+.dir-form__palette{display:flex;gap:7px;margin:0 0 8px}.dir-form__swatch{width:27px;height:27px;border-radius:9px;border:2px solid transparent;cursor:pointer;background:var(--swatch);box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}.dir-form__swatch.is-active{border-color:var(--text);box-shadow:0 0 0 2px var(--surface),0 0 0 3px var(--text)}
+@media(max-width:600px){.dir-hero{min-height:0;padding:25px 21px}.dir-hero::before{right:20px;top:25px;transform:scale(.75)}.dir-spotlight{align-items:flex-start;flex-wrap:wrap;padding:14px}.dir-spotlight__copy{flex-basis:calc(100% - 58px)}.dir-spotlight .dir-profile-cta{width:100%;min-height:42px}.dir-grid{grid-template-columns:1fr}.dir-card{min-height:0;flex-direction:column;padding:0 0 16px;gap:0}.dir-card__cover{height:53px}.dir-card__top{margin:-34px 0 8px 16px}.dir-card__foto{width:70px;height:70px}.dir-card__body-m{padding:0 16px}.dir-card__bio{font-size:12px}.dir-section-head{margin-top:5px}}
 /* ===== FORO funcional ===== */
 .foro-aviso{display:flex;align-items:center;gap:10px;background:color-mix(in srgb,var(--accent,#D5A13D) 8%,transparent);border:1px dashed color-mix(in srgb,var(--primary) 30%,transparent);border-radius:12px;padding:10px 14px;margin:12px 0 0;font-size:12.5px;color:var(--text-2)}
 .foro-aviso .ic{width:16px;height:16px;color:var(--primary);flex-shrink:0}
@@ -11981,13 +12009,17 @@ const Sections = (function(){
         </div>
 
         ${esVip ? '' : `<div class="dir-lockbanner">${_DIR_ICO_LOCK}<span>Estás viendo el directorio como visitante. <b>Contactar a los miembros</b> y <b>compartir tu propia tarjeta</b> se activa con tu membresía VIP.</span><button type="button" class="dir-lockbanner__btn" data-dir-vip>Activar membresía</button></div>`}
+        <div class="dir-spotlight">
+          <div class="dir-spotlight__icon"><svg class="ic"><use href="#i-user"/></svg></div>
+          <div class="dir-spotlight__copy"><b>Destaca con tu tarjeta profesional</b><span>Comparte tu experiencia y permite que otros miembros conozcan tu trabajo.</span></div>
+          ${esVip?`<button class="btn dir-profile-cta" id="dir-mi-tarjeta"><svg class="ic"><use href="#i-edit"/></svg>Mi tarjeta</button>`
+            :`<button class="btn dir-profile-cta dir-profile-cta--lock" id="dir-mi-tarjeta-lock">${_DIR_ICO_LOCK}Hazte VIP</button>`}
+        </div>
         <div class="dir-workbench">
           <div class="dir-search">
             <svg class="ic"><use href="#i-search"/></svg>
             <input type="text" id="dir-buscar" placeholder="Buscar por nombre, empresa o puesto…">
           </div>
-          ${esVip?`<button class="btn dir-profile-cta" id="dir-mi-tarjeta"><svg class="ic"><use href="#i-edit"/></svg>Mi tarjeta</button>`
-            :`<button class="btn dir-profile-cta dir-profile-cta--lock" id="dir-mi-tarjeta-lock">${_DIR_ICO_LOCK}Compartir mi tarjeta</button>`}
         </div>
 
         <div class="dir-chips" id="dir-chips">
@@ -12059,6 +12091,9 @@ const Sections = (function(){
     }
     const uid = window.UserState?.uid;
     const vipDir = dirEsVip();
+    // La tarjeta propia se muestra primero para que el usuario ubique y edite su
+    // presencia profesional sin perder el resto de la comunidad.
+    cards = cards.filter(c=>c.id===uid).concat(cards.filter(c=>c.id!==uid));
     // Seguridad: el link de LinkedIn/sitio web lo escribe el propio miembro en su
     // perfil — hay que validar que sea http(s) real y escapar antes de meterlo en
     // un atributo href, si no, se puede romper el atributo o abrir un esquema raro.
@@ -12071,13 +12106,15 @@ const Sections = (function(){
         return escapeHtml(u.href);
       } catch (e) { return ''; }
     };
+    let seccionAnterior = '';
     grid.innerHTML = cards.map(c=>{
       // Sin membresía no se muestra ningún dato de contacto: ni se pinta ni queda en la página.
       if (!vipDir) c = Object.assign({}, c, { whatsapp:'', email:'', linkedin:'', web:'' });
+      const color = /^#[0-9a-f]{6}$/i.test(c.color||'') ? c.color : dirColorFor(c.id);
       const inicial = (c.nombre||'?').trim().slice(0,2).toUpperCase();
       const foto = c.foto
         ? `<img src="${c.foto}" alt="${escapeHtml(c.nombre||'')}" class="dir-card__foto">`
-        : `<div class="dir-card__foto dir-card__foto--ini" style="background:linear-gradient(135deg,${c.color||'#C4577A'},${(c.color||'#C4577A')}aa);">${escapeHtml(inicial)}</div>`;
+        : `<div class="dir-card__foto dir-card__foto--ini" style="background:linear-gradient(135deg,${color},${color}aa);">${escapeHtml(inicial)}</div>`;
       const contactos = [];
       if (c.whatsapp) contactos.push(`<a class="dir-cta dir-cta--wa" href="https://wa.me/${(c.whatsapp||'').replace(/[^0-9]/g,'')}" target="_blank" rel="noopener" title="WhatsApp"><svg class="ic"><use href="#i-whatsapp"/></svg></a>`);
       if (c.email) contactos.push(`<button class="dir-cta dir-cta--mail" data-email="${escapeHtml(c.email)}" title="Copiar correo: ${escapeHtml(c.email)}"><svg class="ic"><use href="#i-mail"/></svg></button>`);
@@ -12085,15 +12122,19 @@ const Sections = (function(){
       if (c.web && _dirSafeHref(c.web)) contactos.push(`<a class="dir-cta" href="${_dirSafeHref(c.web)}" target="_blank" rel="noopener" title="Sitio web"><svg class="ic"><use href="#i-link"/></svg></a>`);
       if (!vipDir) contactos.push(`<button type="button" class="dir-cta dir-cta--lock" data-dir-lock title="Disponible con la membresía VIP">${_DIR_ICO_LOCK}<span>Contactar</span></button>`);
       const esMia = c.id===uid;
+      const seccion = esMia ? 'Tu tarjeta profesional' : 'Miembros de la comunidad';
+      const encabezado = seccion===seccionAnterior ? '' : `<div class="dir-section-head">${seccion}<span>${esMia?'Visible en el directorio':'Profesionales de DulceLab Food'}</span></div>`;
+      seccionAnterior = seccion;
       return `
-      <article class="dir-card${esMia?' dir-card--mia':''}" data-dircard="${c.id}">
+      ${encabezado}<article class="dir-card${esMia?' dir-card--mia':''}" data-dircard="${c.id}" style="--dir-color:${color}">
         ${esMia?'<span class="dir-card__badge-mia">Tú</span>':''}
+        <div class="dir-card__cover" aria-hidden="true"></div>
         <div class="dir-card__top">
           ${foto}
         </div>
         <div class="dir-card__body-m">
           <div class="dir-card__name">${escapeHtml(c.nombre||'Miembro VIP')}</div>
-          ${c.puesto?`<div class="dir-card__puesto">${escapeHtml(c.puesto)}</div>`:''}
+          <div class="dir-card__puesto">${escapeHtml(c.puesto||'Miembro de DulceLab Food')}</div>
           ${c.empresa?`<div class="dir-card__empresa"><svg class="ic"><use href="#i-briefcase"/></svg>${escapeHtml(c.empresa)}</div>`:''}
           ${c.sector?`<span class="dir-card__sector">${escapeHtml(c.sector)}</span>`:''}
           ${c.bio?`<div class="dir-card__bio">${escapeHtml(c.bio)}</div>`:''}
@@ -12199,8 +12240,11 @@ const Sections = (function(){
     _dirFotoTmp = undefined;
 
     const fotoActual = data.foto || '';
+    const coloresTarjeta = ['#7A1730','#C4577A','#D5A13D','#4F7CAC','#5B8C85','#C87558','#87505D','#6B7280'];
+    let colorTarjeta = /^#[0-9a-f]{6}$/i.test(data.color||'') ? data.color : dirColorFor(uid);
     const body = `
       <div class="dir-form">
+        <div class="dir-form__intro"><svg class="ic"><use href="#i-user"/></svg><span><b>Tarjeta profesional</b> · visible para la comunidad cuando la publiques.</span></div>
         <div class="dir-form__foto-wrap">
           <div class="dir-form__foto" id="dirf-foto-prev">
             ${fotoActual ? `<img src="${fotoActual}" alt="">` : `<svg class="ic"><use href="#i-user"/></svg>`}
@@ -12210,6 +12254,11 @@ const Sections = (function(){
             ${fotoActual?`<button class="btn btn--ghost btn--sm" id="dirf-foto-quitar">Quitar</button>`:''}
             <input type="file" id="dirf-foto-file" accept="image/*" style="display:none;">
           </div>
+        </div>
+        <label class="dir-form__lbl">Portada de tu tarjeta</label>
+        <div class="dir-form__cover" id="dirf-cover-prev" style="--dir-form-color:${colorTarjeta}"></div>
+        <div class="dir-form__palette" aria-label="Elige el color de portada">
+          ${coloresTarjeta.map(color=>`<button type="button" class="dir-form__swatch${color===colorTarjeta?' is-active':''}" data-dir-color="${color}" style="--swatch:${color}" aria-label="Color de portada"></button>`).join('')}
         </div>
         <label class="dir-form__lbl">Nombre completo</label>
         <input class="dir-form__in" id="dirf-nombre" maxlength="50" value="${(data.nombre||window.UserState?.nombre||'').replace(/"/g,'&quot;')}" placeholder="Ej. Felipe Estrada Ramírez">
@@ -12252,6 +12301,11 @@ const Sections = (function(){
     });
     const btnQuitar = document.getElementById('dirf-foto-quitar');
     if (btnQuitar) btnQuitar.addEventListener('click', ()=>{ _dirFotoTmp = null; document.getElementById('dirf-foto-prev').innerHTML = `<svg class="ic"><use href="#i-user"/></svg>`; });
+    document.querySelectorAll('[data-dir-color]').forEach(b=>b.addEventListener('click', ()=>{
+      colorTarjeta = b.dataset.dirColor;
+      document.querySelectorAll('[data-dir-color]').forEach(x=>x.classList.toggle('is-active', x===b));
+      document.getElementById('dirf-cover-prev').style.setProperty('--dir-form-color',colorTarjeta);
+    }));
 
     footer.querySelector('#dirf-cancel').addEventListener('click', ()=> m.close());
     footer.querySelector('#dirf-guardar').addEventListener('click', async ()=>{
@@ -12268,6 +12322,7 @@ const Sections = (function(){
         email: document.getElementById('dirf-email').value.trim(),
         linkedin: document.getElementById('dirf-linkedin').value.trim(),
         web: document.getElementById('dirf-web').value.trim(),
+        color: colorTarjeta,
         visible: document.getElementById('dirf-visible').checked
       };
       if (_dirFotoTmp !== undefined) payload.foto = _dirFotoTmp; // string o null
