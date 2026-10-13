@@ -3157,7 +3157,7 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 .xp-library__score b small{font-size:11px;font-weight:700;color:var(--text-3)}
 .xp-library__score span{display:block;margin-top:4px;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;color:var(--text-3)}
 .lib-next{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:20px;align-items:center;padding:16px 20px;margin-bottom:22px;border-radius:16px;border:1px solid color-mix(in srgb,var(--primary) 22%,var(--border));background:linear-gradient(110deg,color-mix(in srgb,var(--primary) 7%,var(--surface)),var(--surface) 70%)}
-.lib-next__cover{width:74px;aspect-ratio:3/4.1;border-radius:4px 8px 8px 4px;background:var(--portada) center/cover;box-shadow:2px 2px 0 var(--tono),6px 9px 16px rgba(37,18,18,.22);filter:grayscale(.5)}
+.lib-next__cover{width:74px;aspect-ratio:3/4.1;border-radius:4px 8px 8px 4px;background:var(--portada) center/cover;box-shadow:2px 2px 0 var(--tono),6px 9px 16px rgba(37,18,18,.22)}
 .lib-next__eyebrow{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:800;letter-spacing:1.3px;text-transform:uppercase;color:var(--accent,#B8862F)}
 .lib-next h3{margin:5px 0 3px;font-size:17px;font-weight:800;letter-spacing:-.3px;color:var(--text);line-height:1.2}
 .lib-next p{margin:0;font-size:12.5px;line-height:1.5;color:var(--text-2)}
@@ -3212,7 +3212,7 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 .lib-intro{margin:0 0 16px;font-size:12.5px;line-height:1.6;color:var(--text-2);max-width:720px}
 .lib-book__meta{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .rec-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:14px}
-.rec-card{position:relative;overflow:hidden;display:flex;flex-direction:column;gap:7px;padding:14px 15px 13px 18px;border-radius:14px;border:1px solid var(--border);background:linear-gradient(120deg,color-mix(in srgb,var(--surface) 96%,transparent),color-mix(in srgb,var(--surface) 72%,transparent)),var(--foto,var(--surface)) center/cover;text-align:left;color:var(--text);font:inherit;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.rec-card{position:relative;overflow:hidden;display:flex;flex-direction:column;gap:7px;padding:14px 15px 13px 18px;border-radius:14px;border:1px solid var(--border);background:linear-gradient(120deg,color-mix(in srgb,var(--surface) 70%,transparent),color-mix(in srgb,var(--surface) 46%,transparent)),var(--foto,var(--surface)) center/cover;text-align:left;color:var(--text);font:inherit;cursor:pointer;transition:transform .15s,box-shadow .15s}
 .rec-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(180deg,var(--c1),var(--c2))}
 .rec-card:hover{transform:translateY(-3px);box-shadow:0 12px 22px -14px rgba(37,18,18,.4)}
 .rec-card:focus-visible{outline:3px solid #E5C171;outline-offset:3px}
@@ -10953,16 +10953,16 @@ const Sections = (function(){
     const LIBROS_BIBLIOTECA = [
       // Clásicos de dominio público: con la membresía se abre el primero y luego uno cada 25 días ("dia" = día de membresía).
       { id:'confitero', dia:0,  tono:'#6B1526', tema:'Pastelería y confitería', titulo:'El confitero y pastelero', autor:'Eduardo Merin', anio:'1893', paginas:137,
-        pdf:'assets/libros/confitero-pastelero.pdf', portada:'assets/libros/portada-confitero-pastelero.webp',
+        pdf:'assets/libros/confitero-pastelero.pdf', portada:'assets/libros/clasico-confitero-ilustrado.png',
         fuente:'Repositorio Minerva · Universidade de Santiago de Compostela', fuenteUrl:'https://minerva.usc.gal/entities/publication/50535701-38e2-4a32-b4ba-1b0113a8ff47/full' },
       { id:'carrillo', dia:25, tono:'#B8862F', tema:'Cocina mexicana', titulo:'Nuevo y sencillo arte de cocina, repostería y refrescos', autor:'Antonia Carrillo', anio:'1836', paginas:460,
-        pdf:'assets/libros/cocina-reposteria-refrescos.pdf', portada:'assets/libros/portada-cocina-reposteria-refrescos.webp',
+        pdf:'assets/libros/cocina-reposteria-refrescos.pdf', portada:'assets/libros/clasico-carrillo-ilustrado.png',
         fuente:'Internet Archive', fuenteUrl:'https://archive.org/details/nuevoysencilloar00carr' },
       { id:'practicon', dia:50, tono:'#71513D', tema:'Cocina general', titulo:'El Practicón: tratado completo de cocina', autor:'Ángel Muro', anio:'1894', paginas:1014,
-        pdf:'assets/libros/practicon.pdf', portada:'assets/libros/portada-practicon.webp',
+        pdf:'assets/libros/practicon.pdf', portada:'assets/libros/clasico-practicon-ilustrado.png',
         fuente:'Internet Archive', fuenteUrl:'https://archive.org/details/elpracticntrat00muro' },
       { id:'montino', dia:75, tono:'#7A1B30', tema:'Cocina y pastelería clásica', titulo:'Arte de cocina, pastelería, vizcochería y conservería', autor:'Francisco Martínez Montiño', anio:'ed. 1778', paginas:492,
-        pdf:'assets/libros/arte-de-cocina.pdf', portada:'assets/libros/portada-arte-de-cocina.webp',
+        pdf:'assets/libros/arte-de-cocina.pdf', portada:'assets/libros/clasico-montino-ilustrado.png',
         fuente:'Internet Archive', fuenteUrl:'https://archive.org/details/artedecocinapast00mart_1' }
     ];
     const xpMaximoRetos = (typeof RETOS_LIBRARY !== 'undefined' && RETOS_LIBRARY.length)
@@ -11101,6 +11101,16 @@ const Sections = (function(){
       'Inocuidad':['#3f8a6c','#1f4a39'], 'Cocina':['#8a6a4f','#3f2d20'], 'Producción':['#8e2a3f','#3b0f1a']
     };
     const _tonoBib = (tema) => _TONOS_BIB[tema] || ['#8a1e33','#4a0e1a'];
+    // El catálogo administrable puede llegar sin portada. Estas fotos locales dan
+    // una imagen adecuada a cada receta y evitan tarjetas vacías o deslavadas.
+    const _fotoReceta = (r) => {
+      if (r.portada) return `url('${String(r.portada).replace(/'/g, '%27')}')`;
+      const nombre = String(r.titulo || '').toLowerCase();
+      if (/masa madre|pan de caja|concha/.test(nombre)) return "url('assets/discover/7.jpg')";
+      if (/salsa|pozole|arroz/.test(nombre)) return "url('assets/discover/11.jpg')";
+      if (/flan|galleta|brownie|pastel|pay|cheesecake/.test(nombre)) return "url('assets/discover/3.jpg')";
+      return "url('assets/discover/2.jpg')";
+    };
     let _bibCatalogo = null, _bibTab = window.__bibTab || 'guias';
     const _desbloqueados = () => _progreso.desbloqueados || {};
     const _minTxt = (m) => !m ? '' : m >= 1440 ? `${Math.round(m / 1440)} días` : m >= 60 ? `${Math.floor(m / 60)} h${m % 60 ? ' ' + (m % 60) + ' min' : ''}` : `${m} min`;
@@ -11282,7 +11292,8 @@ const Sections = (function(){
         banner = `<div class="lib-next"><div class="lib-next__cover" style="--portada:linear-gradient(160deg,#c9962f,#6d4b12);--tono:#6d4b12"></div><div><div class="lib-next__eyebrow">Tienes XP para gastar</div><h3>${_fmtXP(xpActual)} XP de saldo</h3><p>Te alcanza para <strong>${alcanzan.length === 1 ? 'este material' : alcanzan.length + ' materiales distintos'}</strong>, desde ${_fmtXP(barato.xp)} XP. Elige cuál abrir: cada uno que abras descuenta su precio de tu saldo, se paga una sola vez y queda tuyo.${siguiente ? ` El siguiente que aún no alcanzas cuesta ${_fmtXP(siguiente.xp)} XP.` : ''}</p></div><button type="button" class="btn btn--primary" data-lib-ir="retos">Ganar más XP</button></div>`;
       } else if (siguiente) {
         const pct = Math.max(0, Math.min(100, (xpActual / siguiente.xp) * 100));
-        banner = `<div class="lib-next"><div class="lib-next__cover" style="--portada:linear-gradient(160deg,${_tonoBib(siguiente.tema || siguiente.categoria)[0]},${_tonoBib(siguiente.tema || siguiente.categoria)[1]});--tono:${_tonoBib(siguiente.tema || siguiente.categoria)[1]}"></div><div><div class="lib-next__eyebrow">Lo más cercano</div><h3>${escapeHtml(siguiente.titulo)}</h3><p>Cuesta <strong>${_fmtXP(siguiente.xp)} XP</strong> y tu saldo es de <strong>${_fmtXP(xpActual)} XP</strong>: te faltan <strong>${_fmtXP(siguiente.xp - xpActual)} XP</strong>. Supera retos para ganarlos.</p><div class="lib-bar"><i style="width:${pct}%"></i></div></div><button type="button" class="btn btn--primary" data-lib-ir="retos">Ganar XP en Retos</button></div>`;
+        const portadaSiguiente = siguiente.tipo === 'receta' || siguiente.categoria ? _fotoReceta(siguiente) : `linear-gradient(160deg,${_tonoBib(siguiente.tema || siguiente.categoria)[0]},${_tonoBib(siguiente.tema || siguiente.categoria)[1]})`;
+        banner = `<div class="lib-next"><div class="lib-next__cover" style="--portada:${portadaSiguiente};--tono:${_tonoBib(siguiente.tema || siguiente.categoria)[1]}"></div><div><div class="lib-next__eyebrow">Lo más cercano</div><h3>${escapeHtml(siguiente.titulo)}</h3><p>Cuesta <strong>${_fmtXP(siguiente.xp)} XP</strong> y tu saldo es de <strong>${_fmtXP(xpActual)} XP</strong>: te faltan <strong>${_fmtXP(siguiente.xp - xpActual)} XP</strong>. Supera retos para ganarlos.</p><div class="lib-bar"><i style="width:${pct}%"></i></div></div><button type="button" class="btn btn--primary" data-lib-ir="retos">Ganar XP en Retos</button></div>`;
       } else {
         banner = `<div class="lib-next"><div class="lib-next__cover" style="--portada:linear-gradient(160deg,#c9962f,#6d4b12);--tono:#6d4b12"></div><div><div class="lib-next__eyebrow">Biblioteca completa</div><h3>Abriste todas las guías y recetas</h3><p>Puedes leerlas cuando quieras. ¡Gracias por seguir aprendiendo!</p></div></div>`;
       }
@@ -11308,7 +11319,7 @@ const Sections = (function(){
       const tarjetaReceta = (r) => {
         const est = _estadoItem(r);
         const [c1, c2] = _tonoBib(r.categoria);
-        const portada = r.portada ? `url('${String(r.portada).replace(/'/g, '%27')}')` : 'none';
+        const portada = _fotoReceta(r);
         const faltan = Math.max(0, r.xp - xpActual);
         const estado = est === 'abierto' ? `${_ICO_BOOK}<span>Tuya · ver receta</span>` : est === 'comprable' ? `${_ICO_BOOK}<span>Tienes saldo · toca para abrirla</span>` : est === 'xp' ? `${_ICO_LOCK}<span>Te faltan ${_fmtXP(faltan)} XP</span>` : `${_ICO_LOCK}<span>Con membresía · ${_fmtXP(r.xp)} XP</span>`;
         const barra = est === 'xp' ? `<span class="lib-bar"><i style="width:${Math.min(100, (xpActual / r.xp) * 100)}%"></i></span>` : '';
