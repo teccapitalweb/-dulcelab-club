@@ -9462,8 +9462,6 @@ const Sections = (function(){
     const total = RETOS_LIBRARY.length;
     const nHechos = RETOS_LIBRARY.filter(hecho).length;
     const pct = total ? Math.round(nHechos / total * 100) : 0;
-    const idxSig = RETOS_LIBRARY.findIndex((r, i) => !hecho(r) && abierto(i));
-    const sig = idxSig >= 0 ? RETOS_LIBRARY[idxSig] : null;
     // Niveles visuales calculados con el XP ya guardado del miembro.
     const NIVELES_RETO = [
       { nombre:'Aprendiz', xp:0 }, { nombre:'Bronce', xp:200 }, { nombre:'Plata', xp:600 },
@@ -9489,47 +9487,6 @@ const Sections = (function(){
     const tareas = _misionSemanalTareas();
     const tHechas = tareas.filter(t => t.ok).length;
     const pctMision = Math.round(tHechas / tareas.length * 100);
-
-    // ─── Tarjeta de reto destacado ───
-    let nextHtml;
-    if (bloqueoPlan) {
-      nextHtml = `
-        <div class="retos2-next" style="--cat-color:var(--primary);cursor:default">
-          <div class="retos2-next__ic"><svg class="ic"><use href="#i-bolt"/></svg></div>
-          <div>
-            <div class="retos2-next__eyebrow">Tu reto gratis ya está jugado</div>
-            <div class="retos2-next__title">Activa tu membresía para seguir jugando</div>
-            <div class="retos2-next__meta"><span>Tus ${_progreso.xp.toLocaleString('es-MX')} XP están guardados y se activan al hacerte VIP.</span></div>
-            <button type="button" class="mat-open" data-retos-vip>Hazte VIP<span class="mat-open__ic"><svg class="ic"><use href="#i-crown"/></svg></span></button>
-          </div>
-        </div>`;
-    } else if (sig) {
-      const meta = RETO_CAT_META[sig.categoria] || { icon:'i-bolt', color:'var(--primary)' };
-      const tm = RETO_TIPO_META[sig.tipo] || { ic:'i-bolt', nombre:'Reto' };
-      nextHtml = `
-        <div class="retos2-next retos2-next--foto" data-reto-id="${sig.id}" data-reto-locked="false" role="button" tabindex="0" style="--cat-color:${meta.color};background-image:linear-gradient(90deg,rgba(18,7,10,.92) 0%,rgba(18,7,10,.62) 55%,rgba(18,7,10,.18) 100%),url('${_retoFoto(sig, 900)}')">
-          <div>
-            <div class="retos2-next__eyebrow">${nHechos === 0 ? 'Puedes empezar por aquí' : 'Reto destacado'} · ${escapeHtml(sig.categoria)}</div>
-            <div class="retos2-next__title">${escapeHtml(sig.titulo)}</div>
-            <div class="retos2-next__meta">
-              <span><svg class="ic"><use href="#i-bolt"/></svg>+${sig.puntos} pts</span>
-              <span><svg class="ic"><use href="#i-clock"/></svg>${_retoDur(sig.tipo)}</span>
-              <span><svg class="ic"><use href="#${tm.ic}"/></svg>${escapeHtml(tm.nombre)}</span>
-            </div>
-            <button type="button" class="mat-open">Jugar ahora<span class="mat-open__ic"><svg class="ic"><use href="#i-play"/></svg></span></button>
-          </div>
-        </div>`;
-    } else {
-      nextHtml = `
-        <div class="retos2-next" style="--cat-color:var(--success);cursor:default">
-          <div class="retos2-next__ic"><svg class="ic"><use href="#i-trophy"/></svg></div>
-          <div>
-            <div class="retos2-next__eyebrow">Zona de retos</div>
-            <div class="retos2-next__title">¡Superaste los ${total} retos!</div>
-            <div class="retos2-next__meta"><span>Puedes repetir cualquiera de la lista para seguir practicando.</span></div>
-          </div>
-        </div>`;
-    }
 
     // Camino a maestría: una lectura visual del nivel real del usuario, sin cambiar el XP.
     const rutaItems = NIVELES_RETO.map((nivel, i) => {
@@ -9594,16 +9551,8 @@ const Sections = (function(){
           ${rutaHtml}
         </div>
 
-        <section class="retos2-zone">
-          <div class="retos2-sec">
-            <div><div class="retos2-sec__eyebrow">Entrena tus conocimientos</div><h2 class="retos2-sec__title">Zona de retos</h2></div>
-            <span class="retos2-sec__note">${esVipRetos ? `${_saldoXP().toLocaleString('es-MX')} XP de saldo · ${_progreso.xp.toLocaleString('es-MX')} ganados en total` : `${_progreso.xp.toLocaleString('es-MX')} XP guardados · se activan con tu membresía`}</span>
-          </div>
-          ${nextHtml}
-        </section>
-
         <div class="retos2-sec">
-          <div><div class="retos2-sec__eyebrow">Modalidades de juego</div><h2 class="retos2-sec__title">Elige cómo practicar</h2></div>
+          <div><div class="retos2-sec__eyebrow">Zona de retos</div><h2 class="retos2-sec__title">Elige el reto que quieras practicar</h2></div>
           <span class="retos2-sec__note">${total} retos disponibles</span>
         </div>
         <div class="retos2-modes" id="retos2-modes"></div>
@@ -9638,7 +9587,6 @@ const Sections = (function(){
       el.addEventListener('click', () => abrirDesde(el));
       el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); abrirDesde(el); } });
     };
-    container.querySelectorAll('.retos2-next[data-reto-id]').forEach(enlazar);
     container.querySelectorAll('[data-retos-vip]').forEach(b => b.addEventListener('click', () => navigateToSection('suscripcion')));
 
     function pintar(){
