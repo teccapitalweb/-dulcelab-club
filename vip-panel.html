@@ -9055,6 +9055,30 @@ const Sections = (function(){
         {x:72,y:85,r:6,label:'Termómetro tirado, sin usarse para verificar temperatura'},
         {x:74,y:71,r:6,label:'Trapo/jerga sucia sobre la superficie de preparación'}
       ] },
+    { id:'err2', tipo:'error', categoria:'Inocuidad', titulo:'Encuentra 4 errores al guardar alimentos', dificultad:'Intermedio', puntos:50,
+      imagen:'assets/err2-refrigeracion.png',
+      hotspots:[
+        {x:36,y:17,r:10,label:'Pollo crudo sin cubrir en la repisa superior, sobre alimentos listos para comer'},
+        {x:66,y:21,r:8,label:'Huevos sin proteger junto a alimentos preparados'},
+        {x:58,y:40,r:8,label:'Arroz cocido guardado sin etiqueta ni fecha'},
+        {x:45,y:66,r:9,label:'Carne cruda con líquido escurriendo dentro del refrigerador'}
+      ] },
+    { id:'err3', tipo:'error', categoria:'Inocuidad', titulo:'Encuentra 4 errores de higiene personal', dificultad:'Intermedio', puntos:50,
+      imagen:'assets/err3-higiene.png',
+      hotspots:[
+        {x:56,y:26,r:10,label:'Cabello largo suelto, sin cofia ni red para cabello'},
+        {x:62,y:67,r:10,label:'Guantes sucios usados al manipular un alimento listo para comer'},
+        {x:18,y:49,r:12,label:'Lavamanos bloqueado con utensilios sucios'},
+        {x:92,y:58,r:8,label:'Químico de limpieza colocado junto a los alimentos'}
+      ] },
+    { id:'err4', tipo:'error', categoria:'Inocuidad', titulo:'Encuentra 4 errores en esta barra de servicio', dificultad:'Avanzado', puntos:60,
+      imagen:'assets/err4-servicio.png',
+      hotspots:[
+        {x:23,y:43,r:13,label:'Alimento caliente servido sin fuente de calor para conservar la temperatura segura'},
+        {x:43,y:36,r:11,label:'Ensalada fría expuesta junto a alimentos crudos'},
+        {x:58,y:38,r:10,label:'Pollo crudo colocado en una barra de autoservicio'},
+        {x:85,y:78,r:10,label:'Platos limpios colocados directamente sobre el piso'}
+      ] },
     { id:'sec2', tipo:'secuencia', categoria:'Cocina', titulo:'Ordena cómo se prepara una salsa bechamel', dificultad:'Básico', puntos:30,
       pasos:['Derretir la mantequilla','Agregar la harina y cocinar el roux','Incorporar la leche poco a poco','Sazonar y dejar espesar'] },
     { id:'img2', tipo:'imagen', categoria:'Cocina', titulo:'¿Cuál corte corresponde a un brunoise correcto?', dificultad:'Básico', puntos:30,
