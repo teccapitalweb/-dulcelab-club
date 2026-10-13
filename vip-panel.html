@@ -2545,6 +2545,7 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 .canal-invite::after{content:"";position:absolute;right:-30px;bottom:-74px;width:168px;height:168px;border-radius:50%;border:1px solid color-mix(in srgb,var(--whatsapp) 20%,transparent);box-shadow:0 0 0 24px color-mix(in srgb,var(--whatsapp) 5%,transparent);pointer-events:none}
 .canal-invite__icon{width:60px;height:60px;border-radius:18px;background:var(--whatsapp);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 22px color-mix(in srgb,var(--whatsapp) 27%,transparent);position:relative;z-index:1}
 .canal-invite__icon svg{width:30px;height:30px}.canal-invite__main{position:relative;z-index:1}.canal-invite__eyebrow{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:var(--whatsapp);margin-bottom:5px}.canal-invite__title{font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:800;letter-spacing:-.45px;color:var(--text);margin-bottom:4px}.canal-invite__sub{font-size:13px;color:var(--text-2);line-height:1.5;max-width:490px}.canal-invite__actions{position:relative;z-index:1;display:flex;gap:8px;align-items:center;flex-wrap:wrap}.canal-invite__actions .btn{border-radius:999px;white-space:nowrap}
+.canal-socials{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.canal-social{min-height:175px;padding:20px;border:1px solid var(--border-2);border-radius:18px;background:var(--surface);color:var(--text);text-align:left;cursor:pointer;transition:transform .18s,box-shadow .18s,border-color .18s}.canal-social:hover{transform:translateY(-3px);box-shadow:0 13px 25px color-mix(in srgb,var(--primary) 11%,transparent);border-color:color-mix(in srgb,var(--primary) 38%,var(--border-2))}.canal-social__icon{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#fff;margin-bottom:20px}.canal-social__icon svg{width:25px;height:25px}.canal-social--whatsapp .canal-social__icon{background:var(--whatsapp)}.canal-social--facebook .canal-social__icon{background:#1877F2}.canal-social--instagram .canal-social__icon{background:linear-gradient(135deg,#833AB4,#FD1D1D 55%,#FCB045)}.canal-social__title{font-size:16px;font-weight:800;margin-bottom:5px}.canal-social__copy{font-size:12px;line-height:1.48;color:var(--text-2)}.canal-social__go{display:inline-flex;align-items:center;gap:5px;margin-top:15px;font-size:11px;font-weight:800;color:var(--primary)}
 .canal-benefits{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:16px}.canal-benefit{display:flex;align-items:center;gap:10px;padding:12px 13px;border:1px solid var(--border);border-radius:14px;background:var(--surface)}.canal-benefit__icon{width:32px;height:32px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border-radius:10px;background:color-mix(in srgb,var(--primary) 9%,var(--surface-2));color:var(--primary)}.canal-benefit__icon .ic{width:16px;height:16px}.canal-benefit__title{font-size:12.5px;font-weight:800;color:var(--text);line-height:1.2}.canal-benefit__copy{font-size:11.5px;color:var(--text-3);margin-top:2px;line-height:1.3}
 .wa-rules{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:18px;margin-top:0}.wa-rules__title{margin:0 0 13px;padding-left:3px}.wa-rules__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.wa-rule{padding:13px;border:1px solid var(--border);border-radius:13px;background:color-mix(in srgb,var(--surface-2) 60%,var(--surface));gap:10px}.wa-rule:not(:last-child){border-bottom:1px solid var(--border)}.wa-rule__check{width:25px;height:25px}.wa-rule__text{font-size:12px;line-height:1.45}
 .wa-rules__title{
@@ -2684,6 +2685,7 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 .perfil-panel__next{margin-top:16px;padding:15px;border-radius:15px;background:color-mix(in srgb,var(--primary) 8%,var(--surface));font-size:12px;color:var(--text-2);line-height:1.5}.perfil-panel__next b{display:block;color:var(--text);margin-bottom:3px}.perfil-panel__details{margin-top:16px;border:1px solid var(--border-2);border-radius:15px;padding:16px}.perfil-panel__details[hidden]{display:none}.perfil-panel__details-title{font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:1px;font-size:10px;font-weight:700;color:var(--text-2);margin-bottom:11px}.perfil-panel__details .perfil-field{min-height:42px}.perfil-panel__logout{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;border:0;background:transparent;color:var(--danger);margin-top:21px;padding:12px;cursor:pointer;font-weight:700}.perfil-panel__logout .ic{width:16px;height:16px}
 @keyframes perfilPanelFade{from{opacity:0}to{opacity:1}}@keyframes perfilPanelIn{from{transform:translateX(30px)}to{transform:translateX(0)}}
 @media(max-width:600px){.perfil-panel__hero{padding:23px 20px 21px}.perfil-panel__body{padding:17px 16px 24px}.perfil-panel__eyebrow{margin-bottom:19px}.perfil-panel__name{font-size:20px}.perfil-panel__email{max-width:205px}.perfil-panel__stats b{font-size:20px}.perfil-panel__tiles{gap:9px}.perfil-panel__tile{padding:11px;min-height:94px}}
+@media(max-width:700px){.canal-socials{grid-template-columns:1fr}.canal-social{min-height:0;padding:17px;display:grid;grid-template-columns:48px 1fr;column-gap:14px}.canal-social__icon{margin:0;grid-row:span 2}.canal-social__title{align-self:end}.canal-social__copy{grid-column:2}.canal-social__go{grid-column:2;margin-top:8px}}
 
 /* Modo noche: carbón y arena, sin las capas vino que endurecían las secciones. */
 :root[data-theme="night"] .sec-hero{
@@ -3964,6 +3966,8 @@ window.__cargarContactoClub = async function(){
     const wa = soloDigitos(c.whatsapp);
     if (wa) { DULCELAB_CONTACT.whatsapp = wa; DULCELAB_CONTACT.director = wa; }
     if (c.whatsappCanal) DULCELAB_CONTACT.canal = c.whatsappCanal;
+    if (c.instagram) DULCELAB_CONTACT.instagram = c.instagram;
+    if (c.facebook) DULCELAB_CONTACT.facebook = c.facebook;
   } catch (e) { console.warn('[DulceLab Food] No se pudo leer contacto de config/club:', e.message); }
 };
 window.__cargarContactoClub();
@@ -4478,7 +4482,7 @@ window.__setDisplayName = async (nombre) => {
       <div class="nav-label">Comunidad</div>
       <a class="nav-item" data-section="foro"><svg class="ic"><use href="#i-messages"/></svg>Foro VIP</a>
       <a class="nav-item" data-section="directorio"><svg class="ic"><use href="#i-users"/></svg>Directorio VIP</a>
-      <a class="nav-item" data-section="canal"><svg class="ic"><use href="#i-whatsapp"/></svg>Canal WhatsApp</a>
+      <a class="nav-item" data-section="canal"><svg class="ic"><use href="#i-whatsapp"/></svg>Canal</a>
     </div>
 
     <div class="sidebar__foot">
@@ -4740,7 +4744,7 @@ window.__setDisplayName = async (nombre) => {
         <div class="mobile-drawer__label">Comunidad</div>
         <a class="mobile-drawer__item" data-section="foro"><svg class="ic"><use href="#i-messages"/></svg>Foro VIP</a>
         <a class="mobile-drawer__item" data-section="directorio"><svg class="ic"><use href="#i-users"/></svg>Directorio VIP</a>
-        <a class="mobile-drawer__item" data-section="canal"><svg class="ic"><use href="#i-whatsapp"/></svg>Canal WhatsApp</a>
+        <a class="mobile-drawer__item" data-section="canal"><svg class="ic"><use href="#i-whatsapp"/></svg>Canal</a>
       </div>
 
       <div class="mobile-drawer__section">
@@ -5642,7 +5646,7 @@ window.addEventListener('popstate', () => {
 });
 
 function sectionPlaceholder(section){
-  const names={pdfs:'PDFs y material','mes-mayo':'Biblioteca · Mayo 2026','mes-abril':'Biblioteca · Abril 2026','mes-marzo':'Biblioteca · Marzo 2026',foro:'Foro VIP',canal:'Canal WhatsApp',perfil:'Mi perfil',suscripcion:'Suscripción'};
+  const names={pdfs:'PDFs y material','mes-mayo':'Biblioteca · Mayo 2026','mes-abril':'Biblioteca · Abril 2026','mes-marzo':'Biblioteca · Marzo 2026',foro:'Foro VIP',canal:'Canal',perfil:'Mi perfil',suscripcion:'Suscripción'};
   const name=names[section]||section;
   return `<div class="fade-up" style="padding:80px 20px;text-align:center;"><div style="width:80px;height:80px;margin:0 auto 18px;border-radius:20px;background:var(--surface);border:0.5px solid var(--border-2);display:flex;align-items:center;justify-content:center;color:var(--primary);"><svg class="ic ic--xl"><use href="#i-tools"/></svg></div><h2 style="font-size:22px;font-weight:600;letter-spacing:-.4px;margin-bottom:6px;">${name}</h2><p style="color:var(--text-2);max-width:380px;margin:0 auto;line-height:1.55;font-size:13.5px;">Sección en construcción. La entrego en el siguiente sprint.</p><button class="btn btn--ghost" style="margin-top:20px;" onclick="navigateToSection('inicio')">Volver al inicio</button></div>`;
 }
@@ -12677,50 +12681,20 @@ const Sections = (function(){
     });
   }
 
-  /* ============================ CANAL WHATSAPP ============================ */
+  /* ============================ CANALES OFICIALES ============================ */
   function renderCanal(container){
     container.innerHTML = `
       <div class="fade-up canal-page">
         <div class="canal-hero">
-          <span class="canal-hero__eyebrow">Canal oficial</span>
-          <h1 class="canal-hero__title">Comunidad por WhatsApp</h1>
-          <p class="canal-hero__sub">Únete a la comunidad de profesionales de la gastronomía. Recibe alertas de nuevos cursos, novedades del sector, recetas y networking.</p>
+          <span class="canal-hero__eyebrow">Canales oficiales</span>
+          <h1 class="canal-hero__title">Sigue a DulceLab Food</h1>
+          <p class="canal-hero__sub">Elige el canal que prefieras para recibir novedades, contenido y avisos importantes.</p>
         </div>
-
-        <section class="canal-invite">
-          <div class="canal-invite__icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.05 4.91A9.816 9.816 0 0 0 12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01zm-7.01 15.24c-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.264 8.264 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24 2.2 0 4.27.86 5.82 2.42a8.183 8.183 0 0 1 2.41 5.83c.02 4.54-3.68 8.23-8.22 8.23zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.78.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43s.17-.25.25-.41c.08-.17.04-.31-.02-.43s-.56-1.34-.76-1.84c-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.14-1.18s-.22-.16-.47-.28z"/></svg></div>
-          <div class="canal-invite__main"><div class="canal-invite__eyebrow">DulceLab Food</div><h2 class="canal-invite__title">Únete al canal oficial</h2><p class="canal-invite__sub">Profesionales de la gastronomía y la repostería compartiendo recetas, dudas y tips del oficio.</p></div>
-          <div class="canal-invite__actions">
-            <button class="btn btn--wa" id="btn-wa-canal-open"><svg class="ic"><use href="#i-whatsapp"/></svg>Abrir grupo</button>
-            <button class="btn btn--ghost" id="btn-wa-canal-share"><svg class="ic"><use href="#i-arrow-right"/></svg>Compartir invitación</button>
-          </div>
+        <section class="canal-socials" aria-label="Redes sociales oficiales">
+          <button type="button" class="canal-social canal-social--whatsapp" id="btn-canal-whatsapp"><span class="canal-social__icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.05 4.91A9.816 9.816 0 0 0 12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01zm-7.01 15.24c-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.264 8.264 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24 2.2 0 4.27.86 5.82 2.42a8.183 8.183 0 0 1 2.41 5.83c.02 4.54-3.68 8.23-8.22 8.23z"/></svg></span><span class="canal-social__title">WhatsApp</span><span class="canal-social__copy">Recibe anuncios y actualizaciones en el canal oficial.</span><span class="canal-social__go">Abrir canal <svg class="ic"><use href="#i-arrow-right"/></svg></span></button>
+          <button type="button" class="canal-social canal-social--facebook" id="btn-canal-facebook"><span class="canal-social__icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 22v-8h2.7l.4-3h-3.1V9.1c0-.87.24-1.46 1.5-1.46H16.6V4.96A21 21 0 0 0 14.3 4.84c-2.28 0-3.84 1.39-3.84 3.94V11H7.9v3h2.56v8h3.04z"/></svg></span><span class="canal-social__title">Facebook</span><span class="canal-social__copy">Entérate de novedades y contenidos de DulceLab Food.</span><span class="canal-social__go">Ver Facebook <svg class="ic"><use href="#i-arrow-right"/></svg></span></button>
+          <button type="button" class="canal-social canal-social--instagram" id="btn-canal-instagram"><span class="canal-social__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg></span><span class="canal-social__title">Instagram</span><span class="canal-social__copy">Ideas, recetas y contenido visual para tu negocio.</span><span class="canal-social__go">Ver Instagram <svg class="ic"><use href="#i-arrow-right"/></svg></span></button>
         </section>
-
-        <div class="canal-benefits">
-          <div class="canal-benefit"><span class="canal-benefit__icon"><svg class="ic"><use href="#i-broadcast"/></svg></span><div><div class="canal-benefit__title">Novedades del Club</div><div class="canal-benefit__copy">Cursos, clases y avisos importantes.</div></div></div>
-          <div class="canal-benefit"><span class="canal-benefit__icon"><svg class="ic"><use href="#i-book"/></svg></span><div><div class="canal-benefit__title">Tips del oficio</div><div class="canal-benefit__copy">Recetas, técnicas y buenas prácticas.</div></div></div>
-          <div class="canal-benefit"><span class="canal-benefit__icon"><svg class="ic"><use href="#i-users"/></svg></span><div><div class="canal-benefit__title">Comunidad profesional</div><div class="canal-benefit__copy">Conecta y aprende con otros miembros.</div></div></div>
-        </div>
-
-        <div class="wa-rules">
-          <div class="wa-rules__title">Reglas de la comunidad</div>
-          <div class="wa-rules__grid"><div class="wa-rule">
-            <div class="wa-rule__check"><svg class="ic"><use href="#i-check"/></svg></div>
-            <div class="wa-rule__text"><strong>Respeto siempre.</strong> Tratamos a todos los miembros con profesionalismo. Sin política, sin religión, sin ataques personales.</div>
-          </div>
-          <div class="wa-rule">
-            <div class="wa-rule__check"><svg class="ic"><use href="#i-check"/></svg></div>
-            <div class="wa-rule__text"><strong>Comparte experiencias reales.</strong> Si compartes una receta, caso de cocina o duda de negocio, da contexto: sector, tamaño y qué pasó.</div>
-          </div>
-          <div class="wa-rule">
-            <div class="wa-rule__check"><svg class="ic"><use href="#i-check"/></svg></div>
-            <div class="wa-rule__text"><strong>Nada de spam.</strong> No promociones tus servicios ni vendas cursos externos. El canal es para aprender, no para vender.</div>
-          </div>
-          <div class="wa-rule">
-            <div class="wa-rule__check"><svg class="ic"><use href="#i-check"/></svg></div>
-            <div class="wa-rule__text"><strong>Confidencialidad.</strong> Lo que se comparte aquí queda aquí. No screenshots fuera del canal sin permiso.</div>
-          </div></div>
-        </div>
       </div>
     `;
   }
@@ -13453,6 +13427,8 @@ const DULCELAB_CONTACT = {
   director: '', // dirección · temas estratégicos · usa el mismo número si no hay uno dedicado
   // Canal de difusión oficial
   canal: '', // se carga desde config/club (campo whatsappCanal)
+  instagram: '', // se carga desde config/club
+  facebook: '', // se carga desde config/club
   // Zoom de la próxima clase (muestra · sustituir por el real al confirmar webinar)
   zoom: 'https://zoom.us/j/85234567890?pwd=DULCELAB2026OEE',
   // Sitio público
@@ -14455,17 +14431,23 @@ function initNav(){
       }
     }
 
-    // Sección Canal WhatsApp · abrir grupo
-    if(t.closest('#btn-wa-canal-open')){
+    // Sección Canal · redes oficiales
+    if(t.closest('#btn-canal-whatsapp')){
       if(!DULCELAB_CONTACT.canal){ Toast.info('Aún no está configurado','Pídele al equipo que ponga el canal de WhatsApp en Admin → Configuración'); return; }
       window.open(DULCELAB_CONTACT.canal,'_blank');
       Toast.success('Abriendo canal','Comunidad DulceLab Food');
       return;
     }
-    // Sección Canal WhatsApp · compartir
-    if(t.closest('#btn-wa-canal-share')){
-      window.open(DULCELAB_CONTACT.shareInvitacion(),'_blank');
-      Toast.success('Compartiendo','Selecciona contactos');
+    if(t.closest('#btn-canal-facebook')){
+      if(!DULCELAB_CONTACT.facebook){ Toast.info('Facebook pendiente','Agrega el enlace en Admin → Configuración.'); return; }
+      window.open(DULCELAB_CONTACT.facebook,'_blank');
+      return;
+    }
+    if(t.closest('#btn-canal-instagram')){
+      const raw = (DULCELAB_CONTACT.instagram || '').trim();
+      if(!raw){ Toast.info('Instagram pendiente','Agrega el usuario o enlace en Admin → Configuración.'); return; }
+      const url = /^https?:\/\//i.test(raw) ? raw : 'https://www.instagram.com/' + raw.replace(/^@+|^\/+|\/+$/g,'');
+      window.open(url,'_blank');
       return;
     }
   });
