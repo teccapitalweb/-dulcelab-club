@@ -9391,7 +9391,9 @@ const Sections = (function(){
     calculo:      { ic:'i-gauge',           nombre:'Haz la cuenta',         sub:'Números de tu cocina',     corto:'Cálculo' }
   };
   const _RETO_LOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
-  let _retosF = { tipo:'todos', cat:'todas' };
+  // Al entrar se muestran sólo las modalidades. La lista aparece hasta que
+  // la persona elige cómo quiere practicar.
+  let _retosF = { tipo:null, cat:'todas' };
 
   // Fotos (Unsplash, uso libre) para darle vida a la zona de retos: una lista por categoría,
   // se reparten entre los retos de esa categoría; y una foto por modo de juego.
@@ -9552,8 +9554,8 @@ const Sections = (function(){
         </div>
 
         <div class="retos2-sec">
-          <div><div class="retos2-sec__eyebrow">Zona de retos</div><h2 class="retos2-sec__title">Elige el reto que quieras practicar</h2></div>
-          <span class="retos2-sec__note">${total} retos disponibles</span>
+          <div><div class="retos2-sec__eyebrow">Zona de retos</div><h2 class="retos2-sec__title" id="retos2-title">Elige el reto que quieras practicar</h2></div>
+          <span class="retos2-sec__note" id="retos2-count">${total} retos disponibles</span>
         </div>
         <div class="retos2-modes" id="retos2-modes"></div>
         <div class="cursos-chips" id="retos2-chips"></div>
@@ -9578,6 +9580,8 @@ const Sections = (function(){
     const $modes = container.querySelector('#retos2-modes');
     const $chips = container.querySelector('#retos2-chips');
     const $grid = container.querySelector('#retos2-grid');
+    const $title = container.querySelector('#retos2-title');
+    const $count = container.querySelector('#retos2-count');
 
     const abrirDesde = (el) => {
       if (bloqueoPlan) { _avisoRetosMembresia(); return; }
@@ -9606,12 +9610,26 @@ const Sections = (function(){
           </span>
         </button>`).join('');
       $modes.querySelectorAll('[data-modo]').forEach(b => b.addEventListener('click', () => {
-        _retosF.tipo = (_retosF.tipo === b.dataset.modo) ? 'todos' : b.dataset.modo;
+        _retosF.tipo = (_retosF.tipo === b.dataset.modo) ? null : b.dataset.modo;
+        _retosF.cat = 'todas';
         pintar();
       }));
 
+      // La portada de retos contiene únicamente las seis modalidades.
+      // Sólo al elegir una se revela la lista correspondiente.
+      if (!_retosF.tipo) {
+        $title.textContent = 'Elige cómo quieres practicar';
+        $count.textContent = `${total} retos disponibles`;
+        $chips.innerHTML = '';
+        $grid.innerHTML = '';
+        return;
+      }
+
       // Chips de categoría, con conteo dentro del modo elegido
-      const base = RETOS_LIBRARY.filter(r => _retosF.tipo === 'todos' || r.tipo === _retosF.tipo);
+      const base = RETOS_LIBRARY.filter(r => r.tipo === _retosF.tipo);
+      const modo = RETO_TIPO_META[_retosF.tipo];
+      $title.textContent = modo ? modo.nombre : 'Elige el reto que quieras practicar';
+      $count.textContent = `${base.length} retos disponibles`;
       if (_retosF.cat !== 'todas' && !base.some(r => r.categoria === _retosF.cat)) _retosF.cat = 'todas';
       const cats = Array.from(new Set(base.map(r => r.categoria)));
       $chips.innerHTML =
@@ -9621,7 +9639,7 @@ const Sections = (function(){
 
       // Tarjetas de retos
       const visibles = RETOS_LIBRARY.map((r, i) => ({ r, i })).filter(({ r }) =>
-        (_retosF.tipo === 'todos' || r.tipo === _retosF.tipo) && (_retosF.cat === 'todas' || r.categoria === _retosF.cat));
+        r.tipo === _retosF.tipo && (_retosF.cat === 'todas' || r.categoria === _retosF.cat));
       if (!visibles.length) { $grid.innerHTML = '<div class="mat-empty" style="grid-column:1/-1;">No hay retos con este filtro.</div>'; return; }
       $grid.innerHTML = visibles.map(({ r, i }) => {
         const meta = RETO_CAT_META[r.categoria] || { icon:'i-bolt', color:'var(--primary)' };
