@@ -584,6 +584,7 @@ body{
 
 /* Buttons */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:9px 16px;border-radius:100px;font-size:12px;font-weight:600;letter-spacing:.1px;cursor:pointer;transition:transform .15s,box-shadow .25s,background .15s;white-space:nowrap}
+.btn:disabled{opacity:.45;cursor:not-allowed;pointer-events:none;box-shadow:none}
 .btn .ic{width:13px;height:13px;stroke-width:2.2}
 .btn--primary{background:var(--text);color:var(--bg)}
 .btn--primary:hover{background:var(--text-2)}
@@ -10119,7 +10120,6 @@ const Sections = (function(){
 
   // ─── Tipo: encontrar el error (ilustración con puntos clicables) ───
   function _retoError(r){
-    const seleccionados = new Set();
     let resuelto = false;
     const body = document.createElement('div');
     const puntosHtml = r.hotspots.map((h,i)=>`<circle class="reto-err-spot" data-i="${i}" cx="${h.x}" cy="${h.y}" r="${h.r}" fill="transparent" stroke="transparent" style="cursor:pointer;"/>`).join('');
@@ -10142,7 +10142,7 @@ const Sections = (function(){
       <p style="font-size:12.5px;color:var(--text-2);margin-bottom:10px;">Toca las ${r.hotspots.length} zonas donde veas una falla. Al terminar, pulsa <strong>Verificar</strong>.</p>
       <div id="reto-err-wrap" style="position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--border-2);cursor:crosshair;">
         ${escena}
-        <svg viewBox="0 0 100 100" style="position:absolute;inset:0;width:100%;height:100%;">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;">
           ${puntosHtml}
         </svg>
       </div>
@@ -10156,6 +10156,8 @@ const Sections = (function(){
       <button class="btn btn--ghost" id="reto-giveup" style="display:none;color:var(--danger);">Ver respuesta (sin puntos)</button>
     `;
     Modal.open({ id:'reto-'+r.id, title:r.titulo, subtitle:r.categoria+' · +'+r.puntos+' pts', icon:'i-bolt', size:'md', body, footer });
+    const spotsSeleccionados = () => Array.from(body.querySelectorAll('.reto-err-spot[data-seleccionado="si"]'));
+    const totalSeleccionado = () => spotsSeleccionados().length;
     function bloquearTodo(){
       body.querySelectorAll('.reto-err-spot').forEach(spot => spot.style.pointerEvents = 'none');
       footer.querySelector('#reto-hint').disabled = true;
@@ -10165,7 +10167,7 @@ const Sections = (function(){
     footer.querySelector('#reto-cerrar').addEventListener('click', ()=>Modal.close('reto-'+r.id));
     footer.querySelector('#reto-hint').addEventListener('click', ()=>{
       if(resuelto) return;
-      const faltante = r.hotspots.findIndex((h,i)=>!seleccionados.has(i));
+      const faltante = r.hotspots.findIndex((h,i)=>!body.querySelector(`.reto-err-spot[data-i="${i}"]`)?.dataset.seleccionado);
       if(faltante<0) return;
       const spot = body.querySelector(`.reto-err-spot[data-i="${faltante}"]`);
       if(spot){
@@ -10178,7 +10180,6 @@ const Sections = (function(){
     });
     footer.querySelector('#reto-giveup').addEventListener('click', async ()=>{
       r.hotspots.forEach((h,i)=>{
-        seleccionados.add(i);
         const spot = body.querySelector(`.reto-err-spot[data-i="${i}"]`);
         if(spot){ spot.setAttribute('fill','rgba(122,154,110,.35)'); spot.setAttribute('stroke','#7A9A6E'); spot.setAttribute('stroke-width','1.5'); spot.style.animation=''; }
       });
@@ -10190,28 +10191,29 @@ const Sections = (function(){
       spot.addEventListener('click', ()=>{
         if(resuelto) return;
         const i = Number(spot.dataset.i);
-        if(seleccionados.has(i)){
-          seleccionados.delete(i);
+        if(spot.dataset.seleccionado === 'si'){
+          delete spot.dataset.seleccionado;
           spot.setAttribute('fill','transparent');
           spot.setAttribute('stroke','transparent');
           spot.setAttribute('stroke-width','0');
         } else {
-          seleccionados.add(i);
+          spot.dataset.seleccionado = 'si';
           spot.setAttribute('fill','rgba(213,161,61,.26)');
           spot.setAttribute('stroke','#D5A13D');
           spot.setAttribute('stroke-width','1.8');
         }
         spot.style.animation = '';
-        body.querySelector('#reto-err-n').textContent = String(seleccionados.size);
-        const faltan = r.hotspots.length - seleccionados.size;
+        const cantidad = totalSeleccionado();
+        body.querySelector('#reto-err-n').textContent = String(cantidad);
+        const faltan = r.hotspots.length - cantidad;
         body.querySelector('#reto-err-fb').innerHTML = faltan
-          ? 'Seleccionaste <strong>'+seleccionados.size+'</strong> de '+r.hotspots.length+'. Te faltan '+faltan+'; puedes quitar una selección tocándola de nuevo.'
+          ? 'Seleccionaste <strong>'+cantidad+'</strong> de '+r.hotspots.length+'. Te faltan '+faltan+'; puedes quitar una selección tocándola de nuevo.'
           : '<span style="color:var(--primary);font-weight:600;">Listo. Pulsa Verificar para comprobar tus respuestas.</span>';
-        footer.querySelector('#reto-verificar').disabled = seleccionados.size !== r.hotspots.length;
+        footer.querySelector('#reto-verificar').disabled = cantidad !== r.hotspots.length;
       });
     });
     footer.querySelector('#reto-verificar').addEventListener('click', async ()=>{
-      if(resuelto || seleccionados.size !== r.hotspots.length) return;
+      if(resuelto || totalSeleccionado() !== r.hotspots.length) return;
       resuelto = true;
       r.hotspots.forEach((h,i)=>{
         const spot = body.querySelector(`.reto-err-spot[data-i="${i}"]`);
