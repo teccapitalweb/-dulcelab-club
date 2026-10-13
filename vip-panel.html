@@ -2669,6 +2669,22 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 @media(max-width:900px){.perfil-grid{grid-template-columns:1fr 1fr}.perfil-card--personal{grid-row:auto;grid-column:1/-1}}
 @media(max-width:700px){.perfil-page .sec-hero{padding:21px 20px 20px}.perfil-page .sec-hero__title{font-size:29px}.perfil-hero{padding:20px;gap:13px}.perfil-hero__actions{justify-content:center;width:100%}.perfil-hero__actions .btn{flex:1 1 auto;justify-content:center}.perfil-grid{grid-template-columns:1fr;gap:11px}.perfil-card--personal{grid-column:auto}.perfil-card{padding:18px}.perfil-field{min-height:43px}}
 
+/* Panel de perfil lateral: una vista breve y clara, como la ficha del club. */
+.perfil-panel-layer{position:fixed;inset:0;z-index:12000;background:rgba(35,17,20,.52);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:flex;justify-content:flex-end;animation:perfilPanelFade .2s ease}
+.perfil-panel{width:min(468px,100%);height:100%;overflow-y:auto;background:var(--surface);box-shadow:-22px 0 54px rgba(30,9,13,.24);animation:perfilPanelIn .28s cubic-bezier(.2,.8,.25,1);color:var(--text)}
+.perfil-panel__hero{position:relative;overflow:hidden;padding:28px 28px 25px;color:#fff;background:linear-gradient(135deg,var(--primary-deep),var(--primary) 62%,var(--highlight))}
+.perfil-panel__hero:after,.perfil-panel__hero:before{content:"";position:absolute;border:1px solid rgba(255,255,255,.18);border-radius:50%;pointer-events:none}.perfil-panel__hero:after{width:240px;height:240px;right:-126px;top:-72px}.perfil-panel__hero:before{width:165px;height:165px;right:-40px;top:82px}
+.perfil-panel__close{position:absolute;z-index:1;right:18px;top:18px;width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.42);background:rgba(255,255,255,.08);color:#fff;font-size:27px;line-height:1;cursor:pointer}
+.perfil-panel__eyebrow{position:relative;z-index:1;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.35px;text-transform:uppercase;font-weight:700;opacity:.85;margin-bottom:24px}
+.perfil-panel__identity{position:relative;z-index:1;display:flex;gap:14px;align-items:center}.perfil-panel__avatar{width:67px;height:67px;border-radius:50%;border:3px solid rgba(255,255,255,.9);background:color-mix(in srgb,var(--primary-deep) 62%,#fff);display:grid;place-items:center;font-size:22px;font-weight:800;box-shadow:0 5px 16px rgba(0,0,0,.18)}
+.perfil-panel__name{font-size:23px;line-height:1.12;letter-spacing:-.6px;margin:0 0 5px}.perfil-panel__email{font-size:12px;opacity:.85;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:290px}.perfil-panel__plan{display:inline-flex;align-items:center;gap:5px;margin-top:9px;padding:5px 9px;border-radius:99px;border:1px solid rgba(255,255,255,.4);font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.75px;text-transform:uppercase}
+.perfil-panel__body{padding:22px 24px 28px}.perfil-panel__stats{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--border-2);border-radius:16px;overflow:hidden;background:var(--surface-2)}.perfil-panel__stat{padding:17px 7px;text-align:center;border-right:1px solid var(--border-2)}.perfil-panel__stat:last-child{border-right:0}.perfil-panel__stat b{display:block;font-size:23px;letter-spacing:-.7px}.perfil-panel__stat span{font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.65px;color:var(--text-3);font-weight:700}
+.perfil-panel__benefit{width:100%;margin:16px 0;border:1px solid color-mix(in srgb,var(--success) 45%,var(--border-2));border-radius:16px;padding:14px;text-align:left;background:color-mix(in srgb,var(--success) 8%,var(--surface));color:var(--text);display:flex;gap:12px;align-items:center;cursor:pointer}.perfil-panel__benefit-ic,.perfil-panel__tile-ic{width:39px;height:39px;border-radius:11px;display:grid;place-items:center;flex-shrink:0;background:color-mix(in srgb,var(--success) 17%,transparent);color:var(--success)}.perfil-panel__benefit-ic .ic,.perfil-panel__tile-ic .ic{width:19px;height:19px}.perfil-panel__benefit b,.perfil-panel__tile b{display:block;font-size:13px}.perfil-panel__benefit small,.perfil-panel__tile small{display:block;font-size:10.5px;color:var(--text-3);margin-top:2px}.perfil-panel__benefit-arrow{margin-left:auto;font-size:22px;color:var(--success)}
+.perfil-panel__tiles{display:grid;grid-template-columns:1fr 1fr;gap:11px}.perfil-panel__tile{border:1px solid var(--border-2);border-radius:15px;background:var(--surface);padding:13px;text-align:left;color:var(--text);cursor:pointer;min-height:102px}.perfil-panel__tile:hover{border-color:color-mix(in srgb,var(--primary) 48%,var(--border-2));background:color-mix(in srgb,var(--primary) 4%,var(--surface))}.perfil-panel__tile-ic{width:34px;height:34px;margin-bottom:11px;background:color-mix(in srgb,var(--primary) 10%,transparent);color:var(--primary)}
+.perfil-panel__next{margin-top:16px;padding:15px;border-radius:15px;background:color-mix(in srgb,var(--primary) 8%,var(--surface));font-size:12px;color:var(--text-2);line-height:1.5}.perfil-panel__next b{display:block;color:var(--text);margin-bottom:3px}.perfil-panel__details{margin-top:16px;border:1px solid var(--border-2);border-radius:15px;padding:16px}.perfil-panel__details[hidden]{display:none}.perfil-panel__details-title{font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:1px;font-size:10px;font-weight:700;color:var(--text-2);margin-bottom:11px}.perfil-panel__details .perfil-field{min-height:42px}.perfil-panel__logout{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;border:0;background:transparent;color:var(--danger);margin-top:21px;padding:12px;cursor:pointer;font-weight:700}.perfil-panel__logout .ic{width:16px;height:16px}
+@keyframes perfilPanelFade{from{opacity:0}to{opacity:1}}@keyframes perfilPanelIn{from{transform:translateX(30px)}to{transform:translateX(0)}}
+@media(max-width:600px){.perfil-panel__hero{padding:23px 20px 21px}.perfil-panel__body{padding:17px 16px 24px}.perfil-panel__eyebrow{margin-bottom:19px}.perfil-panel__name{font-size:20px}.perfil-panel__email{max-width:205px}.perfil-panel__stats b{font-size:20px}.perfil-panel__tiles{gap:9px}.perfil-panel__tile{padding:11px;min-height:94px}}
+
 /* Modo noche: carbón y arena, sin las capas vino que endurecían las secciones. */
 :root[data-theme="night"] .sec-hero{
   background:#191613;
@@ -12715,88 +12731,65 @@ const Sections = (function(){
     const _nom = escapeHtml(S.nombre || S.displayName || 'Miembro');
     const _em  = escapeHtml(S.email || '—');
     const _ini = (S.iniciales || 'IN');
-    // MODIFICADO: plan, nivel y fecha de membresía eran texto fijo ("VIP Anual", "Nivel 2 ·
-    // Técnico", "Miembro desde mar 2026") que salía igual para cualquier usuario, sin importar
-    // su plan real. Ahora se calculan con los mismos datos reales que usa el resto del panel.
     const _planLabels = {mensual:'VIP Mensual', anual:'VIP Anual', regalo:'Acceso de regalo', admin:'Administrador'};
     const _planTxt = _planLabels[S.plan] || 'Miembro';
     try { usuario.xp = _statsLogros().puntos; } catch (e) {}
     const _nivelReal = getNivel(usuario.xp);
     const _nivelTxt = 'Nivel '+_nivelReal.id+' · '+_nivelReal.nombre;
-    let _desdeTxt = '';
-    const _rawDesde = S.membership && (S.membership.activadoEn || S.membership.startedAt || S.membership.createdAt);
-    if (_rawDesde) {
-      let _d = null;
-      if (_rawDesde.toDate) _d = _rawDesde.toDate();
-      else if (_rawDesde.seconds) _d = new Date(_rawDesde.seconds*1000);
-      else { const _p = new Date(_rawDesde); if (!isNaN(_p.getTime())) _d = _p; }
-      if (_d) _desdeTxt = 'Miembro desde '+_d.toLocaleDateString('es-MX',{month:'short',year:'numeric'});
-    }
+    const _stats = _statsLogros();
+    const _enProgreso = (cursos || []).filter(c => {
+      const vistas = getProgresoCurso(c.id).clasesVistas.length;
+      return vistas > 0 && vistas < (c.sesiones?.length || 0);
+    }).length;
     container.innerHTML = `
-      <div class="fade-up perfil-page">
-        <div class="sec-hero">
-          <span class="sec-hero__eyebrow">Tu cuenta</span>
-          <h1 class="sec-hero__title">Mi perfil</h1>
-          <p class="sec-hero__sub">Tus datos personales, configuración de la membresía y preferencias de notificaciones.</p>
-        </div>
-
-        <section class="perfil-hero">
-          <div class="perfil-hero__avatar">${_ini}</div>
-          <div class="perfil-hero__info">
-            <h2 class="perfil-hero__name">${_nom}</h2>
-            <div class="perfil-hero__email">${_em}</div>
-            <div class="perfil-hero__badges">
-              <span class="pill"><svg class="ic"><use href="#i-crown"/></svg>${_planTxt}</span>
-              <span class="tag tag--new">${_nivelTxt}</span>
-              ${_desdeTxt?`<span class="tag tag--down">${_desdeTxt}</span>`:''}
+      <div class="perfil-panel-layer" id="perfil-panel-layer">
+        <aside class="perfil-panel" aria-label="Tu perfil DulceLab Food">
+          <section class="perfil-panel__hero">
+            <button class="perfil-panel__close" type="button" id="perfil-panel-close" aria-label="Cerrar perfil">×</button>
+            <div class="perfil-panel__eyebrow">✦ Tu espacio DulceLab Food</div>
+            <div class="perfil-panel__identity">
+              <div class="perfil-panel__avatar">${_ini}</div>
+              <div><h1 class="perfil-panel__name">${_nom}</h1><div class="perfil-panel__email">${_em}</div><span class="perfil-panel__plan"><svg class="ic"><use href="#i-crown"/></svg>${_planTxt}</span></div>
             </div>
+          </section>
+          <div class="perfil-panel__body">
+            <section class="perfil-panel__stats" aria-label="Tu actividad">
+              <div class="perfil-panel__stat"><b>${_stats.puntos}</b><span>Puntos</span></div>
+              <div class="perfil-panel__stat"><b>${_stats.clases}</b><span>Clases</span></div>
+              <div class="perfil-panel__stat"><b>${_stats.completados}</b><span>Cursos</span></div>
+            </section>
+            <button type="button" class="perfil-panel__benefit" data-profile-section="suscripcion"><span class="perfil-panel__benefit-ic"><svg class="ic"><use href="#i-crown"/></svg></span><span><b>Explora tus beneficios</b><small>Consulta tu membresía y tu progreso.</small></span><span class="perfil-panel__benefit-arrow">›</span></button>
+            <section class="perfil-panel__tiles">
+              <button type="button" class="perfil-panel__tile" id="perfil-open-details"><span class="perfil-panel__tile-ic"><svg class="ic"><use href="#i-user"/></svg></span><b>Mi perfil</b><small>Datos profesionales</small></button>
+              <button type="button" class="perfil-panel__tile" data-profile-section="logros"><span class="perfil-panel__tile-ic"><svg class="ic"><use href="#i-trophy"/></svg></span><b>Mis logros</b><small>Avances y medallas</small></button>
+              <button type="button" class="perfil-panel__tile" data-profile-section="suscripcion"><span class="perfil-panel__tile-ic"><svg class="ic"><use href="#i-crown"/></svg></span><b>Membresía</b><small>Plan y beneficios</small></button>
+              <button type="button" class="perfil-panel__tile" id="perfil-open-settings"><span class="perfil-panel__tile-ic"><svg class="ic"><use href="#i-tools"/></svg></span><b>Configuración</b><small>Datos y seguridad</small></button>
+            </section>
+            <section class="perfil-panel__details" id="perfil-panel-details" hidden>
+              <div class="perfil-panel__details-title">Datos personales</div>
+              <div class="perfil-field" data-field="nombre"><span class="perfil-field__lbl">Nombre</span><span class="perfil-field__val">${_nom}</span><button class="perfil-field__edit" aria-label="Editar nombre"><svg class="ic"><use href="#i-tools"/></svg></button></div>
+              <div class="perfil-field" data-field="email" data-readonly="1"><span class="perfil-field__lbl">Email</span><span class="perfil-field__val">${_em}</span><button class="perfil-field__edit" aria-label="Ver email"><svg class="ic"><use href="#i-tools"/></svg></button></div>
+              <div class="perfil-field" data-field="whatsapp"><span class="perfil-field__lbl">WhatsApp</span><span class="perfil-field__val">—</span><button class="perfil-field__edit" aria-label="Editar WhatsApp"><svg class="ic"><use href="#i-tools"/></svg></button></div>
+              <div class="perfil-field" data-field="empresa"><span class="perfil-field__lbl">Empresa</span><span class="perfil-field__val">—</span><button class="perfil-field__edit" aria-label="Editar empresa"><svg class="ic"><use href="#i-tools"/></svg></button></div>
+              <div class="perfil-field" data-field="especialidad"><span class="perfil-field__lbl">Especialidad</span><span class="perfil-field__val">—</span><button class="perfil-field__edit" aria-label="Editar especialidad"><svg class="ic"><use href="#i-tools"/></svg></button></div>
+              <button class="btn btn--ghost" id="btn-change-pass" type="button" style="margin-top:12px;font-size:11px;"><svg class="ic"><use href="#i-shield-check"/></svg>Cambiar contraseña</button>
+            </section>
+            <section class="perfil-panel__next"><b>✦ Tu siguiente avance empieza aquí.</b>${_enProgreso ? `Tienes ${_enProgreso} curso${_enProgreso !== 1 ? 's' : ''} en progreso para continuar.` : `Estudia una clase o resuelve un reto para subir de ${escapeHtml(_nivelTxt)}.`}</section>
+            <button type="button" class="perfil-panel__logout" id="perfil-panel-logout"><svg class="ic"><use href="#i-logout"/></svg>Cerrar sesión</button>
           </div>
-          <div class="perfil-hero__actions">
-            <button class="btn btn--ghost" id="btn-edit-profile"><svg class="ic"><use href="#i-tools"/></svg>Editar perfil</button>
-            <button class="btn btn--ghost" id="btn-mi-tarjeta-dir"><svg class="ic"><use href="#i-users"/></svg>Mi tarjeta</button>
-            <button class="btn btn--ghost" data-tour-restart type="button" aria-label="Ver recorrido guiado" title="Ver recorrido guiado"><span class="tour-help-icon" aria-hidden="true">?</span></button>
-          </div>
-        </section>
-
-        <div class="perfil-grid">
-          <div class="perfil-card perfil-card--personal">
-            <div class="perfil-card__title">Datos personales</div>
-            <div class="perfil-field" data-field="nombre"><span class="perfil-field__lbl">Nombre</span><span class="perfil-field__val">${_nom}</span><button class="perfil-field__edit"><svg class="ic"><use href="#i-tools"/></svg></button></div>
-            <div class="perfil-field" data-field="email" data-readonly="1"><span class="perfil-field__lbl">Email</span><span class="perfil-field__val">${_em}</span><button class="perfil-field__edit"><svg class="ic"><use href="#i-tools"/></svg></button></div>
-            <div class="perfil-field" data-field="whatsapp"><span class="perfil-field__lbl">WhatsApp</span><span class="perfil-field__val">—</span><button class="perfil-field__edit"><svg class="ic"><use href="#i-tools"/></svg></button></div>
-            <div class="perfil-field" data-field="empresa"><span class="perfil-field__lbl">Empresa</span><span class="perfil-field__val">—</span><button class="perfil-field__edit"><svg class="ic"><use href="#i-tools"/></svg></button></div>
-            <div class="perfil-field" data-field="especialidad"><span class="perfil-field__lbl">Especialidad</span><span class="perfil-field__val" id="pf-especialidad">—</span><button class="perfil-field__edit"><svg class="ic"><use href="#i-tools"/></svg></button></div>
-          </div>
-
-          <div class="perfil-card perfil-card--activity">
-            <div class="perfil-card__title">Tu actividad</div>
-            <div class="perfil-field"><span class="perfil-field__lbl">Cursos</span><span class="perfil-field__val" id="pf-cursos" style="color:var(--primary);font-family:'JetBrains Mono',monospace;">0 en progreso · 0 completados</span></div>
-            <div class="perfil-field"><span class="perfil-field__lbl">Certificados</span><span class="perfil-field__val" id="pf-certs" style="color:var(--success);font-family:'JetBrains Mono',monospace;">0 emitidos</span></div>
-            <div class="perfil-field"><span class="perfil-field__lbl">Horas estudiadas</span><span class="perfil-field__val" id="pf-horas" style="font-family:'JetBrains Mono',monospace;">0 hrs</span></div>
-            <div class="perfil-field"><span class="perfil-field__lbl">Racha actual</span><span class="perfil-field__val" id="pf-racha" style="color:var(--primary);font-family:'JetBrains Mono',monospace;">0 días</span></div>
-            <div class="perfil-field"><span class="perfil-field__lbl">Último acceso</span><span class="perfil-field__val" id="pf-acceso">—</span></div>
-          </div>
-
-          <div class="perfil-card perfil-card--notifications">
-            <div class="perfil-card__title">Notificaciones</div>
-            <div class="perfil-field"><span class="perfil-field__lbl">Nuevos cursos</span><span class="perfil-field__val" style="color:var(--success);">✓ Activado</span></div>
-            <div class="perfil-field"><span class="perfil-field__lbl">Clases en vivo</span><span class="perfil-field__val" style="color:var(--success);">✓ Activado</span></div>
-            <div class="perfil-field"><span class="perfil-field__lbl">Foro VIP</span><span class="perfil-field__val" style="color:var(--success);">✓ Activado</span></div>
-            <div class="perfil-field"><span class="perfil-field__lbl">Newsletter quincenal</span><span class="perfil-field__val" style="color:var(--text-3);">— Desactivado</span></div>
-          </div>
-
-          <div class="perfil-card perfil-card--security">
-            <div class="perfil-card__title">Seguridad</div>
-            <div class="perfil-field"><span class="perfil-field__lbl">Contraseña</span><span class="perfil-field__val">••••••••</span><button class="perfil-field__edit" id="btn-change-pass" title="Restablecer contraseña"><svg class="ic"><use href="#i-tools"/></svg></button></div>
-            <div class="perfil-field"><span class="perfil-field__lbl">2FA</span><span class="perfil-field__val" style="color:var(--text-3);">Desactivado</span></div>
-            <div class="perfil-field" style="border-bottom:none;padding-top:10px;">
-              <button class="btn btn--ghost" id="btn-close-all-sessions" style="font-size:11px;color:var(--danger);border-color:color-mix(in srgb,var(--danger) 35%,transparent);"><svg class="ic"><use href="#i-logout"/></svg>Cerrar todas las sesiones</button>
-            </div>
-          </div>
-        </div>
+        </aside>
       </div>
     `;
     if (typeof loadProfileFromLS==='function') loadProfileFromLS();
+    const cerrarPanel = () => navigateToSection('inicio');
+    container.querySelector('#perfil-panel-close')?.addEventListener('click', cerrarPanel);
+    container.querySelector('#perfil-panel-layer')?.addEventListener('click', e => { if (e.target.id === 'perfil-panel-layer') cerrarPanel(); });
+    const detalles = container.querySelector('#perfil-panel-details');
+    const abrirDetalles = () => { detalles.hidden = false; detalles.scrollIntoView({ behavior:'smooth', block:'nearest' }); };
+    container.querySelector('#perfil-open-details')?.addEventListener('click', abrirDetalles);
+    container.querySelector('#perfil-open-settings')?.addEventListener('click', abrirDetalles);
+    container.querySelectorAll('[data-profile-section]').forEach(b => b.addEventListener('click', () => navigateToSection(b.dataset.profileSection)));
+    container.querySelector('#perfil-panel-logout')?.addEventListener('click', () => window.__signOut?.());
   }
 
   /* ============================ SUSCRIPCIÓN ============================ */
@@ -13764,8 +13757,8 @@ function openEditField(field){
       // Refresco visual directo de lo que está en pantalla del perfil
       try {
         wrap.querySelector('.perfil-field__val').textContent=newVal;
-        document.querySelectorAll('.perfil-hero__name').forEach(el=>el.textContent=newVal);
-        const av=document.querySelector('.perfil-hero__avatar'); if(av) av.textContent=window.UserState.iniciales;
+        document.querySelectorAll('.perfil-hero__name, .perfil-panel__name').forEach(el=>el.textContent=newVal);
+        document.querySelectorAll('.perfil-hero__avatar, .perfil-panel__avatar').forEach(av=>av.textContent=window.UserState.iniciales);
       } catch(e){}
       Modal.close('edit-nombre');
       Toast.success('Nombre actualizado','Se aplicará también en tus certificados');
