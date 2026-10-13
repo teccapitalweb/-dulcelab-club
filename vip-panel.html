@@ -6588,8 +6588,8 @@ const Sections = (function(){
   /* ============================================================
      ACTIVIDAD DINÁMICA AL TERMINAR CADA CLASE
      Tipos: ahorcado, vf (verdadero/falso), opcion (opción múltiple).
-     Se configura por clase en el admin (sesion.actividad). Obligatoria
-     de completar (no cierra con click fuera), no afecta certificado.
+     Se configura por clase en el admin (sesion.actividad). Puede dejarse
+     pendiente con la X y no afecta el certificado.
      ============================================================ */
   function _normalizaLetra(s){
     return (s||'').toUpperCase()
@@ -7457,7 +7457,7 @@ const Sections = (function(){
     elContinuar.addEventListener('click', onDone);
   }
 
-  function mostrarActividadClase(sesion, onDone){
+  function mostrarActividadClase(sesion, onDone, onSkip){
     const act = sesion && sesion.actividad;
     if (!act || !act.tipo) { onDone(); return; }
     // MODIFICADO: antes usaba un id fijo ('actividad-clase') para el modal.
@@ -7478,7 +7478,17 @@ const Sections = (function(){
     else if (act.tipo === 'rompecabezas') bodyHtml = _renderRompecabezas(act);
     else if (act.tipo === 'crucigrama') bodyHtml = _renderCrucigrama(act);
     else { onDone(); return; }
-    Modal.open({ id: modalId, closeOnBackdrop: false, size: act.tipo === 'crucigrama' ? 'lg' : 'md', body: bodyHtml });
+    // La X permite posponer, no responder: la clase queda sin marcar para
+    // que la persona pueda volver a abrirla y hacer la actividad después.
+    bodyHtml = `<button id="actividad-omitir" type="button" class="modal__close" aria-label="Cerrar actividad por ahora" title="Responder después" style="position:absolute;top:12px;right:12px;z-index:2;background:var(--bg);font-size:20px;line-height:1;">×</button>${bodyHtml}`;
+    let actividadCompletada = false;
+    Modal.open({
+      id: modalId,
+      closeOnBackdrop: false,
+      size: act.tipo === 'crucigrama' ? 'lg' : 'md',
+      body: bodyHtml,
+      onClose: () => { if (!actividadCompletada) onSkip?.(); }
+    });
     // MODIFICADO: solo ESTA ventana (la actividad) va por encima del visor de
     // video (z-index 9999) — no se toca la regla general de .modal-backdrop,
     // que usan también "Detalle del curso" y otras ventanas del sitio, y que
@@ -7487,7 +7497,9 @@ const Sections = (function(){
     if (elBackdrop) elBackdrop.style.zIndex = '10600';
     const root = document.querySelector(`[data-modal-id="${modalId}"] .modal__body`);
     if (!root) { onDone(); return; }
-    const cerrar = () => { Modal.close(modalId); onDone(); };
+    root.style.position = 'relative';
+    root.querySelector('#actividad-omitir')?.addEventListener('click', () => Modal.close(modalId));
+    const cerrar = () => { actividadCompletada = true; Modal.close(modalId); onDone(); };
     if (act.tipo === 'ahorcado') _initAhorcado(root, act, cerrar);
     else if (act.tipo === 'vf') _initVF(root, act, cerrar);
     else if (act.tipo === 'opcion') _initOpcion(root, act, cerrar);
@@ -7530,14 +7542,21 @@ const Sections = (function(){
           if (typeof renderCursosList === 'function') renderCursosList();
         }, 1200);
       }
-      // MODIFICADO: si la clase tiene una actividad dinámica configurada (ahorcado,
-      // verdadero/falso, opción múltiple), se muestra primero y es obligatorio
-      // completarla antes de marcar la clase como vista. No afecta el certificado.
+      // Si la clase tiene actividad, se muestra antes de marcarla. La persona
+      // puede cerrarla con la X para dejar tanto la clase como la actividad
+      // pendientes y retomarlas después.
       const curso = cursos.find(c => c.id === cursoId);
       const sesion = curso?.sesiones?.find(s => (s.numero || 0) === numClase);
       if (sesion && sesion.actividad && sesion.actividad.tipo) {
         btn.disabled = true; // evita abrir dos actividades encimadas si le dan doble clic
-        mostrarActividadClase(sesion, () => { btn.disabled = false; completarMarcado(); });
+        mostrarActividadClase(
+          sesion,
+          () => { btn.disabled = false; completarMarcado(); },
+          () => {
+            btn.disabled = false;
+            if (window.Toast?.info) window.Toast.info('Actividad pendiente', 'Puedes volver a esta clase y responderla cuando quieras.');
+          }
+        );
       } else {
         completarMarcado();
       }
