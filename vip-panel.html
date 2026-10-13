@@ -10156,7 +10156,9 @@ const Sections = (function(){
       <button class="btn btn--ghost" id="reto-giveup" style="display:none;color:var(--danger);">Ver respuesta (sin puntos)</button>
     `;
     Modal.open({ id:'reto-'+r.id, title:r.titulo, subtitle:r.categoria+' · +'+r.puntos+' pts', icon:'i-bolt', size:'md', body, footer });
-    const spotsSeleccionados = () => Array.from(body.querySelectorAll('.reto-err-spot[data-seleccionado="si"]'));
+    // El estado visual es la fuente de verdad: evita que una marca visible y el
+    // contador puedan desincronizarse en SVGs de distinto tamaño.
+    const spotsSeleccionados = () => Array.from(body.querySelectorAll('.reto-err-spot')).filter(spot => spot.dataset.seleccionado === 'si' || spot.getAttribute('stroke') === '#D5A13D');
     const totalSeleccionado = () => spotsSeleccionados().length;
     function bloquearTodo(){
       body.querySelectorAll('.reto-err-spot').forEach(spot => spot.style.pointerEvents = 'none');
@@ -10171,11 +10173,11 @@ const Sections = (function(){
       if(faltante<0) return;
       const spot = body.querySelector(`.reto-err-spot[data-i="${faltante}"]`);
       if(spot){
-        spot.setAttribute('stroke','#D5A13D');
+        spot.setAttribute('stroke','#6687B5');
         spot.setAttribute('stroke-width','2.5');
         spot.style.animation = 'retoHintPulse 1s ease-in-out infinite';
       }
-      body.querySelector('#reto-err-fb').innerHTML = '<span style="color:var(--primary);font-weight:600;">💡 Hay una falla marcada con un círculo dorado.</span>';
+      body.querySelector('#reto-err-fb').innerHTML = '<span style="color:var(--primary);font-weight:600;">💡 Hay una falla marcada con un círculo azul.</span>';
       footer.querySelector('#reto-giveup').style.display = '';
     });
     footer.querySelector('#reto-giveup').addEventListener('click', async ()=>{
