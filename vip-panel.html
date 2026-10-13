@@ -3212,10 +3212,11 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 .lib-intro{margin:0 0 16px;font-size:12.5px;line-height:1.6;color:var(--text-2);max-width:720px}
 .lib-book__meta{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .rec-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:14px}
-.rec-card{position:relative;overflow:hidden;display:flex;flex-direction:column;gap:7px;padding:14px 15px 13px 18px;border-radius:14px;border:1px solid var(--border);background:linear-gradient(120deg,color-mix(in srgb,var(--surface) 70%,transparent),color-mix(in srgb,var(--surface) 46%,transparent)),var(--foto,var(--surface)) center/cover;text-align:left;color:var(--text);font:inherit;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.rec-card{position:relative;overflow:hidden;display:flex;flex-direction:column;gap:7px;padding:0 15px 13px 18px;border-radius:14px;border:1px solid var(--border);background:var(--surface);text-align:left;color:var(--text);font:inherit;cursor:pointer;transition:transform .15s,box-shadow .15s}
 .rec-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(180deg,var(--c1),var(--c2))}
 .rec-card:hover{transform:translateY(-3px);box-shadow:0 12px 22px -14px rgba(37,18,18,.4)}
 .rec-card:focus-visible{outline:3px solid #E5C171;outline-offset:3px}
+.rec-card__image{display:block;height:76px;margin:0 -15px 3px -18px;background-image:var(--foto);background-position:center;background-size:cover;border-bottom:1px solid var(--border);filter:saturate(.92)}
 .rec-card__top{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .rec-card__cat{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:800;letter-spacing:.9px;text-transform:uppercase;color:var(--c1)}
 .rec-card__xp{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:99px;background:var(--surface-2);border:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:800;color:var(--text-2)}
@@ -11324,6 +11325,7 @@ const Sections = (function(){
         const estado = est === 'abierto' ? `${_ICO_BOOK}<span>Tuya · ver receta</span>` : est === 'comprable' ? `${_ICO_BOOK}<span>Tienes saldo · toca para abrirla</span>` : est === 'xp' ? `${_ICO_LOCK}<span>Te faltan ${_fmtXP(faltan)} XP</span>` : `${_ICO_LOCK}<span>Con membresía · ${_fmtXP(r.xp)} XP</span>`;
         const barra = est === 'xp' ? `<span class="lib-bar"><i style="width:${Math.min(100, (xpActual / r.xp) * 100)}%"></i></span>` : '';
         return `<button type="button" class="rec-card ${est === 'abierto' ? 'is-open' : est === 'comprable' ? 'is-buyable' : 'is-locked'}" data-receta="${r.id}" style="--c1:${c1};--c2:${c2};--foto:${portada}" aria-label="${escapeHtml(r.titulo)}${est === 'abierto' ? '' : ' (bloqueada)'}">
+          <span class="rec-card__image" aria-hidden="true"></span>
           <span class="rec-card__top"><span class="rec-card__cat">${escapeHtml(r.categoria)}</span><span class="rec-card__xp">${est === 'abierto' ? `${_ICO_BOOK}Ver` : est === 'comprable' ? `${_ICO_BOOK}Abrir · ${_fmtXP(r.xp)} XP` : `${_ICO_LOCK}${_fmtXP(r.xp)} XP`}</span></span>
           <span class="rec-card__title">${escapeHtml(r.titulo)}</span>
           <span class="rec-card__meta">${_minTxt(r.tiempo)}${r.porciones ? ' · ' + r.porciones + ' porciones' : ''} · ${escapeHtml(r.dificultad)}</span>
