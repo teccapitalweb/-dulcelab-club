@@ -8969,21 +8969,13 @@ const Sections = (function(){
       if(_esErrorPermiso(e)) _progresoSinPermiso = true;
     }
     _progresoListo = true;
-    if (!window.__nivelesRevisados) { window.__nivelesRevisados = true; setTimeout(() => { try { window.__revisarRegalosNivel && window.__revisarRegalosNivel(); } catch (e) {} }, 5000); }
   }
   window.__cargarProgreso = _cargarProgreso;
   // XP ganados (el nivel de Retos usa este total, que nunca baja) y saldo para gastar en la biblioteca (ganados − gastados).
   const _saldoXP = () => Math.max(0, (Number(_progreso.xp) || 0) - (Number(_progreso.xpGastado) || 0));
   window.__saldoXP = _saldoXP;
-  // Niveles de retos ya terminados cuyo cofre aún no se cobra (se piden al servidor).
-  window.__nivelesPendientes = function(){
-    if (typeof toolEsVIP === 'function' && !toolEsVIP()) return [];
-    const hechos = _progreso.retosCompletados || [];
-    return NIVELES_COFRE.filter(n => {
-      const lista = RETOS_LIBRARY.filter(r => r.dificultad === n.dif);
-      return lista.length && lista.every(r => hechos.includes(r.id)) && !(_progreso.nivelesPremiados || {})[n.k];
-    });
-  };
+  // Los retos se eligen libremente; ya no hay cofres por terminar niveles.
+  window.__nivelesPendientes = () => [];
   async function _guardarProgreso(){
     try{
       const fs = window.__fs; const db = window.__db;
@@ -9136,8 +9128,8 @@ const Sections = (function(){
 
   // ═══════════════════════════════════════════════════════════════
   // RETOS NUEVOS · trivias y cuentas (24 retos más, sin fotos)
-  // Mismas reglas de siempre (se desbloquean en orden, XP en progreso/{uid}),
-  // pero con formatos más ágiles: trivias con explicación y problemas de números del
+  // Mismos puntos y avance guardado en progreso/{uid}, pero con formatos más
+  // ágiles: trivias con explicación y problemas de números del
   // día a día de una cocina. Cada reto da entre 35 y 50 XP, que es lo que permite
   // pedir más XP por los premios de la biblioteca.
   // tipo 'quiz'    · varias preguntas; se aprueba con "aprobar" aciertos
@@ -9369,19 +9361,12 @@ const Sections = (function(){
     const base = RETOS_LIBRARY.splice(0, RETOS_LIBRARY.length);
     base.forEach(r => { RETOS_LIBRARY.push(r); const n = nuevos.shift(); if (n) RETOS_LIBRARY.push(n); });
     nuevos.forEach(n => RETOS_LIBRARY.push(n));
-    // Tres niveles de dificultad. Se juegan en este orden y no se puede saltar ninguno:
-    // para entrar al siguiente reto hay que superar el anterior. Dentro de cada nivel se conserva la mezcla de formatos.
+    // Se conservan las dificultades para informar el nivel de cada reto, pero todos
+    // quedan disponibles: cada persona decide cuál practicar.
     const RANGO = { 'Básico':0, 'Intermedio':1, 'Avanzado':2 };
     const orden = RETOS_LIBRARY.map((r, i) => ({ r, i })).sort((a, b) => (RANGO[a.r.dificultad] - RANGO[b.r.dificultad]) || (a.i - b.i));
     RETOS_LIBRARY.splice(0, RETOS_LIBRARY.length, ...orden.map(x => x.r));
   })();
-  // Niveles y su cofre (el servidor da el regalo: dulcelab-webhook/data/retos.js debe tener los mismos retos por nivel).
-  const NIVELES_COFRE = [
-    { k:'basico', dif:'Básico', nombre:'Básico', xp:100 },
-    { k:'intermedio', dif:'Intermedio', nombre:'Intermedio', xp:200 },
-    { k:'avanzado', dif:'Avanzado', nombre:'Avanzado', xp:300 }
-  ];
-
   const RETO_CAT_META = {
     'Repostería':{icon:'i-bn-whisk', color:'var(--primary)'},
     'Panadería':{icon:'i-bn-rollingpin', color:'var(--warning)'},
@@ -9393,8 +9378,8 @@ const Sections = (function(){
 
   // ═══════════════════════════════════════════════════════════════
   // RETOS · rediseño v10 (ref. Visión Pecuaria "Zona de retos")
-  // Mismo contenido y mismas reglas de siempre (18 retos, se desbloquean en orden,
-  // XP y racha de Firestore progreso/{uid}); cambia cómo se presenta: marcador,
+  // Mismo contenido, XP y racha de Firestore progreso/{uid}; cada reto se puede
+  // elegir libremente. La presentación incluye marcador,
   // "tu siguiente reto", misión semanal, modos de juego, filtros y medallas.
   // ═══════════════════════════════════════════════════════════════
   const RETO_TIPO_META = {
@@ -9472,7 +9457,8 @@ const Sections = (function(){
     const esVipRetos = typeof toolEsVIP==='function' ? toolEsVIP() : true;
     const bloqueoPlan = !esVipRetos && _progreso.retosCompletados.length >= 1;
     const hecho = r => _progreso.retosCompletados.includes(r.id);
-    const abierto = i => !bloqueoPlan && (i === 0 || _progreso.retosCompletados.includes(RETOS_LIBRARY[i-1].id));
+    // No hay una ruta obligatoria: cualquier reto puede elegirse desde la lista.
+    const abierto = () => !bloqueoPlan;
     const total = RETOS_LIBRARY.length;
     const nHechos = RETOS_LIBRARY.filter(hecho).length;
     const pct = total ? Math.round(nHechos / total * 100) : 0;
@@ -9504,7 +9490,7 @@ const Sections = (function(){
     const tHechas = tareas.filter(t => t.ok).length;
     const pctMision = Math.round(tHechas / tareas.length * 100);
 
-    // ─── Tarjeta "siguiente reto" ───
+    // ─── Tarjeta de reto destacado ───
     let nextHtml;
     if (bloqueoPlan) {
       nextHtml = `
@@ -9523,7 +9509,7 @@ const Sections = (function(){
       nextHtml = `
         <div class="retos2-next retos2-next--foto" data-reto-id="${sig.id}" data-reto-locked="false" role="button" tabindex="0" style="--cat-color:${meta.color};background-image:linear-gradient(90deg,rgba(18,7,10,.92) 0%,rgba(18,7,10,.62) 55%,rgba(18,7,10,.18) 100%),url('${_retoFoto(sig, 900)}')">
           <div>
-            <div class="retos2-next__eyebrow">${nHechos === 0 ? 'Empieza aquí' : 'Tu siguiente reto'} · ${escapeHtml(sig.categoria)}</div>
+            <div class="retos2-next__eyebrow">${nHechos === 0 ? 'Puedes empezar por aquí' : 'Reto destacado'} · ${escapeHtml(sig.categoria)}</div>
             <div class="retos2-next__title">${escapeHtml(sig.titulo)}</div>
             <div class="retos2-next__meta">
               <span><svg class="ic"><use href="#i-bolt"/></svg>+${sig.puntos} pts</span>
@@ -9559,24 +9545,6 @@ const Sections = (function(){
       <div class="retos-route__head"><div><div class="retos-route__eyebrow">Camino a maestría</div><h2 class="retos-route__title">Seis niveles de dominio</h2></div><span class="retos-route__note">${nivelSiguiente ? `Faltan ${(nivelSiguiente.xp - _progreso.xp).toLocaleString('es-MX')} XP para ${nivelSiguiente.nombre}` : 'Nivel máximo alcanzado'}</span></div>
       <div class="retos-route__scroll"><div class="retos-route__track">${rutaItems}</div></div>
     </section>`;
-
-    // Niveles de dificultad: se superan en orden (Básico → Intermedio → Avanzado) y cada uno termina con un cofre de XP.
-    const nivelesHtml = `<section class="retos-niv-wrap" aria-label="Niveles de dificultad">
-      <div class="retos2-sec"><div><div class="retos2-sec__eyebrow">Sube de dificultad</div><h2 class="retos2-sec__title">Tres niveles, tres cofres</h2></div><span class="retos2-sec__note">Se juegan en orden: hay que superar cada reto para avanzar</span></div>
-      <div class="retos-niv">${NIVELES_COFRE.map((n, i) => {
-        const lista = RETOS_LIBRARY.filter(r => r.dificultad === n.dif);
-        const h = lista.filter(hecho).length, completo = lista.length > 0 && h === lista.length;
-        const cobrado = !!(_progreso.nivelesPremiados || {})[n.k];
-        const previo = i === 0 ? true : RETOS_LIBRARY.filter(r => r.dificultad === NIVELES_COFRE[i - 1].dif).every(hecho);
-        const pie = cobrado ? `<b class="retos-niv__ok">✓ Cofre cobrado · +${n.xp} XP</b>`
-                  : completo ? `<b class="retos-niv__ok">¡Nivel superado! Tu cofre de +${n.xp} XP llega enseguida</b>`
-                  : !previo ? `Se abre al terminar el nivel ${NIVELES_COFRE[i - 1].nombre}`
-                  : `Supéralo completo y gana un cofre de <b>+${n.xp} XP</b>`;
-        return `<div class="retos-niv__card ${completo ? 'is-done' : ''} ${previo ? '' : 'is-lock'}">
-          <div class="retos-niv__top"><span>Nivel ${n.nombre}</span><span class="retos-niv__n">${h}/${lista.length}</span></div>
-          <div class="hero-progress__bar" style="margin:9px 0 8px"><div class="hero-progress__fill" style="width:${lista.length ? Math.round(h / lista.length * 100) : 0}%"></div></div>
-          <div class="retos-niv__pie">${pie}</div></div>`;
-      }).join('')}</div></section>`;
 
     const avisoGratis = esVipRetos ? '' : (bloqueoPlan
       ? `<div class="retos-gratis retos-gratis--fin"><b>Ya jugaste tu reto gratis.</b> Tus <b>${_progreso.xp.toLocaleString('es-MX')} XP</b> están guardados, pero no se pueden usar ni sumar más hasta que actives tu membresía VIP. <button type="button" class="retos-gratis__btn" data-retos-vip>Activar membresía</button></div>`
@@ -9626,8 +9594,6 @@ const Sections = (function(){
           ${rutaHtml}
         </div>
 
-        ${nivelesHtml}
-
         <section class="retos2-zone">
           <div class="retos2-sec">
             <div><div class="retos2-sec__eyebrow">Entrena tus conocimientos</div><h2 class="retos2-sec__title">Zona de retos</h2></div>
@@ -9666,7 +9632,6 @@ const Sections = (function(){
 
     const abrirDesde = (el) => {
       if (bloqueoPlan) { _avisoRetosMembresia(); return; }
-      if (el.dataset.retoLocked === 'true') { Toast.info('Reto bloqueado', 'Completa el reto anterior para desbloquear este.'); return; }
       _abrirReto(el.dataset.retoId);
     };
     const enlazar = (el) => {
@@ -9713,12 +9678,11 @@ const Sections = (function(){
       $grid.innerHTML = visibles.map(({ r, i }) => {
         const meta = RETO_CAT_META[r.categoria] || { icon:'i-bolt', color:'var(--primary)' };
         const tm = RETO_TIPO_META[r.tipo] || { corto:'Reto' };
-        const ok = hecho(r), libre = abierto(i), esSig = sig && sig.id === r.id;
+        const ok = hecho(r), libre = abierto(i);
         const estado = ok ? '<span class="retos2-card__st is-done">✓ Resuelto</span>'
-                     : !libre ? '<span class="retos2-card__st is-lock">Bloqueado</span>'
-                     : esSig ? '<span class="retos2-card__st is-next">Siguiente</span>'
+                     : !libre ? '<span class="retos2-card__st is-lock">Con membresía</span>'
                      : '<span class="retos2-card__st">Disponible</span>';
-        const cta = ok ? (bloqueoPlan ? 'Con membresía' : 'Repetir') : !libre ? (bloqueoPlan ? 'Activa tu membresía' : 'Completa el anterior') : 'Jugar';
+        const cta = ok ? (bloqueoPlan ? 'Con membresía' : 'Repetir') : !libre ? 'Activa tu membresía' : 'Jugar';
         return `
           <div class="retos2-card ${ok ? 'is-done' : ''} ${libre ? '' : 'is-locked'}" role="button" tabindex="0" style="--cat-color:${meta.color}" data-reto-id="${r.id}" data-reto-locked="${!libre}">
             <div class="retos2-card__img" style="background-image:linear-gradient(180deg,rgba(0,0,0,.28) 0%,rgba(0,0,0,.04) 42%,rgba(0,0,0,.5) 100%),url('${_retoFoto(r, 640)}')">
@@ -9793,16 +9757,9 @@ const Sections = (function(){
   }
 
   function _trasCompletarReto(r, msCierre){
-    const idx = RETOS_LIBRARY.findIndex(x=>x.id===r.id);
-    const siguiente = RETOS_LIBRARY[idx+1];
-    if(siguiente && !_progreso.retosCompletados.includes(siguiente.id) && !_retoGratisAgotado()){
-      setTimeout(()=>Toast.success('🔓 ¡Reto desbloqueado!', siguiente.titulo), 900);
-    }
     const dyn = document.getElementById('dynamic-section');
     if(dyn && dyn.querySelector('[data-reto-id]')) renderRetos(dyn);
     setTimeout(()=>Modal.close('reto-'+r.id), msCierre || 1500);
-    // ¿Se acabó el nivel? Entonces llega su cofre (después de cerrar el reto).
-    setTimeout(() => { try { window.__revisarRegalosNivel && window.__revisarRegalosNivel(); } catch (e) {} }, (msCierre || 1500) + 1500);
   }
   window.__refrescarRetos = function(){
     const dyn = document.getElementById('dynamic-section');
@@ -11221,14 +11178,14 @@ const Sections = (function(){
       if (est === 'membresia') {
         Modal.open({
           id, title: 'Exclusivo para miembros', subtitle: it.titulo, icon: 'i-shield-check',
-          body: `<div style="padding:10px 2px 4px;line-height:1.6;color:var(--text-2);font-size:13px">Las guías y recetas se leen con la <strong style="color:var(--primary)">membresía VIP</strong>. Cuando la actives, se abre gastando <strong style="color:var(--text)">${_fmtXP(it.xp)} XP</strong> de los que ganes en retos, cofres y cursos.</div>`,
+          body: `<div style="padding:10px 2px 4px;line-height:1.6;color:var(--text-2);font-size:13px">Las guías y recetas se leen con la <strong style="color:var(--primary)">membresía VIP</strong>. Cuando la actives, se abre gastando <strong style="color:var(--text)">${_fmtXP(it.xp)} XP</strong> de los que ganes en retos y cursos.</div>`,
           footer: `<button class="btn btn--ghost" onclick="Modal.close('${id}')">Después</button><button class="btn btn--primary" onclick="Modal.close('${id}');navigateToSection('suscripcion')">Ver membresía</button>`
         });
         return;
       }
       Modal.open({
         id, title: 'Sigue sumando XP', subtitle: it.titulo, icon: 'i-shield-check',
-        body: `<div style="padding:10px 2px 4px;line-height:1.6;color:var(--text-2);font-size:13px">Se abre gastando <strong style="color:var(--primary)">${_fmtXP(it.xp)} XP</strong>. Tu saldo es de <strong style="color:var(--text)">${_fmtXP(xpActual)} XP</strong> y te faltan <strong style="color:var(--text)">${_fmtXP(faltan)} XP</strong>. Cada reto suma de 30 a 50 XP y cada nivel superado da un cofre.<div class="lib-bar" style="margin-top:14px"><i style="width:${Math.min(100, (xpActual / it.xp) * 100)}%"></i></div></div>`,
+        body: `<div style="padding:10px 2px 4px;line-height:1.6;color:var(--text-2);font-size:13px">Se abre gastando <strong style="color:var(--primary)">${_fmtXP(it.xp)} XP</strong>. Tu saldo es de <strong style="color:var(--text)">${_fmtXP(xpActual)} XP</strong> y te faltan <strong style="color:var(--text)">${_fmtXP(faltan)} XP</strong>. Cada reto suma de 30 a 50 XP.<div class="lib-bar" style="margin-top:14px"><i style="width:${Math.min(100, (xpActual / it.xp) * 100)}%"></i></div></div>`,
         footer: `<button class="btn btn--ghost" onclick="Modal.close('${id}')">Después</button><button class="btn btn--primary" onclick="Modal.close('${id}');navigateToSection('retos')">Ir a los retos</button>`
       });
     };
@@ -11255,7 +11212,7 @@ const Sections = (function(){
     const pintarBiblioteca = async (root) => {
       if (!root) return;
       const esVip = tieneAccesoVipCompleto();
-      const encabezado = `<div class="xp-library__head"><div><div class="xp-library__eyebrow">Biblioteca DulceLab Food</div><h2 class="xp-library__title">Guías, recetas y libros para tu formación</h2><p class="xp-library__sub">Todo se lee aquí mismo con tu membresía. Las guías y las recetas se abren <strong>gastando XP</strong>: cada una se paga una sola vez y queda tuya. Los XP los ganas en Retos (hasta ${_fmtXP(xpMaximoRetos)} XP), con un cofre por cada nivel de retos que superes y 15 XP por cada curso que termines. Los libros clásicos se abren por días de membresía: uno al empezar y otro cada 25 días.</p></div><div class="xp-library__score"><b>${_fmtXP(xpActual)} <small>XP</small></b><span>${esVip ? 'Tu saldo' : 'XP guardados'}</span></div></div>`;
+      const encabezado = `<div class="xp-library__head"><div><div class="xp-library__eyebrow">Biblioteca DulceLab Food</div><h2 class="xp-library__title">Guías, recetas y libros para tu formación</h2><p class="xp-library__sub">Todo se lee aquí mismo con tu membresía. Las guías y las recetas se abren <strong>gastando XP</strong>: cada una se paga una sola vez y queda tuya. Los XP los ganas en Retos (hasta ${_fmtXP(xpMaximoRetos)} XP) y con 15 XP por cada curso que termines. Los libros clásicos se abren por días de membresía: uno al empezar y otro cada 25 días.</p></div><div class="xp-library__score"><b>${_fmtXP(xpActual)} <small>XP</small></b><span>${esVip ? 'Tu saldo' : 'XP guardados'}</span></div></div>`;
       root.innerHTML = encabezado + '<div class="foro-empty">Cargando biblioteca…</div>';
       let cat;
       try { cat = await _cargarCatalogoBib(); }
