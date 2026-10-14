@@ -10126,6 +10126,9 @@ const Sections = (function(){
     let resuelto = false;
     const encontrados = new Set();
     const body = document.createElement('div');
+    // La primera foto es cuadrada; si ocupa todo el ancho del modal empuja
+    // la explicación y los hallazgos fuera de la pantalla.
+    const escenaCuadrada = r.id === 'err1';
     const escena = r.imagen
       ? `<img src="${r.imagen}" style="width:100%;display:block;">`
       : `<svg viewBox="0 0 100 100" style="width:100%;display:block;background:#EDE6DA">
@@ -10151,7 +10154,7 @@ const Sections = (function(){
         <p style="font-size:12.5px;color:var(--text-2);margin:0;line-height:1.55;">Analiza la escena y toca directamente el objeto o la condición que representa un peligro.</p>
         <strong id="reto-detector-count" style="white-space:nowrap;padding:7px 10px;border-radius:999px;background:var(--surface-2);color:var(--success);font-size:12px;">0/${r.hotspots.length}</strong>
       </div>
-      <div id="reto-err-wrap" role="application" aria-label="Imagen interactiva: encuentra las fallas" style="position:relative;margin-top:14px;border-radius:16px;overflow:hidden;border:1px solid var(--border-2);cursor:crosshair;line-height:0;touch-action:manipulation;">
+      <div id="reto-err-wrap" role="application" aria-label="Imagen interactiva: encuentra las fallas" style="position:relative;${escenaCuadrada ? 'width:min(100%,390px);margin:14px auto 0;' : 'margin-top:14px;'}border-radius:16px;overflow:hidden;border:1px solid var(--border-2);cursor:crosshair;line-height:0;touch-action:manipulation;">
         ${escena}
       </div>
       <div id="reto-err-fb" role="status" aria-live="polite" style="margin-top:12px;padding:12px 14px;border:1px solid var(--border-2);border-radius:12px;background:var(--surface-2);font-size:12.5px;color:var(--text-2);line-height:1.45;">Busca una condición insegura y tócala directamente en la imagen.</div>
