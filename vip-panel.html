@@ -12144,7 +12144,7 @@ const Sections = (function(){
     let seccionAnterior = '';
     grid.innerHTML = cards.map(c=>{
       // Sin membresía no se muestra ningún dato de contacto: ni se pinta ni queda en la página.
-      if (!vipDir) c = Object.assign({}, c, { whatsapp:'', email:'', linkedin:'', web:'' });
+      if (!vipDir) c = Object.assign({}, c, { whatsapp:'', email:'', linkedin:'', instagram:'', web:'' });
       const color = /^#[0-9a-f]{6}$/i.test(c.color||'') ? c.color : dirColorFor(c.id);
       const inicial = (c.nombre||'?').trim().slice(0,2).toUpperCase();
       const foto = c.foto
@@ -12154,6 +12154,7 @@ const Sections = (function(){
       if (c.whatsapp) contactos.push(`<a class="dir-cta dir-cta--wa" href="https://wa.me/${(c.whatsapp||'').replace(/[^0-9]/g,'')}" target="_blank" rel="noopener" title="WhatsApp"><svg class="ic"><use href="#i-whatsapp"/></svg></a>`);
       if (c.email) contactos.push(`<button class="dir-cta dir-cta--mail" data-email="${escapeHtml(c.email)}" title="Copiar correo: ${escapeHtml(c.email)}"><svg class="ic"><use href="#i-mail"/></svg></button>`);
       if (c.linkedin && _dirSafeHref(c.linkedin)) contactos.push(`<a class="dir-cta dir-cta--li" href="${_dirSafeHref(c.linkedin)}" target="_blank" rel="noopener" title="LinkedIn"><svg class="ic"><use href="#i-linkedin"/></svg></a>`);
+      if (c.instagram && _dirSafeHref(c.instagram)) contactos.push(`<a class="dir-cta" href="${_dirSafeHref(c.instagram)}" target="_blank" rel="noopener" title="Instagram"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg></a>`);
       if (c.web && _dirSafeHref(c.web)) contactos.push(`<a class="dir-cta" href="${_dirSafeHref(c.web)}" target="_blank" rel="noopener" title="Sitio web"><svg class="ic"><use href="#i-link"/></svg></a>`);
       if (!vipDir) contactos.push(`<button type="button" class="dir-cta dir-cta--lock" data-dir-lock title="Disponible con la membresía VIP">${_DIR_ICO_LOCK}<span>Contactar</span></button>`);
       const esMia = c.id===uid;
@@ -12201,7 +12202,7 @@ const Sections = (function(){
     const c0 = _dirCards.find(x=>x.id===id); if(!c0) return;
     const vipDir = dirEsVip();
     // Sin membresía no se muestra ningún dato de contacto.
-    const c = vipDir ? c0 : Object.assign({}, c0, { whatsapp:'', email:'', linkedin:'', web:'' });
+    const c = vipDir ? c0 : Object.assign({}, c0, { whatsapp:'', email:'', linkedin:'', instagram:'', web:'' });
     const uid = window.UserState?.uid;
     const esMia = c.id===uid;
     const inicial = (c.nombre||'?').trim().slice(0,2).toUpperCase();
@@ -12243,9 +12244,10 @@ const Sections = (function(){
              <span class="dir-det__row-tx"><span class="dir-det__row-lbl">Correo · toca para copiar</span><span class="dir-det__row-val">${escapeHtml(c.email)}</span></span>
            </button>`:''}
           ${row('i-linkedin','LinkedIn',c.linkedin, _dirSafeHref(c.linkedin), 'dir-det__row--li')}
+          ${row('i-link','Instagram',c.instagram, _dirSafeHref(c.instagram))}
           ${row('i-link','Sitio web',c.web, _dirSafeHref(c.web))}
         </div>
-        ${(vipDir&&!c.whatsapp&&!c.email&&!c.linkedin&&!c.web)?'<div class="dir-det__sincontacto">Este miembro no agregó datos de contacto.</div>':''}
+        ${(vipDir&&!c.whatsapp&&!c.email&&!c.linkedin&&!c.instagram&&!c.web)?'<div class="dir-det__sincontacto">Este miembro no agregó datos de contacto.</div>':''}
       </div>
     `;
     const footer = document.createElement('div');
@@ -12315,6 +12317,8 @@ const Sections = (function(){
         <input class="dir-form__in" id="dirf-email" maxlength="80" value="${(data.email||'').replace(/"/g,'&quot;')}" placeholder="correo@ejemplo.com">
         <label class="dir-form__lbl">LinkedIn</label>
         <input class="dir-form__in" id="dirf-linkedin" maxlength="120" value="${(data.linkedin||'').replace(/"/g,'&quot;')}" placeholder="linkedin.com/in/tu-perfil">
+        <label class="dir-form__lbl">Instagram</label>
+        <input class="dir-form__in" id="dirf-instagram" maxlength="120" value="${(data.instagram||'').replace(/"/g,'&quot;')}" placeholder="instagram.com/tu-perfil o @tu-perfil">
         <label class="dir-form__lbl">Sitio web</label>
         <input class="dir-form__in" id="dirf-web" maxlength="120" value="${(data.web||'').replace(/"/g,'&quot;')}" placeholder="tusitio.com">
         <label class="dir-form__check"><input type="checkbox" id="dirf-visible" ${data.visible!==false?'checked':''}> Mostrar mi tarjeta en el directorio</label>
@@ -12356,6 +12360,7 @@ const Sections = (function(){
         whatsapp: document.getElementById('dirf-wa').value.trim(),
         email: document.getElementById('dirf-email').value.trim(),
         linkedin: document.getElementById('dirf-linkedin').value.trim(),
+        instagram: document.getElementById('dirf-instagram').value.trim(),
         web: document.getElementById('dirf-web').value.trim(),
         color: colorTarjeta,
         visible: document.getElementById('dirf-visible').checked
