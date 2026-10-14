@@ -10120,9 +10120,12 @@ const Sections = (function(){
 
   // ─── Tipo: encontrar el error (ilustración con puntos clicables) ───
   function _retoError(r){
+    // Este reto se resuelve directamente sobre la fotografía: no hay círculos
+    // visibles, ni selecciones acumuladas, ni un botón de "Verificar". Cada
+    // toque correcto se valida al instante, como en el detector de Alitec.
     let resuelto = false;
+    const encontrados = new Set();
     const body = document.createElement('div');
-    const puntosHtml = r.hotspots.map((h,i)=>`<button type="button" class="reto-err-spot" data-i="${i}" aria-label="Seleccionar zona ${i+1}" style="position:absolute;left:${h.x-h.r}%;top:${h.y-h.r}%;width:${h.r*2}%;height:${h.r*2}%;border-radius:50%;border:3px solid transparent;background:transparent;cursor:pointer;padding:0;z-index:2;"></button>`).join('');
     const escena = r.imagen
       ? `<img src="${r.imagen}" style="width:100%;display:block;">`
       : `<svg viewBox="0 0 100 100" style="width:100%;display:block;background:#EDE6DA">
@@ -10138,105 +10141,80 @@ const Sections = (function(){
           <circle cx="88" cy="70" r="4" fill="#F5F1E8" stroke="#8C8478" stroke-width="1"/>
           <ellipse cx="38" cy="82" rx="10" ry="4" fill="#6B7280" opacity=".8"/>
         </svg>`;
+    const tarjetas = r.hotspots.map((h,i)=>`
+      <article class="reto-detector-card" data-hallazgo="${i}" style="border:1px solid var(--border-2);border-radius:12px;padding:11px;min-height:86px;background:var(--surface);display:flex;gap:10px;align-items:flex-start;">
+        <span class="reto-detector-card__num" style="flex:0 0 30px;height:30px;border-radius:9px;background:var(--surface-2);color:var(--text-3);display:grid;place-items:center;font-size:12px;font-weight:700;">${i+1}</span>
+        <span><strong style="font-size:12px;display:block;color:var(--text);">Hallazgo pendiente</strong><small style="display:block;margin-top:4px;color:var(--text-3);font-size:11px;line-height:1.35;">Busca una condición insegura en la escena.</small></span>
+      </article>`).join('');
     body.innerHTML = `
-      <p style="font-size:12.5px;color:var(--text-2);margin-bottom:10px;">Toca las ${r.hotspots.length} zonas donde veas una falla. Al terminar, pulsa <strong>Verificar</strong>.</p>
-      <div id="reto-err-wrap" style="position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--border-2);cursor:crosshair;">
-        ${escena}
-        ${puntosHtml}
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:6px;">
+        <p style="font-size:12.5px;color:var(--text-2);margin:0;line-height:1.55;">Analiza la escena y toca directamente el objeto o la condición que representa un peligro.</p>
+        <strong id="reto-detector-count" style="white-space:nowrap;padding:7px 10px;border-radius:999px;background:var(--surface-2);color:var(--success);font-size:12px;">0/${r.hotspots.length}</strong>
       </div>
-      <div id="reto-err-fb" style="margin-top:10px;font-size:12.5px;color:var(--text-2);">Seleccionadas: <strong id="reto-err-n">0</strong> de ${r.hotspots.length}</div>
+      <div id="reto-err-wrap" role="application" aria-label="Imagen interactiva: encuentra las fallas" style="position:relative;margin-top:14px;border-radius:16px;overflow:hidden;border:1px solid var(--border-2);cursor:crosshair;line-height:0;touch-action:manipulation;">
+        ${escena}
+      </div>
+      <div id="reto-err-fb" role="status" aria-live="polite" style="margin-top:12px;padding:12px 14px;border:1px solid var(--border-2);border-radius:12px;background:var(--surface-2);font-size:12.5px;color:var(--text-2);line-height:1.45;">Busca una condición insegura y tócala directamente en la imagen.</div>
+      <div id="reto-detector-cards" style="display:grid;grid-template-columns:repeat(${Math.min(r.hotspots.length,4)},minmax(0,1fr));gap:9px;margin-top:12px;">${tarjetas}</div>
     `;
     const footer = document.createElement('div');
-    footer.innerHTML = `
-      <button class="btn btn--ghost" id="reto-cerrar">Cerrar</button>
-      <button class="btn btn--ghost" id="reto-hint" data-bypass-paywall="true"><svg class="ic"><use href="#i-info"/></svg>Pista</button>
-      <button class="btn btn--primary" id="reto-verificar" disabled>Verificar</button>
-      <button class="btn btn--ghost" id="reto-giveup" style="display:none;color:var(--danger);">Ver respuesta (sin puntos)</button>
-    `;
+    footer.innerHTML = `<button class="btn btn--ghost" id="reto-cerrar">Cerrar</button>`;
     Modal.open({ id:'reto-'+r.id, title:r.titulo, subtitle:r.categoria+' · +'+r.puntos+' pts', icon:'i-bolt', size:'md', body, footer });
-    // Cuenta lo que realmente se ve marcado en pantalla. Algunos navegadores
-    // normalizan el color CSS y antes dejaban el contador interno en 1 aunque
-    // las cuatro zonas doradas ya estuvieran seleccionadas.
-    const spotsSeleccionados = () => Array.from(body.querySelectorAll('.reto-err-spot')).filter(spot => {
-      const color = getComputedStyle(spot).borderTopColor.replace(/\s/g,'');
-      return spot.dataset.seleccionado === 'si' || color === 'rgb(213,161,61)';
-    });
-    const totalSeleccionado = () => spotsSeleccionados().length;
-    function bloquearTodo(){
-      body.querySelectorAll('.reto-err-spot').forEach(spot => spot.style.pointerEvents = 'none');
-      footer.querySelector('#reto-hint').disabled = true;
-      footer.querySelector('#reto-verificar').disabled = true;
-      const gu = footer.querySelector('#reto-giveup'); if(gu) gu.disabled = true;
-    }
     footer.querySelector('#reto-cerrar').addEventListener('click', ()=>Modal.close('reto-'+r.id));
-    footer.querySelector('#reto-hint').addEventListener('click', ()=>{
+    const wrap = body.querySelector('#reto-err-wrap');
+    const feedback = body.querySelector('#reto-err-fb');
+    const actualizarTarjeta = (i) => {
+      const h = r.hotspots[i];
+      const card = body.querySelector(`[data-hallazgo="${i}"]`);
+      card.style.borderColor = 'rgba(28,122,105,.42)';
+      card.style.background = 'rgba(223,244,237,.55)';
+      card.querySelector('.reto-detector-card__num').innerHTML = '✓';
+      card.querySelector('.reto-detector-card__num').style.cssText = 'flex:0 0 30px;height:30px;border-radius:9px;background:#278B78;color:#fff;display:grid;place-items:center;font-size:15px;font-weight:800;';
+      card.querySelector('strong').textContent = 'Hallazgo correcto';
+      card.querySelector('small').textContent = h.label || 'Condición insegura identificada.';
+    };
+    const marcarHallazgo = (i) => {
+      const h = r.hotspots[i];
+      const marca = document.createElement('span');
+      marca.setAttribute('aria-hidden','true');
+      marca.textContent = '✓';
+      marca.style.cssText = `position:absolute;left:${h.x}%;top:${h.y}%;transform:translate(-50%,-50%);width:42px;height:42px;border-radius:50%;background:#278B78;color:#fff;border:3px solid #fff;box-shadow:0 2px 10px rgba(15,75,65,.35);display:grid;place-items:center;font-size:23px;font-weight:800;line-height:1;z-index:3;pointer-events:none;`;
+      wrap.appendChild(marca);
+      actualizarTarjeta(i);
+    };
+    wrap.addEventListener('click', async (e)=>{
       if(resuelto) return;
-      const faltante = r.hotspots.findIndex((h,i)=>!body.querySelector(`.reto-err-spot[data-i="${i}"]`)?.dataset.seleccionado);
-      if(faltante<0) return;
-      const spot = body.querySelector(`.reto-err-spot[data-i="${faltante}"]`);
-      if(spot){
-        spot.style.borderColor = '#6687B5';
-        spot.style.boxShadow = '0 0 0 4px rgba(102,135,181,.2)';
-        spot.style.animation = 'retoHintPulse 1s ease-in-out infinite';
+      const rect = wrap.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      let elegido = -1;
+      let distancia = Infinity;
+      r.hotspots.forEach((h,i)=>{
+        if(encontrados.has(i)) return;
+        const d = Math.hypot(x-h.x, y-h.y);
+        if(d <= Math.max((h.r || 7) + 4, 10) && d < distancia){ elegido=i; distancia=d; }
+      });
+      if(elegido < 0){
+        feedback.style.cssText = 'margin-top:12px;padding:12px 14px;border:1px solid rgba(185,63,53,.34);border-radius:12px;background:rgba(255,242,240,.8);font-size:12.5px;color:#B93F35;line-height:1.45;';
+        feedback.innerHTML = '<strong>Selección incorrecta.</strong> Observa alimentos crudos, químicos, higiene, superficies y objetos extraños. Sigue intentando.';
+        return;
       }
-      body.querySelector('#reto-err-fb').innerHTML = '<span style="color:var(--primary);font-weight:600;">💡 Hay una falla marcada con un círculo azul.</span>';
-      footer.querySelector('#reto-giveup').style.display = '';
-    });
-    footer.querySelector('#reto-giveup').addEventListener('click', async ()=>{
-      r.hotspots.forEach((h,i)=>{
-        const spot = body.querySelector(`.reto-err-spot[data-i="${i}"]`);
-        if(spot){ spot.style.background='rgba(122,154,110,.35)'; spot.style.borderColor='#53814D'; spot.style.animation=''; }
-      });
-      body.querySelector('#reto-err-n').textContent = String(r.hotspots.length);
-      bloquearTodo();
-      _retoReintento(r, body.querySelector('#reto-err-fb'), 'Ahí están las ' + r.hotspots.length + ' fallas. Rendirse no suma puntos: vuelve a intentarlo y encuéntralas tú.', 10);
-    });
-    body.querySelectorAll('.reto-err-spot').forEach(spot=>{
-      spot.addEventListener('click', ()=>{
-        if(resuelto) return;
-        const i = Number(spot.dataset.i);
-        if(spot.dataset.seleccionado === 'si'){
-          delete spot.dataset.seleccionado;
-          spot.style.background='transparent';
-          spot.style.borderColor='transparent';
-          spot.style.boxShadow='none';
-        } else {
-          spot.dataset.seleccionado = 'si';
-          spot.style.background='rgba(213,161,61,.26)';
-          spot.style.borderColor='#D5A13D';
-        }
-        spot.style.animation = '';
-        const cantidad = totalSeleccionado();
-        body.querySelector('#reto-err-n').textContent = String(cantidad);
-        const faltan = r.hotspots.length - cantidad;
-        body.querySelector('#reto-err-fb').innerHTML = faltan
-          ? 'Seleccionaste <strong>'+cantidad+'</strong> de '+r.hotspots.length+'. Te faltan '+faltan+'; puedes quitar una selección tocándola de nuevo.'
-          : '<span style="color:var(--primary);font-weight:600;">¡Las cuatro zonas están marcadas! Comprobando reto…</span>';
-        footer.querySelector('#reto-verificar').disabled = cantidad !== r.hotspots.length;
-        if(!faltan) footer.querySelector('#reto-verificar').click();
-      });
-    });
-    footer.querySelector('#reto-verificar').addEventListener('click', async ()=>{
-      if(resuelto || totalSeleccionado() !== r.hotspots.length) return;
+      encontrados.add(elegido);
+      marcarHallazgo(elegido);
+      const h = r.hotspots[elegido];
+      feedback.style.cssText = 'margin-top:12px;padding:12px 14px;border:1px solid rgba(39,139,120,.35);border-radius:12px;background:rgba(223,244,237,.7);font-size:12.5px;color:#215D51;line-height:1.45;';
+      feedback.innerHTML = '<strong>Hallazgo correcto.</strong> '+escapeHtml(h.label || 'Identificaste una condición insegura.');
+      body.querySelector('#reto-detector-count').textContent = encontrados.size+'/'+r.hotspots.length;
+      if(encontrados.size !== r.hotspots.length) return;
       resuelto = true;
-      r.hotspots.forEach((h,i)=>{
-        const spot = body.querySelector(`.reto-err-spot[data-i="${i}"]`);
-        if(spot){ spot.style.background='rgba(122,154,110,.35)'; spot.style.borderColor='#53814D'; spot.style.boxShadow='none'; }
-      });
-      bloquearTodo();
-      footer.querySelector('#reto-verificar').textContent = 'Resuelto ✓';
+      feedback.innerHTML = '<strong>¡Reto superado!</strong> Encontraste todas las fallas. Sumando '+r.puntos+' puntos…';
       const res = await _otorgarXP(r.id, r.puntos);
-      const mensaje = res.yaCompletado ? 'Este reto ya estaba resuelto.' : '¡Correcto! Encontraste las '+r.hotspots.length+' fallas y ganaste '+r.puntos+' puntos.';
-      body.querySelector('#reto-err-fb').innerHTML = '<span style="color:var(--success);font-weight:700;">'+mensaje+'</span>';
-      if(!res.yaCompletado) _avisarResultadoXP(r, res, '¡Encontraste las '+r.hotspots.length+' fallas!');
+      feedback.innerHTML = res.yaCompletado
+        ? '<strong>¡Reto superado!</strong> Ya habías recibido los puntos de este reto.'
+        : '<strong>¡Reto superado!</strong> Encontraste todas las fallas y ganaste '+r.puntos+' puntos.';
+      if(!res.yaCompletado) _avisarResultadoXP(r, res, '¡Reto superado!');
       _celebrarLogros(res.nuevosLogros);
       _trasCompletarReto(r, 2400);
-    });
-    // Clic en zona vacía (no es ninguna falla) · da feedback de "no es aquí"
-    body.querySelector('#reto-err-wrap').addEventListener('click', (e)=>{
-      if(resuelto) return;
-      if(e.target.classList && e.target.classList.contains('reto-err-spot')) return;
-      body.querySelector('#reto-err-fb').innerHTML = '<span style="color:var(--danger);font-weight:600;">Esa zona no quedó seleccionada. Busca una falla y toca directamente sobre ella.</span>';
     });
   }
 
