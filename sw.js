@@ -13,7 +13,8 @@
                                las fuentes de Google siempre van directo a la red.
    ═══════════════════════════════════════════════════════════════════════════ */
 
-const VERSION = 'dulcelab-v4';
+// Cambiar esta versión obliga al navegador a soltar cualquier panel anterior.
+const VERSION = 'dulcelab-v5';
 const CACHE_SHELL = VERSION + '-shell';
 const CACHE_RUNTIME = VERSION + '-runtime';
 
