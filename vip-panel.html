@@ -10154,7 +10154,13 @@ const Sections = (function(){
       <button class="btn btn--ghost" id="reto-giveup" style="display:none;color:var(--danger);">Ver respuesta (sin puntos)</button>
     `;
     Modal.open({ id:'reto-'+r.id, title:r.titulo, subtitle:r.categoria+' · +'+r.puntos+' pts', icon:'i-bolt', size:'md', body, footer });
-    const spotsSeleccionados = () => Array.from(body.querySelectorAll('.reto-err-spot[data-seleccionado="si"]'));
+    // Cuenta lo que realmente se ve marcado en pantalla. Algunos navegadores
+    // normalizan el color CSS y antes dejaban el contador interno en 1 aunque
+    // las cuatro zonas doradas ya estuvieran seleccionadas.
+    const spotsSeleccionados = () => Array.from(body.querySelectorAll('.reto-err-spot')).filter(spot => {
+      const color = getComputedStyle(spot).borderTopColor.replace(/\s/g,'');
+      return spot.dataset.seleccionado === 'si' || color === 'rgb(213,161,61)';
+    });
     const totalSeleccionado = () => spotsSeleccionados().length;
     function bloquearTodo(){
       body.querySelectorAll('.reto-err-spot').forEach(spot => spot.style.pointerEvents = 'none');
@@ -10205,8 +10211,9 @@ const Sections = (function(){
         const faltan = r.hotspots.length - cantidad;
         body.querySelector('#reto-err-fb').innerHTML = faltan
           ? 'Seleccionaste <strong>'+cantidad+'</strong> de '+r.hotspots.length+'. Te faltan '+faltan+'; puedes quitar una selección tocándola de nuevo.'
-          : '<span style="color:var(--primary);font-weight:600;">Listo. Pulsa Verificar para comprobar tus respuestas.</span>';
+          : '<span style="color:var(--primary);font-weight:600;">¡Las cuatro zonas están marcadas! Comprobando reto…</span>';
         footer.querySelector('#reto-verificar').disabled = cantidad !== r.hotspots.length;
+        if(!faltan) footer.querySelector('#reto-verificar').click();
       });
     });
     footer.querySelector('#reto-verificar').addEventListener('click', async ()=>{
