@@ -10122,7 +10122,7 @@ const Sections = (function(){
   function _retoError(r){
     let resuelto = false;
     const body = document.createElement('div');
-    const puntosHtml = r.hotspots.map((h,i)=>`<button type="button" class="reto-err-spot" data-i="${i}" aria-label="Seleccionar zona ${i+1}" style="position:absolute;left:${h.x-h.r}%;top:${h.y-h.r}%;width:${h.r*2}%;aspect-ratio:1;border-radius:50%;border:3px solid transparent;background:transparent;cursor:pointer;padding:0;z-index:2;"></button>`).join('');
+    const puntosHtml = r.hotspots.map((h,i)=>`<button type="button" class="reto-err-spot" data-i="${i}" aria-label="Seleccionar zona ${i+1}" style="position:absolute;left:${h.x-h.r}%;top:${h.y-h.r}%;width:${h.r*2}%;height:${h.r*2}%;border-radius:50%;border:3px solid transparent;background:transparent;cursor:pointer;padding:0;z-index:2;"></button>`).join('');
     const escena = r.imagen
       ? `<img src="${r.imagen}" style="width:100%;display:block;">`
       : `<svg viewBox="0 0 100 100" style="width:100%;display:block;background:#EDE6DA">
