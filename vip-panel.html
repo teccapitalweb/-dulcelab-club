@@ -3881,7 +3881,9 @@ body.has-fomo .main{padding-top:18px}
     if (activos[id]) return;
     activos[id] = true;
     pend[id] = prio;
-    var t0 = Date.now(), limite = maxMs || 180000;
+    // Las ventanas esperan su turno con paciencia (la guía y el nombre pueden tardar varios minutos en leerse).
+    // Antes se rendían a los 3 o 5 minutos y la invitación al curso gratis o el nombre se perdían sin avisar.
+    var t0 = Date.now(), limite = id === 'bienvenida' ? (maxMs || 180000) : Math.max(maxMs || 0, 3600000);
     (function intentar(){
       var hayMayor = Object.keys(pend).some(function(k){ return k !== id && pend[k] < prio; });
       if (!hayPopup() && !hayMayor && Date.now() >= hasta && (!listo || listo())){
