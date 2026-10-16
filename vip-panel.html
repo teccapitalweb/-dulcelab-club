@@ -6590,7 +6590,10 @@ const Sections = (function(){
     const markBtn = document.getElementById('visorMarkAsViewed');
     if (!overlay || !frame) return;
 
-    const videoId = opciones.videoId || (cursoId && /^[0-9a-f-]{36}$/i.test(url) ? url : '');
+    // El video de Bunny puede venir como id suelto o como la URL completa de Bunny (así lo guarda el admin).
+    // Con el id se pide al servidor un enlace firmado, que es donde se valida quién puede ver cada clase.
+    const _mBunny = /mediadelivery\.net\/(?:embed|play)\/\d+\/([0-9a-f-]{36})/i.exec(String(url));
+    let videoId = opciones.videoId || (_mBunny ? _mBunny[1] : '') || (cursoId && /^[0-9a-f-]{36}$/i.test(url) ? url : '');
     let visorUrl = convertirUrlDrive(url);
     if (videoId) {
       try {
@@ -6611,9 +6614,16 @@ const Sections = (function(){
             mostrarPaywallCurso(cursos.find(c => c.id === cursoId));
             return;
           }
-          throw new Error(data.error || `Error HTTP ${response.status}`);
+          // El servidor aún no tiene configurado el reproductor protegido (503) o no conoce el video (404):
+          // se abre el enlace directo como siempre, para no dejar a nadie sin clase.
+          if ((response.status === 503 || response.status === 404) && /^https?:/i.test(String(url))) {
+            videoId = '';
+          } else {
+            throw new Error(data.error || `Error HTTP ${response.status}`);
+          }
+        } else {
+          visorUrl = data.embedUrl;
         }
-        visorUrl = data.embedUrl;
       } catch (error) {
         console.error('[Bunny player]', error);
         if (window.Toast?.show) window.Toast.show('No se pudo abrir la clase. Intenta nuevamente.', 'error');
