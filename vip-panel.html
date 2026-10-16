@@ -3138,6 +3138,22 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 .mat-item:hover .book{transform:translateY(-3px)}
 .mat-item__title{font-size:12.5px;font-weight:700;line-height:1.35;color:var(--text);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .mat-item__meta{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);letter-spacing:.3px}
+.mat-curso{margin:0 0 40px}
+.mat-curso__head{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.mat-curso__eyebrow{font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--text-3)}
+.mat-curso__title{margin:5px 0 0;font-size:21px;font-weight:800;letter-spacing:-.5px;line-height:1.2;color:var(--text)}
+.mat-curso__count{flex:none;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:var(--text-3);white-space:nowrap}
+.mat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:26px 18px}
+.mat-grid .mat-item{flex:none;min-width:0}
+.mat-grid .book__top{padding-right:34px}
+.mat-item__cover{position:relative}
+.mat-save{position:absolute;top:8px;right:8px;z-index:3;width:30px;height:30px;border-radius:50%;border:0;background:rgba(0,0,0,.5);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);transition:background .15s,transform .15s}
+.mat-save:hover{transform:scale(1.08)}
+.mat-save svg{width:14px;height:14px}
+.mat-save.is-on{background:#E5B04A;color:#2A0D16}
+.mat-dot{display:inline-block;width:7px;height:7px;margin-right:6px;border-radius:50%;background:var(--text-3);vertical-align:middle}
+.mat-dot.is-ok{background:var(--success)}
+@media(max-width:700px){.mat-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 12px}.mat-curso__head{flex-direction:column;align-items:flex-start;gap:6px}.mat-curso__title{font-size:18px}}
 .mat-item.is-selected .mat-item__title{color:var(--primary)}
 .mat-item.is-selected .book__cover{outline:2px solid #E5C171;outline-offset:3px}
 .mat-item:focus-visible .book__cover{outline:2px solid var(--primary);outline-offset:3px}
@@ -11463,21 +11479,13 @@ const Sections = (function(){
         </div>
         <section class="xp-library" id="xp-library"></section>
         <div class="cursos-chips mat-areas" id="mat-areas"></div>
-        <section class="mat-feat" id="mat-feat"></section>
-        <div class="mat-shelf__head">
-          <div>
-            <div class="mat-shelf__title">Todos los módulos de esta serie</div>
-            <div class="mat-shelf__sub" id="mat-shelf-sub"></div>
-          </div>
-        </div>
-        <div class="mat-shelf" id="mat-shelf"></div>
+        <div id="mat-cursos"></div>
       </div>
     `;
     const $chips = container.querySelector('#mat-chips');
     const $xpLibrary = container.querySelector('#xp-library');
     const $areas = container.querySelector('#mat-areas');
-    const $feat = container.querySelector('#mat-feat');
-    const $shelf = container.querySelector('#mat-shelf');
+    const $cursos = container.querySelector('#mat-cursos');
 
     pintarBiblioteca($xpLibrary);
 
@@ -11535,73 +11543,62 @@ const Sections = (function(){
       } else { $areas.style.display = 'none'; $areas.innerHTML = ''; }
 
       const lista = filtrar();
-      const $shelfSub = container.querySelector('#mat-shelf-sub');
       if (!lista.length) {
-        $feat.style.display = 'none';
-        if ($shelfSub) $shelfSub.textContent = '';
-        $shelf.innerHTML = `<div class="mat-empty" style="flex:1;">${fTipo === 'guardados' ? 'Aún no guardas materiales. Toca el marcador de un material para tenerlo aquí.' : 'No hay materiales con estos filtros.'}</div>`;
+        $cursos.innerHTML = `<div class="mat-empty">${fTipo === 'guardados' ? 'Aún no guardas materiales. Toca el marcador de un material para tenerlo aquí.' : 'No hay materiales con estos filtros.'}</div>`;
         return;
       }
-      $feat.style.display = '';
-      if ($shelfSub) $shelfSub.textContent = `${lista.length} recurso${lista.length !== 1 ? 's' : ''} · Avanza a tu ritmo`;
 
-      // Destacado: el elegido si sigue en la lista; si no, el primero disponible (o el primero)
-      let sel = lista.find(m => m.id === selId);
-      if (!sel) sel = lista.find(m => _materialDisponible(m)) || lista[0];
-      selId = sel.id;
-      const info = _matInfo(sel);
-      const guardado = guardados.has(sel.id);
-      const cursoEsc = escapeHtml(sel.cursoTitulo || '');
-      const btn = info.disponible
-        ? `<button type="button" class="mat-open" id="mat-open">Abrir<span class="mat-open__ic"><svg class="ic"><use href="#i-news"/></svg></span></button>`
-        : info.requiere
-          ? `<button type="button" class="mat-open" id="mat-open">Activar membresía<span class="mat-open__ic"><svg class="ic"><use href="#i-crown"/></svg></span></button>`
-          : `<button type="button" class="mat-open mat-open--soon" id="mat-open">Disponible pronto<span class="mat-open__ic"><svg class="ic"><use href="#i-clock"/></svg></span></button>`;
-      $feat.innerHTML = `
-        <div class="mat-feat__cover">${_matBookHTML(sel, info)}</div>
-        <div class="mat-feat__info">
-          <div class="mat-feat__eyebrow">${escapeHtml(info.T.nombre)} · ${escapeHtml(sel.cursoArea)}</div>
-          <h2 class="mat-feat__title">${escapeHtml(_matTituloBonito(sel.titulo))}</h2>
-          <p class="mat-feat__desc">${escapeHtml(info.desc)}</p>
-          <div class="mat-feat__actions">
-            ${btn}
-            <button type="button" class="mat-icon-btn ${guardado ? 'is-on' : ''}" id="mat-bookmark" aria-label="${guardado ? 'Quitar de guardados' : 'Guardar material'}" title="${guardado ? 'Quitar de guardados' : 'Guardar material'}">${_MAT_ICON_MARK}</button>
-          </div>
-          <div class="mat-feat__meta">
-            <div><b>Formato</b><span>${escapeHtml(info.T.nombre)}</span></div>
-            <div><b>Del curso</b><span>${cursoEsc}</span></div>
-            <div><b>Área</b><span>${escapeHtml(sel.cursoArea)}</span></div>
-            <div><b>Estado</b><span>${escapeHtml(info.estado)}</span></div>
-          </div>
-        </div>`;
-      $feat.querySelector('#mat-open').addEventListener('click', () => abrirMaterial(sel));
-      $feat.querySelector('#mat-bookmark').addEventListener('click', () => {
-        if (guardados.has(sel.id)) guardados.delete(sel.id); else guardados.add(sel.id);
-        escribirGuardados(guardados);
-        pintar();
+      // Una sección por curso, con todos sus materiales visibles a la vez (sin carrusel que mover).
+      const grupos = [];
+      lista.forEach(m => {
+        let g = grupos.find(x => x.id === m.cursoId);
+        if (!g) { g = { id: m.cursoId, titulo: m.cursoTitulo || 'Curso', area: m.cursoArea || '', items: [] }; grupos.push(g); }
+        g.items.push(m);
       });
 
-      // Carrusel de módulos
-      $shelf.innerHTML = lista.map((m, i) => {
-        const inf = _matInfo(m);
+      $cursos.innerHTML = grupos.map(g => {
+        const disp = g.items.filter(m => _materialDisponible(m)).length;
         return `
-          <div class="mat-item ${m.id === selId ? 'is-selected' : ''}" role="button" tabindex="0" data-mid="${escapeHtml(m.id)}" title="${escapeHtml(m.titulo)}">
-            ${_matBookHTML(m, inf, i + 1)}
-            <span class="mat-item__title">${escapeHtml(_matTituloBonito(m.titulo))}</span>
-            <span class="mat-item__meta">${inf.T.corto} · ${escapeHtml(inf.estado)}</span>
-          </div>`;
+        <section class="mat-curso">
+          <header class="mat-curso__head">
+            <div>
+              <div class="mat-curso__eyebrow">${escapeHtml(g.area)}</div>
+              <h2 class="mat-curso__title">${escapeHtml(g.titulo)}</h2>
+            </div>
+            <span class="mat-curso__count">${disp} de ${g.items.length} disponibles</span>
+          </header>
+          <div class="mat-grid">
+            ${g.items.map((m, i) => {
+              const inf = _matInfo(m);
+              const guardado = guardados.has(m.id);
+              return `
+              <div class="mat-item" role="button" tabindex="0" data-mid="${escapeHtml(m.id)}" title="${escapeHtml(m.titulo)}">
+                <div class="mat-item__cover">
+                  ${_matBookHTML(m, inf, i + 1)}
+                  <button type="button" class="mat-save ${guardado ? 'is-on' : ''}" data-save="${escapeHtml(m.id)}" aria-label="${guardado ? 'Quitar de guardados' : 'Guardar material'}" title="${guardado ? 'Quitar de guardados' : 'Guardar material'}">${_MAT_ICON_MARK}</button>
+                </div>
+                <span class="mat-item__title">${escapeHtml(_matTituloBonito(m.titulo))}</span>
+                <span class="mat-item__meta"><i class="mat-dot ${inf.disponible ? 'is-ok' : ''}"></i>${inf.T.corto} · ${escapeHtml(inf.estado)}</span>
+              </div>`;
+            }).join('')}
+          </div>
+        </section>`;
       }).join('');
-      $shelf.querySelectorAll('.mat-item').forEach(el => {
-        const activar = () => {
-          const m = materialesTodos.find(x => x.id === el.dataset.mid);
-          if (!m) return;
-          if (m.id === selId) { abrirMaterial(m); return; }   // 2.º clic sobre el ya elegido = abrirlo
-          selId = m.id;
+
+      $cursos.querySelectorAll('.mat-item').forEach(el => {
+        const m = materialesTodos.find(x => x.id === el.dataset.mid);
+        if (!m) return;
+        el.addEventListener('click', (e) => {
+          if (e.target.closest('.mat-save')) return;
+          abrirMaterial(m);
+        });
+        el.addEventListener('keydown', e => { if (e.target === el && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); abrirMaterial(m); } });
+        el.querySelector('.mat-save').addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (guardados.has(m.id)) guardados.delete(m.id); else guardados.add(m.id);
+          escribirGuardados(guardados);
           pintar();
-          $feat.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        };
-        el.addEventListener('click', activar);
-        el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activar(); } });
+        });
       });
     }
     pintar();
