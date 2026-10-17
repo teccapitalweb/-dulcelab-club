@@ -6827,7 +6827,7 @@ const Sections = (function(){
         <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:var(--primary);margin-bottom:14px;">🎮 Actividad · Opción múltiple</div>
         <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:18px;line-height:1.5;max-width:440px;margin-left:auto;margin-right:auto;">${escapeHtml(act.pregunta||'')}</div>
         <div id="op-lista" style="display:flex;flex-direction:column;gap:9px;max-width:380px;margin:0 auto;">
-          ${opts.map((o,i)=>`<button type="button" class="btn btn--ghost" data-op-idx="${i}" style="text-align:left;justify-content:flex-start;">${String.fromCharCode(65+i)}) ${escapeHtml(o)}</button>`).join('')}
+          ${opts.map((o,i)=>`<button type="button" class="btn btn--ghost" data-op-idx="${i}" style="text-align:left;justify-content:flex-start;white-space:normal;height:auto;min-height:44px;line-height:1.4;padding:10px 16px;width:100%;border-radius:14px;overflow-wrap:anywhere;">${String.fromCharCode(65+i)}) ${escapeHtml(o)}</button>`).join('')}
         </div>
         <div id="op-resultado" style="margin-top:16px;font-weight:700;font-size:14px;min-height:22px;"></div>
         <div style="display:flex;gap:8px;justify-content:center;margin-top:8px;flex-wrap:wrap;">
@@ -7359,7 +7359,7 @@ const Sections = (function(){
     return `
       <div style="padding:4px 2px;">
         <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:var(--primary);margin-bottom:12px;text-align:center;">🎮 Actividad · Crucigrama</div>
-        <div id="cru-grid-wrap" style="overflow-x:auto;margin-bottom:16px;"><div id="cru-grid" style="display:inline-grid;gap:1px;margin:0 auto;"></div></div>
+        <div id="cru-grid-wrap" style="overflow-x:auto;margin-bottom:16px;text-align:center;"><div id="cru-grid" style="display:inline-grid;gap:1px;margin:0 auto;"></div></div>
         <div id="cru-pistas" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;text-align:left;font-size:12px;color:var(--text-2);margin-bottom:14px;"></div>
         <div style="text-align:center;">
           <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
@@ -7388,9 +7388,12 @@ const Sections = (function(){
     // En una pantalla estrecha el crucigrama debe caber completo antes de que
     // aparezca el teclado. La misma cuadrícula se reduce, sin recortar pistas.
     const cellBase = (filas * cols > 140) ? 26 : 32;
-    const anchoDisponible = Math.min(window.innerWidth || 420, 520) - 48;
+    const envoltura = root.querySelector('#cru-grid-wrap');
+    const anchoReal = (envoltura && envoltura.clientWidth) || (Math.min(window.innerWidth || 420, 520) - 48);
+    const anchoDisponible = anchoReal - 2;
+    // cabe en el ancho de la ventana: cuenta también el 1 px de separación entre casillas
     const cellPx = window.matchMedia('(max-width: 880px)').matches
-      ? Math.max(19, Math.min(cellBase, Math.floor(anchoDisponible / Math.max(1, cols))))
+      ? Math.max(15, Math.min(cellBase, Math.floor((anchoDisponible - (cols - 1)) / Math.max(1, cols))))
       : cellBase;
     elGrid.style.gridTemplateColumns = `repeat(${cols}, ${cellPx}px)`;
     elGrid.style.gridTemplateRows = `repeat(${filas}, ${cellPx}px)`;
