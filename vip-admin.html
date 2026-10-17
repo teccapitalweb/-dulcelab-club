@@ -6058,6 +6058,40 @@ const Pages={
         try { await navigator.clipboard.writeText(v); Toast.success('Enlace copiado', 'Pégalo donde lo vayas a compartir'); }
         catch (e) { cuerpo.querySelector('#mt-g-url').select(); Toast.info('Selecciona y copia', 'Ctrl + C'); }
       });
+
+      // ── Correos de recordatorio (secuencia automática para quien se registra y no paga) ──
+      try {
+        const rc = await fetch(`${Pages._webhookUrl}/api/correos/resumen`, { headers: { Authorization: `Bearer ${token}` } });
+        const c = await rc.json();
+        if (rc.ok) {
+          const card = document.createElement('div');
+          card.className = 'mt-card';
+          const tile = (t, n, sub) => `<div class="mt-cat"><small>${t}</small><b>${fmt(n)}</b><em>${sub || ''}</em></div>`;
+          card.innerHTML = `<h3>Correos de recordatorio</h3>
+            <p>Secuencia automática: 12 h después de registrarse (beneficios), 24 h después (−$50) y 24 h después (−$100), solo a quien nunca ha pagado. ${c.inicio ? 'Cuenta a quienes se registraron desde el ' + escapeHtml(new Date(c.inicio).toLocaleString('es-MX', { dateStyle: 'medium', timeStyle: 'short' })) + '.' : 'Aún no ha arrancado.'}</p>
+            <div class="mt-cats">
+              ${tile('Personas en la secuencia', c.registradas)}
+              ${tile('Correo 1 · beneficios', c.correo1)}
+              ${tile('Correo 2 · −$50', c.correo2)}
+              ${tile('Correo 3 · −$100', c.correo3)}
+              ${tile('Ya pagaron', c.pagaron, c.pagaronConDescuento ? fmt(c.pagaronConDescuento) + ' con descuento' : '')}
+              ${tile('Se dieron de baja', c.bajas, c.conError ? fmt(c.conError) + ' con error de envío' : '')}
+            </div>
+            <div style="margin-top:14px"><button class="btn btn--ghost btn--sm" id="mt-correos-prueba">Enviarme los 3 correos de prueba</button></div>`;
+          cuerpo.appendChild(card);
+          card.querySelector('#mt-correos-prueba').addEventListener('click', async (ev) => {
+            const b = ev.currentTarget; b.disabled = true; b.textContent = 'Enviando…';
+            try {
+              const rp = await fetch(`${Pages._webhookUrl}/api/correos/prueba`, { method: 'POST', headers: { Authorization: `Bearer ${await Pages._getAuthToken()}` } });
+              const dp = await rp.json();
+              if (!rp.ok) throw new Error(dp.error || rp.statusText);
+              const ok = (dp.resultados || []).filter(x => x.ok).length;
+              Toast[ok === 3 ? 'success' : 'error'](ok === 3 ? 'Correos enviados' : 'Algunos no salieron', `${ok} de 3 enviados a ${dp.enviadosA}`);
+            } catch (e) { Toast.error('No se pudieron enviar', e.message); }
+            b.disabled = false; b.textContent = 'Enviarme los 3 correos de prueba';
+          });
+        }
+      } catch (e) { /* si no carga, el resto de Métricas sigue igual */ }
     }
 
     p.querySelectorAll('#mt-dias button').forEach(b => b.addEventListener('click', () => {

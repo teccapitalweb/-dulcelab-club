@@ -12838,6 +12838,47 @@ const Sections = (function(){
   }
 
   /* ============================ SUSCRIPCIÓN ============================ */
+  // Descuento de los correos de recordatorio (solo para quien nunca ha pagado): aviso con cuenta regresiva y precio especial.
+  async function mostrarOfertaSuscripcion(container){
+    try {
+      if (!window.__currentUser) return;
+      const token = await window.__currentUser.getIdToken();
+      const r = await fetch(`${window.WEBHOOK_URL}/api/correos/oferta`, { headers: { Authorization: 'Bearer ' + token } });
+      if (!r.ok) return;
+      const { oferta } = await r.json();
+      if (!oferta || !container.isConnected) return;
+      const vence = Date.parse(oferta.venceAt);
+      if (!(vence > Date.now())) return;
+      const fmt = (n) => '$' + Number(n).toLocaleString('es-MX', { maximumFractionDigits: 0 });
+      const cont = container.querySelector('.fade-up');
+      if (!cont || cont.querySelector('#oferta-correo')) return;
+      const caja = document.createElement('div');
+      caja.id = 'oferta-correo';
+      caja.style.cssText = 'margin:0 0 20px;padding:18px 20px;border-radius:16px;border:1px solid color-mix(in srgb,var(--primary) 45%,var(--border));background:color-mix(in srgb,var(--primary) 9%,var(--surface));display:flex;flex-wrap:wrap;gap:12px 18px;align-items:center;justify-content:space-between';
+      caja.innerHTML = `<div><div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:1.3px;text-transform:uppercase;font-weight:700;color:var(--primary)">Precio especial para ti</div>
+        <div style="font-size:17px;font-weight:800;margin-top:5px;color:var(--text)">Tu primer mes del plan mensual a ${fmt(oferta.precioFinal)} <span style="font-weight:600;color:var(--text-3);text-decoration:line-through;font-size:14px">${fmt(oferta.precioNormal)}</span></div>
+        <div style="font-size:12.5px;color:var(--text-2);margin-top:4px">Aplica solo al primer mes. Después sigue en ${fmt(oferta.precioNormal)} al mes y puedes cancelar cuando quieras.</div></div>
+        <div style="text-align:center"><div style="font-size:11px;color:var(--text-3);margin-bottom:3px">Termina en</div><div id="oferta-correo-reloj" style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:800;color:var(--primary)">--:--:--</div></div>`;
+      const hero = cont.querySelector('.sec-hero');
+      if (hero && hero.nextSibling) cont.insertBefore(caja, hero.nextSibling); else cont.prepend(caja);
+      // precio del plan mensual en la tarjeta
+      const precio = container.querySelector('[data-precio-picker-mes]');
+      const precioOriginal = precio ? precio.innerHTML : '';
+      if (precio) precio.innerHTML = `<s style="opacity:.55;font-size:.75em">${fmt(oferta.precioNormal)}</s> ${fmt(oferta.precioFinal)}`;
+      // el descuento solo vale para el plan mensual: se deja elegido
+      const tarjetaMensual = container.querySelector('.plan-picker__card[data-plan="mensual"]');
+      if (tarjetaMensual && !tarjetaMensual.classList.contains('is-active')) tarjetaMensual.click();
+      const reloj = caja.querySelector('#oferta-correo-reloj');
+      const p2 = (n) => String(n).padStart(2, '0');
+      const tic = () => {
+        const falta = vence - Date.now();
+        if (!container.isConnected || falta <= 0) { clearInterval(iv); caja.remove(); if (precio) precio.innerHTML = precioOriginal; return; }
+        reloj.textContent = `${p2(Math.floor(falta / 3600000))}:${p2(Math.floor(falta % 3600000 / 60000))}:${p2(Math.floor(falta % 60000 / 1000))}`;
+      };
+      const iv = setInterval(tic, 1000); tic();
+    } catch (e) { console.warn('[oferta]', e && e.message); }
+  }
+
   function renderSuscripcion(container){
     const S = window.UserState || { modo:'cargando' };
 
@@ -12853,6 +12894,7 @@ const Sections = (function(){
     }
     // Estado SIN-MEMBRESIA / INVITADO · activar suscripción
     renderSuscripcionActivar(container, S);
+    if (S.modo !== 'invitado') mostrarOfertaSuscripcion(container);
   }
 
   /* ─── Estado: SIN membresía (logueado pero no pagó) o INVITADO (demo) ─── */
@@ -12979,7 +13021,8 @@ const Sections = (function(){
       try {
         const res = await fetch(`${window.WEBHOOK_URL || 'https://dulcelab-webhook-production.up.railway.app'}/stripe/checkout`, {
           method:'POST',
-          headers:{'Content-Type':'application/json'},
+          // con sesión iniciada, el servidor puede reconocer el descuento vigente de la persona
+          headers: Object.assign({'Content-Type':'application/json'}, window.__currentUser ? { Authorization: 'Bearer ' + await window.__currentUser.getIdToken() } : {}),
           body: JSON.stringify({
             plan: selectedPlan,
             uid: S.uid,
