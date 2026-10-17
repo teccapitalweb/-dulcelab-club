@@ -6077,8 +6077,29 @@ const Pages={
               ${tile('Ya pagaron', c.pagaron, c.pagaronConDescuento ? fmt(c.pagaronConDescuento) + ' con descuento' : '')}
               ${tile('Se dieron de baja', c.bajas, c.conError ? fmt(c.conError) + ' con error de envío' : '')}
             </div>
-            <div style="margin-top:14px"><button class="btn btn--ghost btn--sm" id="mt-correos-prueba">Enviarme los 3 correos de prueba</button></div>`;
+            <div style="margin-top:14px"><button class="btn btn--ghost btn--sm" id="mt-correos-prueba">Enviarme los 3 correos de prueba</button></div>
+            <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
+              <h3 style="margin:0 0 4px;font-size:14px">Probar el cobro con descuento</h3>
+              <p style="margin:0 0 10px">Dale una oferta de 1 hora a una cuenta tuya que <b>no sea miembro</b>. Entra con esa cuenta a Suscripción y verás el precio especial. El pago es real: después lo puedes cancelar o reembolsar desde Stripe.</p>
+              <div class="mt-gen" style="grid-template-columns:2fr 1fr auto">
+                <input id="mt-of-email" type="email" placeholder="correo de la cuenta de prueba">
+                <select id="mt-of-monto"><option value="50">−$50 (primer mes)</option><option value="100">−$100 (primer mes)</option><option value="0">Quitar oferta</option></select>
+                <button class="btn btn--accent btn--sm" id="mt-of-dar">Dar oferta</button>
+              </div>
+            </div>`;
           cuerpo.appendChild(card);
+          card.querySelector('#mt-of-dar').addEventListener('click', async (ev) => {
+            const b = ev.currentTarget; const email = card.querySelector('#mt-of-email').value.trim(); const monto = Number(card.querySelector('#mt-of-monto').value);
+            if (!email) { Toast.error('Escribe el correo', 'La cuenta que va a probar el descuento'); return; }
+            b.disabled = true;
+            try {
+              const rp = await fetch(`${Pages._webhookUrl}/api/correos/oferta-prueba`, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${await Pages._getAuthToken()}` }, body: JSON.stringify({ email, monto }) });
+              const dp = await rp.json();
+              if (!rp.ok) throw new Error(dp.error === 'cuenta-no-encontrada' ? 'No existe una cuenta con ese correo' : dp.error === 'ya-es-miembro' ? 'Esa cuenta ya es miembro: usa una que no lo sea' : (dp.error || rp.statusText));
+              Toast.success(monto ? 'Oferta dada por 1 hora' : 'Oferta quitada', monto ? `${dp.email} ya ve el precio especial` : dp.email);
+            } catch (e) { Toast.error('No se pudo', e.message); }
+            b.disabled = false;
+          });
           card.querySelector('#mt-correos-prueba').addEventListener('click', async (ev) => {
             const b = ev.currentTarget; b.disabled = true; b.textContent = 'Enviando…';
             try {
