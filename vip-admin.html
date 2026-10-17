@@ -6079,6 +6079,15 @@ const Pages={
             </div>
             <div style="margin-top:14px"><button class="btn btn--ghost btn--sm" id="mt-correos-prueba">Enviarme los 3 correos de prueba</button></div>
             <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
+              <h3 style="margin:0 0 4px;font-size:14px">Personas que ya estaban registradas y nunca han pagado</h3>
+              <p style="margin:0 0 10px">También recibirán la secuencia. No entran solas: mira cuántas son y tú las incluyes. A todas les llegará primero el correo 1 (a un ritmo de máximo 60 correos por hora) y luego seguirán el mismo orden.</p>
+              <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+                <button class="btn btn--ghost btn--sm" id="mt-ex-contar">Ver cuántas son</button>
+                <span id="mt-ex-res" style="font-size:13px;color:var(--text-2)"></span>
+                <button class="btn btn--accent btn--sm" id="mt-ex-incluir" style="display:none">Incluirlas en la secuencia</button>
+              </div>
+            </div>
+            <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
               <h3 style="margin:0 0 4px;font-size:14px">Probar el cobro con descuento</h3>
               <p style="margin:0 0 10px">Dale una oferta de 1 hora a una cuenta tuya que <b>no sea miembro</b>. Entra con esa cuenta a Suscripción y verás el precio especial. El pago es real: después lo puedes cancelar o reembolsar desde Stripe.</p>
               <div class="mt-gen" style="grid-template-columns:2fr 1fr auto">
@@ -6088,6 +6097,30 @@ const Pages={
               </div>
             </div>`;
           cuerpo.appendChild(card);
+          card.querySelector('#mt-ex-contar').addEventListener('click', async (ev) => {
+            const b = ev.currentTarget; const out = card.querySelector('#mt-ex-res'); const inc = card.querySelector('#mt-ex-incluir');
+            b.disabled = true; out.textContent = 'Contando…'; inc.style.display = 'none';
+            try {
+              const r = await fetch(`${Pages._webhookUrl}/api/correos/existentes`, { headers: { Authorization: `Bearer ${await Pages._getAuthToken()}` } });
+              const d = await r.json();
+              if (!r.ok) throw new Error(d.error || r.statusText);
+              out.innerHTML = d.elegibles ? `<b>${fmt(d.elegibles)}</b> persona${d.elegibles === 1 ? '' : 's'} (con correo confirmado y sin haber pagado).` : 'No hay personas pendientes: todas las que ya estaban registradas están en la secuencia o ya pagaron.';
+              if (d.elegibles) { inc.style.display = ''; inc.textContent = `Incluir a ${fmt(d.elegibles)} en la secuencia`; inc.dataset.n = d.elegibles; }
+            } catch (e) { out.textContent = ''; Toast.error('No se pudo contar', e.message); }
+            b.disabled = false;
+          });
+          card.querySelector('#mt-ex-incluir').addEventListener('click', async (ev) => {
+            const b = ev.currentTarget; const n = Number(b.dataset.n || 0);
+            if (!confirm(`¿Incluir a ${n} persona${n === 1 ? '' : 's'} en la secuencia? Empezarán a recibir el correo 1 en la próxima hora hábil (de 8 a. m. a 10 p. m.).`)) return;
+            b.disabled = true; b.textContent = 'Incluyendo…';
+            try {
+              const r = await fetch(`${Pages._webhookUrl}/api/correos/existentes/incluir`, { method: 'POST', headers: { Authorization: `Bearer ${await Pages._getAuthToken()}` } });
+              const d = await r.json();
+              if (!r.ok) throw new Error(d.error || r.statusText);
+              Toast.success('Listo', `${fmt(d.incluidas)} persona${d.incluidas === 1 ? '' : 's'} incluida${d.incluidas === 1 ? '' : 's'}`);
+              b.style.display = 'none'; card.querySelector('#mt-ex-res').textContent = 'Incluidas. Los correos salen de forma gradual.';
+            } catch (e) { Toast.error('No se pudo', e.message); b.disabled = false; b.textContent = `Incluir a ${n} en la secuencia`; }
+          });
           card.querySelector('#mt-of-dar').addEventListener('click', async (ev) => {
             const b = ev.currentTarget; const email = card.querySelector('#mt-of-email').value.trim(); const monto = Number(card.querySelector('#mt-of-monto').value);
             if (!email) { Toast.error('Escribe el correo', 'La cuenta que va a probar el descuento'); return; }
