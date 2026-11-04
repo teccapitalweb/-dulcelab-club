@@ -1191,6 +1191,7 @@ window.__signOut = async () => {
 <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></symbol>
 <symbol id="i-shield-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1-8.5 15a12 12 0 0 1-8.5-15a12 12 0 0 0 8.5-3"/><path d="M9 12l2 2l4-4"/></symbol>
 <symbol id="i-folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></symbol>
+<symbol id="i-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2.5 15 9 22 9.8 16.8 14.6 18.2 21.5 12 18 5.8 21.5 7.2 14.6 2 9.8 9 9"/></symbol>
 <symbol id="i-chart-bar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/><line x1="3" y1="20" x2="21" y2="20"/></symbol>
 <symbol id="i-credit-card" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></symbol>
 <symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8s11 8 11 8s-4 8-11 8s-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></symbol>
@@ -1237,6 +1238,7 @@ window.__signOut = async () => {
       <a class="nav-item" data-section="pdfs"><svg class="ic"><use href="#i-news"/></svg>PDFs y material<span class="nav-item__badge" id="badge-pdfs">0</span></a>
       <a class="nav-item" data-externo="vip-panel.html#pdfs" title="Abre el panel del miembro en otra pestaña"><svg class="ic"><use href="#i-book"/></svg>Biblioteca (vista del miembro)</a>
       <a class="nav-item" data-section="certificados"><svg class="ic"><use href="#i-certificate"/></svg>Certificados<span class="nav-item__badge" id="badge-cert">0</span></a>
+      <a class="nav-item" data-section="resenas"><svg class="ic"><use href="#i-star"/></svg>Reseñas</a>
     </div>
 
     <div class="nav-section">
@@ -5797,6 +5799,177 @@ const Pages={
       body.innerHTML = `<section class="trial-card"><h3>No se pudieron cargar las pruebas gratuitas</h3><p>${escapeHtml(error.message || 'Inténtalo de nuevo más tarde.')}</p></section>`;
     }
   },
+  // ═══════════════════════════════════════════════════════
+  // RESEÑAS · lo que opinan los alumnos de los cursos que terminaron (estrellas + comentario)
+  // Las escribe el alumno desde su panel al terminar un curso. Solo las ve el admin.
+  // ═══════════════════════════════════════════════════════
+  async resenas(p){
+    if (!document.getElementById('rv-css')) {
+      const st = document.createElement('style'); st.id = 'rv-css';
+      st.textContent = `
+        .rv-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:0 0 20px}
+        .rv-kpi{position:relative;overflow:hidden;padding:18px 20px;border:1px solid var(--border);border-radius:18px;background:var(--surface)}
+        .rv-kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--rv-c,var(--primary))}
+        .rv-kpi small{display:block;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text-3)}
+        .rv-kpi b{display:block;font-size:34px;letter-spacing:-1px;margin:6px 0 2px;color:var(--text)}
+        .rv-kpi span{font-size:12.5px;color:var(--text-3)}
+        .rv-card{margin:0 0 20px;padding:20px 22px;border:1px solid var(--border);border-radius:18px;background:var(--surface)}
+        .rv-card h3{margin:0 0 4px;font-size:15px}
+        .rv-card > p{margin:0 0 14px;font-size:12.5px;line-height:1.55;color:var(--text-3)}
+        .rv-leyenda{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
+        .rv-leyenda span{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:99px;background:var(--surface-2);font-size:12px;font-weight:600;color:var(--text-2)}
+        .rv-leyenda i,.rv-punto{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--rv-c)}
+        .rv-cursos{display:grid;gap:10px}
+        .rv-fila{display:grid;grid-template-columns:minmax(120px,240px) 1fr 86px;gap:14px;align-items:center;font-size:13px}
+        .rv-fila__t{text-align:right;color:var(--text-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .rv-pista{position:relative;height:22px;border-radius:8px;background:var(--surface-2)}
+        .rv-pista i{display:block;height:100%;border-radius:8px;background:var(--rv-c)}
+        .rv-fila__n{font-weight:800;font-variant-numeric:tabular-nums}
+        .rv-fila__n small{font-weight:600;color:var(--text-3)}
+        .rv-escala{display:grid;grid-template-columns:minmax(120px,240px) 1fr 86px;gap:14px;margin-top:6px;font-size:11px;color:var(--text-3)}
+        .rv-escala div{display:flex;justify-content:space-between}
+        .rv-grupos{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:20px}
+        .rv-grupo{padding:14px 16px;border:1px solid var(--border);border-radius:14px;background:var(--surface-2)}
+        .rv-grupo b{display:flex;align-items:center;gap:8px;font-size:14px}
+        .rv-grupo small{display:block;margin:3px 0 8px;font-size:12px;color:var(--text-3)}
+        .rv-grupo div{font-size:12.5px;line-height:1.5;color:var(--text-2)}
+        .rv-nota{margin:14px 0 0;font-size:12px;line-height:1.55;color:var(--text-3)}
+        .rv-dist{display:grid;gap:9px}
+        .rv-dist__fila{display:grid;grid-template-columns:34px 1fr 78px;gap:12px;align-items:center;font-size:13px}
+        .rv-dist__fila b{font-weight:800}
+        .rv-dist__fila .rv-pista{height:12px;border-radius:99px}
+        .rv-dist__fila .rv-pista i{border-radius:99px;background:#F2B33D}
+        .rv-dist__fila span{text-align:right;color:var(--text-2);font-variant-numeric:tabular-nums}
+        .rv-filtros{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:12px 0 6px}
+        .rv-filtros select{padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);font:inherit;font-size:13px;max-width:100%}
+        .rv-filtros label{display:inline-flex;gap:7px;align-items:center;font-size:13px;color:var(--text-2);cursor:pointer}
+        .rv-item{padding:16px 0;border-top:1px solid var(--border)}
+        .rv-item:first-child{border-top:0}
+        .rv-item__top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:14px}
+        .rv-item__top b{font-weight:800}
+        .rv-est{color:#F2B33D;letter-spacing:1px;margin-left:8px;font-size:13px}
+        .rv-fecha{font-size:12px;color:var(--text-3)}
+        .rv-item__curso{margin-top:3px;font-size:12.5px;color:var(--text-3)}
+        .rv-item__txt{margin-top:7px;font-size:14px;line-height:1.55;color:var(--text)}
+        .rv-item__txt.is-vacio{font-style:italic;color:var(--text-3);font-size:13px}
+        @media(max-width:700px){.rv-fila,.rv-escala{grid-template-columns:1fr 74px}.rv-fila__t{grid-column:1 / -1;text-align:left}.rv-escala > div:first-child{display:none}.rv-pista{height:18px}}
+      `;
+      document.head.appendChild(st);
+    }
+
+    p.innerHTML = `
+      <div class="fade-up">
+        <div class="sec-hero">
+          <span class="sec-hero__eyebrow">Contenido</span>
+          <h1 class="sec-hero__title">Reseñas</h1>
+          <p class="sec-hero__sub">Lo que opinan tus alumnos de los cursos que terminaron: estrellas de 1 a 5 y, si quisieron, un comentario. Solo tú las ves.</p>
+        </div>
+        <div id="rv-cuerpo"><div class="empty-state">Cargando…</div></div>
+      </div>`;
+
+    const cuerpo = p.querySelector('#rv-cuerpo');
+    let token;
+    try { token = await Pages._getAuthToken(); } catch (e) { cuerpo.innerHTML = '<div class="empty-state">No se pudo verificar tu sesión de admin.</div>'; return; }
+    let lista;
+    try {
+      const r = await fetch(`${Pages._webhookUrl}/api/resenas/admin`, { headers: { Authorization: `Bearer ${token}` } });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error || r.statusText);
+      lista = d.resenas || [];
+    } catch (e) {
+      cuerpo.innerHTML = `<div class="rv-card"><h3>No se pudieron cargar las reseñas</h3><p>${escapeHtml(e.message)}</p></div>`;
+      return;
+    }
+
+    const fmt = (n) => Number(n || 0).toLocaleString('es-MX');
+    const prom = (arr) => arr.length ? arr.reduce((t, x) => t + x.estrellas, 0) / arr.length : 0;
+    const uno = (n) => (Math.round(n * 10) / 10).toFixed(1);
+    const estrellas = (n) => '★'.repeat(n) + '☆'.repeat(5 - n);
+    const fechaTxt = (ms) => ms ? new Date(ms).toLocaleString('es-MX', { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true }).replace('.', '') : '';
+    const COLOR = { top: '#3f9d5a', bien: '#4a83e8', mal: '#e04b4b', poco: '#9aa0ab' };
+    const MIN_RESENAS = 3;
+
+    if (!lista.length) {
+      cuerpo.innerHTML = `<div class="rv-card"><h3>Aún no hay reseñas</h3><p>Cuando alguien termine un curso, se le pedirá que lo califique y sus respuestas aparecerán aquí.</p></div>`;
+      return;
+    }
+
+    const hace7 = Date.now() - 7 * 86400000;
+    const nuevas = lista.filter(x => x.fecha >= hace7).length;
+    const conTxt = lista.filter(x => x.comentario).length;
+
+    // por curso
+    const mapa = new Map();
+    lista.forEach(x => { if (!mapa.has(x.cursoId)) mapa.set(x.cursoId, { id: x.cursoId, titulo: x.cursoTitulo || 'Curso', items: [] }); mapa.get(x.cursoId).items.push(x); });
+    const cursos = [...mapa.values()].map(c => ({ ...c, n: c.items.length, prom: prom(c.items) }))
+      .map(c => ({ ...c, cat: c.n < MIN_RESENAS ? 'poco' : c.prom >= 4.5 ? 'top' : c.prom >= 3.5 ? 'bien' : 'mal' }))
+      .sort((a, b) => b.prom - a.prom);
+    const nTop = cursos.filter(c => c.cat === 'top').length, nMal = cursos.filter(c => c.cat === 'mal').length;
+    const grupo = (cat) => cursos.filter(c => c.cat === cat);
+    const lineaGrupo = (cat) => grupo(cat).length ? grupo(cat).map(c => `${escapeHtml(c.titulo)} (${uno(c.prom)} ★, ${c.n})`).join('<br>') : 'Ningún curso por ahora.';
+
+    cuerpo.innerHTML = `
+      <div class="rv-kpis">
+        <div class="rv-kpi" style="--rv-c:#F2B33D"><small>Calificación promedio</small><b>${uno(prom(lista))}★</b><span>de 5 estrellas · entre todos los cursos</span></div>
+        <div class="rv-kpi" style="--rv-c:#3f9d5a"><small>Reseñas recibidas</small><b>${fmt(lista.length)}</b><span>${fmt(nuevas)} en los últimos 7 días</span></div>
+        <div class="rv-kpi" style="--rv-c:#4a83e8"><small>Con comentario</small><b>${fmt(conTxt)}</b><span>${Math.round(conTxt / lista.length * 100)}% dejó un comentario</span></div>
+        <div class="rv-kpi" style="--rv-c:#a063e0"><small>Cursos calificados</small><b>${fmt(cursos.length)}</b><span>${fmt(nTop)} excelente${nTop === 1 ? '' : 's'} · ${fmt(nMal)} por mejorar</span></div>
+      </div>
+
+      <div class="rv-card">
+        <h3>¿Cómo califican tus cursos?</h3>
+        <p>Calificación promedio de cada curso. Un curso necesita al menos ${MIN_RESENAS} reseñas para clasificarse.</p>
+        <div class="rv-leyenda">
+          <span style="--rv-c:${COLOR.top}"><i></i>Excelentes · 4.5 o más</span>
+          <span style="--rv-c:${COLOR.bien}"><i></i>Mejor calificados · de 3.5 a 4.4</span>
+          <span style="--rv-c:${COLOR.mal}"><i></i>Por mejorar · menos de 3.5</span>
+          <span style="--rv-c:${COLOR.poco}"><i></i>Pocas reseñas</span>
+        </div>
+        <div class="rv-cursos">
+          ${cursos.map(c => `<div class="rv-fila" style="--rv-c:${COLOR[c.cat]}"><div class="rv-fila__t" title="${escapeHtml(c.titulo)}">${escapeHtml(c.titulo)}</div><div class="rv-pista"><i style="width:${Math.round(c.prom / 5 * 100)}%"></i></div><div class="rv-fila__n">${uno(c.prom)} ★ <small>· ${fmt(c.n)}</small></div></div>`).join('')}
+        </div>
+        <div class="rv-escala"><div></div><div><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div><div></div></div>
+        <div class="rv-grupos">
+          <div class="rv-grupo" style="--rv-c:${COLOR.top}"><b><i class="rv-punto"></i>Excelentes (${grupo('top').length})</b><small>4.5 estrellas o más</small><div>${lineaGrupo('top')}</div></div>
+          <div class="rv-grupo" style="--rv-c:${COLOR.bien}"><b><i class="rv-punto"></i>Mejor calificados (${grupo('bien').length})</b><small>de 3.5 a 4.4 estrellas</small><div>${lineaGrupo('bien')}</div></div>
+          <div class="rv-grupo" style="--rv-c:${COLOR.mal}"><b><i class="rv-punto"></i>Por mejorar (${grupo('mal').length})</b><small>menos de 3.5 estrellas</small><div>${lineaGrupo('mal')}</div></div>
+        </div>
+        ${grupo('poco').length ? `<p class="rv-nota">Con pocas reseñas todavía (${grupo('poco').length}): ${grupo('poco').map(c => `${escapeHtml(c.titulo)} (${uno(c.prom)} ★, ${c.n})`).join(' · ')}</p>` : ''}
+      </div>
+
+      <div class="rv-card">
+        <h3>Estrellas recibidas</h3>
+        <p>Cuántas reseñas hay de cada calificación.</p>
+        <div class="rv-dist">
+          ${[5, 4, 3, 2, 1].map(n => { const k = lista.filter(x => x.estrellas === n).length; const pc = Math.round(k / lista.length * 100); return `<div class="rv-dist__fila"><b>${n} ★</b><div class="rv-pista"><i style="width:${pc}%"></i></div><span>${fmt(k)} · ${pc}%</span></div>`; }).join('')}
+        </div>
+      </div>
+
+      <div class="rv-card">
+        <h3>Comentarios y calificaciones <span style="color:var(--text-3);font-weight:600" id="rv-total">(${fmt(lista.length)})</span></h3>
+        <div class="rv-filtros">
+          <select id="rv-f-curso"><option value="">Todos los cursos</option>${cursos.map(c => `<option value="${escapeHtml(c.id)}">${escapeHtml(c.titulo)}</option>`).join('')}</select>
+          <select id="rv-f-est"><option value="">Todas las estrellas</option>${[5, 4, 3, 2, 1].map(n => `<option value="${n}">${n} estrella${n === 1 ? '' : 's'}</option>`).join('')}</select>
+          <label><input type="checkbox" id="rv-f-txt"> Solo con comentario</label>
+        </div>
+        <div id="rv-lista"></div>
+      </div>`;
+
+    const pintarLista = () => {
+      const fc = cuerpo.querySelector('#rv-f-curso').value, fe = cuerpo.querySelector('#rv-f-est').value, ft = cuerpo.querySelector('#rv-f-txt').checked;
+      const f = lista.filter(x => (!fc || x.cursoId === fc) && (!fe || String(x.estrellas) === fe) && (!ft || x.comentario));
+      cuerpo.querySelector('#rv-total').textContent = `(${fmt(f.length)})`;
+      cuerpo.querySelector('#rv-lista').innerHTML = f.length ? f.map(x => `
+        <div class="rv-item">
+          <div class="rv-item__top"><div><b>${escapeHtml(x.nombre || 'Alumno')}</b><span class="rv-est">${estrellas(x.estrellas)}</span></div><span class="rv-fecha">${escapeHtml(fechaTxt(x.fecha))}</span></div>
+          <div class="rv-item__curso">${escapeHtml(x.cursoTitulo)}${x.email ? ' · ' + escapeHtml(x.email) : ''}</div>
+          <div class="rv-item__txt ${x.comentario ? '' : 'is-vacio'}">${x.comentario ? escapeHtml(x.comentario) : 'Solo calificó, sin comentario.'}</div>
+        </div>`).join('') : '<div class="empty-state">No hay reseñas con estos filtros.</div>';
+    };
+    ['#rv-f-curso', '#rv-f-est', '#rv-f-txt'].forEach(s => cuerpo.querySelector(s).addEventListener('input', pintarLista));
+    pintarLista();
+  },
+
   async metricas(p){
     if (!document.getElementById('mt-css')) {
       const st = document.createElement('style'); st.id = 'mt-css';
@@ -7188,7 +7361,7 @@ function dirAdminCargar(){
    refresh te deja donde estabas, los botones atrás/adelante del
    navegador funcionan y puedes compartir un link directo a la sección.
    ═══════════════════════════════════════════════════════════════════ */
-const SECCIONES_VALIDAS = ['dashboard','metricas','pruebas','notificaciones','cursos','webinars','pdfs','certificados','miembros','pagos','encuesta','noticias','config','foro','directorio'];
+const SECCIONES_VALIDAS = ['dashboard','resenas','metricas','pruebas','notificaciones','cursos','webinars','pdfs','certificados','miembros','pagos','encuesta','noticias','config','foro','directorio'];
 
 function seccionDesdeHash(){
   const h = (window.location.hash || '').replace(/^#\/?/, '').trim();

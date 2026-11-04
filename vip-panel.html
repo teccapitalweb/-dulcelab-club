@@ -3884,7 +3884,7 @@ body.has-fomo .main{padding-top:18px}
 (function(){
   var pend = {}, activos = {}, hasta = 0;
   function hayPopup(){
-  return !!document.querySelector('#splash-bienvenida, #name-modal, #professional-card-modal, .modal-backdrop.is-open, .mvtour-overlay, #dulcelab-install-pop.show, #regalo-pop, #cofre-pop, #splash-completado, .lib-reader');
+  return !!document.querySelector('#splash-bienvenida, #name-modal, #professional-card-modal, .modal-backdrop.is-open, .mvtour-overlay, #dulcelab-install-pop.show, #regalo-pop, #cofre-pop, #resena-pop, #splash-completado, .lib-reader');
   }
   // reservar: avisa que esta ventana va a salir pronto, para que las de menor prioridad no se adelanten.
   function reservar(id, prio){
@@ -6125,6 +6125,8 @@ const Sections = (function(){
       setTimeout(() => mostrarSplashCompletado(curso), 400);
       // Regalo de XP por terminar el curso (el servidor lo verifica); el aviso sale después de la felicitación
       setTimeout(() => { window.__regaloCurso && window.__regaloCurso(curso.id, curso.titulo); }, 3000);
+      // Después de la felicitación y del regalo, se le pide su opinión del curso (estrellas y comentario)
+      setTimeout(() => { window.__resenaCurso && window.__resenaCurso(curso.id, curso.titulo); }, 3500);
     }
     // Celebración chica por cada clase — pero no si ya viene el splash grande
     // de curso completado, para no encimar dos festejos.
@@ -7725,6 +7727,8 @@ const Sections = (function(){
       }, 450);
       // Cursos ya terminados que todavía no cobraron su regalo de XP
       setTimeout(() => { window.__revisarRegalosCurso && window.__revisarRegalosCurso(); }, 4000);
+      // Cursos terminados que todavía no se han calificado
+      setTimeout(() => { window.__revisarResenas && window.__revisarResenas(); }, 9000);
     }
   }
   window.__cargarCursosFirestore = cargarCursosFirestore;
@@ -15744,6 +15748,152 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
       var lista = window.__cursosCompletados ? window.__cursosCompletados() : [];
       lista.forEach(function(c, i){ setTimeout(function(){ pedirRegalo(c.id, c.titulo, 0); }, i * 1500); });
     } catch(e){}
+  };
+})();
+</script>
+<!-- ═══ Reseña al terminar un curso: estrellas y comentario (solo las ve el admin) ═══ -->
+<style>
+  #resena-pop{position:fixed;inset:0;z-index:99998;display:none;align-items:center;justify-content:center;padding:18px;font-family:'Inter','Plus Jakarta Sans',system-ui,sans-serif}
+  #resena-pop.show{display:flex;animation:rsFade .2s ease}
+  #resena-pop .rs-ov{position:absolute;inset:0;background:rgba(10,7,8,.66);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+  #resena-pop .rs-card{position:relative;width:100%;max-width:420px;max-height:calc(100vh - 36px);overflow:auto;padding:26px 24px 22px;text-align:center;color:var(--text,#251212);background:var(--surface,#fff);border:1px solid var(--border,#e7dad5);border-radius:22px;box-shadow:0 28px 70px -20px rgba(0,0,0,.55);animation:rsPop .3s cubic-bezier(.2,.9,.25,1.05)}
+  #resena-pop .rs-eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:var(--primary,#6b1526)}
+  #resena-pop h3{margin:8px 0 4px;font-size:19px;line-height:1.3;letter-spacing:-.3px}
+  #resena-pop .rs-sub{margin:0 0 16px;font-size:13px;line-height:1.55;color:var(--text-2,#5a4a46)}
+  #resena-pop .rs-estrellas{display:flex;justify-content:center;gap:6px;margin:4px 0 6px}
+  #resena-pop .rs-estrellas button{width:44px;height:44px;padding:0;border:0;background:none;cursor:pointer;color:var(--border-2,#d9c9c3);transition:transform .12s,color .12s}
+  #resena-pop .rs-estrellas button svg{width:100%;height:100%;display:block;fill:currentColor}
+  #resena-pop .rs-estrellas button.on{color:#E5B04A}
+  #resena-pop .rs-estrellas button:hover{transform:scale(1.12)}
+  #resena-pop .rs-etq{min-height:20px;margin:0 0 12px;font-size:13px;font-weight:700;color:var(--primary,#6b1526)}
+  #resena-pop textarea{width:100%;box-sizing:border-box;min-height:88px;resize:vertical;padding:12px 14px;border-radius:12px;border:1.5px solid var(--border-2,#d9c9c3);background:var(--surface-2,#f3ebe6);color:var(--text,#251212);font:inherit;font-size:14px;line-height:1.5}
+  #resena-pop textarea:focus{outline:none;border-color:var(--primary,#6b1526)}
+  #resena-pop .rs-cuenta{margin:4px 2px 0;text-align:right;font-size:11px;color:var(--text-3,#8a7a74)}
+  #resena-pop .rs-msg{min-height:18px;margin:8px 0 0;font-size:12.5px;color:var(--danger,#c0392b)}
+  #resena-pop .rs-btns{display:flex;gap:10px;margin-top:14px}
+  #resena-pop .rs-btns button{flex:1;padding:13px 10px;border-radius:13px;font:inherit;font-size:14px;font-weight:700;cursor:pointer}
+  #resena-pop .rs-no{background:transparent;border:1px solid var(--border-2,#d9c9c3);color:var(--text-2,#5a4a46)}
+  #resena-pop .rs-si{background:var(--primary,#6b1526);border:0;color:#fff}
+  #resena-pop .rs-si:disabled{opacity:.45;cursor:not-allowed}
+  #resena-pop .rs-gracias{padding:18px 4px 6px}
+  #resena-pop .rs-gracias b{display:block;font-size:44px;line-height:1.1}
+  @keyframes rsFade{from{opacity:0}to{opacity:1}}
+  @keyframes rsPop{from{opacity:0;transform:translateY(18px) scale(.96)}to{opacity:1;transform:none}}
+  @media(max-width:480px){#resena-pop .rs-card{padding:22px 16px 18px}#resena-pop .rs-estrellas button{width:40px;height:40px}}
+</style>
+<script>
+(function(){
+  var ESTRELLA = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3 6.1 20.6l1.3-6.6L2.5 9.4l6.6-.8z"/></svg>';
+  var ETIQUETAS = ['', 'Muy malo', 'Podría mejorar', 'Estuvo bien', 'Muy bueno', '¡Excelente!'];
+  function esc(t){ return String(t == null ? '' : t).replace(/[&<>"']/g, function(c){ return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]; }); }
+  function base(){ return window.WEBHOOK_URL || 'https://dulcelab-webhook-production.up.railway.app'; }
+  function uid(){ return (window.UserState && window.UserState.uid) || ''; }
+  var kHecha = function(id){ return 'dulcelab_resena_hecha_' + uid() + '_' + id; };
+  var kPedida = function(id){ return 'dulcelab_resena_pedida_' + uid() + '_' + id; };
+  function leer(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
+  function escribir(k, v){ try { localStorage.setItem(k, v); } catch(e){} }
+
+  function mostrar(cursoId, titulo){
+    if (document.getElementById('resena-pop')) return;
+    var el = document.createElement('div');
+    el.id = 'resena-pop';
+    el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-labelledby', 'rs-tit');
+    el.innerHTML =
+      '<div class="rs-ov"></div><div class="rs-card">' +
+        '<div class="rs-eyebrow">Tu opinión cuenta</div>' +
+        '<h3 id="rs-tit">¿Qué te pareció «' + esc(titulo) + '»?</h3>' +
+        '<p class="rs-sub">Califica el curso y, si quieres, cuéntanos qué te gustó o qué mejorarías. Nos ayuda a hacerlo mejor.</p>' +
+        '<div class="rs-estrellas" role="radiogroup" aria-label="Calificación de 1 a 5 estrellas"></div>' +
+        '<div class="rs-etq" aria-live="polite"></div>' +
+        '<textarea maxlength="600" placeholder="Tu comentario (opcional)"></textarea>' +
+        '<div class="rs-cuenta"><span class="rs-n">0</span>/600</div>' +
+        '<div class="rs-msg" aria-live="polite"></div>' +
+        '<div class="rs-btns"><button type="button" class="rs-no">Ahora no</button><button type="button" class="rs-si" disabled>Enviar</button></div>' +
+      '</div>';
+    document.body.appendChild(el);
+    var cont = el.querySelector('.rs-estrellas'), etq = el.querySelector('.rs-etq'), ta = el.querySelector('textarea');
+    var msg = el.querySelector('.rs-msg'), si = el.querySelector('.rs-si'), val = 0;
+    for (var i = 1; i <= 5; i++) {
+      (function(n){
+        var b = document.createElement('button');
+        b.type = 'button'; b.setAttribute('role', 'radio'); b.setAttribute('aria-label', n + (n === 1 ? ' estrella' : ' estrellas'));
+        b.innerHTML = ESTRELLA;
+        b.addEventListener('click', function(){ val = n; pintar(); si.disabled = false; });
+        b.addEventListener('mouseenter', function(){ pintar(n); });
+        b.addEventListener('mouseleave', function(){ pintar(); });
+        cont.appendChild(b);
+      })(i);
+    }
+    function pintar(hover){
+      var v = hover || val;
+      Array.prototype.forEach.call(cont.children, function(b, i){ b.classList.toggle('on', i < v); b.setAttribute('aria-checked', String(i + 1 === val)); });
+      etq.textContent = ETIQUETAS[v] || '';
+    }
+    ta.addEventListener('input', function(){ el.querySelector('.rs-n').textContent = ta.value.length; });
+    var cerrar = function(){ el.remove(); document.removeEventListener('keydown', tecla); };
+    var tecla = function(e){ if (e.key === 'Escape') cerrar(); };
+    document.addEventListener('keydown', tecla);
+    el.querySelector('.rs-ov').addEventListener('click', cerrar);
+    el.querySelector('.rs-no').addEventListener('click', cerrar);
+    si.addEventListener('click', async function(){
+      if (!val) return;
+      si.disabled = true; si.textContent = 'Enviando…'; msg.textContent = '';
+      try {
+        var token = await window.__currentUser.getIdToken();
+        var res = await fetch(base() + '/api/resenas', {
+          method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+          body: JSON.stringify({ cursoId: cursoId, estrellas: val, comentario: ta.value })
+        });
+        var data = await res.json().catch(function(){ return {}; });
+        if (res.status === 409) throw new Error('Tu avance todavía se está guardando. Inténtalo de nuevo en unos segundos.');
+        if (!res.ok) throw new Error('No se pudo enviar. Inténtalo de nuevo.');
+        escribir(kHecha(cursoId), '1');
+        el.querySelector('.rs-card').innerHTML = '<div class="rs-gracias"><b>🙌</b><h3>¡Gracias por tu opinión!</h3><p class="rs-sub">La leemos con mucho cuidado para mejorar tus cursos.</p></div>';
+        setTimeout(cerrar, 1800);
+      } catch (e) {
+        msg.textContent = e && e.message ? e.message : 'No se pudo enviar.';
+        si.disabled = false; si.textContent = 'Enviar';
+      }
+    });
+    requestAnimationFrame(function(){ el.classList.add('show'); });
+    setTimeout(function(){ el.classList.add('show'); }, 80);
+  }
+
+  // Pide la reseña de un curso terminado. Se pregunta como máximo 3 veces por curso y nunca a quien ya calificó.
+  async function pedir(cursoId, titulo, nueva){
+    try {
+      if (!uid() || !window.__currentUser || !cursoId) return;
+      if (leer(kHecha(cursoId)) === '1') return;
+      var veces = parseInt(leer(kPedida(cursoId)) || '0', 10) || 0;
+      if (!nueva && veces >= 3) return;
+      var token = await window.__currentUser.getIdToken();
+      var r = await fetch(base() + '/api/resenas/mias', { headers: { Authorization: 'Bearer ' + token } });
+      if (r.ok) {
+        var d = await r.json();
+        if ((d.cursos || []).indexOf(cursoId) >= 0) { escribir(kHecha(cursoId), '1'); return; }
+      }
+      var P = window.__Popups;
+      var ahora = function(){
+        if (leer(kHecha(cursoId)) === '1') return;
+        escribir(kPedida(cursoId), String(veces + 1));
+        mostrar(cursoId, titulo);
+      };
+      if (P) P.pedir('resena', 5, ahora, 3600000); else ahora();
+    } catch (e) { console.warn('[reseña]', e && e.message); }
+  }
+  window.__resenaCurso = function(id, titulo){ pedir(id, titulo, true); };
+  // Al entrar: si hay un curso terminado sin calificar, se pregunta por uno (solo uno por visita).
+  window.__revisarResenas = function(){
+    try {
+      var lista = window.__cursosCompletados ? window.__cursosCompletados() : [];
+      for (var i = 0; i < lista.length; i++) {
+        var c = lista[i];
+        if (leer(kHecha(c.id)) === '1') continue;
+        if ((parseInt(leer(kPedida(c.id)) || '0', 10) || 0) >= 3) continue;
+        pedir(c.id, c.titulo, false);
+        break;
+      }
+    } catch (e) {}
   };
 })();
 </script>
