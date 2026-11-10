@@ -10914,8 +10914,73 @@ const Sections = (function(){
     ['equipo',  /equipo|maquinaria|estufa|horno|coccion|coccion/],
     ['negocio', /costo|negocio|estrateg|administr|finanz|gestion|operaci/]
   ];
+
+  // Fotos por tema (Unsplash, uso libre). Cada material recibe una foto DISTINTA a las demás: se reparten en orden
+  // dentro de su tema y, si ese tema se agota, se toma de un tema cercano. Así ninguna portada se repite.
+  const _MAT_POOL = {
+    pastel: ['1561702856-b4ec96854ed8','1673417284575-cb29c8631125','1652284918100-1fd4a60e7356','1586195833823-bf90376c614d','1669221295912-9f78d2947372','1621303837174-89787a7d4729','1761637604809-735817ea2bd2','1623428454614-abaf00244e52'],
+    postre: ['1567691334394-c0d00a7716db','1622814651041-b9a3c54d60ab','1647784057692-7c7116f86c7d','1563245737-d5224c6cdca7','1530648672449-81f6c723e2f1','1488477181946-6428a0291777','1643733645069-76bac4462103','1660409255014-909c965b2d39'],
+    cafe: ['1511920170033-f8396924c348','1773894480003-955c58ddf4af','1610632380989-680fe40816c6','1772134141698-c47b78663c55','1583165278997-0250ea5d72e2','1509042239860-f550ce710b93','1620807773206-49c1f2957417','1760662018512-e881f06d0fe0'],
+    equipo: ['1695606452743-e4b6872df715','1611774759371-8e68d29c1344','1785068540682-6917367db28e','1780319232447-4075b592098a','1792950065553-eacdba8babdc','1697898109582-40f15c65f174','1555396273-367ea4eb4db5','1622021142947-da7dedc7c39a','1641536618422-2cf0bbd10014','1771360963016-1408c2de12c4'],
+    servicio: ['1786209676820-f408e4fba31e','1581349485608-9469926a8e5e','1719573019827-d06944a0c2be','1516554646385-7642248096d1','1566670735914-b2038696981d','1414235077428-338989a2e8c0','1663530761401-15eefb544889','1467003909585-2f8a72700288','1551632436-cbf8dd35adfa','1790156690726-ac0f96d5a2f9'],
+    receta: ['1542010589005-d1eacc3918f2','1586797166778-7cb76a618157','1547516508-4c1f9c7c4ec3','1617049092088-8771a80edde2','1588467850695-a898367ce465','1506368083636-6defb67639a7','1466637574441-749b8f19452f','1624715080044-8d9e1e5aa3b2','1599981819329-31f250c3bc75','1556909114-f6e7ad7d3136'],
+    costos: ['1648201637025-1c77b9be3013','1768839720849-fef976b3ffff','1626266061368-46a8f578ddd6','1529078155058-5d716f45d604','1761515397001-c8e82879c4c0','1647427017067-8f33ccbae493','1647427017458-f6df91d046eb','1571907483086-3c0ea40cc16d','1780037190608-1d871be1fe41','1544025162-d76694265947'],
+    almacen: ['1645567454567-901dc409551b','1738618141224-815f18b8e469','1617510711388-6f88e078d698','1587293852726-70cdb56c2866','1782948603191-065fb15e2e8e','1604719312566-8912e9227c6a','1542838132-92c53300491e','1606859191214-25806e8e2423','1643494847705-74808059bf07','1576020301507-5d5a00982053'],
+    merma: ['1605600659908-0ef719419d41','1767459516949-cbc6d219a595','1614272527834-e95f090a34c5','1700478933476-8b023ec95869','1644575881028-9f170fd241ed','1585285072892-a52481577926'],
+    higiene: ['1589109807644-924edf14ee09','1574482620811-1aa16ffe3c82','1584744646898-40ff0404e767','1541614101331-1a5a3a194e92','1661505300208-9f0857553690','1636115130040-adf36e3ed32b','1708915965975-2a950db0e215','1652211955967-99c892925469'],
+    pan: ['1509440159596-0249088772ff','1613396874083-2d5fbe59ae79','1537734796389-e1fc293cf856','1652283321082-72bb2b601abd','1587241321921-91a834d6d191','1568254183919-78a4f43a2877','1760049869567-e4ae462306f5','1517686469429-8bdb88b9f907']
+  };
+  // si un tema se acaba, se sigue con estos (en este orden)
+  const _MAT_VECINOS = {
+    pastel: ['postre', 'pan', 'receta'], postre: ['pastel', 'receta', 'pan'], cafe: ['postre', 'servicio', 'pan'],
+    equipo: ['servicio', 'higiene', 'receta'], servicio: ['equipo', 'receta', 'higiene'], receta: ['costos', 'pan', 'equipo'],
+    costos: ['almacen', 'receta', 'servicio'], almacen: ['merma', 'costos', 'higiene'], merma: ['almacen', 'costos', 'higiene'],
+    higiene: ['equipo', 'servicio', 'almacen'], pan: ['receta', 'pastel', 'postre']
+  };
+  // De qué trata el material: primero por su propio título y, si no, por el curso al que pertenece.
+  const _MAT_TEMAS_TITULO = [
+    ['cafe',     /barism|barista|cafe|espresso|latte/],
+    ['merma',    /merma|desperdicio|residuo|desecho/],
+    ['almacen',  /compra|inventario|insumo|almacen|proveedor/],
+    ['higiene',  /inocuidad|higiene|sanit|nom-?251|limpieza/],
+    ['postre',   /postre|vaso|mousse|crema|textura/],
+    ['pastel',   /pastel|decorac|cobertura|acabado|fondant|glaseado|tendencia/],
+    ['servicio', /servicio|presentacion|emplat|comercializ/],
+    ['costos',   /costo|precio|rentabil|margen|negocio|finanz/],
+    ['receta',   /receta|estandariz|porcion|rendimiento|aprovechamiento|calidad|consistencia/],
+    ['pan',      /panader|masa|\bpan\b|hornea/],
+    ['equipo',   /brigada|equipo|organizacion|liderazgo|coordinacion|produccion|programacion|escalamiento/]
+  ];
+  const _MAT_TEMAS_CURSO = [
+    ['cafe', /barism/], ['pastel', /decorac.*pastel/], ['postre', /postres? en vaso/], ['equipo', /brigada/],
+    ['servicio', /cocina bajo control/], ['receta', /estandariz/], ['costos', /costo/]
+  ];
+  function _matTema(m){
+    const norm = (t) => String(t || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const tit = norm(m.titulo), cur = norm(m.cursoTitulo);
+    for (const [k, re] of _MAT_TEMAS_CURSO) if ((k === 'cafe' || k === 'pastel' || k === 'postre') && re.test(cur)) return k;
+    for (const [k, re] of _MAT_TEMAS_TITULO) if (re.test(tit)) return k;
+    for (const [k, re] of _MAT_TEMAS_CURSO) if (re.test(cur)) return k;
+    return 'receta';
+  }
+  // Reparte una foto distinta a cada material (en el orden en que aparecen; así no cambian de una visita a otra).
+  function _asignarFotosMateriales(lista){
+    const usadas = new Set(), mapa = new Map();
+    (lista || []).forEach(m => {
+      if (m.imagen) { mapa.set(m.id, m.imagen); return; }
+      const tema = _matTema(m);
+      const orden = [tema].concat(_MAT_VECINOS[tema] || [], Object.keys(_MAT_POOL));
+      let elegida = null;
+      for (const t of orden) { elegida = (_MAT_POOL[t] || []).find(id => !usadas.has(id)); if (elegida) break; }
+      if (!elegida) { const p = _MAT_POOL[tema] || _MAT_POOL.receta; elegida = p[mapa.size % p.length]; } // ya se usaron todas: se repite la menos reciente
+      usadas.add(elegida);
+      mapa.set(m.id, _MAT_FOTO_BASE + elegida + _MAT_FOTO_Q);
+    });
+    window.__matFotoMapa = mapa;
+  }
   function _matFoto(m){
     if (m.imagen) return m.imagen;
+    if (window.__matFotoMapa && window.__matFotoMapa.has(m.id)) return window.__matFotoMapa.get(m.id);
     const norm = (t) => String(t || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     const probar = (texto) => { for (const [k, re] of _MAT_FOTO_REGLAS) if (re.test(texto)) return k; return null; };
     const k = probar(norm(m.titulo)) || probar(norm((m.cursoTitulo || '') + ' ' + (m.cursoArea || ''))) || 'general';
@@ -11405,6 +11470,7 @@ const Sections = (function(){
 
     // Materiales aplanados (de los cursos reales)
     const materialesTodos = _allMaterialesFromCursos();
+    _asignarFotosMateriales(materialesTodos);
     const total = materialesTodos.length;
     const disponiblesAhora = materialesTodos.filter(m => _materialDisponible(m)).length;
     const proximos = total - disponiblesAhora;
