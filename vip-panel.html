@@ -7639,9 +7639,22 @@ const Sections = (function(){
       costos:'https://images.unsplash.com/photo-1725258080098-727051947997?w=900&q=80&auto=format&fit=crop',
       catering:'https://images.unsplash.com/photo-1686853021522-1b0e9a81706e?w=900&q=80&auto=format&fit=crop',
       horno:'https://images.unsplash.com/photo-1732565649629-eb4932a1ec09?w=900&q=80&auto=format&fit=crop',
-      cocina:'https://images.unsplash.com/photo-1762329924239-e204f101fca4?w=900&q=80&auto=format&fit=crop'
+      cocina:'https://images.unsplash.com/photo-1762329924239-e204f101fca4?w=900&q=80&auto=format&fit=crop',
+      decoracion:'https://images.unsplash.com/photo-1786114352364-b354a97bfbce?w=900&q=80&auto=format&fit=crop',
+      postresvaso:'https://images.unsplash.com/photo-1769434129307-33ecda53c1ed?w=900&q=80&auto=format&fit=crop',
+      barismo:'https://images.unsplash.com/photo-1541167760496-1628856ab772?w=900&q=80&auto=format&fit=crop',
+      estandar:'https://images.unsplash.com/photo-1777647262314-58b72a19ffdc?w=900&q=80&auto=format&fit=crop',
+      brigada:'https://images.unsplash.com/photo-1683624328172-88fb24625ec1?w=900&q=80&auto=format&fit=crop',
+      servicio:'https://images.unsplash.com/photo-1775513153018-0c7ac7899751?w=900&q=80&auto=format&fit=crop'
     };
     function pick(){
+      // Cursos con foto propia (así ninguno repite portada con otro)
+      if(/decorac/.test(t)&&/pastel/.test(t))return'decoracion';
+      if(/postres? en vaso/.test(t))return'postresvaso';
+      if(/barism|barista|caf[eé]/.test(t)||a.indexOf('barismo')>=0)return'barismo';
+      if(/estandariz/.test(t))return'estandar';
+      if(/brigada/.test(t))return'brigada';
+      if(/cocina bajo control|control del servicio/.test(t))return'servicio';
       if(a.indexOf('higien')>=0||a.indexOf('inocu')>=0||/higien|inocu|sanitari|nom-251/.test(t))return'higiene';
       if(a.indexOf('mexican')>=0||/taco|mexican/.test(t))return'mexicana';
       if(a.indexOf('mermelada')>=0||a.indexOf('conserva')>=0||/mermelada|conserva|jalea/.test(t))return'mermeladas';
